@@ -1,0 +1,9 @@
+api_dir: api
+debug: true
+description: Create congfig.yaml and mappall quicky.config.Congfig attr to congfig.yaml
+host: 127.0.0.1
+host_dir: /
+https: false
+name: Noname
+port: null
+template_folder: templates

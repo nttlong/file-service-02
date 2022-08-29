@@ -1,0 +1,10 @@
+use: custom-config/lv.yaml
+#use: custom-config/home.yaml
+#Host trên IIS rất phức tạp
+# Để bảo đảm các link url hỗ trợ unicode trên windows làm theo các bước sau:
+#-------------------------------------------------------------------------------
+#Open a console window with administrative privileges.
+#Run this command to adjust the registry settings:
+#reg add HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\w3svc\Parameters /v FastCGIUtf8ServerVariables /t REG_MULTI_SZ /d REQUEST_URI\0PATH_INFO
+#Restart IIS.
+#---------------------------------------------------------------------

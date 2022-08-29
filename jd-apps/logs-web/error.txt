@@ -1,0 +1,90 @@
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'
+Traceback (most recent call last):
+  File "D:\lv-files\jd-apps\jd-apps\api_app_dev_run.py", line 6, in <module>
+    import fasty
+  File "D:\lv-files\jd-apps\jd-apps\fasty\__init__.py", line 5, in <module>
+    from fastapi.middleware.cors import CORSMiddleware
+ModuleNotFoundError: No module named 'fastapi'

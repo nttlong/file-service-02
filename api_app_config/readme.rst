@@ -1,0 +1,1 @@
+Tất cả mọi cấu hình

@@ -1,0 +1,59 @@
+<div style="padding:10px">
+    <rcmpct-grid cols="1fr 2fr">
+
+        <label>{{$res("Select file")}}:</label>
+        <div>
+            <input type="file" id="file" />
+        </div>
+        <label>
+            {{$res("Is Public")}}:
+        </label>
+        <div>
+            <input type="checkbox" ng-model="data.IsPublic"/>
+        </div>
+        <label>
+            {{$res("File size")}}:
+        </label>
+        <label>
+            {{info.SizeInHumanReadable}}
+        </label>
+        <label>{{$res("Uploaded size")}}:</label><label>{{info.SizeUploadedInHumanReadable}}</label>
+        <div style="grid-column:1/-1">
+            <div style="margin-top:10px;margin-bottom:10px">
+                <rcmpct-progressbar style="width:100%;height:24px" ng-value="{{info.Percent}}" color="#000000" />
+            </div>
+
+        </div>
+
+        <div style="grid-column:1/-1">
+            <input type="button" class="btn btn-primary btn-small" style="float:right" value="{{$res('Upload')}}" ng-click="doUploadFile().then()" />
+
+        </div>
+    </rcmpct-grid>
+    <!--<div style="width:200px">
+
+    </div>
+    <div class="dock full debug">
+        <div class="row">
+            <div class="col-4">
+                Select file
+            </div>
+            <div class="col-8">
+                <input type="file" id="file" />
+            </div>
+        </div>
+        <div class="row">
+            <rcmpct-progressbar style="width:300px;height:50px" ng-value="{{info.Percent}}"/> 
+        </div>
+        <div class="row">
+            <div class="col-12">
+                {{info}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                
+            </div>
+        </div>
+    </div>-->
+</div>

@@ -1,0 +1,75 @@
+    I. Ph?n LMS:
+Old
+New
+
+
+Thông tin khóa h?c
+
+
+Trang ??ng ký
+
+
+Trang tìm ki?m khóa h?c
+
+
+    II. 
+Chi ti?t khóa h?c
+
+
+Chi ti?t bài h?c
+
+
+Forum c?a khóa h?c
+
+
+Thêm topic trong forum
+
+
+
+
+Wiki chia nhi?u c?p ?? nh? vào các dropdown menu phía trên
+Ph?n này nên so sánh gi?a phiên b?n c? trên:
+http://suredx.net (c?)
+http://172.16.7.63 (m?i)
+
+User profile
+
+
+Có thêm ph?n ch?ng ch?
+
+
+
+    III. Ph?n CMS:
+
+C? (http://cms.suredx.net)
+M?i (http://172.16.7.63:18010)
+
+
+Danh sách khóa h?c không b? h?n ch? b?i gi?ng viên ?ang ??ng nh?p
+
+
+
+?ã ?i?u ch?nh l?i ch? th?y nh?ng khóa h?c c?a gi?ng viên ?ang ??ng nh?p
+Thêm m?i khóa h?c:
+
+Không phân lo?i (t?c là thi?u subject).
+Mã t? ch?c ph?i ?i?n vào b?ng tay.
+
+
+
+?i?u ch?nh l?i:
+    1- Có phân lo?i (subject).
+    2- Mã t? ch?c t? ??ng ?i?n vào, mã này c?n c? vào mã công ty c?a gi?n viên lúc ??ng ký.
+Thêm m?i th? vi?n:
+ Mã t? ch?c ph?i ?i?n vào b?ng tay.
+
+
+
+Mã t? ch?c t? ??ng ?i?n vào, mã này c?n c? vào mã công ty c?a gi?n viên lúc ??ng ký.
+Trang ??ng ký:
+
+Ch?a có ph?n dành cho doanh nghi?p.
+
+
+Có ph?n dành cho doan nghi?p ??ng ký.
+
