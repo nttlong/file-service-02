@@ -12,6 +12,7 @@ from . import api_apps_get_sso_id
 from . import api_apps_sigin
 from . import api_files_search_content
 from . import api_files_info
+from . import api_file_copy
 from . import api_file_mark_delete
 # from . import api_system_config
 from . import api_apps_register

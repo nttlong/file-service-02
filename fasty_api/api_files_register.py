@@ -117,11 +117,11 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo = Body(emb
     ret.Data = register_new_upload_input.RegisterUploadResult()
     ret.Data.SizeInHumanReadable = ret_upload[docs.Files.SizeInHumanReadable.__name__]
 
-    ret.Data.UrlThumb = f"{fasty.config.app.api_url}/thumb/{ret_upload[docs.Files._id.__name__]}/{ret_upload[docs.Files.FileNameOnly.__name__]}.png"
-    ret.Data.RelUrlThumb = f"thumb/{ret_upload[docs.Files._id.__name__]}/{ret_upload[docs.Files.FileNameOnly.__name__]}.png"
+    ret.Data.UrlThumb = f"{fasty.config.app.api_url}/thumb/{ret_upload[docs.Files._id.__name__]}/{ret_upload[docs.Files.FileNameLower.__name__]}.png"
+    ret.Data.RelUrlThumb = f"api/{app_name}/thumb/{ret_upload[docs.Files._id.__name__]}/{ret_upload[docs.Files.FileNameLower.__name__]}.png"
     ret.Data.ServerFilePath=ret_upload[docs.Files.ServerFileName.__name__]
     ret.Data.UrlOfServerPath =f"{fasty.config.app.api_url}/{app_name}/file/{upload_id}/{ret_upload['FileName']}"
-    ret.Data.RelUrlOfServerPath = f"file/{upload_id}/{ret_upload['FileName']}"
+    ret.Data.RelUrlOfServerPath = f"api/{app_name}/file/{upload_id}/{ret_upload['FileName']}"
     ret.Data.UploadId = ret_upload["_id"]
     ret.Data.ServerFilePath=ret_upload[docs.Files.FullFileName.__name__]
     ret.Data.NumOfChunks = num_of_chunks

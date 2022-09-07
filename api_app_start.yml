@@ -2,21 +2,21 @@
 #Phần khia báo host
 # Cho phép binding web api với local IP và host ra internet
 # là đường dẫn tương đối đến file cấu hình host tính từ vị trí lưu thư mục này
-#host: api_app_config/local/host.yaml
-#host: api_app_config/lv_172_16_9_78/host.yaml
-host: api_app_config/172_16_7_25/host.yaml
+#host: api_app_config/local/host.yml
+#host: api_app_config/lv_172_16_9_78/host.yml
+host: api_app_config/172_16_7_25/host.yml
 # Khai báo kết nối Database
 # là đường dẫn tương đối đến file cấu hình Database tính từ vị trí lưu thư mục này
-#db: api_app_config/local/db.yaml
-db: api_app_config/host_36/db.yaml
+#db: api_app_config/local/db.yml
+db: api_app_config/host_36/db.yml
 # Khai báo cấu hình app
 # là đường dẫn tương đối đến file cấu hình app tính từ vị trí lưu thư mục này
-#app: api_app_config/local/app.yaml
-app: api_app_config/172_16_7_25/app.yaml
+#app: api_app_config/local/app.yml
+app: api_app_config/172_16_7_25/app.yml
 # Khai báo Kafka
-broker:  api_app_config/host_36/kafka.yaml
+broker:  api_app_config/host_36/kafka.yml
 # Cấu hình search engine
-search: api_app_config/host_36/search.yaml
+search: api_app_config/host_36/search.yml
 
 
 log: logs

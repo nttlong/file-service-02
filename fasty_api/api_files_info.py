@@ -9,7 +9,7 @@ import api_models.documents as docs
 from typing import List, Union
 from fastapi import Depends, FastAPI, HTTPException, status
 from ReCompact import db_async
-
+from fastapi import Body
 import fasty.JWT
 
 
@@ -26,6 +26,8 @@ class UploadInfoResult(BaseModel):
     FileExt: Union[str, None] = Field(description="File extension")
     HasThumb: Union[bool, None] = Field(description="If thumb of this upload was generate set true")
     SizeInBytes: Union[int, None] = Field(description="File size")
+    FullUrl: Union[str, None] = Field(description="Full url of content")
+    RelUrl: Union[str, None] = Field(description="Relative url of content")
     UrlThumb: Union[str, None] = Field(description="Full url of thumb")
     RelUrlThumb: Union[str, None] = Field(description="Relative url of thumb")
     HasOCR: Union[bool, None] = Field(description="If ORC of this upload was generate set true")
@@ -39,9 +41,9 @@ class UploadInfoResult(BaseModel):
     VideoInfo: Union[VideoInfoClass, None] = Field(description="Thông tin media")
 
 
-@fasty.api_post("/{app_name}/files/info",response_model=UploadInfoResult)
-async def get_info(app_name: str, UploadId: str, request: Request,
-                            token: str = Depends(fasty.JWT.oauth2_scheme)):
+@fasty.api_post("/{app_name}/files/info", response_model=UploadInfoResult)
+async def get_info(app_name: str, request: Request,
+                   token: str = Depends(fasty.JWT.oauth2_scheme), UploadId: str = Body(embed=True)):
     """
     APi này lay chi tiet thong tin cua Upload
     :param app_name:
@@ -62,22 +64,24 @@ async def get_info(app_name: str, UploadId: str, request: Request,
     ret.SizeInBytes = upload_info.get(docs.Files.SizeInBytes.__name__)
     ret.IsPublic = upload_info.get(docs.Files.IsPublic.__name__)
     ret.Status = upload_info.get(docs.Files.Status.__name__)
-
+    ret.RelUrl = f"api/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}"
+    ret.FullUrl = f"{fasty.config.app.api_url}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}"
+    ret.HasThumb = upload_info.get(docs.Files.ThumbFileId.__name__) is not None
     if ret.HasThumb:
         """
         http://172.16.7.25:8011/api/lv-docs/thumb/c4eade3a-63cb-428d-ac63-34aadd412f00/search.png.png
         """
-        ret.RelUrlThumb=f"{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.png"
-        ret.UrlThumb = f"{fasty.config.app.api_url}/{ret.RelUrlThumb}"
+        ret.RelUrlThumb = f"api/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.png"
+        ret.UrlThumb = f"{fasty.config.app.api_url}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.png"
     if ret.HasOCR:
         """
         http://172.16.7.25:8011/api/lv-docs/file-ocr/cc5728d0-c216-43f9-8475-72e84b6365fd/im-003.pdf
         """
-        ret.RelUrlOCR = f"{app_name}/file-ocr/{ret.UploadId}/{ret.FileName.lower()}.pdf"
-        ret.UrlOCR = f"{fasty.config.app.api_url}/{ret.RelUrlOCR}"
+        ret.RelUrlOCR = f"api/{app_name}/file-ocr/{ret.UploadId}/{ret.FileName.lower()}.pdf"
+        ret.UrlOCR = f"{fasty.config.app.api_url}/{app_name}/file-ocr/{ret.UploadId}/{ret.FileName.lower()}.pdf"
     if upload_info.get(docs.Files.VideoResolutionWidth.__name__):
         ret.VideoInfo = VideoInfoClass()
         ret.VideoInfo.Width = upload_info.get(docs.Files.VideoResolutionWidth.__name__)
         ret.VideoInfo.Height = upload_info.get(docs.Files.VideoResolutionHeight.__name__)
-        ret.VideoInfo.Duration= upload_info.get(docs.Files.VideoDuration.__name__)
+        ret.VideoInfo.Duration = upload_info.get(docs.Files.VideoDuration.__name__)
     return ret

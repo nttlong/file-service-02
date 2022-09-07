@@ -251,7 +251,7 @@ class Config:
             self.logger.handlers.clear()
         self.logger.addHandler(file_handler)
         try:
-            self.path_to_star_yaml = os.path.join(config_dir, "api_app_start.yaml")
+            self.path_to_star_yaml = os.path.join(config_dir, "api_app_start.yml")
             if not os.path.isfile(self.path_to_star_yaml):
                 raise Exception(f"'{self.path_to_star_yaml} was not found")
             self.master_config = self.load_yaml_file(self.path_to_star_yaml)

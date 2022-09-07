@@ -33,8 +33,8 @@ async def mark_delete(app_name: str, UploadId: str = Body(embed=True),IsDelete:b
     bool_body = {
         "bool": {
             "must":
-                {"match": {
-                    "path.virtual": f'/{app_name}/{delete_item.get(Files._id.__name__)}.{delete_item.get(Files.FileExt.__name__)}'}}
+                {"prefix": {
+                    "path.virtual": f'/{app_name}/{delete_item.get(Files._id.__name__)}'}}
         }
     }
     resp = search_engine.get_client().search(index=fasty.config.search.index, query=bool_body)

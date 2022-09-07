@@ -118,6 +118,16 @@ def search_content_of_file(app_name: str, content: str,page_size:int,page_index:
 
 @fasty.api_post("/{app_name}/search")
 async def file_search(request:Request, app_name: str, content: str = Body(embed=True),page_size:Optional[int]=Body(embed=True),page_index:Optional[int]=Body(embed=True), token: str = Depends(fasty.JWT.oauth2_scheme)):
+    """
+    Tim kiem noi dung
+    :param request:
+    :param app_name:
+    :param content:
+    :param page_size:
+    :param page_index:
+    :param token:
+    :return:
+    """
 
     db_name = await fasty.JWT.get_db_name_async(app_name)
     if db_name is None:
