@@ -267,4 +267,7 @@ class DocUploadRegister:
     Field này là file id trỏ đến file pdf, là file pdf sinh ra bằng cách dùng
     libreoffice convert ra pdf 
     """
-
+    MarkDelete = ReCompact.dbm.field(data_type=bool)
+    """
+    Mark delete
+    """

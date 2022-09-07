@@ -1,0 +1,14 @@
+import py_vncorenlp
+
+# Automatically download VnCoreNLP components from the original repository
+# and save them in some local machine folder
+py_vncorenlp.download_model(save_dir=r'C:\data')
+
+# Load the word and sentence segmentation component
+rdrsegmenter = py_vncorenlp.VnCoreNLP(annotators=["wseg"], save_dir='/absolute/path/to/vncorenlp')
+
+text = "Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội. Bà Lan, vợ ông Chúc, cũng làm việc tại đây."
+
+output = rdrsegmenter.word_segment(text)
+
+print(output)

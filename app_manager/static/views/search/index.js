@@ -22,7 +22,9 @@ var searchView = await View(import.meta, class SearchView extends BaseScope {
     async doFullTextSearch() {
        
         this.data = await api.post(`${this.currentAppName}/search`, {
-            content: this.searchContent
+            content: this.searchContent,
+            page_size:1000,
+            page_index:0
         });
         this.$applyAsync();
     }

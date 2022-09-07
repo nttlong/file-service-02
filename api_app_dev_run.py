@@ -1,7 +1,7 @@
 """
 Trường hợp DEv chạy để debug trên môi trường phát triển
 """
-from werkzeug import debug
+#from werkzeug import debug
 
 import fasty
 import pathlib

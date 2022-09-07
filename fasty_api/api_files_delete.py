@@ -5,10 +5,10 @@ from fastapi import Body, Depends, Response
 from api_models.documents import Files
 from ReCompact.db_async import get_db_context
 from fasty.JWT import get_db_name_async, get_oauth2_scheme
-
+import ReCompact.es_search as search_engine
 
 @fasty.api_post("/{app_name}/files/delete")
-async def files_upload(app_name: str, UploadId: str = Body(embed=True), token: str = Depends(get_oauth2_scheme())):
+async def files_delete(app_name: str, UploadId: str = Body(embed=True), token: str = Depends(get_oauth2_scheme())):
     db_name = await  get_db_name_async(app_name)
     if db_name is None:
         return Response(status_code=403)
@@ -23,4 +23,14 @@ async def files_upload(app_name: str, UploadId: str = Body(embed=True), token: s
         gfs.delete(bson.ObjectId(thumb_file_id))
 
     ret = await db_context.delete_one_async(Files, Files._id == UploadId)
+    bool_body = {
+        "bool": {
+            "must":
+                {"match":{"path.virtual": f'/{app_name}/{delete_item.get(Files._id.__name__)}.{delete_item.get(Files.FileExt.__name__)}'}}
+        }
+    }
+    resp = search_engine.get_client().search(index=fasty.config.search.index, query=bool_body)
+    if resp.body.get('hits') and resp.body['hits']['hits'] and resp.body['hits']['hits'].__len__()>0:
+        es_id = resp.body['hits']['hits'][0]['_id']
+        search_engine.get_client().delete(index= fasty.config.search.index,id= es_id)
     return dict()

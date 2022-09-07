@@ -90,7 +90,7 @@
             var fetcher = await fetch(url, {
                 method: 'POST',
                 //mode: 'no-cors', // this is to prevent browser from sending 'OPTIONS' method request first
-                credentials: "include",
+                //credentials: "include",
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
