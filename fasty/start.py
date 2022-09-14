@@ -71,10 +71,12 @@ class config_broker:
                 Nếu có sử dụng kafka thì phải kiểm tra xem thư mục này có tồn tại hay không
                 """
                 if not os.path.isdir(self.share_directory):
-                    raise Exception(f"'{self.share_directory}' was not found\n"
-                                    f"'{self.share_directory}' was use when this system want to send file content to "
-                                    f"broker server "
-                                    f"If thy would not like to use broker server just set enable in '{broker_yaml_path}' is False")
+                    os.makedirs(self.share_directory)
+                    if not os.path.isdir(self.share_directory):
+                        raise Exception(f"'{self.share_directory}' was not found\n"
+                                        f"'{self.share_directory}' was use when this system want to send file content to "
+                                        f"broker server "
+                                        f"If thy would not like to use broker server just set enable in '{broker_yaml_path}' is False")
 
 
 class config_mongo_db:

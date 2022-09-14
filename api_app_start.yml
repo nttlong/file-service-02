@@ -4,19 +4,23 @@
 # là đường dẫn tương đối đến file cấu hình host tính từ vị trí lưu thư mục này
 #host: api_app_config/local/host.yml
 #host: api_app_config/lv_172_16_9_78/host.yml
-host: api_app_config/172_16_7_25/host.yml
+#host: api_app_config/172_16_7_25/host.yml
+host: api_app_config/172_16_13_72/host.yml
 # Khai báo kết nối Database
 # là đường dẫn tương đối đến file cấu hình Database tính từ vị trí lưu thư mục này
 #db: api_app_config/local/db.yml
-db: api_app_config/host_36/db.yml
+#db: api_app_config/host_36/db.yml
+db: api_app_config/172_16_13_72/db.yml
 # Khai báo cấu hình app
 # là đường dẫn tương đối đến file cấu hình app tính từ vị trí lưu thư mục này
 #app: api_app_config/local/app.yml
-app: api_app_config/172_16_7_25/app.yml
+#app: api_app_config/172_16_7_25/app.yml
+app: api_app_config/172_16_13_72/app.yml
 # Khai báo Kafka
-broker:  api_app_config/host_36/kafka.yml
+#broker:  api_app_config/host_36/kafka.yml
+broker:  api_app_config/172_16_13_72/kafka.yml
 # Cấu hình search engine
-search: api_app_config/host_36/search.yml
-
+#search: api_app_config/host_36/search.yml
+search: api_app_config/172_16_13_72/search.yml
 
 log: logs

@@ -1,0 +1,6 @@
+/inside-docker-container/
+/content-processing/
+/ansible/
+/tmp/
+/venv/
+/logs/
