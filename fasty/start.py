@@ -223,8 +223,13 @@ class config_app:
 
 
 import traceback
-
-
+import sys
+def get_arg_value(key,df_v=None):
+    if key in sys.argv:
+        i = sys.argv.index(key)
+        if i + 1 < sys.argv.__len__():
+            return sys.argv[i + 1]
+    return df_v
 class Config:
     def __init__(self, config_dir: str, logger_name, log_dir=None):
         """
@@ -247,6 +252,7 @@ class Config:
         self.logger = logging.getLogger("app")
         self.logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s:%(levelname)s : %(name)s : %(message)s')
+        print(f"Api log file '{self.full_path_to_log}'")
         file_handler = logging.FileHandler(self.full_path_to_log)
         file_handler.setFormatter(formatter)
         if (self.logger.hasHandlers()):
@@ -286,6 +292,10 @@ class Config:
             self.host_dict = self.load_yaml_file(self.host_yalm_path)
             self.db_dict = self.load_yaml_file(self.db_yaml_path)
             self.app_dict = self.load_yaml_file(self.app_yaml_path)
+            api_url = get_arg_value('--api-url')
+            if api_url is not None:
+                self.app_dict['root_url']=f"{api_url}"
+                self.app_dict['api_url']=f"{api_url}/api"
             self.broker_dict = self.load_yaml_file(self.broker_yaml_path)
             self.search_dict = self.load_yaml_file(self.search_yaml_Path)
 

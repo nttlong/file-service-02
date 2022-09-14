@@ -1,5 +1,7 @@
 import datetime
 import os.path
+import pathlib
+
 import ReCompact_Kafka.producer
 from fastapi import  File, Form,Response,Depends
 from pydantic import BaseModel, Field
@@ -100,20 +102,18 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
 
     ret = UploadFilesChunkInfoResult()
     db_name = await fasty.JWT.get_db_name_async(app_name)
-
+    path_to_broker_share = os.path.join(fasty.config.broker.share_directory, db_name)
+    if not os.path.isdir(path_to_broker_share):
+        """
+        Nếu không có thư mục tạo luôn
+        """
+        os.makedirs(path_to_broker_share)
 
     if db_name is None:
         return Response(status_code=403)
-    if fasty.config.broker.enable:
-        """
-        Nếu có sử dụng broker
-        """
-        path_to_broker_share = os.path.join(fasty.config.broker.share_directory, db_name)
-        if not os.path.isdir(path_to_broker_share):
-            """
-            Nếu không có thư mục tạo luôn
-            """
-            os.makedirs(path_to_broker_share)
+
+
+
 
 
 
@@ -138,8 +138,7 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
         ret.Error.Fields=['UploadId']
         ret.Error.Message =f"Upload with '{UploadId}' was not found"
         return ret
-    if fasty.config.broker.enable:
-        path_to_broker_share = os.path.join(path_to_broker_share,f"{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}")
+    path_to_broker_share = os.path.join(path_to_broker_share,f"{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}")
     file_size=upload_item[docs.Files.SizeInBytes.__name__]
     size_uploaded=upload_item.get(docs.Files.SizeUploaded.__name__,0)
     num_of_chunks_complete = upload_item.get(docs.Files.NumOfChunksCompleted.__name__,0)
@@ -156,25 +155,23 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
             file_size=file_size
         )
         ReCompact.db_context.mongodb_file_add_chunks(db_context.db.delegate,fs._id,Index,FilePart)
-        if fasty.config.broker.enable:
+        if not os.path.isfile(path_to_broker_share):
+            with open(path_to_broker_share, "wb") as file:
+                file.write(FilePart)
+        else:
+            with open(path_to_broker_share, "ab") as file:
+                file.write(FilePart)
+
+        main_file_id=fs._id
+    else:
+        def append():
+            ReCompact.db_context.mongodb_file_add_chunks(db_context.db.delegate,main_file_id,Index, FilePart)
             if not os.path.isfile(path_to_broker_share):
                 with open(path_to_broker_share, "wb") as file:
                     file.write(FilePart)
             else:
                 with open(path_to_broker_share, "ab") as file:
                     file.write(FilePart)
-
-        main_file_id=fs._id
-    else:
-        def append():
-            ReCompact.db_context.mongodb_file_add_chunks(db_context.db.delegate,main_file_id,Index, FilePart)
-            if fasty.config.broker.enable:
-                if not os.path.isfile(path_to_broker_share):
-                    with open(path_to_broker_share, "wb") as file:
-                        file.write(FilePart)
-                else:
-                    with open(path_to_broker_share, "ab") as file:
-                        file.write(FilePart)
         th_append=threading.Thread(target=append,args=())
         th_append.start()
         th_append.join()
@@ -209,6 +206,11 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
             """
             Để bảo đảm tốc độ việc gời 1 thông điệp đến Kafka cần phải thông qua 1 tiến trình
             """
+        else:
+            p_path=f"{db_name}.{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}"
+            p_path = os.path.join(fasty.config.broker.share_directory, p_path)
+            with open(p_path,"a") as f:
+                f.write(".")
     def save_to_db():
 
         db_context.update_one(

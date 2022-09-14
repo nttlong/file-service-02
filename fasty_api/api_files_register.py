@@ -75,7 +75,7 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo = Body(emb
     db_context = get_db_context(db_name)
     _, file_extension = os.path.splitext(Data.FileName)
     mime_type, _ = mimetypes.guess_type(Data.FileName)
-    reg_now = datetime.datetime.now()
+    reg_now = datetime.datetime.utcnow()
     chunk_size = Data.ChunkSizeInKB * 1024
     num_of_chunks, remain = divmod(Data.FileSize, chunk_size)
     if remain > 0:

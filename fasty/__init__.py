@@ -26,6 +26,7 @@ import sys
 app = None
 config:start.Config=None
 def load_config(app_path,app_name):
+    print(f"{__name__}.load_config({app_path},{app_name})")
     global config
 
     config = start.Config(app_path,app_name)
@@ -47,6 +48,10 @@ def install_fastapi_app(module_name:str):
     )
     app.middleware('http')(catch_exceptions_middleware)
     setattr(sys.modules[module_name],"app",app)
+    if config is None:
+        import fasty
+        import pathlib
+        fasty.load_config(str(pathlib.Path(__file__).parent.parent), "uvicorn.error")
     config.app.static=config.app.static.replace('/',os.sep)
 
     app.mount("/static", StaticFiles(directory=config.app.static), name="static")

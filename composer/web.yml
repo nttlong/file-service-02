@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: ./..
+      dockerfile: ./composer/web-dockerfile
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+
+
+    command: python3 /app/api_app_dev_run.py --port 8000 --api-url http://${HOST_IP}:${API_PORT}
+#    command: uvicorn test_apps:app --host 0.0.0.0 --reload
+#    command: ls /app
+#    command: python3 /app/dev_run.py
+#    volumes:
+#      - .:/app
+    ports:
+      - ${API_PORT}:8000
+
+#    command: ls ./.. # list all root folders
+#    command: mkdir /app/tmp/yes_ok #check can docker access to tmp

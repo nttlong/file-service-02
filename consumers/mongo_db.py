@@ -1,5 +1,5 @@
 import pymongo.database
-
+from  consumers import config
 
 def get_db(app_name) -> pymongo.database.Database:
     """
@@ -8,7 +8,7 @@ def get_db(app_name) -> pymongo.database.Database:
     :return:
     """
     import ReCompact.db_context
-    import config
+    # import config
     db= None
     if config.mongo_db_config.get("replicaSet"):
         db = ReCompact.db_context.get_db_connection(
