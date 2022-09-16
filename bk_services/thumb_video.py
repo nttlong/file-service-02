@@ -13,7 +13,7 @@ import mimetypes
 import ReCompact.thumbnal
 from moviepy.editor import *
 
-from bk_services.watchers import start, Info
+from bk_services.watchers import start, Info,start_thead
 from bk_services import mongodb as mongo_db
 path = config.watch_path
 working_folder_name = pathlib.Path(__file__).stem
@@ -78,4 +78,4 @@ def handler(info: Info):
         print(info.full_path)
 
 
-start(path, handler)
+start_thead(path, handler)

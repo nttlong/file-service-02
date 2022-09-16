@@ -10,7 +10,7 @@ host: api_app_config/172_16_13_72/host.yml
 # là đường dẫn tương đối đến file cấu hình Database tính từ vị trí lưu thư mục này
 #db: api_app_config/local/config.yml
 #db: api_app_config/host_36/config.yml
-db: api_app_config/172_16_13_72/config.yml
+db: api_app_config/172_16_13_72/db.yml
 # Khai báo cấu hình app
 # là đường dẫn tương đối đến file cấu hình app tính từ vị trí lưu thư mục này
 #app: api_app_config/local/app.yml

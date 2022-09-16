@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  build-mage:
+    image: lv-file
+    build:
+      context: ./..
+      dockerfile: ./composer/web-dockerfile
+  web:
+    image: lv-file
+    container_name: lv-file-web
+    hostname: web
+
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+
+    command: python3 /app/api_app_dev_run.py --port 8000 --api-url http://${HOST_IP}:${API_PORT}
+    ports:
+      - ${API_PORT}:8000
+  thumb-video:
+    image: lv-file
+    container_name: lv-file--services
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+    command: python3 /app/bk_services/thumb_video.py

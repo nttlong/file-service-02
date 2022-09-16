@@ -73,3 +73,8 @@ def start(watch_path, handler):
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
+
+def start_thead(watch_path, handler):
+    th=threading.Thread(target=start,args=(watch_path,handler,))
+    th.start()
+    # th.join()

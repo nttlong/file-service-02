@@ -1,7 +1,11 @@
 version: '3.7'
 
 services:
+
   web:
+    image: web
+    container_name: web
+    hostname: web
     build:
       context: ./..
       dockerfile: ./composer/web-dockerfile
@@ -18,6 +22,17 @@ services:
 #      - .:/app
     ports:
       - ${API_PORT}:8000
-
+#  thumb-video:
+#    image: bk-services
+#    container_name: bk-services
+#    build:
+#      context: ./..
+#      dockerfile: ./composer/thumb-video-dockerfile
+#    volumes:
+#      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
+#      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+#
+#
+#    command: python3 /app/bk_services/thumb_video.py
 #    command: ls ./.. # list all root folders
 #    command: mkdir /app/tmp/yes_ok #check can docker access to tmp
