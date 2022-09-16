@@ -1,5 +1,5 @@
 FROM python:3.8-slim
-#RUN apt-get update
+
 #RUN apt-get install -y libopencv-dev python3-opencv
 WORKDIR /app
 #RUN /usr/local/bin/python -m pip install --upgrade pip

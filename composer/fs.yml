@@ -1,16 +1,15 @@
 version: '3.7'
 services:
   fs-crawler:
-    image : dadoonet/fscrawler:noocr
+    image : fs-watcher
     container_name: fscrawler
-    restart: always
-    volumes:
-      - ${PATH_LOCAL_DIR_IN_HOST}/fs/usr:/usr/share
-    command: >
-      bash -c " 
-              cd .. &&
-              cd .. &&
-              cd .. &&
-              ls usr/share/fscrawler
-              "
-              
+#    restart: always
+    build:
+      context: ./..
+      dockerfile: ./composer/fs-dockerfile
+#    volumes:
+#      - ${PATH_LOCAL_DIR_IN_HOST}/fs/usr:/usr/share
+#    command: python3 /app/py_fs_crawler/run_service.py
+    command: /usr/share/fscrawler/bin/fscrawler
+
+
