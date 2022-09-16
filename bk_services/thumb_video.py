@@ -1,19 +1,24 @@
-import config
+import pathlib
+import sys
+sys.path.append(str(pathlib.Path(__file__).parent))
+sys.path.append(str(pathlib.Path(__file__).parent.parent))
+from bk_services import config
 from datetime import datetime
 
 import api_models.Model_Files
 import os.path
-import pathlib
-import sys
+
+
 import mimetypes
 import ReCompact.thumbnal
 from moviepy.editor import *
-sys.path.append(str(pathlib.Path(__file__).parent.parent))
+
 from bk_services.watchers import start, Info
 from bk_services import mongodb as mongo_db
 path = config.watch_path
 working_folder_name = pathlib.Path(__file__).stem
 working_path = os.path.join(pathlib.Path(__file__).parent,working_folder_name)
+sys.path.append(working_path)
 if not os.path.isdir(working_path):
     os.makedirs(working_path)
 

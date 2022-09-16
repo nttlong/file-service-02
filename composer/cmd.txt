@@ -8,34 +8,5 @@ docker rm $(docker ps -aq)
 docker rmi $(docker images -q)
 docker volume rm $(docker volume ls)
 docker system prune -a
-docker compose -f kafka.yml up -d
-docker compose -f mongodb.yml up -d
-docker compose -f pg.yml up -d
-sysctl -w vm.max_map_count=262144
-docker compose -f es.yml up -d
-docker compose -f fscrawler.yml up -d
-docker compose -f web.yml build
-
-docker compose -f web.yml up -d
-
-#----------simplest boost------
-#---- Warning: preview .env carefully, before deploy
-docker compose -f es.yml up -d
-docker compose -f kafka.yml up -d
-docker compose -f mongodb.yml up -d
-#----------- from source code to container-----------------
-#------------ Warning: preview congif.yml carefully, brefore deploy below
-docker compose -f web.yml build
-docker compose -f consumer-upload.yml build
-docker compose -f consumer-files-create-thumb.yml build
-docker compose -f consumer-files-video-create-thumb.yml build
-
-docker compose -f consumer-files-office-create-thumb.yml build
-
-docker compose -f web.yml up -d
-docker compose -f consumer-upload.yml up -d
-docker compose -f consumer-files-create-thumb.yml up -d
-docker compose -f consumer-files-video-create-thumb.yml up -d
-docker compose -f consumer-files-office-create-thumb.yml up -d
-#----------simplest boost finish------
-#----------good luck and fun ------
+sudo docker compose -f web.yml up -d
+sudo docker compose -f thumb-video.yml up -d

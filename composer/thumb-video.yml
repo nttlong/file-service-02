@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  web:
+  thumb-video:
     build:
       context: ./..
       dockerfile: ./composer/thumb-video-dockerfile
@@ -10,14 +10,15 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
 
 
-    command: python3 /app/api_app_dev_run.py --port 8000 --api-url http://${HOST_IP}:${API_PORT}
+    command: python3 /app/bk_services/thumb_video.py
+
 #    command: uvicorn test_apps:app --host 0.0.0.0 --reload
 #    command: ls /app
 #    command: python3 /app/dev_run.py
 #    volumes:
 #      - .:/app
-    ports:
-      - ${API_PORT}:8000
+#    ports:
+#      - ${API_PORT}:8000
 
 #    command: ls ./.. # list all root folders
 #    command: mkdir /app/tmp/yes_ok #check can docker access to tmp

@@ -6,5 +6,5 @@ db:
   authSource: 'lv-docs'
   replicaSet: ''
   authMechanism: SCRAM-SHA-1
-watch-path-: app/tmp
-watch-path: /home/vmadmin/python/file-service-02/map/web-api/tmp-file-upload
+watch-path: /app/tmp
+watch-path-: /home/vmadmin/python/file-service-02/map/web-api/tmp-file-upload
