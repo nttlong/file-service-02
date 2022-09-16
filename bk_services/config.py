@@ -4,6 +4,7 @@ import sys
 import pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.parent.absolute()))
 sys.path.append(str(pathlib.Path(__file__).parent.parent.parent.absolute()))
+watch_path = ''
 import os
 is_debug = True
 kafka_broker = ["192.168.18.36:9092"]
@@ -47,7 +48,7 @@ tmp_dir_ocr =r"\\192.168.18.36\Share\DjangoWeb\ocr"
 
 import os
 import yaml
-path_to_db_yml_file = os.path.join(working_dir,"db.yml")
+path_to_db_yml_file = os.path.join(working_dir, "config.yml")
 
 mongo_db_config = dict(
 
@@ -62,8 +63,12 @@ mongo_db_config = dict(
 )
 with open(path_to_db_yml_file, 'r') as stream:
     try:
-        mongo_db_config=yaml.safe_load(stream)
-        print(mongo_db_config)
+        config=yaml.safe_load(stream)
+        mongo_db_config=config.get('db')
+        watch_path =config.get('watch-path')
+        if not os.path.isdir(watch_path):
+            raise Exception(f"{watch_path} was not found")
+        print(config)
     except yaml.YAMLError as exc:
         print(exc)
 lang_processing = [
