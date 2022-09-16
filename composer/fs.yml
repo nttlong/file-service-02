@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  fs-crawler:
+    image : dadoonet/fscrawler:noocr
+    container_name: fscrawler
+    restart: always
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/usr:/usr/share
+    command: >
+      bash -c " 
+              cd .. &&
+              cd .. &&
+              cd .. &&
+              ls usr/share/fscrawler
+              "
+              
