@@ -35,3 +35,19 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
     command: python3 /app/bk_services/thumb_image.py
+  thumb-office:
+    image: lv-file
+    container_name: thumb-office
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+    command: python3 /app/bk_services/thumb_office.py
+  thumb-pdf:
+    image: lv-file
+    container_name: thumb-pdf
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+
+
+    command: python3 /app/bk_services/thumb_pdf.py
