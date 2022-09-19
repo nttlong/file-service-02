@@ -2,6 +2,8 @@ FROM dadoonet/fscrawler:noocr
 #RUN echo 'fscrawler'
 RUN apt-get update
 RUN apt-get install -y python3
+RUN apt-get update
+RUN apt-get install nano
 RUN ls
 #RUN apt-get install -y libopencv-dev python3-opencv
 

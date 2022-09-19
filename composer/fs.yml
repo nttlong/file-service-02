@@ -10,6 +10,17 @@ services:
 #    volumes:
 #      - ${PATH_LOCAL_DIR_IN_HOST}/fs/usr:/usr/share
 #    command: python3 /app/py_fs_crawler/run_service.py
-    command: /usr/share/fscrawler/bin/fscrawler
+    command: >
+             bash -c '
+             sed -i "s/{FS_CRAWLER_INDEX}/${FS_CRAWLER_INDEX}/g"  /app/py_fs_crawler/fs_config/_settings.yaml &&
+             sed  -i "s/{ES_URL}/http\:\/\/${ES_URL}/g" /app/py_fs_crawler/fs_config/_settings.yaml &&  
+             /usr/share/fscrawler/bin/fscrawler /app/py_fs_crawler/fs_config'
+
+#    command: /usr/share/fscrawler/bin/fscrawler /app/py_fs_crawler/fs_config
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/fs-logs:/usr/share/fscrawler/logs
+
+
 
 
