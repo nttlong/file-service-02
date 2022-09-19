@@ -60,14 +60,18 @@ def start(watch_path, handler):
     logs_file = os.path.join(watch_path, "data.txt")
     files = __all_files__(watch_path)
     def thread_running(h,d):
+
         th=threading.Thread(target=h,args=(d,))
         th.start()
     for f in files:
-        info = Info()
-        info.rel_path = os.path.relpath(f, watch_path)
-        info.full_path = f
-        info.root_path = watch_path
-        thread_running(handler,info)
+        try:
+            info = Info()
+            info.rel_path = os.path.relpath(f, watch_path)
+            info.full_path = f
+            info.root_path = watch_path
+            thread_running(handler,info)
+        except Exception as e:
+            print(e)
 
 
 

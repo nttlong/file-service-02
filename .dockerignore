@@ -5,3 +5,8 @@
 /venv/
 /logs/
 /map/
+/bk_services/thumb_image/
+/bk_services/LibreOfficeTempProfiles/
+/bk_services/thumb_office/
+/bk_services/thumb_pdf/
+/bk_services/thumb_video/
