@@ -8,7 +8,7 @@ services:
     hostname: web
     build:
       context: ./..
-      dockerfile: ./composer/web-dockerfile
+      dockerfile: ./composer/files-dockerfile
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs

@@ -8,5 +8,3 @@ docker rm $(docker ps -aq)
 docker rmi $(docker images -q)
 docker volume rm $(docker volume ls)
 docker system prune -a
-sudo docker compose -f web.yml up -d
-sudo docker compose -f thumb-video.yml up -d

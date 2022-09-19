@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+
+  thumb-image:
+    build:
+      context: ./..
+#      dockerfile: ./composer/files-dockerfile
+      dockerfile: ./composer/thumb-image-dockerfile
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+
+
+    command: python3 /app/bk_services/thumb_image.py
+    container_name: lv-file-thumb-image
+
