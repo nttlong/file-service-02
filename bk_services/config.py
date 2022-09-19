@@ -64,6 +64,10 @@ mongo_db_config = dict(
 with open(path_to_db_yml_file, 'r') as stream:
     try:
         config=yaml.safe_load(stream)
+        if config.get('libre-office-path') is not None:
+            if not os.path.isfile(config.get('libre-office-path')):
+                raise Exception(f"{config.get('libre-office-path')} was not found")
+        libre_office_path=config.get('libre-office-path')
         mongo_db_config=config.get('db')
         watch_path =config.get('watch-path')
         if not os.path.isdir(watch_path):

@@ -4,7 +4,7 @@ services:
   thumb-video:
     build:
       context: ./..
-      dockerfile: ./composer/files-dockerfile
+      dockerfile: ./composer/full-source-dockerfile
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
