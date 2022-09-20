@@ -2,7 +2,7 @@
 name: "{FS_CRAWLER_INDEX}"
 fs:
   url: /app/fs-docs
-  update_rate: "2s"
+  update_rate: "30s"
   excludes:
   - "*/~*"
   json_support: false

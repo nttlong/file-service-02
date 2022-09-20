@@ -6,8 +6,8 @@ db:
   authSource: 'lv-docs'
   replicaSet: ''
   authMechanism: SCRAM-SHA-1
-watch-path: /app/tmp
-watch-path-: /home/vmadmin/python/file-service-02/map/web-api/tmp-file-upload
-fs-docs-: /home/vmadmin/python/file-service-02/map/fs/share-docs
-fs-docs: /app/fs-docs
+watch-path: /app/tmp #docker
+watch-path-: /home/vmadmin/python/file-service-02/map/web-api/tmp-file-upload # khong docker
+fs-docs-: /home/vmadmin/python/file-service-02/map/fs/share-docs #kg docker
+fs-docs: /app/fs-docs #docker
 libre-office-path: /usr/bin/soffice

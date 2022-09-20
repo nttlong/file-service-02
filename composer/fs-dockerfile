@@ -5,6 +5,7 @@ RUN apt-get update
 RUN apt-get update
 RUN apt-get install nano
 RUN ls
-#RUN apt-get install -y libopencv-dev python3-opencv
+RUN apt-get install -y libopencv-dev python3-opencv
+RUN apt-get install -y tesseract-ocr
 
 COPY ./py_fs_crawler /app/py_fs_crawler

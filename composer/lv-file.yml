@@ -70,12 +70,20 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/fs-logs:/usr/share/fscrawler/logs
 
   files-es-index-all-office-files:
-    build:
-      context: ./..
-      dockerfile: ./composer/full-source-dockerfile
+    image: lv-file
     container_name: files-es-index-all-office-files
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/fs_es_index.py
+
+  ocr-image:
+    image: lv-file
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
+
+    command: python3 /app/bk_services/ocr_image.py
+    container_name: ocr-image

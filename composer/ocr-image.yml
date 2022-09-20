@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
 
-  thumb-image:
+  ocr-image:
     build:
       context: ./..
 #      dockerfile: ./composer/files-dockerfile
@@ -12,6 +12,6 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
 
-    command: python3 /app/bk_services/thumb_office.py
-    container_name: lv-file-thumb-office
+    command: python3 /app/bk_services/ocr_image.py
+    container_name: ocr-image
 

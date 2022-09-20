@@ -4,7 +4,12 @@ RUN  apt-get update
 RUN apt-get -y install libreoffice
 RUN apt-get update  --fix-missing
 RUN apt-get -y install libreoffice
-#RUN apt-get install -y libopencv-dev python3-opencv
+RUN apt-get update  --fix-missing
+RUN apt-get -y install ghostscript
+RUN apt-get update  --fix-missing
+RUN apt-get install -y tesseract-ocr
+RUN apt-get update  --fix-missing
+RUN apt-get install -y libopencv-dev python3-opencv
 WORKDIR /app
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
