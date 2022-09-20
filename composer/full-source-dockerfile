@@ -9,6 +9,8 @@ RUN apt-get -y install ghostscript
 RUN apt-get update  --fix-missing
 RUN apt-get install -y tesseract-ocr
 RUN apt-get update  --fix-missing
+RUN apt-get install tesseract-ocr-vie
+RUN apt-get update  --fix-missing
 RUN apt-get install -y libopencv-dev python3-opencv
 WORKDIR /app
 
