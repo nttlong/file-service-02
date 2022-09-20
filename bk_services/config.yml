@@ -8,4 +8,6 @@ db:
   authMechanism: SCRAM-SHA-1
 watch-path: /app/tmp
 watch-path-: /home/vmadmin/python/file-service-02/map/web-api/tmp-file-upload
+fs-docs-: /home/vmadmin/python/file-service-02/map/fs/share-docs
+fs-docs: /app/fs-docs
 libre-office-path: /usr/bin/soffice

@@ -27,6 +27,7 @@ services:
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/thumb_video.py
   thumb-image:
     image: lv-file
@@ -34,6 +35,7 @@ services:
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/thumb_image.py
   thumb-office:
     image: lv-file
@@ -41,6 +43,7 @@ services:
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/thumb_office.py
   thumb-pdf:
     image: lv-file
@@ -48,6 +51,31 @@ services:
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
-
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
 
     command: python3 /app/bk_services/thumb_pdf.py
+  fs-crawler:
+    image: fs-crawler
+    container_name: fs-crawler
+    build:
+      context: ./..
+      dockerfile: ./composer/fs-dockerfile
+    command: >
+      bash -c '
+      sed -i "s/{FS_CRAWLER_INDEX}/${FS_CRAWLER_INDEX}/g"  /app/py_fs_crawler/fs_config/_settings.yaml &&
+      sed  -i "s/{ES_URL}/http\:\/\/${ES_URL}/g" /app/py_fs_crawler/fs_config/_settings.yaml &&  
+      /usr/share/fscrawler/bin/fscrawler /app/py_fs_crawler/fs_config'
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/fs-logs:/usr/share/fscrawler/logs
+
+  files-es-index-all-office-files:
+    build:
+      context: ./..
+      dockerfile: ./composer/full-source-dockerfile
+    container_name: files-es-index-all-office-files
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
+    command: python3 /app/bk_services/fs_es_index.py

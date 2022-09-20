@@ -15,6 +15,7 @@ office_extension += ".ODT;.CSV;.DB;.DOC;.DOCX;.DOTX;.FODP;.FODS;.FODT;.MML" \
                     ";.PPTX;.PSW;.SDA;.SDC;.SDD;.SDP;.SDW;.SLK;.SMF;.STC" \
                     ";.STD;.STI;.STW;.SXC;.SXG;.SXI;.SXM;.UOF;.UOP;.UOS;.UOT" \
                     ";.VSD;.VSDX;.WDB;.WPS;.WRI;.XLS;.XLSX".lower().split(';.')
+office_extension +=";txt;jsx;ts".split(';')
 temp_thumbs = r"\\192.168.18.36\Share\DjangoWeb\temp_thumb"  # Thư mục tạm để xử lý ảnh thumbs
 
 poppler_path = r"C:\dj-apps\jd-apps\poppler-0.68.0\bin"
@@ -70,8 +71,11 @@ with open(path_to_db_yml_file, 'r') as stream:
         libre_office_path=config.get('libre-office-path')
         mongo_db_config=config.get('db')
         watch_path =config.get('watch-path')
+        fs_crawler_path=config.get('fs-docs')
         if not os.path.isdir(watch_path):
             raise Exception(f"{watch_path} was not found")
+        if not os.path.isdir(fs_crawler_path):
+            raise Exception(f"{fs_crawler_path} was not found (share folder for fscrawlwer)")
         print(config)
     except yaml.YAMLError as exc:
         print(exc)
