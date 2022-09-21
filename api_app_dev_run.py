@@ -30,11 +30,19 @@ print(str(port))
 
 
 if __name__ == "__main__":
+
     uvicorn.run(
         "api_app:app",
         host=fasty.config.host.binding.ip,
-        port=port
-        # workers=2,
+        port=port,
+        workers=1,
+        ws='websockets',
+        ws_max_size=16777216*1024,
+        backlog=1000,
+        # interface='WSGI',
+        timeout_keep_alive=True,
+        lifespan='on'
+
         # debug=False,
         # reload=False,
 

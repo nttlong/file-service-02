@@ -18,7 +18,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
     command: python3 /app/api_app_dev_run.py --port 8000 --api-url http://${HOST_IP}:${API_PORT}
-    restart: always
+
     ports:
       - ${API_PORT}:8000
   thumb-video:
