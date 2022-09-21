@@ -33,9 +33,9 @@ if __name__ == "__main__":
     uvicorn.run(
         "api_app:app",
         host=fasty.config.host.binding.ip,
-        port=port,
-        workers=2,
-        debug=True,
-        reload=True,
+        port=port
+        # workers=2,
+        # debug=False,
+        # reload=False,
 
     )

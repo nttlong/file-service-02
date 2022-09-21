@@ -1,0 +1,35 @@
+
+volumes:
+  tmp_upload_v5:
+     external: true
+services:
+#  build-mage:
+#    image: lv-file
+#    build:
+#      context: ./..
+#      dockerfile: ./composer/files-dockerfile
+  build-web-mage:
+    image: lv-file-web-api
+    build:
+      context: ./..
+      dockerfile: ./composer/web-dockerfile
+  web:
+    image: lv-file-web-api
+    container_name: lv-file-web
+    hostname: web
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+#      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
+    command: python3 /app/api_app_dev_run.py --port 8000 --api-url http://${HOST_IP}:${API_PORT}
+    restart: always
+    ports:
+      - ${API_PORT}:8000
+#  thumb-video:
+#    image: lv-file
+#    container_name: thumb-video
+#    volumes:
+#      - tmp_upload_v5:/app/tmp
+#      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+#      - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
+#    command: python3 /app/bk_services/thumb_video.py

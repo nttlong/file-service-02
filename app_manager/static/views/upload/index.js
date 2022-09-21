@@ -11,7 +11,13 @@ var uploadFileView = await View(import.meta, class UploadFileView extends BaseSc
     }
     async doUploadFile() {
 
-        
+        var delay=(t)=>{
+            return new Promise((r,x)=>{
+                setTimeout(()=>{
+                    r()
+                },t);
+            })
+        };
         var file = this.$elements.find("#file")[0];
         if (file.files.length == 0) {
             msgError(this.$res("Please select file"));
@@ -23,7 +29,7 @@ var uploadFileView = await View(import.meta, class UploadFileView extends BaseSc
                 Data: {
                     FileName: fileUpload.name,
                     FileSize: fileUpload.size,
-                    ChunkSizeInKB: 1024 * 3,
+                    ChunkSizeInKB: 1024 * 10,
                     IsPublic: this.data.IsPublic||false
                 }
             });
@@ -46,6 +52,7 @@ var uploadFileView = await View(import.meta, class UploadFileView extends BaseSc
                         Index: i,
                         FilePart: filePart
                     }, true);
+                    await delay(10)
                     if (chunk.Error) {
                         msgError(chunk.Error.message)
                         return

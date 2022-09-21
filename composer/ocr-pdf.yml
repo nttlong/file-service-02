@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+
+  ocr-pdf:
+    build:
+      context: ./..
+#      dockerfile: ./composer/files-dockerfile
+      dockerfile: ./composer/full-source-dockerfile
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-file-upload/:/app/tmp
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
+
+    command: python3 /app/bk_services/ocr_pdf.py
+    container_name: ocr-pdf
+

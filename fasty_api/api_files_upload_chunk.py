@@ -1,7 +1,7 @@
 import datetime
 import os.path
 import pathlib
-
+import gc
 import ReCompact_Kafka.producer
 from fastapi import  File, Form,Response,Depends
 from pydantic import BaseModel, Field
@@ -110,6 +110,7 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
         os.makedirs(path_to_broker_share)
 
     if db_name is None:
+        gc.collect()
         return Response(status_code=403)
 
 
@@ -137,6 +138,7 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
         ret.Error.Code=db_error_type.DATA_NOT_FOUND
         ret.Error.Fields=['UploadId']
         ret.Error.Message =f"Upload with '{UploadId}' was not found"
+        gc.collect()
         return ret
     path_to_broker_share = os.path.join(path_to_broker_share,f"{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}")
     file_size=upload_item[docs.Files.SizeInBytes.__name__]
@@ -164,17 +166,13 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
 
         main_file_id=fs._id
     else:
-        def append():
-            ReCompact.db_context.mongodb_file_add_chunks(db_context.db.delegate,main_file_id,Index, FilePart)
-            if not os.path.isfile(path_to_broker_share):
-                with open(path_to_broker_share, "wb") as file:
-                    file.write(FilePart)
-            else:
-                with open(path_to_broker_share, "ab") as file:
-                    file.write(FilePart)
-        th_append=threading.Thread(target=append,args=())
-        th_append.start()
-        th_append.join()
+        ReCompact.db_context.mongodb_file_add_chunks(db_context.db.delegate, main_file_id, Index, FilePart)
+        if not os.path.isfile(path_to_broker_share):
+            with open(path_to_broker_share, "wb") as file:
+                file.write(FilePart)
+        else:
+            with open(path_to_broker_share, "ab") as file:
+                file.write(FilePart)
     size_uploaded +=len(FilePart)
     ret.Data=UploadChunkResult()
     ret.Data.Percent=round((size_uploaded*100)/file_size,2)
@@ -211,24 +209,20 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
             p_path = os.path.join(fasty.config.broker.share_directory, p_path)
             with open(p_path,"a") as f:
                 f.write(".")
-    def save_to_db():
+    db_context.update_one(
+        docs.Files,
+        docs.Files._id == UploadId,
+        docs.Files.SizeUploaded == size_uploaded,
+        docs.Files.NumOfChunksCompleted == num_of_chunks_complete,
+        docs.Files.Status == status,
+        docs.Files.MainFileId == main_file_id
 
-        db_context.update_one(
-            docs.Files,
-            docs.Files._id==UploadId,
-            docs.Files.SizeUploaded==size_uploaded,
-            docs.Files.NumOfChunksCompleted==num_of_chunks_complete,
-            docs.Files.Status==status,
-            docs.Files.MainFileId==main_file_id
-
-        )
-    th= threading.Thread(target=save_to_db,args=())
-    th.start()
-    th.join()
+    )
     upload_item[docs.Files.SizeUploaded.__name__] = size_uploaded
     upload_item[docs.Files.NumOfChunksCompleted.__name__] = num_of_chunks_complete
     upload_item[docs.Files.Status.__name__] = status
     upload_item[docs.Files.MainFileId.__name__] = main_file_id
+    gc.collect()
     return ret
 #
 #
