@@ -25,7 +25,11 @@ import ReCompact.db_async
 import sys
 app = None
 config:start.Config=None
+
+
+
 def load_config(app_path,app_name):
+
     print(f"{__name__}.load_config({app_path},{app_name})")
     global config
 

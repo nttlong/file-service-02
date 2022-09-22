@@ -7,7 +7,14 @@ __logger__ = None
 
 class config_search:
     def __init__(self, config_dir: str, yaml_path, data: dict):
-        self.nodes = data.get("nodes")
+        if self.is_load_from_os():
+            self.nodes =[]
+            for x in os.getenv('file_server_es_url').split(','):
+                if x!='':
+                    self.nodes+=[x]
+
+        else:
+            self.nodes = data.get("nodes")
         if self.nodes is None:
             raise Exception(f"'nodes' was not found in '{yaml_path}'")
         if not isinstance(self.nodes,list):
@@ -21,6 +28,9 @@ class config_search:
             self.nodes,
             self.index
         )
+
+    def is_load_from_os(self):
+        return os.getenv('file_server_use_os_config') is not None
 
 
 class config_broker:
@@ -118,6 +128,7 @@ class config_mongo_db:
         ret += f"@{host}/?authSource={self.authSource}"
         if self.replicaSet != "" and self.replicaSet is not None:
             ret += f"&replicaSet={self.replicaSet}"
+        print(f"db is '{ret}'")
         return ret
 
     def __repr__(self):
@@ -210,16 +221,25 @@ class config_app:
         """
         Bô render template
         """
-        self.root_url = data.get('root_url', None)
+        if self.is_load_from_os():
+            self.root_url = os.getenv('file_server_root_url')
+        else:
+            self.root_url = data.get('root_url', None)
         if self.root_url is None:
             raise Exception(f"'root_url' was not found in '{self.path_to_yaml_file}'")
-        self.api_url = data.get('api_url', None)
+        if self.is_load_from_os():
+            self.api_url = os.getenv('file_server_api_url')
+        else:
+            self.api_url = data.get('api_url', None)
         if self.api_url is None:
             raise Exception(f"'api_url' was not found in '{self.path_to_yaml_file}'")
         jwt_data = data.get("jwt", None)
         if jwt_data is None:
             raise Exception(f"'jwt' was not found in f'{self.path_to_yaml_file}'")
         self.jwt = config_app_jwt(self.path_to_yaml_file, jwt_data)
+
+    def is_load_from_os(self):
+        return os.getenv('file_server_use_os_config') is not None
 
 
 import traceback
@@ -268,11 +288,9 @@ class Config:
                 raise Exception(f"'host' point to host config file was not found in '{self.host_yalm_path}'")
             if not os.path.isabs(self.host_yalm_path):
                 self.host_yalm_path = os.path.join(self.config_dir, self.host_yalm_path).replace('/', os.sep)
-            self.db_yaml_path = self.master_config.get("db", None)
-            if not self.db_yaml_path:
-                raise Exception(f"'db' point to database config file was not found in '{self.host_yalm_path}'")
-            if not os.path.isabs(self.db_yaml_path):
-                self.db_yaml_path = os.path.join(self.config_dir, self.db_yaml_path).replace('/', os.sep)
+
+
+
             self.app_yaml_path = self.master_config.get("app", None)
             if not self.app_yaml_path:
                 raise Exception(f"'app' point to application config file was not found in '{self.host_yalm_path}'")
@@ -290,7 +308,15 @@ class Config:
                 self.search_yaml_Path = os.path.join(self.config_dir, self.search_yaml_Path).replace('/', os.sep)
 
             self.host_dict = self.load_yaml_file(self.host_yalm_path)
-            self.db_dict = self.load_yaml_file(self.db_yaml_path)
+            if self.is_from_os_env():
+                self.db_dict = self.load_db_config_from_os()
+            else:
+                self.db_yaml_path = self.master_config.get("db", None)
+                if not self.db_yaml_path:
+                    raise Exception(f"'db' point to database config file was not found in '{self.host_yalm_path}'")
+                if not os.path.isabs(self.db_yaml_path):
+                    self.db_yaml_path = os.path.join(self.config_dir, self.db_yaml_path).replace('/', os.sep)
+                self.db_dict = self.load_yaml_file(self.db_yaml_path)
             self.app_dict = self.load_yaml_file(self.app_yaml_path)
             api_url = get_arg_value('--api-url')
             if api_url is not None:
@@ -304,10 +330,13 @@ class Config:
             """
             Host config info
             """
-            if self.host_dict.get('binding', None) is None:
-                raise Exception(f'binding was not found in "{self.host_yalm_path}"')
-            if not isinstance(self.host_dict.get('binding'), dict):
-                raise Exception(f'binding in "{self.host_yalm_path}" must have ip attribute and port attribute')
+            if self.is_from_os_env():
+                self.host_dict =self.load_host_binding_config_from_os()
+            else:
+                if self.host_dict.get('binding', None) is None:
+                    raise Exception(f'binding was not found in "{self.host_yalm_path}"')
+                if not isinstance(self.host_dict.get('binding'), dict):
+                    raise Exception(f'binding in "{self.host_yalm_path}" must have ip attribute and port attribute')
 
             self.host.binding.ip = self.host_dict["binding"].get("ip", None)
             self.host.binding.port = self.host_dict["binding"].get("port", None)
@@ -317,6 +346,8 @@ class Config:
             if self.host.binding.port is None:
                 raise Exception(f'port attribute in binding of "{self.host_yalm_path}" was not found')
             self.mongodb_connection_string = ""
+
+            self.db_yaml_path=''
             self.db = config_mongo_db(self.db_yaml_path, self.db_dict)
             self.app = config_app(self.config_dir, self.app_yaml_path, self.app_dict)
             self.broker = config_broker(self.config_dir, self.broker_yaml_path, self.broker_dict)
@@ -347,3 +378,37 @@ class Config:
         if not ret:
             ret = {}
         return ret
+
+    def is_from_os_env(self):
+        return os.getenv('file_server_use_os_config') is not None
+
+    def load_db_config_from_os(self):
+        db_host = os.getenv('file_server_db_host')
+        db_port = os.getenv('file_server_db_port')
+        db_auth_source = os.getenv('file_server_db_auth_source')
+        db_replica_set = os.getenv('file_server_db_replica_set')
+        db_password = os.getenv('file_server_db_password')
+        db_username = os.getenv('file_server_db_username')
+        return dict(
+            host= db_host,
+            port= int(db_port),
+            username = db_username,
+            password=db_password,
+            authSource=db_auth_source,
+            replicaSet=db_replica_set,
+            authMechanism= "SCRAM-SHA-1"
+        )
+
+    def load_host_binding_config_from_os(self):
+        """
+        export file_server_bind_port ='8011'
+        export file_server_bind_ip ='0.0.0.0'
+        :return:
+        """
+        return dict(
+            binding=dict(
+                ip=os.environ.get('file_server_bind_ip','0.0.0.0'),
+                port=int(os.getenv('file_server_bind_port'))
+            )
+        )
+

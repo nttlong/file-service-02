@@ -1,6 +1,7 @@
 """
 Quản lý JWT
 """
+from fasty import config
 from typing import Any, Dict, List, Optional, Union
 from fastapi.exceptions import HTTPException
 from fastapi.openapi.models import OAuth2 as OAuth2Model
@@ -60,7 +61,7 @@ class TokenData(BaseModel):
 
 
 def get_token_url():
-    from . import config
+
     __api_host_dir__ = config.app.api
     if __api_host_dir__ is None:
         raise Exception("Please call fasty.JWT.set_api_host_dir at start application")
