@@ -1,0 +1,89 @@
+# Enables the pods in a deployment to be accessible from outside the cluster
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: file-services-api-svc
+  namespace: fs-svc
+spec:
+  selector:
+    app: file-services-api
+
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+
+---
+# kf-api Deployment
+# Defines the deployment of the app running in a pod on any worker node
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-services-api
+  namespace: fs-svc
+  labels:
+    app: file-services-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: file-services-api
+  template:
+    metadata:
+      labels:
+        app: file-services-api
+    spec:
+      containers:
+        - args:
+            - gunicorn
+            - -w
+            - "4"
+            - --worker-class
+            - uvicorn.workers.UvicornWorker
+            - api_app:app
+            - --bind
+            - 0.0.0.0:8080
+          env:
+            - name: file_server_api_url
+              value: http://:/api
+            - name: file_server_bind_ip
+              value: 0.0.0.0
+            - name: file_server_bind_port
+              value: "80"
+            - name: file_server_db_auth_source
+              value: lv-docs
+            - name: file_server_db_host
+              value: 192.168.18.36
+            - name: file_server_db_password
+              value: "123456"
+            - name: file_server_db_port
+              value: "27018"
+            - name: file_server_db_replica_set
+            - name: file_server_db_username
+              value: admin-doc
+            - name: file_server_es_url
+              value: '''http://,'''
+            - name: file_server_root_url
+              value: 'http://:'
+            - name: file_server_use_os_config
+              value: '''true'''
+          image: lv-file:latest
+          name: lv-file-web
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources: { }
+
+#      containers:
+#        - name: container-file-services-api
+#          image: lv-file
+#          ports:
+#            - containerPort: 8080
+#          imagePullPolicy: Always
+#          resources:
+#            # You must specify requests for CPU to autoscale
+#            # based on CPU utilization
+#            requests:
+#              cpu: "250m"

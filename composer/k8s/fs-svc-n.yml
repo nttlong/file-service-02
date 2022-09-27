@@ -1,0 +1,8 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: fs-svc
+  labels:
+    name: fs-svc
+
+

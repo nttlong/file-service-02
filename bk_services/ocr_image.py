@@ -76,7 +76,8 @@ def handler(info: Info):
         ret = ocrmypdf.api.ocr(
             input_file=temp_pdf_file,
             output_file=temp_orc_file,
-            progress_bar=False
+            progress_bar=False,
+            language="vie+eng",
         )
         if os.path.isfile(temp_orc_file):
             fs = ReCompact.db_context.create_mongodb_fs_from_file(
