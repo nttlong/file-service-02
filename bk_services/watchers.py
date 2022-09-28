@@ -41,6 +41,8 @@ class Watcher(LoggingEventHandler):
 
 
 def __all_files__(p):
+    if not os.path.isdir(p):
+        os.makedirs(p)
     ret = []
     dirs=list(os.walk(p))
     dirpath, dirnames, filenames = dirs[0]

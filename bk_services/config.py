@@ -72,10 +72,10 @@ with open(path_to_db_yml_file, 'r') as stream:
         mongo_db_config=config.get('db')
         watch_path =config.get('watch-path')
         fs_crawler_path=config.get('fs-docs')
-        if not os.path.isdir(watch_path):
-            raise Exception(f"{watch_path} was not found")
-        if not os.path.isdir(fs_crawler_path):
-            raise Exception(f"{fs_crawler_path} was not found (share folder for fscrawlwer)")
+        # if not os.path.isdir(watch_path):
+        #     raise Exception(f"{watch_path} was not found")
+        # if not os.path.isdir(fs_crawler_path):
+        #     raise Exception(f"{fs_crawler_path} was not found (share folder for fscrawlwer)")
         print(config)
     except yaml.YAMLError as exc:
         print(exc)

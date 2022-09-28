@@ -1,0 +1,59 @@
+# Enables the pods in a deployment to be accessible from outside the cluster
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: test
+  namespace: fs-svc
+spec:
+  selector:
+    app: test
+
+  ports:
+    - protocol: "TCP"
+      port: 8082
+      targetPort: 8082
+  type: LoadBalancer
+
+---
+# kf-api Deployment
+# Defines the deployment of the app running in a pod on any worker node
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+  namespace: fs-svc
+  labels:
+    app: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+        - args:
+            - python3
+            - /app/hello.py
+
+          image: 10.0.2.1:5000/local/test:latest
+          name: test
+          imagePullPolicy: Always
+
+          resources: { }
+
+#      containers:
+#        - name: container-file-services-api
+#          image: lv-file
+#          ports:
+#            - containerPort: 8080
+#          imagePullPolicy: Always
+#          resources:
+#            # You must specify requests for CPU to autoscale
+#            # based on CPU utilization
+#            requests:
+#              cpu: "250m"

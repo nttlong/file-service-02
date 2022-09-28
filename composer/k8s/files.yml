@@ -13,6 +13,7 @@ spec:
     - protocol: "TCP"
       port: 8080
       targetPort: 8080
+      namespace: fs-svc
   type: LoadBalancer
 
 ---
@@ -47,7 +48,7 @@ spec:
             - 0.0.0.0:8080
           env:
             - name: file_server_api_url
-              value: http://:/api
+              value: http://172.16.7.240:8080/api
             - name: file_server_bind_ip
               value: 0.0.0.0
             - name: file_server_bind_port
@@ -64,17 +65,22 @@ spec:
             - name: file_server_db_username
               value: admin-doc
             - name: file_server_es_url
-              value: '''http://,'''
+              value: '''http://192.168.18.36:9200,'''
             - name: file_server_root_url
-              value: 'http://:'
+              value: 'http://172.16.7.240:8080'
             - name: file_server_use_os_config
               value: '''true'''
-          image: lv-file:latest
+          image: nttlong/lv-file:latest
           name: lv-file-web
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
           resources: { }
+          volumeMounts:
+            - mountPath: /app/tmp
+              name: file-api-tem-upload-volume
+            - mountPath: /app/fs-docs
+              name: ocr-pdf-claim1
 
 #      containers:
 #        - name: container-file-services-api

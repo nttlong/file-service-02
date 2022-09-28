@@ -1,0 +1,16 @@
+        # Process fs crawler
+        - args:
+            - bash
+            - -c
+            - ' cp /app/py_fs_crawler/fs_config/_settings_template.yaml /app/py_fs_crawler/fs_config/_settings.yaml sed -i "s/{FS_CRAWLER_INDEX}//g"  /app/py_fs_crawler/fs_config/_settings.yaml && sed  -i "s/{ES_URL}/http\:\/\//g" /app/py_fs_crawler/fs_config/_settings.yaml && /usr/share/fscrawler/bin/fscrawler /app/py_fs_crawler/fs_config'
+
+          image: nttlong/fscrawler
+          name: file-services-fs-crawler
+          imagePullPolicy: Always
+
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs

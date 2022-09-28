@@ -1,0 +1,19 @@
+#Full file service including:
+# 1- Web API and Web app for documentation of storage
+# 2- Video Process Thumb
+version: '3.7'
+
+services:
+  fs-crawler:
+    image: nttlong/fscrawler
+    container_name: fs-crawler
+    command: >
+      bash -c '
+      sed -i "s/{FS_CRAWLER_INDEX}/lv-files-server-v2/g"  /app/py_fs_crawler/fs_config/_settings.yaml &&
+      sed  -i "s/{ES_URL}/http\:\/\/192.168.18.36/g" /app/py_fs_crawler/fs_config/_settings.yaml &&
+      /usr/share/fscrawler/bin/fscrawler /app/py_fs_crawler/fs_config'
+    volumes:
+      - /nttlong/test/tmp-upload/:/app/tmp
+      - /nttlong/test/fs/share-docs:/app/fs-docs
+      - /nttlong/test/fs/fs-logs:/usr/share/fscrawler/logs
+
