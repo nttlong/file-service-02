@@ -15,6 +15,7 @@ from api_models.documents import Files
 from ReCompact import db_async
 from fastapi.responses import StreamingResponse
 import os
+from fasty import mime_data
 import mimetypes
 import fasty.mongo_fs_http_streaming
 from fastapi import Depends, status
@@ -113,12 +114,13 @@ async def get_content_of_files(app_name: str, directory: str, request: Request,
         if fsg is None:
             return Response(status_code=401)
         content_type, _ = mimetypes.guess_type(directory)
+        print(f"content type={content_type}")
         if content_type is None:
             content_type='application/octet-stream'
 
         res = await fasty.mongo_fs_http_streaming.streaming(fsg, request, content_type)
         fsg.close()
-        # res.headers.append("Cache-Control","max-age=86400")
+        res.headers.append("Cache-Control","max-age=86400")
         return res
     except Exception as e:
         raise e

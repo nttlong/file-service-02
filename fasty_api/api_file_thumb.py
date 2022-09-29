@@ -15,6 +15,7 @@ from api_models.documents import Files
 from ReCompact import db_async
 from fastapi.responses import StreamingResponse
 import os
+from fasty import mime_data
 import mimetypes
 import fasty.mongo_fs_http_streaming
 fasty.app.get("test/ping-server")
@@ -37,6 +38,7 @@ async def get_thumb_of_files(app_name: str, directory: str, request: Request):
         content_type, _ = mimetypes.guess_type(directory)
         res= await fasty.mongo_fs_http_streaming.streaming(fsg,request,content_type)
         fsg.close()
+        res.headers.append("Cache-Control", "max-age=86400")
         return res
     else:
         return Response(status_code=401,content=f"'{directory}' in '{app_name} was not found")

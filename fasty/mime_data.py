@@ -372,5 +372,23 @@ mime_data[".xtp"]="application/octet-stream"
 mime_data[".xwd"]="image/x-xwindowdump"
 mime_data[".z"]="application/x-compress"
 mime_data[".zip"]="application/x-zip-compressed"
+#------------------audio-------------------------
+mime_data[".weba"]="audio/webm"
+
+#----Image ---------------------------------
+mime_data[".webp"]="image/webp"
+mime_data[".avif"]="image/avif"
 
 mimetypes.types_map = {**mime_data,**mimetypes.types_map}
+__old__=mimetypes.guess_type
+def __new__fn__(url, strict=True):
+    import os
+    a,b= __old__(url,strict)
+    if a is None:
+        x= os.path.splitext(url)[1]
+        a = mime_data.get(x)
+        if a is None:
+            a = r'application/octet-stream'
+    return a,b
+
+mimetypes.guess_type=__new__fn__

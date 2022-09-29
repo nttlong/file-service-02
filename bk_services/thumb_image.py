@@ -8,7 +8,7 @@ from datetime import datetime
 from PIL import Image
 import api_models.Model_Files
 import os.path
-
+from fasty import mime_data
 
 import mimetypes
 import ReCompact.thumbnal
@@ -58,7 +58,7 @@ def handler(info: Info):
         thumb_dir = os.path.join(temp_thumb, app_name)
         if not os.path.isdir(thumb_dir):
             os.makedirs(thumb_dir)
-        thumb_file_path = os.path.join(thumb_dir, upload_id + ".png")
+        thumb_file_path = os.path.join(thumb_dir, upload_id + ".webp")
         if w <= thumb_width and h <= thumb_height:
             shutil.copy(file_path,thumb_file_path)
         else:
@@ -69,7 +69,7 @@ def handler(info: Info):
             if not os.path.isdir(thumb_dir):
                 os.makedirs(thumb_dir)
             image.thumbnail((nh, nw))
-            image.save(thumb_file_path)
+            image.save(thumb_file_path,format="WEBP")
             image.close()
 
         #

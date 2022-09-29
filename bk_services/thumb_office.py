@@ -10,7 +10,7 @@ from datetime import datetime
 from PIL import Image
 import api_models.Model_Files
 import os.path
-
+from fasty import mime_data
 import mimetypes
 import ReCompact.thumbnal
 from moviepy.editor import *
