@@ -35,7 +35,7 @@ services:
       - file_server_bind_ip=0.0.0.0
       - file_server_root_url=http://${HOST_IP}:${API_PORT}
       - file_server_api_url=http://${HOST_IP}:${API_PORT}/api
-      - file_server_es_url='http://${ES_URL},'
+      - file_server_es_url=http://${ES_URL},
   thumb-video:
     image: lv-file
     container_name: thumb-video
@@ -74,7 +74,7 @@ services:
       dockerfile: ./composer/fs-dockerfile
     command: >
       bash -c '
-      cp /app/py_fs_crawler/fs_config/_settings_template.yaml /app/py_fs_crawler/fs_config/_settings.yaml
+      
       sed -i "s/{FS_CRAWLER_INDEX}/${FS_CRAWLER_INDEX}/g"  /app/py_fs_crawler/fs_config/_settings.yaml &&
       sed  -i "s/{ES_URL}/http\:\/\/${ES_URL}/g" /app/py_fs_crawler/fs_config/_settings.yaml &&
       /usr/share/fscrawler/bin/fscrawler /app/py_fs_crawler/fs_config'
