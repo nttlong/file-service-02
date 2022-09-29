@@ -1,20 +1,11 @@
-FROM --platform=linux/amd64 python:3.8-slim
-
-RUN apt-get update  --fix-missing
-RUN apt-get -y install ghostscript
-RUN apt-get update  --fix-missing
-RUN apt-get install -y tesseract-ocr
-RUN apt-get update  --fix-missing
-RUN apt-get install tesseract-ocr-vie
+FROM dadoonet/fscrawler:noocr
+#RUN echo 'fscrawler'
+RUN apt-get update
+#RUN apt-get install -y python3
+RUN apt-get update
+RUN apt-get install nano
+RUN ls
 RUN apt-get install -y libopencv-dev python3-opencv
-RUN  apt-get update --fix-missing
+RUN apt-get install -y tesseract-ocr
 
-RUN apt-get -y install libreoffice
-WORKDIR /app
-
-RUN /usr/local/bin/python -m pip install --upgrade pip
-COPY requirements.txt ./
-RUN pip3 install -r requirements.txt
-
-COPY . /app
-
+COPY ./py_fs_crawler /app/py_fs_crawler
