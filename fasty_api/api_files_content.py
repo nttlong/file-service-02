@@ -113,6 +113,8 @@ async def get_content_of_files(app_name: str, directory: str, request: Request,
         if fsg is None:
             return Response(status_code=401)
         content_type, _ = mimetypes.guess_type(directory)
+        if content_type is None:
+            content_type='application/octet-stream'
 
         res = await fasty.mongo_fs_http_streaming.streaming(fsg, request, content_type)
         fsg.close()

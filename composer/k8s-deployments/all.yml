@@ -21,13 +21,13 @@ spec:
 #      localPort: 9000
   ports:
     - protocol: "TCP"
-      port: 8011
+      port: 80
       targetPort: 8080
       name: file-services-api
-      nodePort: 30000
-#  type: LoadBalancer
-  type: NodePort
-#  loadBalancerIP: 172.16.7.248
+#      nodePort: 30000
+  type: LoadBalancer
+#  type: NodePort
+  loadBalancerIP: 172.16.7.242
 ---
 # kf-api Deployment
 # Defines the deployment of the app running in a pod on any worker node
@@ -60,7 +60,7 @@ spec:
             - 0.0.0.0:8080
           env:
             - name: file_server_api_url
-              value: http://172.16.7.92:30000/api
+              value: http://172.16.7.242/api
             - name: file_server_bind_ip
               value: 0.0.0.0
             - name: file_server_bind_port
@@ -79,7 +79,7 @@ spec:
             - name: file_server_es_url
               value: 'http://192.168.18.36:9200,'
             - name: file_server_root_url
-              value: http://172.16.7.92:30000
+              value: http://172.16.7.242
             - name: file_server_use_os_config
               value: '''true'''
           image: nttlong/lv-file:v1
@@ -202,13 +202,34 @@ spec:
               mountPath: /app/tmp
             - name: fs-docs
               mountPath: /app/fs-docs
+        #fs crawler
+        - args:
+            - bash
+            - -c
+            - ' sed -i "s/{FS_CRAWLER_INDEX}/lv-files-server-v2/g"  /app/py_fs_crawler/fs_config/_settings.yaml && sed  -i "s/{ES_URL}/http\:\/\/192.168.18.36:9200/g" /app/py_fs_crawler/fs_config/_settings.yaml && /usr/share/fscrawler/bin/fscrawler /app/py_fs_crawler/fs_config'
+
+          image: nttlong/fscrawler
+          name: file-services-fs-crawler
+          imagePullPolicy: Always
+
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs
+            - name: fs-logs
+              mountPath: /usr/share/fscrawler/logs
       volumes:
        - name: tmp-upload
          hostPath: # hostPath volume
-           path: /file-api # folder of woker node
+           path: /file-api # folder of worker node
        - name: fs-docs
          hostPath: # hostPath volume
-           path: /fs-docs # folder of woker node
+           path: /fs-docs # folder of worker node
        - name: api-logs
          hostPath:
-            path: /api_logs
+           path: /api_logs
+       - name: fs-logs
+         hostPath:
+           path: /fs-logs
