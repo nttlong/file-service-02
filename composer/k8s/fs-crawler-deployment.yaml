@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+spec:
+  replicas: 1
+  selector:
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      containers:
+        - args:
+            - bash
+            - -c
+            - ' cp /app/py_fs_crawler/fs_config/_settings_template.yaml /app/py_fs_crawler/fs_config/_settings.yaml sed -i "s/{FS_CRAWLER_INDEX}//g"  /app/py_fs_crawler/fs_config/_settings.yaml && sed  -i "s/{ES_URL}/http\:\/\//g" /app/py_fs_crawler/fs_config/_settings.yaml && /usr/share/fscrawler/bin/fscrawler /app/py_fs_crawler/fs_config'
+          image: fs-crawler
+          name: fs-crawler
+          resources: {}
+          volumeMounts:
+            - mountPath: /app/tmp
+              name: fs-crawler-claim0
+            - mountPath: /app/fs-docs
+              name: fs-crawler-claim1
+            - mountPath: /usr/share/fscrawler/logs
+              name: fs-crawler-claim2
+      restartPolicy: Always
+      volumes:
+        - name: fs-crawler-claim0
+          persistentVolumeClaim:
+            claimName: fs-crawler-claim0
+        - name: fs-crawler-claim1
+          persistentVolumeClaim:
+            claimName: fs-crawler-claim1
+        - name: fs-crawler-claim2
+          persistentVolumeClaim:
+            claimName: fs-crawler-claim2
+status: {}
