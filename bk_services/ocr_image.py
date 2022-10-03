@@ -2,10 +2,15 @@ import sys
 import pathlib
 sys.path.append(str(pathlib.Path(__file__).parent))
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-from bk_services.fs_logs import get_logger
+from jarior import loggers
+from jarior import client
+from jarior.client import Context
 
 
-logger = get_logger(str(pathlib.Path(__file__).stem))
+logger = loggers.get_logger(
+        logger_name=str(pathlib.Path(__file__).stem),
+        logger_dir=str(pathlib.Path(__file__).parent)
+    )
 try:
     import shutil
 
@@ -23,7 +28,7 @@ try:
     import ReCompact.thumbnal
     from moviepy.editor import *
 
-    from bk_services.watchers import start, Info,start_thead
+
     from bk_services import mongodb as mongo_db
     path = config.watch_path
     working_folder_name = pathlib.Path(__file__).stem
@@ -53,19 +58,20 @@ try:
         return temp_pdf_file
 
 
-    def handler(info: Info):
+    def handler(context: Context):
         global temp_pdf_dir
         global logger
         try:
-
-            a, b = mimetypes.guess_type(info.full_path)
-            logger.info(info.full_path)
+            full_file_path =context.files[0]
+            a, b = mimetypes.guess_type(full_file_path)
+            logger.info(full_file_path)
             if 'image/' in a:
 
-                file_name = pathlib.Path(info.rel_path).name
-                app_name,file_name_only,ext = tuple(file_name.split('.'))
+                file_name = pathlib.Path(full_file_path).name
+                app_name = context.info.get('app_name')
+                file_name_only,ext = tuple(file_name.split('.'))
                 upload_id= file_name_only
-                real_file_path = os.path.join(info.root_path,app_name,f"{file_name_only}.{ext}")
+                real_file_path = full_file_path
                 db = mongo_db.get_db(app_name)
                 upload_info = ReCompact.dbm.DbObjects.find_one_to_dict(
                     db,
@@ -115,11 +121,15 @@ try:
             logger.debug(e)
 
 
-    if "no-proces" not in sys.argv:
-        start_thead(path, handler, logger)
-        logger.info(f"{__file__} start. should start with no-process")
-    else:
-        start(path, handler, logger)
-        logger.info(f"{__file__} start with process")
+    client.config(
+        msg_folder="./tmp/msg",
+        logger=logger
+    )
+    th = client.watch(
+        msg_type="processing",
+        handler=handler,
+
+    )
+    th.join()
 except Exception as e:
     logger.debug(e)

@@ -2,8 +2,11 @@ import pathlib
 import sys
 sys.path.append(str(pathlib.Path(__file__).parent))
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-from bk_services.fs_logs import get_logger
-logger = get_logger(str(pathlib.Path(__file__).stem))
+
+logger = loggers.get_logger(
+        logger_name=str(pathlib.Path(__file__).stem),
+        logger_dir=str(pathlib.Path(__file__).parent)
+    )
 try:
     from bk_services import config
     from datetime import datetime
@@ -26,10 +29,7 @@ try:
     sys.path.append(working_path)
     if not os.path.isdir(working_path):
         os.makedirs(working_path)
-    logger = loggers.get_logger(
-        logger_name=str(pathlib.Path(__file__).stem),
-        logger_dir=str(pathlib.Path(__file__).parent)
-    )
+
     def handler(context: Context):
         try:
             full_file_path = context.files[0]
