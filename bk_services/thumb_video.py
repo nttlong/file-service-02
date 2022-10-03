@@ -1,6 +1,6 @@
 import pathlib
 import sys
-from builtins import function
+from jarior import loggers
 
 sys.path.append(str(pathlib.Path(__file__).parent))
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
