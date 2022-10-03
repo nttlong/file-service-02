@@ -2,7 +2,7 @@
 import quicky
 
 import mimetypes
-from flask import Flask
+
 from quicky.config import Config
 import pathlib
 import sys

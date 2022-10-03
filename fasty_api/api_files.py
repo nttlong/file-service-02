@@ -119,7 +119,7 @@ async def get_list_of_files(app_name: str, filter: api_files_schema.Filter, requ
         x["UrlOfServerPath"] = url+f"/{app_name}/file/{x[docs.Files.FullFileName.__name__]}"
         x["AppName"]=app_name
         x["RelUrlOfServerPath"] = f"/{app_name}/file/{x[docs.Files.FullFileName.__name__]}"
-        x["ThumbUrl"]= url+f"/{app_name}/thumb/{x['UploadId']}/{x[docs.Files.FileName.__name__]}.png"
+        x["ThumbUrl"]= url+f"/{app_name}/thumb/{x['UploadId']}/{x[docs.Files.FileName.__name__]}.webp"
         if x.get("Media") and x["Media"].get("Duration"):
             x["DurationHumanReadable"]=strftime("%H:%M:%S", gmtime(x["Media"]["Duration"]))
         if x.get(docs.Files.OCRFileId.__name__):

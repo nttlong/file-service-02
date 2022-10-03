@@ -18,9 +18,21 @@ import os
 from fasty import mime_data
 import mimetypes
 import fasty.mongo_fs_http_streaming
+import threading
 fasty.app.get("test/ping-server")
-async  def test():
-    return dict(Ok="OK")
+__cache__ ={}
+__lock__ = threading.Lock()
+def get_from_cahe(id:str)->dict:
+    global __cache__
+    return __cache__.get(id.lower())
+def set_to_cache(id,data):
+    global __lock__
+    global __cache__
+    try:
+        __lock__.acquire()
+        __cache__[id.lower()]=data
+    finally:
+        __lock__.release()
 @fasty.api_get("/{app_name}/thumb/{directory:path}")
 async def get_thumb_of_files(app_name: str, directory: str, request: Request):
     """
@@ -31,8 +43,11 @@ async def get_thumb_of_files(app_name: str, directory: str, request: Request):
     CHUNK_SIZE = 1024 * 1024
     cntx = db_async.get_db_context(app_name)
     upload_id=directory.split('/')[0]
-    file_info = await cntx.find_one_async(Files, Files._id == upload_id)
+    file_info = get_from_cahe(directory)
+    if file_info is None:
+        file_info = await cntx.find_one_async(Files, Files._id == upload_id)
     if file_info:
+        set_to_cache(directory, file_info)
         thumb_fs_id = file_info.get(Files.ThumbFileId.__name__,None)
         fsg = await cntx.get_file_by_id(thumb_fs_id)
         content_type, _ = mimetypes.guess_type(directory)

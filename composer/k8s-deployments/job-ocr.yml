@@ -1,0 +1,76 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: fs-job-ocr
+  labels:
+    name: fs-job-ocr
+---
+
+# kf-api Deployment
+# Defines the deployment of the app running in a pod on any worker node
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: file-services-ocr-pdf-pdf-job
+  namespace: fs-job-ocr
+
+spec:
+
+  template:
+    spec:
+
+      containers:
+#       #  ocr image
+#        - args:
+#            - python3
+#            - /app/bk_services/ocr_image.py
+#
+#          image: nttlong/lv-file:b2
+#          name: file-services-ocr-image
+#          imagePullPolicy: Always
+#
+#          resources: { }
+#          volumeMounts:
+#            - name: tmp-upload
+#              mountPath: /app/tmp
+#            - name: fs-docs
+#              mountPath: /app/fs-docs
+#            - name: bk-logs
+#              mountPath: /app/logs
+        # Pdf
+        - args:
+            - bash
+            - c
+            - 'python3 /app/bk_services/ocr_pdf.py no-process'
+          image: nttlong/lv-file:b3
+          name: file-services-ocr-pdf
+          imagePullPolicy: Always
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs
+            - name: bk-logs
+              mountPath: /app/logs
+
+      volumes:
+        - name: tmp-upload
+          hostPath: # hostPath volume
+            path: /file-api # folder of worker node
+        - name: fs-docs
+          hostPath: # hostPath volume
+            path: /fs-docs # folder of worker node
+        - name: api-logs
+          hostPath:
+            path: /api_logs
+        - name: fs-logs
+          hostPath:
+            path: /fs-logs
+        - name: bk-logs
+          hostPath:
+            path: /lv_file_bk_services
+
+
+      restartPolicy: Never
+  backoffLimit: 1

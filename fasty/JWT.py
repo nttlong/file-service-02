@@ -1,6 +1,8 @@
 """
 Quản lý JWT
 """
+import threading
+
 from fasty import config
 from typing import Any, Dict, List, Optional, Union
 from fastapi.exceptions import HTTPException
@@ -453,16 +455,23 @@ async def authenticate_user_async(app_name, username: str, password: str):
 
 def authenticate_user(app_name, username: str, password: str):
     return sync(authenticate_user_async(app_name, username, password))
-
-
+__cache_app_info__ ={}
+__lock_cache_app_info__ =threading.Lock()
+__cache_db_name__ = {}
+__lock_cache_db_name__ = threading.Lock()
 async def get_db_name_async(app_name):
+    global __cache_db_name__
     global __default_db__
+    global __lock_cache_db_name__
     if __default_db__ is None:
         raise Exception("Please call fasty.JWT.set_default_db when start application")
     import fasty
     if app_name == "admin":
         return __default_db__
     else:
+        ret = __cache_db_name__.get(app_name)
+        if ret is not None:
+            return ret
         import api_models.documents
         import ReCompact.db_async
         dbctx = ReCompact.db_async.get_db_context(__default_db__)
@@ -470,6 +479,9 @@ async def get_db_name_async(app_name):
         if ret is None:
             return ret
         else:
+            __lock_cache_db_name__.acquire()
+            __cache_db_name__[app_name]=app_name
+            __lock_cache_db_name__.release()
             return app_name
 
 
@@ -481,8 +493,15 @@ async def get_app_info_async(app_name):
     if app_name == "admin":
         return __default_db__
     else:
+        ret= __cache_app_info__.get(app_name)
+        if ret is not None:
+            return ret
+
         import api_models.documents
         import ReCompact.db_async
         dbctx = ReCompact.db_async.get_db_context(__default_db__)
         ret = await dbctx.find_one_async(api_models.documents.Apps, api_models.documents.Apps.Name == app_name.lower())
+        __lock_cache_app_info__.acquire()
+        __cache_app_info__[app_name]=ret
+        __lock_cache_app_info__.release()
         return ret

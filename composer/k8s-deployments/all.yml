@@ -29,8 +29,7 @@ spec:
 #  type: NodePort
   loadBalancerIP: 172.16.7.242
 ---
-# kf-api Deployment
-# Defines the deployment of the app running in a pod on any worker node
+# Deploy web api
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -82,7 +81,7 @@ spec:
               value: http://172.16.7.242
             - name: file_server_use_os_config
               value: '''true'''
-          image: nttlong/lv-file:v1
+          image: nttlong/lv-file:b4
           name: file-services-api
           imagePullPolicy: Always
           ports:
@@ -96,130 +95,7 @@ spec:
           - name: api-logs
             mountPath: /app/logs
 
-        # process thumb video container
-        - args:
-            - python3
-            - /app/bk_services/thumb_video.py
 
-          image: nttlong/lv-file:v1
-          name: file-services-thumb-video
-          imagePullPolicy: Always
-
-          resources: { }
-          volumeMounts:
-            - name: tmp-upload
-              mountPath: /app/tmp
-            - name: fs-docs
-              mountPath: /app/fs-docs
-
-        # Process thumb image container
-        - args:
-            - python3
-            - /app/bk_services/thumb_image.py
-
-          image: nttlong/lv-file:v1
-          name: file-services-thumb-image
-          imagePullPolicy: Always
-
-          resources: { }
-          volumeMounts:
-            - name: tmp-upload
-              mountPath: /app/tmp
-            - name: fs-docs
-              mountPath: /app/fs-docs
-        # Process thumb office container
-        - args:
-            - python3
-            - /app/bk_services/thumb_office.py
-
-          image: nttlong/lv-file:v1
-          name: file-services-thumb-office
-          imagePullPolicy: Always
-
-          resources: { }
-          volumeMounts:
-            - name: tmp-upload
-              mountPath: /app/tmp
-            - name: fs-docs
-              mountPath: /app/fs-docs
-        # Process thumb pdf container
-        - args:
-            - python3
-            - /app/bk_services/thumb_pdf.py
-
-          image: nttlong/lv-file:v1
-          name: file-services-thumb-pdf
-          imagePullPolicy: Always
-
-          resources: { }
-          volumeMounts:
-            - name: tmp-upload
-              mountPath: /app/tmp
-            - name: fs-docs
-              mountPath: /app/fs-docs
-        # Process ocr pdf container
-        - args:
-            - python3
-            - /app/bk_services/ocr_pdf.py
-
-          image: nttlong/lv-file:v1
-          name: file-services-ocr-pdf
-          imagePullPolicy: Always
-
-          resources: { }
-          volumeMounts:
-            - name: tmp-upload
-              mountPath: /app/tmp
-            - name: fs-docs
-              mountPath: /app/fs-docs
-        # Process ocr image container
-        - args:
-            - python3
-            - /app/bk_services/ocr_image.py
-
-          image: nttlong/lv-file:v1
-          name: file-services-ocr-image
-          imagePullPolicy: Always
-
-          resources: { }
-          volumeMounts:
-            - name: tmp-upload
-              mountPath: /app/tmp
-            - name: fs-docs
-              mountPath: /app/fs-docs
-        # Process Elastic Search Index container
-        - args:
-            - python3
-            - /app/bk_services/fs_es_index.py
-
-          image: nttlong/lv-file:v1
-          name: file-services-elastic-search
-          imagePullPolicy: Always
-
-          resources: { }
-          volumeMounts:
-            - name: tmp-upload
-              mountPath: /app/tmp
-            - name: fs-docs
-              mountPath: /app/fs-docs
-        #fs crawler
-        - args:
-            - bash
-            - -c
-            - ' sed -i "s/{FS_CRAWLER_INDEX}/lv-files-server-v2/g"  /app/py_fs_crawler/fs_config/_settings.yaml && sed  -i "s/{ES_URL}/http\:\/\/192.168.18.36:9200/g" /app/py_fs_crawler/fs_config/_settings.yaml && /usr/share/fscrawler/bin/fscrawler /app/py_fs_crawler/fs_config'
-
-          image: nttlong/fscrawler
-          name: file-services-fs-crawler
-          imagePullPolicy: Always
-
-          resources: { }
-          volumeMounts:
-            - name: tmp-upload
-              mountPath: /app/tmp
-            - name: fs-docs
-              mountPath: /app/fs-docs
-            - name: fs-logs
-              mountPath: /usr/share/fscrawler/logs
       volumes:
        - name: tmp-upload
          hostPath: # hostPath volume
@@ -233,3 +109,379 @@ spec:
        - name: fs-logs
          hostPath:
            path: /fs-logs
+       - name: bk-logs
+         hostPath:
+           path: /fs_process_logs
+
+
+---
+# image thumb process
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: file-services-thumb-image
+  namespace: fs-svc
+spec:
+  template:
+    spec:
+      containers:
+      # Process thumb image container
+        - args:
+            - python3
+            - /app/bk_services/thumb_image.py
+
+          image: nttlong/lv-file:b4
+          name: file-services-thumb-image
+          imagePullPolicy: Always
+
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs
+            - name: bk-logs
+              mountPath: /app/logs
+      volumes:
+        - name: tmp-upload
+          hostPath: # hostPath volume
+            path: /file-api # folder of worker node
+        - name: fs-docs
+          hostPath: # hostPath volume
+            path: /fs-docs # folder of worker node
+        - name: api-logs
+          hostPath:
+            path: /api_logs
+        - name: fs-logs
+          hostPath:
+            path: /fs-logs
+        - name: bk-logs
+          hostPath:
+            path: /lv_file_bk_services
+      restartPolicy: Never
+  backoffLimit: 4
+---
+# video thumb process
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: file-services-thumb-video
+  namespace: fs-svc
+spec:
+  template:
+    spec:
+      containers:
+
+        - args:
+            - python3
+            - /app/bk_services/thumb_video.py
+
+          image: nttlong/lv-file:b4
+          name: file-services-thumb-video
+          imagePullPolicy: Always
+
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs
+            - name: bk-logs
+              mountPath: /app/logs
+      volumes:
+        - name: tmp-upload
+          hostPath: # hostPath volume
+            path: /file-api # folder of worker node
+        - name: fs-docs
+          hostPath: # hostPath volume
+            path: /fs-docs # folder of worker node
+        - name: api-logs
+          hostPath:
+            path: /api_logs
+        - name: fs-logs
+          hostPath:
+            path: /fs-logs
+        - name: bk-logs
+          hostPath:
+            path: /lv_file_bk_services
+      restartPolicy: Never
+  backoffLimit: 4
+---
+# office thumb process
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: file-services-thumb-office
+  namespace: fs-svc
+spec:
+  template:
+    spec:
+      containers:
+
+        - args:
+            - python3
+            - /app/bk_services/thumb_office.py
+
+          image: nttlong/lv-file:b4
+          name: file-services-thumb-office
+          imagePullPolicy: Always
+
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs
+            - name: bk-logs
+              mountPath: /app/logs
+      volumes:
+        - name: tmp-upload
+          hostPath: # hostPath volume
+            path: /file-api # folder of worker node
+        - name: fs-docs
+          hostPath: # hostPath volume
+            path: /fs-docs # folder of worker node
+        - name: api-logs
+          hostPath:
+            path: /api_logs
+        - name: fs-logs
+          hostPath:
+            path: /fs-logs
+        - name: bk-logs
+          hostPath:
+            path: /lv_file_bk_services
+      restartPolicy: Never
+  backoffLimit: 4
+---
+# pdf thumb process
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: file-services-thumb-pdf
+  namespace: fs-svc
+spec:
+  template:
+    spec:
+      containers:
+
+        - args:
+            - python3
+            - /app/bk_services/thumb_pdf.py
+
+          image: nttlong/lv-file:b4
+          name: file-services-thumb-pdf
+          imagePullPolicy: Always
+
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs
+            - name: bk-logs
+              mountPath: /app/logs
+      volumes:
+        - name: tmp-upload
+          hostPath: # hostPath volume
+            path: /file-api # folder of worker node
+        - name: fs-docs
+          hostPath: # hostPath volume
+            path: /fs-docs # folder of worker node
+        - name: api-logs
+          hostPath:
+            path: /api_logs
+        - name: fs-logs
+          hostPath:
+            path: /fs-logs
+        - name: bk-logs
+          hostPath:
+            path: /lv_file_bk_services
+      restartPolicy: Never
+  backoffLimit: 4
+---
+# ocr pdf
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: file-services-ocr-pdf
+  namespace: fs-svc
+spec:
+  template:
+    spec:
+      containers:
+
+        - args:
+            - python3
+            - /app/bk_services/ocr_pdf.py
+
+          image: nttlong/lv-file:b4
+          name: file-services-ocr-pdf
+          imagePullPolicy: Always
+
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs
+            - name: bk-logs
+              mountPath: /app/logs
+      volumes:
+        - name: tmp-upload
+          hostPath: # hostPath volume
+            path: /file-api # folder of worker node
+        - name: fs-docs
+          hostPath: # hostPath volume
+            path: /fs-docs # folder of worker node
+        - name: api-logs
+          hostPath:
+            path: /api_logs
+        - name: fs-logs
+          hostPath:
+            path: /fs-logs
+        - name: bk-logs
+          hostPath:
+            path: /lv_file_bk_services
+      restartPolicy: Never
+  backoffLimit: 4
+---
+#ocr image
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: file-services-ocr-image
+  namespace: fs-svc
+spec:
+  template:
+    spec:
+      containers:
+
+        - args:
+            - python3
+            - /app/bk_services/ocr_image.py
+
+          image: nttlong/lv-file:b4
+          name: file-services-ocr-image
+          imagePullPolicy: Always
+
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs
+            - name: bk-logs
+              mountPath: /app/logs
+      volumes:
+        - name: tmp-upload
+          hostPath: # hostPath volume
+            path: /file-api # folder of worker node
+        - name: fs-docs
+          hostPath: # hostPath volume
+            path: /fs-docs # folder of worker node
+        - name: api-logs
+          hostPath:
+            path: /api_logs
+        - name: fs-logs
+          hostPath:
+            path: /fs-logs
+        - name: bk-logs
+          hostPath:
+            path: /lv_file_bk_services
+      restartPolicy: Never
+  backoffLimit: 4
+---
+# Process Elastic Search Index
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: file-services-es-index
+  namespace: fs-svc
+spec:
+  template:
+    spec:
+      containers:
+
+        - args:
+            - bash
+            - -c
+            - 'python3 /app/bk_services/fs_es_index.py no-process'
+          image: nttlong/lv-file:b4
+          name: file-services-es-index
+          imagePullPolicy: Always
+
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs
+            - name: bk-logs
+              mountPath: /app/logs
+      volumes:
+        - name: tmp-upload
+          hostPath: # hostPath volume
+            path: /file-api # folder of worker node
+        - name: fs-docs
+          hostPath: # hostPath volume
+            path: /fs-docs # folder of worker node
+        - name: api-logs
+          hostPath:
+            path: /api_logs
+        - name: fs-logs
+          hostPath:
+            path: /fs-logs
+        - name: bk-logs
+          hostPath:
+            path: /lv_file_bk_services
+      restartPolicy: Never
+  backoffLimit: 4
+---
+#fs crawler
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: file-services-fscrawler
+  namespace: fs-svc
+spec:
+  template:
+    spec:
+      containers:
+
+        - args:
+            - bash
+            - -c
+            - ' sed -i "s/{FS_CRAWLER_INDEX}/lv-files-server-v2/g"  /app/py_fs_crawler/fs_config/_settings.yaml && sed  -i "s/{ES_URL}/http\:\/\/192.168.18.36:9200/g" /app/py_fs_crawler/fs_config/_settings.yaml && /usr/share/fscrawler/bin/fscrawler /app/py_fs_crawler/fs_config'
+
+          image: nttlong/fscrawler:v2
+          name: file-services-efscrawler
+          imagePullPolicy: Always
+
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs
+            - name: bk-logs
+              mountPath: /app/logs
+            - name: fs-logs
+              mountPath: /usr/share/fscrawler/logs
+      volumes:
+        - name: tmp-upload
+          hostPath: # hostPath volume
+            path: /file-api # folder of worker node
+        - name: fs-docs
+          hostPath: # hostPath volume
+            path: /fs-docs # folder of worker node
+        - name: api-logs
+          hostPath:
+            path: /api_logs
+        - name: fs-logs
+          hostPath:
+            path: /fs-logs
+        - name: bk-logs
+          hostPath:
+            path: /lv_file_bk_services
+      restartPolicy: Never
+  backoffLimit: 4

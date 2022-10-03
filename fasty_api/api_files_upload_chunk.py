@@ -2,10 +2,14 @@ import datetime
 import os.path
 import pathlib
 import gc
+import uuid
+
 import ReCompact_Kafka.producer
 from fastapi import  File, Form,Response,Depends
 from pydantic import BaseModel, Field
 from typing import Union
+
+import app
 import fasty
 from .models import Error as ret_error
 from ReCompact.db_async import get_db_context, ErrorType as db_error_type,sync as run_sync
@@ -15,6 +19,8 @@ import ReCompact.db_context
 import ReCompact.dbm.DbObjects
 import humanize
 import threading
+import jarior.emitor
+import jarior.loggers
 __lock__= threading.Lock()
 """
 Lock dành cach meta, tránh gọi về Database nhiều lần
@@ -112,12 +118,6 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
     if db_name is None:
         gc.collect()
         return Response(status_code=403)
-
-
-
-
-
-
     db_context = get_db_context(app_name)
     gfs = db_context.get_grid_fs()
     global  __meta_upload_cache__
@@ -205,10 +205,27 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
             Để bảo đảm tốc độ việc gời 1 thông điệp đến Kafka cần phải thông qua 1 tiến trình
             """
         else:
-            p_path=f"{db_name}.{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}"
-            p_path = os.path.join(fasty.config.broker.share_directory, p_path)
-            with open(p_path,"a") as f:
-                f.write(".")
+            jarior.emitor.config(
+                msg_folder= "./tmp/msg",
+                file_folder= fasty.config.broker.share_directory,
+                logger= jarior.loggers.get_logger("msg","./logs/jarior"),
+                age_of_msg_in_minutes=24*60
+
+            )
+            jarior.emitor.commit(
+                msg_id=str(uuid.uuid4()),
+                msg_type= upload_item.get(docs.Files.FileExt.__name__),
+                info=dict(
+                    full_file_path=path_to_broker_share,
+                    app_name =app_name,
+                    ppload_id=UploadId
+                )
+            )
+
+            # p_path=f"{db_name}.{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}"
+            # p_path = os.path.join(fasty.config.broker.share_directory, p_path)
+            # with open(p_path,"a") as f:
+            #     f.write(".")
     db_context.update_one(
         docs.Files,
         docs.Files._id == UploadId,

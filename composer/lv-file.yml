@@ -40,6 +40,7 @@ services:
     image: lv-file
     container_name: thumb-video
     volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
@@ -48,6 +49,7 @@ services:
     image: lv-file
     container_name: thumb-image
     volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/thumb_image.py
@@ -55,6 +57,7 @@ services:
     image: lv-file
     container_name: thumb-office
     volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/thumb_office.py
@@ -62,6 +65,7 @@ services:
     image: lv-file
     container_name: thumb-pdf
     volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
 
@@ -87,6 +91,7 @@ services:
     image: lv-file
     container_name: files-es-index-all-office-files
     volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/fs_es_index.py
@@ -94,6 +99,7 @@ services:
   ocr-image:
     image: lv-file
     volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
 
@@ -102,6 +108,7 @@ services:
   ocr-pdf:
     image: lv-file
     volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
 

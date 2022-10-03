@@ -56,24 +56,29 @@ def __all_files__(p):
 
 
 
-def start(watch_path, handler):
-    event_handler = Watcher(watch_path)
-    event_handler.run = handler
-    logs_file = os.path.join(watch_path, "data.txt")
-    files = __all_files__(watch_path)
-    def thread_running(h,d):
+def start(watch_path, handler,logger:logging.Logger):
+    try:
+        event_handler = Watcher(watch_path)
+        event_handler.run = handler
 
-        th=threading.Thread(target=h,args=(d,))
-        th.start()
-    for f in files:
-        try:
-            info = Info()
-            info.rel_path = os.path.relpath(f, watch_path)
-            info.full_path = f
-            info.root_path = watch_path
-            thread_running(handler,info)
-        except Exception as e:
-            print(e)
+        files = __all_files__(watch_path)
+        def thread_running(h,d):
+            try:
+                th=threading.Thread(target=h,args=(d,))
+                th.start()
+            except Exception as e:
+                logger.debug(e)
+        for f in files:
+            try:
+                info = Info()
+                info.rel_path = os.path.relpath(f, watch_path)
+                info.full_path = f
+                info.root_path = watch_path
+                thread_running(handler,info)
+            except Exception as e:
+                logger.debug(e)
+    except Exception as e:
+        logger.debug(e)
 
 
 
@@ -86,8 +91,9 @@ def start(watch_path, handler):
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
-
-def start_thead(watch_path, handler):
-    th=threading.Thread(target=start,args=(watch_path,handler,))
+from logging import Logger
+def start_thead(watch_path, handler,logger:Logger):
+    th=threading.Thread(target=start,args=(watch_path,handler,logger,))
     th.start()
+    return th
     # th.join()

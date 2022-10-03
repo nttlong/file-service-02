@@ -1,6 +1,8 @@
 """
 API liệt kê danh sách các file
 """
+import threading
+
 import motor
 
 import ReCompact.dbm
@@ -22,7 +24,28 @@ from fastapi import Depends, status
 from fastapi.responses import RedirectResponse, HTMLResponse
 import urllib
 import fasty.JWT
-
+import threading
+__cache__ ={}
+__lock__ = threading.Lock()
+def get_from_cahe(id:str)->dict:
+    global __cache__
+    return __cache__.get(id.lower())
+def set_to_cache(id,data):
+    global __lock__
+    global __cache__
+    try:
+        __lock__.acquire()
+        __cache__[id.lower()]=data
+    finally:
+        __lock__.release()
+def clear_cache():
+    global __lock__
+    global __cache__
+    try:
+        __lock__.acquire()
+        __cache__={}
+    finally:
+        __lock__.release()
 
 @fasty.api_get("/{app_name}/file/{directory:path}")
 async def get_content_of_files(app_name: str, directory: str, request: Request,
@@ -41,12 +64,14 @@ async def get_content_of_files(app_name: str, directory: str, request: Request,
 
         cntx = db_async.get_db_context(db_name)
         from re import compile
-
-        file_info = await cntx.find_one_async(Files, Files.FullFileNameLower == compile('^' + directory.lower() + '$'))
+        file_info = get_from_cahe(directory)
+        if not file_info:
+            file_info = await cntx.find_one_async(Files, Files.FullFileNameLower == compile('^' + directory.lower() + '$'))
 
         if not file_info:
             file_info = await cntx.find_one_async(Files, Files.FullFileName == directory.lower())
             if file_info:
+                set_to_cache(directory,file_info)
                 await cntx.update_one_async(
                     docs.Files,
                     docs.Files._id == file_info["_id"],
@@ -55,6 +80,7 @@ async def get_content_of_files(app_name: str, directory: str, request: Request,
             else:
                 file_info = await cntx.find_one_async(Files, Files.FileNameLower == directory.lower())
                 if file_info:
+                    set_to_cache(directory,file_info)
                     await cntx.update_one_async(
                         docs.Files,
                         docs.Files._id == file_info["_id"],
@@ -74,12 +100,15 @@ async def get_content_of_files(app_name: str, directory: str, request: Request,
                     docs.Files.MainFileId == fix_fs._id
                 )
                 file_info[Files.MainFileId.__name__] = fix_fs._id
+                set_to_cache(directory, file_info)
             fs_id = file_info[Files.MainFileId.__name__]
         else:
             upload_id = directory.split('/')[0]
             file_info = await cntx.find_one_async(Files, Files._id == upload_id)
             if not file_info:
                 return Response(status_code=401)
+            else:
+                set_to_cache(directory, file_info)
 
         is_public = file_info.get(docs.Files.IsPublic.__name__, False)
         if not is_public:

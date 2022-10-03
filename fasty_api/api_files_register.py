@@ -80,7 +80,7 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo = Body(emb
     num_of_chunks, remain = divmod(Data.FileSize, chunk_size)
     if remain > 0:
         num_of_chunks += 1
-    filename_only = Path(Data.FileName).stem
+    filename_only = Path(Data.FileName).stem.replace('#','_').replace('?','_').replace('/','_')
     ret_upload = await  db_context.insert_one_async(
         docs.Files,
         docs.Files._id == upload_id,
@@ -117,8 +117,8 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo = Body(emb
     ret.Data = register_new_upload_input.RegisterUploadResult()
     ret.Data.SizeInHumanReadable = ret_upload[docs.Files.SizeInHumanReadable.__name__]
 
-    ret.Data.UrlThumb = f"{fasty.config.app.api_url}/thumb/{ret_upload[docs.Files._id.__name__]}/{ret_upload[docs.Files.FileNameLower.__name__]}.png"
-    ret.Data.RelUrlThumb = f"api/{app_name}/thumb/{ret_upload[docs.Files._id.__name__]}/{ret_upload[docs.Files.FileNameLower.__name__]}.png"
+    ret.Data.UrlThumb = f"{fasty.config.app.api_url}/thumb/{ret_upload[docs.Files._id.__name__]}/{ret_upload[docs.Files.FileNameLower.__name__]}.webp"
+    ret.Data.RelUrlThumb = f"api/{app_name}/thumb/{ret_upload[docs.Files._id.__name__]}/{ret_upload[docs.Files.FileNameLower.__name__]}.webp"
     ret.Data.ServerFilePath=ret_upload[docs.Files.ServerFileName.__name__]
     ret.Data.UrlOfServerPath =f"{fasty.config.app.api_url}/{app_name}/file/{upload_id}/{ret_upload['FileName']}"
     ret.Data.RelUrlOfServerPath = f"api/{app_name}/file/{upload_id}/{ret_upload['FileName']}"

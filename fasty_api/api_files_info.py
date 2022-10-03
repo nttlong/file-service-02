@@ -71,8 +71,8 @@ async def get_info(app_name: str, request: Request,
         """
         http://172.16.7.25:8011/api/lv-docs/thumb/c4eade3a-63cb-428d-ac63-34aadd412f00/search.png.png
         """
-        ret.RelUrlThumb = f"api/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.png"
-        ret.UrlThumb = f"{fasty.config.app.api_url}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.png"
+        ret.RelUrlThumb = f"api/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.webp"
+        ret.UrlThumb = f"{fasty.config.app.api_url}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.webp"
     if ret.HasOCR:
         """
         http://172.16.7.25:8011/api/lv-docs/file-ocr/cc5728d0-c216-43f9-8475-72e84b6365fd/im-003.pdf
