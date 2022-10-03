@@ -80,6 +80,8 @@ def watch_run(msg_type, handler):
                                         print(_msg_file)
                                         _handler(_context)
                                         is_ok =True
+                            except Exception as e:
+                                pass
                             finally:
                                 count=count+1
                                 time.sleep(0.001)
