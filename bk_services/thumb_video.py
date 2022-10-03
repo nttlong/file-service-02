@@ -1,10 +1,10 @@
 import pathlib
 import sys
-from jarior import loggers
+
 
 sys.path.append(str(pathlib.Path(__file__).parent))
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-
+from jarior import loggers
 logger = loggers.get_logger(
         logger_name=str(pathlib.Path(__file__).stem),
         logger_dir=str(pathlib.Path(__file__).parent)
