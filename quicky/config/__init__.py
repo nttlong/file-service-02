@@ -5,7 +5,7 @@ from .. import logs
 from .. import yaml_reader
 from .. import logs
 import yaml
-from flask_restful import Resource
+
 import traceback
 import sys
 
@@ -298,46 +298,4 @@ class Config:
         else:
             return r_path
 
-    def logger_wrapper(self, *args, **kwargs):
-        def wraper(*x, **y):
-            cls = x[0]
-            if issubclass(cls, Resource):
-                keys = list(cls.__dict__.keys())
-                for k in keys:
-                    if k in ["post","get"]:
-                        # if not (k.__len__() > 4 and k[0:2] == "__" and k[-2:] == "__"):
-                        if hasattr(cls, k):
-                            v = getattr(cls, k)
-                            if callable(v):
-                                setattr(cls, f"__old_{k}__", v)
 
-                                def wrapper_handler(*a, **b):
-                                    instance = a[0]
-                                    print(wrapper_handler.__name__)
-                                    fn_name = wrapper_handler.__name__.split('_')[3]
-                                    func =None
-                                    try:
-                                        if hasattr(instance, f"__old_{fn_name}__"):
-                                            fn = getattr(instance, f"__old_{fn_name}__")
-                                            func=fn.__func__
-                                            ret = fn.__func__(*a, **b)
-                                            return ret
-                                        else:
-                                            fn = getattr(instance,fn_name)
-                                            func = fn.__func__
-                                            ret = fn.__func__(*a, **b)
-                                            return ret
-                                    except Exception as e:
-                                        self.logger.debug("---------------------------------------------------------")
-                                        self.logger.debug(traceback.format_exc())
-                                        self.logger.debug("---------------------------------------------------------")
-                                        raise Exception(traceback.format_exc())
-
-
-                                wrapper_handler.__name__ = f"__wrapper_{k}__"
-                                setattr(cls, k, wrapper_handler)
-                return cls
-            elif callable(cls):
-                return cls
-
-        return wraper

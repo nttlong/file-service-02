@@ -31,21 +31,12 @@ def get_from_cahe(id:str)->dict:
     global __cache__
     return __cache__.get(id.lower())
 def set_to_cache(id,data):
-    global __lock__
     global __cache__
-    try:
-        __lock__.acquire()
-        __cache__[id.lower()]=data
-    finally:
-        __lock__.release()
+    __cache__[id.lower()]=data
 def clear_cache():
     global __lock__
     global __cache__
-    try:
-        __lock__.acquire()
-        __cache__={}
-    finally:
-        __lock__.release()
+    __cache__={}
 
 @fasty.api_get("/{app_name}/file/{directory:path}")
 async def get_content_of_files(app_name: str, directory: str, request: Request,

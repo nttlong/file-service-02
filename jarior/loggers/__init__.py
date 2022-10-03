@@ -13,7 +13,7 @@ def get_logger(logger_name:str, logger_dir:str)-> logging.Logger:
     global __catch__
     if logger_dir[0:2]=="./":
         logger_dir=logger_dir[2:logger_dir.__len__()]
-        working_dir = str(pathlib.Path(__file__).parent.parent)
+        working_dir = str(pathlib.Path(__file__).parent.parent.parent)
         logger_dir = os.path.join(working_dir,logger_dir)
     if __catch__.get(logger_name) is not None:
         return __catch__.get(logger_name)

@@ -84,7 +84,7 @@ def config(
             return
         try:
             __lock__.acquire()
-            woring_dir = str(pathlib.Path(__file__).parent.parent)
+            woring_dir = str(pathlib.Path(__file__).parent.parent.parent)
             if msg_folder[0:2]=="./":
                 msg_folder = msg_folder[2:msg_folder.__len__()]
                 msg_folder=os.path.join(woring_dir,msg_folder)

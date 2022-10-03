@@ -9,7 +9,7 @@ from fastapi import  File, Form,Response,Depends
 from pydantic import BaseModel, Field
 from typing import Union
 
-import app
+
 import fasty
 from .models import Error as ret_error
 from ReCompact.db_async import get_db_context, ErrorType as db_error_type,sync as run_sync
@@ -214,12 +214,13 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
             )
             jarior.emitor.commit(
                 msg_id=str(uuid.uuid4()),
-                msg_type= upload_item.get(docs.Files.FileExt.__name__),
+                msg_type= "processing",
                 info=dict(
                     full_file_path=path_to_broker_share,
                     app_name =app_name,
                     ppload_id=UploadId
-                )
+                ),
+                files_path=[path_to_broker_share]
             )
 
             # p_path=f"{db_name}.{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}"
