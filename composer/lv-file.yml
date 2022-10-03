@@ -4,13 +4,13 @@
 version: '3.7'
 
 services:
-  build-mage:
-    image: lv-file
-    build:
-      context: ./..
-      dockerfile: ./composer/files-dockerfile
+#  build-mage:
+#    image: lv-file
+#    build:
+#      context: ./..
+#      dockerfile: ./composer/files-dockerfile
   web:
-    image: lv-file
+    image: nttlong/lv-file:b5
     container_name: lv-file-web
     hostname: web
     volumes:
@@ -37,7 +37,7 @@ services:
       - file_server_api_url=http://${HOST_IP}:${API_PORT}/api
       - file_server_es_url=http://${ES_URL},
   thumb-video:
-    image: lv-file
+    image: nttlong/lv-file:b5
     container_name: thumb-video
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
@@ -46,7 +46,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/thumb_video.py
   thumb-image:
-    image: lv-file
+    image: nttlong/lv-file:b5
     container_name: thumb-image
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
@@ -54,7 +54,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/thumb_image.py
   thumb-office:
-    image: lv-file
+    image: nttlong/lv-file:b4
     container_name: thumb-office
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
@@ -62,7 +62,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/thumb_office.py
   thumb-pdf:
-    image: lv-file
+    image: nttlong/lv-file:b5
     container_name: thumb-pdf
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
@@ -71,11 +71,11 @@ services:
 
     command: python3 /app/bk_services/thumb_pdf.py
   fs-crawler:
-    image: fs-crawler
+    image: nttlong/fscrawler
     container_name: fs-crawler
-    build:
-      context: ./..
-      dockerfile: ./composer/fs-dockerfile
+#    build:
+#      context: ./..
+#      dockerfile: ./composer/fs-dockerfile
     command: >
       bash -c '
       
@@ -88,7 +88,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/fs-logs:/usr/share/fscrawler/logs
 
   files-es-index-all-office-files:
-    image: lv-file
+    image: nttlong/lv-file:b5
     container_name: files-es-index-all-office-files
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
@@ -97,7 +97,7 @@ services:
     command: python3 /app/bk_services/fs_es_index.py
 #
   ocr-image:
-    image: lv-file
+    image: nttlong/lv-file:b5
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
@@ -106,7 +106,7 @@ services:
     command: python3 /app/bk_services/ocr_image.py
     container_name: ocr-image
   ocr-pdf:
-    image: lv-file
+    image: nttlong/lv-file:b5
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp

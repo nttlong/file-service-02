@@ -11,7 +11,7 @@ from jarior.client import Context
 
 logger = loggers.get_logger(
         logger_name=str(pathlib.Path(__file__).stem),
-        logger_dir=str(pathlib.Path(__file__).parent)
+        logger_dir=str(pathlib.Path(__file__).parent.parent)
     )
 try:
     import shutil
@@ -172,7 +172,7 @@ try:
     th = client.watch(
         msg_type="processing",
         handler=handler,
-
+        delay_in_second = 0.1
     )
     th.join()
 

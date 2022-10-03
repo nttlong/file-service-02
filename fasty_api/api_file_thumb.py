@@ -22,11 +22,12 @@ import threading
 fasty.app.get("test/ping-server")
 __cache__ ={}
 __lock__ = threading.Lock()
+from fasty_api import thumb_caching
 def get_from_cahe(id:str)->dict:
     global __cache__
     return __cache__.get(id.lower())
 def set_to_cache(id,data):
-    global __lock__
+
     global __cache__
     try:
         __lock__.acquire()
@@ -40,6 +41,11 @@ async def get_thumb_of_files(app_name: str, directory: str, request: Request):
     :param app_name:
     :return:
     """
+    cach_thumb_path = thumb_caching.check(directory)
+    if cach_thumb_path is not None:
+        from fastapi.responses import FileResponse
+        return FileResponse(cach_thumb_path)
+
     CHUNK_SIZE = 1024 * 1024
     cntx = db_async.get_db_context(app_name)
     upload_id=directory.split('/')[0]
@@ -51,6 +57,8 @@ async def get_thumb_of_files(app_name: str, directory: str, request: Request):
         thumb_fs_id = file_info.get(Files.ThumbFileId.__name__,None)
         fsg = await cntx.get_file_by_id(thumb_fs_id)
         content_type, _ = mimetypes.guess_type(directory)
+        thumb_caching.sync(fsg.delegate._id,db_async.get_db_context(app_name).db.delegate,directory)
+
         res= await fasty.mongo_fs_http_streaming.streaming(fsg,request,content_type)
         fsg.close()
         res.headers.append("Cache-Control", "max-age=86400")

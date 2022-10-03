@@ -15,6 +15,7 @@ def get_logger(logger_name:str, logger_dir:str)-> logging.Logger:
         logger_dir=logger_dir[2:logger_dir.__len__()]
         working_dir = str(pathlib.Path(__file__).parent.parent.parent)
         logger_dir = os.path.join(working_dir,logger_dir)
+
     if __catch__.get(logger_name) is not None:
         return __catch__.get(logger_name)
     __lock__.acquire()
@@ -25,7 +26,7 @@ def get_logger(logger_name:str, logger_dir:str)-> logging.Logger:
 
         # create formatter and add it to the handlers
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        full_log_dir= os.path.join(logger_dir,"logs",logger_name)
+        full_log_dir= os.path.join(logger_dir,"logs","jarior-client",logger_name)
         if not os.path.isdir(full_log_dir):
             os.makedirs(full_log_dir)
 

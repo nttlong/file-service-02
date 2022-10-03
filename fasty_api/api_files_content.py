@@ -25,6 +25,7 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 import urllib
 import fasty.JWT
 import threading
+import fasty_api.image_caching
 __cache__ ={}
 __lock__ = threading.Lock()
 def get_from_cahe(id:str)->dict:
@@ -47,6 +48,14 @@ async def get_content_of_files(app_name: str, directory: str, request: Request,
         :param app_name:
         :return:
         """
+        mime_type,_ = mimetypes.guess_type(directory)
+        if "image/" in mime_type:
+            file_path=fasty_api.image_caching.check(directory)
+            if file_path is not None:
+                from fastapi.responses import FileResponse
+                res_file = FileResponse(file_path)
+                res_file.headers.append("Cache-Control","max-age=86400")
+                return res_file
 
         CHUNK_SIZE = 1024 * 1024
         db_name = await fasty.JWT.get_db_name_async(app_name)
@@ -131,10 +140,12 @@ async def get_content_of_files(app_name: str, directory: str, request: Request,
         main_file_id = file_info.get(Files.MainFileId.__name__)
 
         fsg = await cntx.get_file_by_id(file_info[Files.MainFileId.__name__])
+        if "image/" in mime_type:
+            fasty_api.image_caching.sync(fsg.delegate._id, db_async.get_db_context(app_name).db.delegate, directory)
         if fsg is None:
             return Response(status_code=401)
         content_type, _ = mimetypes.guess_type(directory)
-        print(f"content type={content_type}")
+
         if content_type is None:
             content_type='application/octet-stream'
 

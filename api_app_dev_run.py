@@ -22,6 +22,8 @@ os.environ['file_server_db_password'] ='123456'
 os.environ['file_server_bind_port']='8011'
 os.environ['file_server_root_url']='http://172.16.13.72:8011'
 os.environ['file_server_api_url']='http://172.16.13.72:8011/api'
+# os.environ['file_server_api_url']='http://172.16.7.240/lvfile/api'
+
 os.environ['file_server_es_url']='http://192.168.18.36:9200,'
 import sys
 

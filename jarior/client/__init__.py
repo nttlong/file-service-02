@@ -95,10 +95,13 @@ def watch_run(msg_type, handler):
             else:
                 print(e)
 
-def watch(msg_type,handler)->threading.Thread:
+def watch(msg_type,handler,delay_in_second:float)->threading.Thread:
+
+    if not isinstance(delay_in_second,float):
+        raise Exception('delay_in_second')
     def loop_watch(msg_type,handler):
         while True:
-            time.sleep(0.001)
+            time.sleep(delay_in_second)
             watch_run(msg_type,handler)
     ret=threading.Thread(target=loop_watch,args=(msg_type,handler,))
     ret.start()
