@@ -39,8 +39,7 @@ try:
     def handler(context: Context):
         try:
             global temp_thumb
-            print("new_file")
-            print( context.files)
+
             full_file_path = context.files[0]
             a, b = mimetypes.guess_type(full_file_path)
 
@@ -105,7 +104,7 @@ try:
 
                     )
                 )
-                logger.info(f"{context.full_path} ok")
+
         except Exception as e:
             logger.debug(e)
 

@@ -2,9 +2,15 @@ import pathlib
 import sys
 sys.path.append(str(pathlib.Path(__file__).parent))
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
+from jarior import loggers
+from jarior import client
+from jarior.client import Context
 
-from bk_services.fs_logs import get_logger
-logger = get_logger(str(pathlib.Path(__file__).stem))
+
+logger = loggers.get_logger(
+        logger_name=str(pathlib.Path(__file__).stem),
+        logger_dir=str(pathlib.Path(__file__).parent)
+    )
 try:
 
 
@@ -64,15 +70,17 @@ try:
         return os.path.join(out_put_dir, f"{filename_only}.png")
 
 
-    def handler(info: Info):
+    def handler(context: Context):
         try:
             global temp_thumb
-            fx = pathlib.Path(info.full_path)
+            full_file_path = context.files[0]
+            fx = pathlib.Path(full_file_path)
             file_name = fx.name
-            app_name, file_name_only, ext = tuple(file_name.split('.'))
+            app_name= context.info.get('app_name')
+            file_name_only, ext = tuple(file_name.split('.'))
             if ext != 'pdf' and ext in config.office_extension:
-                logger.info(info.full_path)
-                real_file_path = os.path.join(info.root_path, app_name, f"{file_name_only}.{ext}")
+                logger.info(full_file_path)
+                real_file_path = full_file_path
                 upload_id = file_name_only
                 db = mongo_db.get_db(app_name)
                 upload_info = ReCompact.dbm.DbObjects.find_one_to_dict(
@@ -128,17 +136,21 @@ try:
                     )
                 )
                 os.remove(thumb_file_path)
-                print(info.full_path)
+                print(context.full_path)
         except Exception as e:
             logger.debug(e)
 
 
-    if "no-proces" not in sys.argv:
-        start_thead(path, handler, logger)
-        logger.info(f"{__file__} start. should start with no-process")
-    else:
-        start(path, handler, logger)
-        logger.info(f"{__file__} start with process")
+    client.config(
+        msg_folder="./tmp/msg",
+        logger=logger
+    )
+    th = client.watch(
+        msg_type="processing",
+        handler=handler,
+
+    )
+    th.join()
 except Exception as e:
     logger.debug(e)
 # start(path, handler)

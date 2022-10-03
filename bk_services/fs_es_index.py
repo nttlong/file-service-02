@@ -5,8 +5,15 @@ import sys
 
 sys.path.append(str(pathlib.Path(__file__).parent))
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-from bk_services.fs_logs import get_logger
-logger = get_logger(str(pathlib.Path(__file__).stem))
+from jarior import loggers
+from jarior import client
+from jarior.client import Context
+
+
+logger = loggers.get_logger(
+        logger_name=str(pathlib.Path(__file__).stem),
+        logger_dir=str(pathlib.Path(__file__).parent)
+    )
 try:
     import uuid
     import shutil
@@ -20,7 +27,7 @@ try:
     import ReCompact.thumbnal
     from moviepy.editor import *
     import subprocess
-    from bk_services.watchers import start, Info, start_thead
+
     from bk_services import mongodb as mongo_db
 
     path = config.watch_path
@@ -68,14 +75,16 @@ try:
         return os.path.join(out_put_dir, f"{filename_only}.png")
 
 
-    def handler(info: Info):
+    def handler(context: Context):
         global temp_thumb
-        fx = pathlib.Path(info.full_path)
+        full_file_path = context.files[0]
+        fx = pathlib.Path(full_file_path)
 
         try:
             file_name = fx.name
-            app_name, file_name_only, ext = tuple(file_name.split('.'))
-            real_file_path = os.path.join(info.root_path, app_name, f"{file_name_only}.{ext}")
+            app_name= context.info.get('app_name')
+            file_name_only, ext = tuple(file_name.split('.'))
+            real_file_path = full_file_path
             if not os.path.isfile(real_file_path):
                 return
             is_searchable = ext!='pdf' and ext in config.office_extension
@@ -95,13 +104,20 @@ try:
                 if os.path.isfile(dest_file_path):
                     return
                 shutil.copy(real_file_path,path_to_es_index_in_fs_crawler)
-                logger.info(info.full_path)
+                logger.info(full_file_path)
         except Exception as e:
             logger.debug(e)
 
 
-    logger.info(sys.argv)
-    start(path, handler, logger)
-    logger.info(f"{__file__} start with process")
+    client.config(
+        msg_folder="./tmp/msg",
+        logger=logger
+    )
+    th = client.watch(
+        msg_type="processing",
+        handler=handler,
+
+    )
+    th.join()
 except Exception as e:
     logger.debug(e)

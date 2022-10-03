@@ -1,5 +1,7 @@
 import pathlib
 import sys
+from builtins import function
+
 sys.path.append(str(pathlib.Path(__file__).parent))
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
@@ -85,8 +87,8 @@ try:
                         ReCompact.dbm.FIELDS.VideoResolutionHeight == clip.size[1],
                     )
                 )
-                logger.info(a)
-                logger.info(context.full_path)
+
+                logger.info(full_file_path)
         except Exception as e:
             logger.debug(e)
 
