@@ -69,8 +69,10 @@ async def streaming(fsg,request,content_type,streaming_buffering=1024 *  8*4):
         headers["content-range"] = f"bytes {start}-{end}/{file_size}"
         status_code = status.HTTP_206_PARTIAL_CONTENT
 
-    return StreamingResponse(
+    res = StreamingResponse(
         __send_bytes_range_requests__(fsg, start, end, streaming_buffering),
         headers=headers,
         status_code=status_code,
     )
+    fsg.close()
+    return res
