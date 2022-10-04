@@ -81,7 +81,7 @@ spec:
               value: http://172.16.7.242
             - name: file_server_use_os_config
               value: '''true'''
-          image: nttlong/lv-file:b4
+          image: nttlong/lv-file:b9
           name: file-services-api
           imagePullPolicy: Always
           ports:
@@ -130,7 +130,7 @@ spec:
             - python3
             - /app/bk_services/thumb_image.py
 
-          image: nttlong/lv-file:b4
+          image: nttlong/lv-file:b9
           name: file-services-thumb-image
           imagePullPolicy: Always
 
@@ -176,7 +176,7 @@ spec:
             - python3
             - /app/bk_services/thumb_video.py
 
-          image: nttlong/lv-file:b4
+          image: nttlong/lv-file:b9
           name: file-services-thumb-video
           imagePullPolicy: Always
 
@@ -222,7 +222,7 @@ spec:
             - python3
             - /app/bk_services/thumb_office.py
 
-          image: nttlong/lv-file:b4
+          image: nttlong/lv-file:b9
           name: file-services-thumb-office
           imagePullPolicy: Always
 
@@ -268,7 +268,7 @@ spec:
             - python3
             - /app/bk_services/thumb_pdf.py
 
-          image: nttlong/lv-file:b4
+          image: nttlong/lv-file:b9
           name: file-services-thumb-pdf
           imagePullPolicy: Always
 
@@ -314,7 +314,7 @@ spec:
             - python3
             - /app/bk_services/ocr_pdf.py
 
-          image: nttlong/lv-file:b4
+          image: nttlong/lv-file:b9
           name: file-services-ocr-pdf
           imagePullPolicy: Always
 
@@ -360,7 +360,7 @@ spec:
             - python3
             - /app/bk_services/ocr_image.py
 
-          image: nttlong/lv-file:b4
+          image: nttlong/lv-file:b9
           name: file-services-ocr-image
           imagePullPolicy: Always
 
@@ -406,7 +406,7 @@ spec:
             - bash
             - -c
             - 'python3 /app/bk_services/fs_es_index.py no-process'
-          image: nttlong/lv-file:b4
+          image: nttlong/lv-file:b9
           name: file-services-es-index
           imagePullPolicy: Always
 
@@ -467,6 +467,99 @@ spec:
               mountPath: /app/logs
             - name: fs-logs
               mountPath: /usr/share/fscrawler/logs
+      volumes:
+        - name: tmp-upload
+          hostPath: # hostPath volume
+            path: /file-api # folder of worker node
+        - name: fs-docs
+          hostPath: # hostPath volume
+            path: /fs-docs # folder of worker node
+        - name: api-logs
+          hostPath:
+            path: /api_logs
+        - name: fs-logs
+          hostPath:
+            path: /fs-logs
+        - name: bk-logs
+          hostPath:
+            path: /lv_file_bk_services
+      restartPolicy: Never
+  backoffLimit: 4
+---
+# Cleansing chapel
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: file-services-cleansing-chapel
+  namespace: fs-svc
+spec:
+  template:
+    spec:
+      containers:
+
+        - args:
+            - python3
+            - /app/bk_services/cleansing_chapel.py
+
+          image: nttlong/lv-file:b9
+          name: file-services-cleansing-chapel
+          imagePullPolicy: Always
+
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs
+            - name: bk-logs
+              mountPath: /app/logs
+      volumes:
+        - name: tmp-upload
+          hostPath: # hostPath volume
+            path: /file-api # folder of worker node
+        - name: fs-docs
+          hostPath: # hostPath volume
+            path: /fs-docs # folder of worker node
+        - name: api-logs
+          hostPath:
+            path: /api_logs
+        - name: fs-logs
+          hostPath:
+            path: /fs-logs
+        - name: bk-logs
+          hostPath:
+            path: /lv_file_bk_services
+      restartPolicy: Never
+  backoffLimit: 4
+---
+# Cleansing town
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: file-services-cleansing-town
+  namespace: fs-svc
+spec:
+  template:
+    spec:
+      containers:
+
+        - args:
+            - python3
+            - /app/bk_services/cleansing_town.py
+
+          image: nttlong/lv-file:b9
+          name: file-services-cleansing-town
+          imagePullPolicy: Always
+
+          resources: { }
+          volumeMounts:
+            - name: tmp-upload
+              mountPath: /app/tmp
+            - name: fs-docs
+              mountPath: /app/fs-docs
+            - name: bk-logs
+              mountPath: /app/logs
       volumes:
         - name: tmp-upload
           hostPath: # hostPath volume
