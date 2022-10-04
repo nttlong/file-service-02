@@ -116,6 +116,7 @@ try:
     th = client.watch(
         msg_type="processing",
         handler=handler,
+        delay_in_second=0.1
 
     )
     th.join()
