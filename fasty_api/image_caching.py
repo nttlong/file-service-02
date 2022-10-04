@@ -7,7 +7,7 @@ import pymongo.database
 working_dir =str(pathlib.Path(__file__).parent.parent)
 thumb_cach_dir= os.path.join(working_dir, "cache", "images")
 if not os.path.isdir(thumb_cach_dir):
-    os.makedirs(thumb_cach_dir)
+    os.makedirs(thumb_cach_dir,exist_ok=True)
 
 __cach__ = {}
 __lock__ = threading.Lock()

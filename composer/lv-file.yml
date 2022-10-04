@@ -123,3 +123,12 @@ services:
 
     command: python3 /app/bk_services/cleansing_chapel.py
     container_name: cleansing-chapel
+  cleansing-town:
+    image: lv-file
+    volumes:
+      - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
+      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
+      - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
+
+    command: python3 /app/bk_services/cleansing_town.py
+    container_name: cleansing-town
