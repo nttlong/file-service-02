@@ -40,8 +40,10 @@ def sync(file_id,db:pymongo.database.Database,directory:str):
 
 
         fs = gridfs.GridFS(db)
-        ret= fs.get(file_id).read()
+        m_file =fs.get(file_id);
+        ret= m_file.read()
         with open(file_path,'wb') as f:
             f.write(ret)
+        m_file.close()
         __cach__[directory.lower()] = file_path
     threading.Thread(target=run,args=()).start()
