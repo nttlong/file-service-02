@@ -221,6 +221,7 @@ def create_mongodb_fs_from_file(
                     "n": n,
                     "data": read_data
                 })
+                del read_data
                 read_data = r_file.read(chunk_size)
                 n = n + 1
 
