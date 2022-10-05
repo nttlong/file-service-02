@@ -72,12 +72,12 @@ def watch_run(msg_type, handler):
                                     with open(_msg_file,'r') as fs:
                                         txt_json = fs.read()
                                         full_info_dict= json.loads(txt_json)
+                                        del txt_json
                                         _context = Context()
                                         _context.info = full_info_dict.get('info')
                                         _context.files = full_info_dict.get('file_paths')
                                         _context.msg_type = msg_type
-                                        print("---process---")
-                                        print(_msg_file)
+
                                         _handler(_context)
                                         is_ok =True
                             except Exception as e:
