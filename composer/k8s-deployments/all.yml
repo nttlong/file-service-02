@@ -1,9 +1,9 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: fs-svc
+  name: fs-qc
   labels:
-    name: fs-svc
+    name: fs-qc
 ---
 # Enables the pods in a deployment to be accessible from outside the cluster
 
@@ -11,7 +11,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: file-services-api-svc
-  namespace: fs-svc
+  namespace: fs-qc
 spec:
   selector:
     app: file-services-api
@@ -22,9 +22,9 @@ spec:
   ports:
     - protocol: "TCP"
       port: 80
-      targetPort: 8080
+      targetPort: 8011
       name: file-services-api
-#      nodePort: 30000
+      nodePort: 30000
   type: LoadBalancer
 #  type: NodePort
   loadBalancerIP: 172.16.7.242
@@ -34,7 +34,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: file-services-api
-  namespace: fs-svc
+  namespace: fs-qc
   labels:
     app: file-services-api
 spec:
@@ -81,7 +81,7 @@ spec:
               value: http://172.16.7.242
             - name: file_server_use_os_config
               value: '''true'''
-          image: nttlong/lv-file:b9
+          image: lv-file
           name: file-services-api
           imagePullPolicy: Always
           ports:
@@ -120,7 +120,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: file-services-thumb-image
-  namespace: fs-svc
+  namespace: fs-qc
 spec:
   template:
     spec:
@@ -130,7 +130,7 @@ spec:
             - python3
             - /app/bk_services/thumb_image.py
 
-          image: nttlong/lv-file:b9
+          image: lv-file
           name: file-services-thumb-image
           imagePullPolicy: Always
 
@@ -166,7 +166,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: file-services-thumb-video
-  namespace: fs-svc
+  namespace: fs-qc
 spec:
   template:
     spec:
@@ -176,7 +176,7 @@ spec:
             - python3
             - /app/bk_services/thumb_video.py
 
-          image: nttlong/lv-file:b9
+          image: lv-file
           name: file-services-thumb-video
           imagePullPolicy: Always
 
@@ -212,7 +212,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: file-services-thumb-office
-  namespace: fs-svc
+  namespace: fs-qc
 spec:
   template:
     spec:
@@ -222,7 +222,7 @@ spec:
             - python3
             - /app/bk_services/thumb_office.py
 
-          image: nttlong/lv-file:b9
+          image: lv-file
           name: file-services-thumb-office
           imagePullPolicy: Always
 
@@ -258,7 +258,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: file-services-thumb-pdf
-  namespace: fs-svc
+  namespace: fs-qc
 spec:
   template:
     spec:
@@ -268,7 +268,7 @@ spec:
             - python3
             - /app/bk_services/thumb_pdf.py
 
-          image: nttlong/lv-file:b9
+          image: lv-file
           name: file-services-thumb-pdf
           imagePullPolicy: Always
 
@@ -304,7 +304,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: file-services-ocr-pdf
-  namespace: fs-svc
+  namespace: fs-qc
 spec:
   template:
     spec:
@@ -314,7 +314,7 @@ spec:
             - python3
             - /app/bk_services/ocr_pdf.py
 
-          image: nttlong/lv-file:b9
+          image: lv-file
           name: file-services-ocr-pdf
           imagePullPolicy: Always
 
@@ -350,7 +350,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: file-services-ocr-image
-  namespace: fs-svc
+  namespace: fs-qc
 spec:
   template:
     spec:
@@ -360,7 +360,7 @@ spec:
             - python3
             - /app/bk_services/ocr_image.py
 
-          image: nttlong/lv-file:b9
+          image: lv-file
           name: file-services-ocr-image
           imagePullPolicy: Always
 
@@ -396,7 +396,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: file-services-es-index
-  namespace: fs-svc
+  namespace: fs-qc
 spec:
   template:
     spec:
@@ -406,7 +406,7 @@ spec:
             - bash
             - -c
             - 'python3 /app/bk_services/fs_es_index.py no-process'
-          image: nttlong/lv-file:b9
+          image: lv-file
           name: file-services-es-index
           imagePullPolicy: Always
 
@@ -442,7 +442,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: file-services-fscrawler
-  namespace: fs-svc
+  namespace: fs-qc
 spec:
   template:
     spec:
@@ -491,7 +491,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: file-services-cleansing-chapel
-  namespace: fs-svc
+  namespace: fs-qc
 spec:
   template:
     spec:
@@ -501,7 +501,7 @@ spec:
             - python3
             - /app/bk_services/cleansing_chapel.py
 
-          image: nttlong/lv-file:b9
+          image: lv-file
           name: file-services-cleansing-chapel
           imagePullPolicy: Always
 
@@ -538,7 +538,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: file-services-cleansing-town
-  namespace: fs-svc
+  namespace: fs-qc
 spec:
   template:
     spec:
@@ -548,7 +548,7 @@ spec:
             - python3
             - /app/bk_services/cleansing_town.py
 
-          image: nttlong/lv-file:b9
+          image: lv-file
           name: file-services-cleansing-town
           imagePullPolicy: Always
 

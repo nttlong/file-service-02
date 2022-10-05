@@ -241,6 +241,7 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
     upload_item[docs.Files.Status.__name__] = status
     upload_item[docs.Files.MainFileId.__name__] = main_file_id
     gc.collect()
+    del FilePart
     return ret
 #
 #

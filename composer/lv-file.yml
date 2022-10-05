@@ -71,11 +71,11 @@ services:
 
     command: python3 /app/bk_services/thumb_pdf.py
   fs-crawler:
-    image: nttlong/fscrawler
+    image: nttlong/fscrawler:v2
     container_name: fs-crawler
-    build:
-      context: ./..
-      dockerfile: ./composer/fs-dockerfile
+#    build:
+#      context: ./..
+#      dockerfile: ./composer/fs-dockerfile
     command: >
       bash -c '
       
