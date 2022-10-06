@@ -10,13 +10,15 @@ import os.path
 import datetime
 import pathlib
 import threading
+
 __lock__ = threading.Lock()
 
+
 def __get_all_files__(p_dir: str):
-    ret=[]
+    ret = []
     for path, subdirs, files in os.walk(p_dir):
         for name in files:
-            ret+=[os.path.join(path, name)]
+            ret += [os.path.join(path, name)]
     return ret
 
 
@@ -50,6 +52,7 @@ def __thead_clean_up__(logger: logging.Logger = None):
                 logger.debug(e)
             else:
                 print(e)
+
     try:
         if isinstance(logger, logging.Logger):
             logger.info(f"Clean up start any file older than {__age_of_msg__} minutes will be deleted")
@@ -85,16 +88,16 @@ def config(
         try:
             __lock__.acquire()
             woring_dir = str(pathlib.Path(__file__).parent.parent.parent)
-            if msg_folder[0:2]=="./":
+            if msg_folder[0:2] == "./":
                 msg_folder = msg_folder[2:msg_folder.__len__()]
-                msg_folder=os.path.join(woring_dir,msg_folder)
+                msg_folder = os.path.join(woring_dir, msg_folder)
                 if not os.path.isdir(msg_folder):
                     os.makedirs(msg_folder)
 
             __msg_folder__ = msg_folder
-            if msg_folder[0:2]=="./":
+            if msg_folder[0:2] == "./":
                 msg_folder = msg_folder[2:msg_folder.__len__()]
-                msg_folder=os.path.join(woring_dir,msg_folder)
+                msg_folder = os.path.join(woring_dir, msg_folder)
                 if not os.path.isdir(msg_folder):
                     os.makedirs(msg_folder)
             __file_folder__ = file_folder
@@ -108,34 +111,36 @@ def config(
         finally:
             __lock__.release()
     except Exception as e:
-        if isinstance(logger,logging.Logger):
+        if isinstance(logger, logging.Logger):
             logger.debug(e)
         else:
             raise e
     return None
 
 
-def commit(msg_id:str,msg_type:str, info:dict, files_path):
+def commit(msg_id: str, msg_type: str, info: dict, files_path):
     global __logger__
+
     def runner():
         global __msg_folder__
         global __logger__
         try:
-            full_info= dict(
+            full_info = dict(
                 info=info,
                 file_paths=files_path
             )
-            full_msg=os.path.join(__msg_folder__,f"{msg_id}.{msg_type}.json")
-            str_content=json.dumps(full_info)
-            with open(full_msg,"w") as fs:
+            full_msg = os.path.join(__msg_folder__, f"{msg_id}.{msg_type}.json")
+            str_content = json.dumps(full_info)
+            with open(full_msg, "w") as fs:
                 fs.write(str_content)
         except Exception as e:
             if __logger__ is not None:
                 __logger__.debug(e)
             else:
                 raise e
+
     try:
-        th=threading.Thread(target=runner,args=())
+        th = threading.Thread(target=runner, args=())
         th.start()
     except Exception as e:
         if __logger__ is not None:

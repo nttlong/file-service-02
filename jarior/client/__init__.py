@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import logging
 __msg_folder__:str=None
@@ -54,7 +55,9 @@ def watch_run(msg_type, handler):
         __cache__[msg_type]=dict()
         __lock__.release()
     files = __get_all_files__(__msg_folder__)
-
+    for k,v in __cache__[msg_type].items():
+        if (datetime.utcnow()-v).total_seconds()>240:
+            del __cache__[msg_type][k]
     for file in files:
         try:
             if file.split('.')[-2]==msg_type:
@@ -84,11 +87,11 @@ def watch_run(msg_type, handler):
                                 pass
                             finally:
                                 count=count+1
-                                time.sleep(0.001)
+                                time.sleep(0.1)
 
                     th=  threading.Thread(target=up_run,args=(handler,file,))
                     th.start()
-                    __cache__[msg_type][file] = file
+                    __cache__[msg_type][file] = datetime.utcnow()
         except Exception as e:
             if __logger__ is not None:
                 __logger__.debug(e)

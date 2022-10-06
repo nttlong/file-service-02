@@ -1,12 +1,14 @@
 import pathlib
 
 import sys
+
 sys.path.append(str(pathlib.Path(__file__).parent))
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
 from jarior import client
 from jarior.client import Context
 from jarior import loggers
+
 logger = loggers.get_logger(
     logger_name=str(pathlib.Path(__file__).stem),
     logger_dir=str(pathlib.Path(__file__).parent.parent)
@@ -24,18 +26,20 @@ try:
     import ReCompact.thumbnal
     from moviepy.editor import *
 
-
     from bk_services import mongodb as mongo_db
+
     path = config.watch_path
     working_folder_name = pathlib.Path(__file__).stem
-    working_path = os.path.join(pathlib.Path(__file__).parent,working_folder_name)
+    working_path = os.path.join(pathlib.Path(__file__).parent, working_folder_name)
     sys.path.append(working_path)
     if not os.path.isdir(working_path):
         os.makedirs(working_path)
 
-    temp_thumb= os.path.join(working_path,'tmp','thumb-images')
+    temp_thumb = os.path.join(working_path, 'tmp', 'thumb-images')
     if not os.path.isdir(temp_thumb):
         os.makedirs(temp_thumb)
+
+
     def handler(context: Context):
         try:
             global temp_thumb
@@ -46,9 +50,9 @@ try:
             if 'image/' in a:
                 logger.info(full_file_path)
                 file_name = pathlib.Path(full_file_path).name
-                file_name_only,ext = tuple(file_name.split('.'))
+                file_name_only, ext = tuple(file_name.split('.'))
                 app_name = context.info.get("app_name")
-                upload_id= file_name_only
+                upload_id = file_name_only
                 real_file_path = full_file_path
                 db = mongo_db.get_db(app_name)
                 upload_info = ReCompact.dbm.DbObjects.find_one_to_dict(
@@ -65,8 +69,8 @@ try:
                     return
                 thumb_width = upload_info.get("ThumbWidth", 350)
                 thumb_height = upload_info.get("ThumbHeight", 350)
-                scale_width,scale_height=350,350
-                file_path =real_file_path
+                scale_width, scale_height = 350, 350
+                file_path = real_file_path
                 image = Image.open(file_path)
                 h, w = image.size
                 thumb_dir = os.path.join(temp_thumb, app_name)
@@ -74,7 +78,7 @@ try:
                     os.makedirs(thumb_dir)
                 thumb_file_path = os.path.join(thumb_dir, upload_id + ".webp")
                 if w <= thumb_width and h <= thumb_height:
-                    shutil.copy(file_path,thumb_file_path)
+                    shutil.copy(file_path, thumb_file_path)
                 else:
                     rate = float(thumb_width / w)
                     if h > w:
@@ -83,7 +87,7 @@ try:
                     if not os.path.isdir(thumb_dir):
                         os.makedirs(thumb_dir)
                     image.thumbnail((nh, nw))
-                    image.save(thumb_file_path,format="WEBP")
+                    image.save(thumb_file_path, format="WEBP")
                     image.close()
 
                 #
@@ -108,9 +112,10 @@ try:
         except Exception as e:
             logger.debug(e)
 
+
     client.config(
         msg_folder="./tmp/msg",
-        logger= logger
+        logger=logger
     )
     th = client.watch(
         msg_type="processing",
