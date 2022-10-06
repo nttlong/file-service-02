@@ -34,24 +34,26 @@ def __get_age_of_file_in_minutes__(file_path):
 
 def __thead_clean_up__(logger: logging.Logger = None):
     def run(logs):
-        try:
-            global __msg_folder__
-            global __age_of_msg__
-            files = __get_all_files__(__msg_folder__)
-            for file in files:
-                age = __get_age_of_file_in_minutes__(file)
-                if age > __age_of_msg__:
-                    try:
-                        os.remove(file)
-                        if isinstance(logs, logging.Logger):
-                            logs.info(f"Delete {file}")
-                    except Exception as e:
-                        logger.debug(e)
-        except Exception as e:
-            if isinstance(logger, logging.Logger):
-                logger.debug(e)
-            else:
-                print(e)
+        global __msg_folder__
+        global __age_of_msg__
+        while True:
+            try:
+
+                files = __get_all_files__(__msg_folder__)
+                for file in files:
+                    age = __get_age_of_file_in_minutes__(file)
+                    if age > __age_of_msg__:
+                        try:
+                            os.remove(file)
+                            if isinstance(logs, logging.Logger):
+                                logs.info(f"Delete {file}")
+                        except Exception as e:
+                            logger.debug(e)
+            except Exception as e:
+                if isinstance(logger, logging.Logger):
+                    logger.debug(e)
+                else:
+                    print(e)
 
     try:
         if isinstance(logger, logging.Logger):

@@ -10,7 +10,7 @@ import pathlib
 import threading
 __cache__={}
 __lock__= threading.Lock()
-
+__max_age_of_msg_in_minutes__ = 10
 import time
 
 from setuptools.command.upload_docs import upload_docs
@@ -50,14 +50,19 @@ def watch_run(msg_type, handler):
     global __cache__
     global __lock__
     global __msg_folder__
+    global __max_age_of_msg_in_minutes__
     if __cache__.get(msg_type) is None:
         __lock__.acquire()
         __cache__[msg_type]=dict()
         __lock__.release()
-    files = __get_all_files__(__msg_folder__)
     for k,v in __cache__[msg_type].items():
-        if (datetime.utcnow()-v).total_seconds()>240:
+        if (datetime.utcnow()-v).total_seconds()>__max_age_of_msg_in_minutes__*60:
             del __cache__[msg_type][k]
+
+
+    files = __get_all_files__(__msg_folder__)
+
+
     for file in files:
         try:
             if file.split('.')[-2]==msg_type:
@@ -98,7 +103,9 @@ def watch_run(msg_type, handler):
             else:
                 print(e)
 
-def watch(msg_type,handler,delay_in_second:float)->threading.Thread:
+def watch(msg_type,handler,delay_in_second:float,max_age_of_msg_in_minutes:int)->threading.Thread:
+    global __max_age_of_msg_in_minutes__
+    __max_age_of_msg_in_minutes__ = max_age_of_msg_in_minutes
 
     if not isinstance(delay_in_second,float):
         raise Exception('delay_in_second')
