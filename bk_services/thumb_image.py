@@ -120,7 +120,8 @@ try:
     th = client.watch(
         msg_type="processing",
         handler=handler,
-        delay_in_second=0.1
+        delay_in_second=0.1,
+        max_age_of_msg_in_minutes=10
     )
     th.join()
 except Exception as e:

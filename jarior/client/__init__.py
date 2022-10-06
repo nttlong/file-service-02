@@ -12,7 +12,12 @@ __cache__={}
 __lock__= threading.Lock()
 __max_age_of_msg_in_minutes__ = 10
 import time
-
+def __get_utc_time_of_file__(file_path):
+    dt = os.path.getmtime(file_path)
+    return datetime.datetime.utcfromtimestamp(dt)
+def __get_age_of_file_in_minutes__(file_path):
+    create_time = __get_utc_time_of_file__(file_path)
+    return (datetime.datetime.utcnow() - create_time).total_seconds() / 60
 from setuptools.command.upload_docs import upload_docs
 
 
@@ -38,12 +43,16 @@ def config(msg_folder:str, logger:logging.Logger):
 
     return None
 
-def __get_all_files__(p_dir: str):
+def __get_all_files__(p_dir: str,max_age_in_minutes:int):
     ret=[]
 
     for path, subdirs, files in os.walk(p_dir):
         for name in files:
-            ret+=[os.path.join(path, name)]
+            full_file_path =os.path.join(path, name)
+            age = __get_age_of_file_in_minutes__(full_file_path)
+            if age<=max_age_in_minutes:
+                ret+=[full_file_path]
+
     return ret
 
 def watch_run(msg_type, handler):
@@ -60,7 +69,7 @@ def watch_run(msg_type, handler):
             del __cache__[msg_type][k]
 
 
-    files = __get_all_files__(__msg_folder__)
+    files = __get_all_files__(__msg_folder__,__max_age_of_msg_in_minutes__)
 
 
     for file in files:
