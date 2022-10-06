@@ -49,9 +49,9 @@ def __get_all_files__(p_dir: str,max_age_in_minutes:int):
     for path, subdirs, files in os.walk(p_dir):
         for name in files:
             full_file_path =os.path.join(path, name)
-            age = __get_age_of_file_in_minutes__(full_file_path)
-            if age<=max_age_in_minutes:
-                ret+=[full_file_path]
+            # age = __get_age_of_file_in_minutes__(full_file_path)
+            # if age<=max_age_in_minutes:
+            ret+=[full_file_path]
 
     return ret
 
@@ -116,6 +116,7 @@ def watch_run(msg_type, handler):
 
 def watch(msg_type,handler,delay_in_second:float,max_age_of_msg_in_minutes:int)->threading.Thread:
     global __max_age_of_msg_in_minutes__
+    global __logger__
     __max_age_of_msg_in_minutes__ = max_age_of_msg_in_minutes
 
     if not isinstance(delay_in_second,float):
@@ -125,5 +126,6 @@ def watch(msg_type,handler,delay_in_second:float,max_age_of_msg_in_minutes:int)-
             time.sleep(delay_in_second)
             watch_run(msg_type,handler)
     ret=threading.Thread(target=loop_watch,args=(msg_type,handler,))
+    __logger__.info(f"Start {__file__}")
     ret.start()
     return ret

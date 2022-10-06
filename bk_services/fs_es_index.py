@@ -1,3 +1,6 @@
+"""
+Transfer all files in which has text to fs crawler
+"""
 import pathlib
 
 import sys
@@ -8,11 +11,12 @@ sys.path.append(str(pathlib.Path(__file__).parent.parent))
 from jarior import loggers
 from jarior import client
 from jarior.client import Context
-
+from bk_services import arg_reader
+from jose import jwt
 
 logger = loggers.get_logger(
         logger_name=str(pathlib.Path(__file__).stem),
-        logger_dir=str(pathlib.Path(__file__).parent)
+        logger_dir=str(pathlib.Path(__file__).parent.parent)
     )
 try:
     import uuid
@@ -108,9 +112,10 @@ try:
         except Exception as e:
             logger.debug(e)
 
-
+    msg_folder = arg_reader.get_arg('msg-folder',"./tmp/msg")
+    config.fs_crawler_path =arg_reader.get_arg('fs-path',config.fs_crawler_path)
     client.config(
-        msg_folder="./tmp/msg",
+        msg_folder=msg_folder,
         logger=logger
     )
     th = client.watch(
@@ -120,6 +125,29 @@ try:
         max_age_of_msg_in_minutes=10
 
     )
+    share_key = arg_reader.get_arg('share-key',None)
+    db_config = arg_reader.get_arg_and_decode_to_dict('db-config',share_key)
+    logger.info(f"Start {__file__}")
+    logger.info(f"msg-folder={msg_folder}")
+    logger.info(f"fs-crawler-folder={config.fs_crawler_path}")
+    config.config['db'] = db_config
+    for k,v in config.config['db'].items():
+        if k=='password':
+            logger.info(f"{k}=*******")
+        else:
+            logger.info(f"{k}={v}")
     th.join()
 except Exception as e:
     logger.debug(e)
+# How to use
+# Go to site: https://dinochiesa.github.io/jwt/
+# Encrypt db config including:
+#   "host": "...",
+#   "port": ...,
+#   "username": "...",
+#   "password:"..."
+#   "authSource": "...",
+#   "replicaSet": "...",
+#   "authMechanism": "SCRAM-SHA-1"
+# python bk_services/fs_es_index.py msg-folder={} fs-path={} share-key={Symmetric Key from site} db-config={token form site}
+# python bk_services/fs_es_index.py msg-folder=/app/tmp fs-path=/app/fs-docs share-key=f7ce559d-f717-49ce-9b7d-46516a3a6180 db-config=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0IjoiMTkyLjE2OC4xOC4zNiIsInBvcnQiOjI3MDE4LCJ1c2VybmFtZSI6ImFkbWluLWRvYyIsImF1dGhTb3VyY2UiOiJsdi1kb2NzIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJyZXBsaWNhU2V0IjoiIiwiYXV0aE1lY2hhbmlzbSI6IlNDUkFNLVNIQS0xIn0.LQ44Swc6XeEIex59xtTWg9LPpGTPzCWBB5HDnvKv31A

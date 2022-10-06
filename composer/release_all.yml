@@ -10,7 +10,7 @@ services:
   #    context: ./..
   #    dockerfile: ./composer/files-dockerfile
   web:
-    image: nttlong/lv-file:b14
+    image: nttlong/lv-file:b17
     container_name: lv-file-web
     hostname: web
     volumes:
@@ -37,7 +37,7 @@ services:
       - file_server_api_url=http://${HOST_IP}:${API_PORT}/api
       - file_server_es_url=http://${ES_URL},
   thumb-video:
-    image: nttlong/lv-file:b14
+    image: nttlong/lv-file:b17
     container_name: thumb-video
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
@@ -45,21 +45,21 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/thumb_video.py
   thumb-image:
-    image: nttlong/lv-file:b14
+    image: nttlong/lv-file:b17
     container_name: thumb-image
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/thumb_image.py
   thumb-office:
-    image: nttlong/lv-file:b14
+    image: nttlong/lv-file:b17
     container_name: thumb-office
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
     command: python3 /app/bk_services/thumb_office.py
   thumb-pdf:
-    image: nttlong/lv-file:b14
+    image: nttlong/lv-file:b17
     container_name: thumb-pdf
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
@@ -84,7 +84,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/fs-logs:/usr/share/fscrawler/logs
 
   files-es-index-all-office-files:
-    image: nttlong/lv-file:b14
+    image: nttlong/lv-file:b17
     container_name: files-es-index-all-office-files
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
@@ -92,7 +92,7 @@ services:
     command: python3 /app/bk_services/fs_es_index.py
 #
   ocr-image:
-    image: nttlong/lv-file:b14
+    image: nttlong/lv-file:b17
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
@@ -100,7 +100,7 @@ services:
     command: python3 /app/bk_services/ocr_image.py
     container_name: ocr-image
   ocr-pdf:
-    image: nttlong/lv-file:b14
+    image: nttlong/lv-file:b17
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
@@ -108,7 +108,7 @@ services:
     command: python3 /app/bk_services/ocr_pdf.py
     container_name: ocr-pdf
   cleansing-chapel:
-    image: nttlong/lv-file:b14
+    image: nttlong/lv-file:b17
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
@@ -117,7 +117,7 @@ services:
     command: python3 /app/bk_services/cleansing_chapel.py
     container_name: cleansing-chapel
   cleansing-town:
-    image: nttlong/lv-file:b14
+    image: nttlong/lv-file:b17
     volumes:
       - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
@@ -125,3 +125,4 @@ services:
 
     command: python3 /app/bk_services/cleansing_town.py
     container_name: cleansing-town
+
