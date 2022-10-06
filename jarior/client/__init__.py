@@ -14,10 +14,10 @@ __max_age_of_msg_in_minutes__ = 10
 import time
 def __get_utc_time_of_file__(file_path):
     dt = os.path.getmtime(file_path)
-    return datetime.datetime.utcfromtimestamp(dt)
+    return datetime.utcfromtimestamp(dt)
 def __get_age_of_file_in_minutes__(file_path):
     create_time = __get_utc_time_of_file__(file_path)
-    return (datetime.datetime.utcnow() - create_time).total_seconds() / 60
+    return (datetime.utcnow() - create_time).total_seconds() / 60
 from setuptools.command.upload_docs import upload_docs
 
 
@@ -64,9 +64,11 @@ def watch_run(msg_type, handler):
         __lock__.acquire()
         __cache__[msg_type]=dict()
         __lock__.release()
-    for k,v in __cache__[msg_type].items():
+    lst = list(__cache__[msg_type].items())
+    for k,v in lst:
         if (datetime.utcnow()-v).total_seconds()>__max_age_of_msg_in_minutes__*60:
             del __cache__[msg_type][k]
+    del lst
 
 
     files = __get_all_files__(__msg_folder__,__max_age_of_msg_in_minutes__)

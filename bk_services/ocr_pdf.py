@@ -124,6 +124,8 @@ try:
                         return
                     is_ocr = detect_is_ocr(real_file_path)
                     fs_index_dir = os.path.join(config.fs_crawler_path, app_name)
+                    if not os.path.isdir(fs_index_dir):
+                        os.makedirs(fs_index_dir)
                     if is_ocr:
                         """
                         Transfer to elastic search
@@ -131,7 +133,7 @@ try:
                         if not os.path.isfile(real_file_path):
                             return
 
-                        shutil.copy(real_file_path, fs_index_dir)
+                        shutil.copy(real_file_path,os.path.join(fs_index_dir,f"{file_name_only}.pdf"))
                         return
                     temp_orc_file = os.path.join(temp_orc_dir,f"{file_name_only}.pdf")
                     runner(real_file_path,temp_orc_file)
