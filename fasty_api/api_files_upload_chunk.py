@@ -120,7 +120,7 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
         return Response(status_code=403)
     db_context = get_db_context(app_name)
     gfs = db_context.get_grid_fs()
-    global  __meta_upload_cache__
+    global __meta_upload_cache__
     global __lock__
     upload_item = __meta_upload_cache__.get(UploadId)
     if not upload_item:

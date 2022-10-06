@@ -1,5 +1,5 @@
 """
-This processing clean up temporary file which is older than 48 hours from now
+This processing clean up fs crawler files in which is older than 48 hours from now
 """
 import os.path
 import pathlib
@@ -11,6 +11,11 @@ import time
 sys.path.append(str(pathlib.Path(__file__).parent))
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 from bk_services import config
+from jarior.loggers import get_logger
+logger = get_logger(
+    logger_name= pathlib.Path(__file__).stem,
+    logger_dir= str(pathlib.Path(__file__).parent.parent)
+)
 def __get_all_files__(p_dir: str):
     ret=[]
     for path, subdirs, files in os.walk(p_dir):
@@ -31,9 +36,14 @@ def run():
     global limit_age
     files = __get_all_files__(config.fs_crawler_path)
     for file in files:
-        age = __get_age_of_file_in_minutes__(file)
-        if age>limit_age:
-            os.remove(file)
+        try:
+            age = __get_age_of_file_in_minutes__(file)
+            if age>limit_age:
+                os.remove(file)
+                logger.info(f"Delete file {file}")
+        except Exception as e:
+            logger.debug(e)
+
 
 def running():
     delay_time = 60*60*8
