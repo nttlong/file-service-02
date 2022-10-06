@@ -23,7 +23,7 @@ def __get_all_files__(p_dir: str):
     return ret
 working_dir = str(pathlib.Path(__file__).parent.parent)
 tmp_dir = os.path.join(working_dir,"tmp")
-limit_age= 3*60
+limit_age= 24*60*2
 def __get_utc_time_of_file__(file_path):
     dt = os.path.getmtime(file_path)
     return datetime.datetime.utcfromtimestamp(dt)
