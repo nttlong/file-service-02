@@ -44,7 +44,9 @@ async def get_thumb_of_files(app_name: str, directory: str, request: Request):
     cach_thumb_path = thumb_caching.check(directory)
     if cach_thumb_path is not None:
         from fastapi.responses import FileResponse
-        return FileResponse(cach_thumb_path)
+        res_file= FileResponse(cach_thumb_path)
+        res_file.headers.append("Cache-Control", "max-age=86400")
+        return res_file
 
     CHUNK_SIZE = 1024 * 1024
     cntx = db_async.get_db_context(app_name)
