@@ -101,6 +101,7 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo = Body(emb
         docs.Files.SizeUploaded == 0,
         docs.Files.ProcessHistories == [],
         docs.Files.ServerFileName==f"{upload_id}.{file_extension}",
+        docs.Files.AvailableThumbSize == Data.ThumbConstraints,
 
 
         docs.Files.MimeType == mime_type,

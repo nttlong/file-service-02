@@ -39,6 +39,7 @@ class UploadInfoResult(BaseModel):
     IsPublic: Union[bool, None] = Field(description="Access type")
     Status: Union[int, None] = Field(description="Status of upload 0: not finish yet, 1;: finished")
     VideoInfo: Union[VideoInfoClass, None] = Field(description="Thông tin media")
+    AvailableThumbs:Union[type([]), None] = Field(description="All relative available thumbs")
 
 
 @fasty.api_post("/{app_name}/files/info", response_model=UploadInfoResult)
@@ -67,6 +68,7 @@ async def get_info(app_name: str, request: Request,
     ret.RelUrl = f"api/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}"
     ret.FullUrl = f"{fasty.config.app.api_url}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}"
     ret.HasThumb = upload_info.get(docs.Files.ThumbFileId.__name__) is not None
+    ret.AvailableThumbs=upload_info.get(docs.Files.AvailableThumbs.__name__,[])
     if ret.HasThumb:
         """
         http://172.16.7.25:8011/api/lv-docs/thumb/c4eade3a-63cb-428d-ac63-34aadd412f00/search.png.png

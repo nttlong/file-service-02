@@ -271,3 +271,15 @@ class DocUploadRegister:
     """
     Mark delete
     """
+    AvailableThumbSize = ReCompact.dbm.field(data_type=str)
+    """
+    Thumbnail constraint generator: After material successfully uploaded. The system will generate a default thumbnail in size of 700pxx700px. However if thy desire more thumbnails with various  sizes such as: 200x200,450x450,... Thy just set 200,450,.. Example: for 200x200, 350x350 and 1920x1920 just set 200,350,1920
+    """
+    AvailableThumbs = ReCompact.dbm.field(data_type=type([]))
+@ReCompact.dbm.table(
+    "fs.files",
+    keys=["rel_file_path"]
+)
+class FsFile:
+    _id = ReCompact.dbm.field(data_type=bson.ObjectId)
+    rel_file_path=ReCompact.dbm.field(data_type=str)

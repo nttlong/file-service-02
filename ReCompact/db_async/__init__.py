@@ -185,18 +185,22 @@ def __fix_bson_object_id__(fx):
     if fx is None:
         return None
     ret = {}
-    for k, v in fx.items():
-        if isinstance(v, bson.ObjectId):
-            ret = {**ret, **{k: str(v)}}
 
-        elif isinstance(v, dict):
-            ret = {**ret, **{k: __fix_bson_object_id__(v)}}
-        elif isinstance(v, list):
-            lst = list(__fix_bson_object_id_in_list__(v))
-            ret = {**ret, **{k: lst}}
-        else:
-            ret = {**ret, **{k: v}}
-    return ret
+    if isinstance(fx,dict):
+        for k, v in fx.items():
+            if isinstance(v, bson.ObjectId):
+                ret = {**ret, **{k: str(v)}}
+
+            elif isinstance(v, dict):
+                ret = {**ret, **{k: __fix_bson_object_id__(v)}}
+            elif isinstance(v, list):
+                lst = list(__fix_bson_object_id_in_list__(v))
+                ret = {**ret, **{k: lst}}
+            else:
+                ret = {**ret, **{k: v}}
+        return ret
+    else:
+        return fx
 
 
 def __fix_bson_object_id_in_list__(fx):

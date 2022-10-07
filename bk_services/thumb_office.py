@@ -26,6 +26,7 @@ try:
     import ReCompact.thumbnal
     from moviepy.editor import *
     import subprocess
+    from  bk_services import graphic_utils
 
     from bk_services import mongodb as mongo_db
 
@@ -95,13 +96,18 @@ try:
                     return
                 if not os.path.isfile(real_file_path):
                     return
+                thumb_dir = os.path.join(temp_thumb, app_name)
+
                 image_file = create_image_from_office_file(real_file_path)
                 thumb_width = upload_info.get("ThumbWidth", 350)
                 thumb_height = upload_info.get("ThumbHeight", 350)
 
                 image = Image.open(image_file)
+                thumb_sizes = context.info.get('thumb_sizes')
+                if thumb_sizes is not None:
+                    graphic_utils.make_thumbs(thumb_dir, image_file, thumb_sizes, db, app_name, upload_id)
                 h, w = image.size
-                thumb_dir = os.path.join(temp_thumb, app_name)
+
                 if not os.path.isdir(thumb_dir):
                     os.makedirs(thumb_dir)
                 thumb_file_path = os.path.join(thumb_dir, upload_id + ".png")
@@ -136,6 +142,7 @@ try:
                     )
                 )
                 os.remove(thumb_file_path)
+                del image
 
         except Exception as e:
             logger.debug(e)
@@ -144,6 +151,7 @@ try:
     arg_config = arg_reader.get_config()
     config.fs_crawler_path = arg_config.fs_crawler_path
     config.config['db'] = arg_config.db_config
+    arg_config.msg_folder=r"/home/vmadmin/python/file-service-02/tmp/msg"
     client.config(
         msg_folder=arg_config.msg_folder,
         logger=logger

@@ -1,4 +1,4 @@
-from  typing import List, Union
+from typing import List, Union, Optional
 from pydantic import Field, BaseModel
 from . import error
 class RegisterUploadInfo(BaseModel):
@@ -8,9 +8,14 @@ class RegisterUploadInfo(BaseModel):
     FileName:Union[str,None]=Field(description="Tên file upload")
     ChunkSizeInKB:Union[int,None]=Field(description="Kích thước phân đoạn tính bằng KB")
     FileSize:Union[int,None]=Field(description="Kích thước file tính bằng bytes")
-    IsPublic:Union[bool,None]=Field(description="Phạm vi truy cập\n <ol>"
+    IsPublic:Optional[bool]=Field(description="Phạm vi truy cập\n <ol>"
                                                 "<li>True:  không ngăn cản bởi xác thực</li>\n"
-                                                "<li>False: Buộc phải chứng thực\n</li></ol>")
+                                                "<li>False: Buộc phải chứng thực\n</li></ol>",
+                                  default=False)
+    ThumbConstraints:Optional[str]=Field(
+        description="Thumbnail constraint generator: After material successfully uploaded. The system will generate a default thumbnail in size of 700pxx700px. However if thy desire more thumbnails with various  sizes such as: 200x200,450x450,... Thy just set 200,450,.. Example: for 200x200, 350x350 and 1920x1920 just set 200,350,1920",
+        default=""
+    )
 
 class RegisterUploadResult(BaseModel):
     NumOfChunks:Union[int,None]=Field(description="Số phân đoạn")

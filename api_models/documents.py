@@ -1,8 +1,9 @@
-from .Model_Files import DocUploadRegister
+from .Model_Files import DocUploadRegister, FsFile
 from .ModelApps import sys_applications
 from .Model_Users import User
 from .Model_Container import ZipContainer
 
+Fs_File = FsFile()
 Files = DocUploadRegister()
 """
 Mongodb Document của phần Upload File

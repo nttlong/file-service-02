@@ -218,7 +218,9 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
                 info=dict(
                     full_file_path=path_to_broker_share,
                     app_name =app_name,
-                    ppload_id=UploadId
+                    upload_id=UploadId,
+                    thumb_sizes= upload_item.get(docs.Files.AvailableThumbSize.__name__)
+
                 ),
                 files_path=[path_to_broker_share]
             )

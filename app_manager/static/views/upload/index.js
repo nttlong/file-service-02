@@ -30,7 +30,8 @@ var uploadFileView = await View(import.meta, class UploadFileView extends BaseSc
                     FileName: fileUpload.name,
                     FileSize: fileUpload.size,
                     ChunkSizeInKB: 1024 * 10,
-                    IsPublic: this.data.IsPublic||false
+                    IsPublic: this.data.IsPublic||false,
+                    ThumbConstraints:"700,350,200,120"
                 }
             });
             if (reg.Error) {
