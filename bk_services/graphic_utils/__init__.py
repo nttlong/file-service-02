@@ -61,7 +61,7 @@ def make_thumbs(temp_thumb:str,image_file: str, thumb_sizes: str, db: pymongo.da
                 data_item_type=api_models.Model_Files.FsFile,
                 filter=ReCompact.dbm.FILTER._id == fs._id,
                 updator=ReCompact.dbm.SET(
-                    ReCompact.dbm.FIELDS.rel_file_path == f"{upload_id}/thumb/{size}.webp",
+                    ReCompact.dbm.FIELDS.rel_file_path == f"thumbs/{upload_id}/{size}.webp",
                 )
             )
             upload_info= ReCompact.dbm.DbObjects.find_one_to_dict(
@@ -71,7 +71,7 @@ def make_thumbs(temp_thumb:str,image_file: str, thumb_sizes: str, db: pymongo.da
             )
             if upload_info is not None:
                 at = upload_info.get(api_models.Model_Files.DocUploadRegister.AvailableThumbs.__name__,[])
-                at+=[f"{app_name}/{upload_id}/thumb/{size}.webp"]
+                at+=[f"thumbs/{upload_id}/{size}.webp"]
                 ReCompact.dbm.DbObjects.update(
                     db,
                     data_item_type=api_models.Model_Files.DocUploadRegister,

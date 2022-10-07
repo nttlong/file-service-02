@@ -151,7 +151,7 @@ try:
     arg_config = arg_reader.get_config()
     config.fs_crawler_path = arg_config.fs_crawler_path
     config.config['db'] = arg_config.db_config
-    arg_config.msg_folder=r"/home/vmadmin/python/file-service-02/tmp/msg"
+
     client.config(
         msg_folder=arg_config.msg_folder,
         logger=logger

@@ -11,6 +11,7 @@ logger = loggers.get_logger(
     )
 try:
     from bk_services import config
+    from bk_services import graphic_utils
     from datetime import datetime
 
     import api_models.Model_Files
@@ -28,6 +29,12 @@ try:
     path = config.watch_path
     working_folder_name = pathlib.Path(__file__).stem
     working_path = os.path.join(pathlib.Path(__file__).parent,working_folder_name)
+    temp_image_dir= os.path.join(working_path,"tmp-image")
+    temp_thumbs_dir = os.path.join(working_path, "tmp-thumbs")
+    if not os.path.isdir(temp_image_dir):
+        os.makedirs(temp_image_dir)
+    if not os.path.isdir(temp_thumbs_dir):
+        os.makedirs(temp_thumbs_dir)
     sys.path.append(working_path)
     if not os.path.isdir(working_path):
         os.makedirs(working_path)
@@ -56,6 +63,7 @@ try:
                     return
                 if not os.path.isfile(real_file_path):
                     return
+
                 scale_width,scale_height=350,350
                 stream = ReCompact.thumbnal.video_create_thumb(
                     in_put=real_file_path,
@@ -64,12 +72,20 @@ try:
                     second=0
 
                 )
+                tmp_image_file = os.path.join(temp_image_dir,f"{upload_id}.png")
 
-                fs = ReCompact.db_context.create_mongodb_fs_from_io_array(
-                    db=db,
-                    stm=stream
-
+                with open(tmp_image_file, 'wb') as out:  ## Open temporary file as bytes
+                    out.write(stream.read())
+                stream.close()
+                del stream
+                fs = ReCompact.db_context.create_mongodb_fs_from_file(
+                    db,
+                    full_path_to_file=tmp_image_file,
+                    chunk_size=1024 * 1024
                 )
+                thumb_sizes = context.info.get('thumb_sizes')
+                if thumb_sizes is not None:
+                    graphic_utils.make_thumbs(temp_thumbs_dir, tmp_image_file, thumb_sizes, db, app_name, upload_id)
                 clip = VideoFileClip(
                     real_file_path
                 )
@@ -95,6 +111,7 @@ try:
 
     from bk_services import arg_reader
     arg_config = arg_reader.get_config()
+    # arg_config.msg_folder = r"/home/vmadmin/python/file-service-02/tmp/msg"
     config.fs_crawler_path = arg_config.fs_crawler_path
     config.config['db'] = arg_config.db_config
     client.config(

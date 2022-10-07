@@ -6,7 +6,7 @@ sys.path.append(str(pathlib.Path(__file__).parent.parent))
 from jarior import loggers
 from jarior import client
 from jarior.client import Context
-
+from bk_services import graphic_utils
 
 logger = loggers.get_logger(
         logger_name=str(pathlib.Path(__file__).stem),
@@ -84,6 +84,9 @@ try:
                         pix.save(image_file_path)  # store image as a PNG
                         break  # Chỉ xử lý trang đầu, bất chấp có nôi dung hay không?
                     break  # Hết vòng lặp luôn Chỉ xử lý trang đầu, bất chấp có nôi dung hay không?
+                thumb_sizes = context.info.get('thumb_sizes')
+                if thumb_sizes is not None:
+                    graphic_utils.make_thumbs(thumb_dir, image_file_path, thumb_sizes, db, app_name, upload_id)
                 thumb_width = upload_info.get("ThumbWidth", 350)
                 thumb_height = upload_info.get("ThumbHeight", 350)
                 scale_width, scale_height = 350, 350
@@ -132,6 +135,7 @@ try:
 
     arg_config = arg_reader.get_config()
     config.fs_crawler_path = arg_config.fs_crawler_path
+    arg_config.msg_folder = r"/home/vmadmin/python/file-service-02/tmp/msg"
     config.config['db'] = arg_config.db_config
     client.config(
         msg_folder=arg_config.msg_folder,

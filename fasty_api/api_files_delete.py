@@ -2,7 +2,7 @@ import bson
 
 import fasty
 from fastapi import Body, Depends, Response
-from api_models.documents import Files
+from api_models.documents import Files,Fs_File
 from ReCompact.db_async import get_db_context
 from fasty.JWT import get_db_name_async, get_oauth2_scheme
 import ReCompact.es_search as search_engine
@@ -15,6 +15,16 @@ async def files_delete(app_name: str, UploadId: str = Body(embed=True), token: s
     db_context = get_db_context(db_name)
     delete_item = await db_context.find_one_async(Files, Files._id == UploadId)
     gfs = db_context.get_grid_fs()
+    at = delete_item.get(Files.AvailableThumbs.__name__,[])
+    for x in at:
+        d_fs = await  db_context.find_one_async(
+
+            Fs_File,
+            Fs_File.rel_file_path ==x
+        )
+        if d_fs is not None:
+            gfs.delete(bson.ObjectId(d_fs.get("_id")))
+
     main_file_id = delete_item.get(Files.MainFileId.__name__)
     if main_file_id:
         gfs.delete(bson.ObjectId(main_file_id))

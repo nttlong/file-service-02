@@ -19,7 +19,7 @@ from fasty import mime_data
 import mimetypes
 import fasty.mongo_fs_http_streaming
 import threading
-fasty.app.get("test/ping-server")
+
 __cache__ ={}
 __lock__ = threading.Lock()
 from fasty_api import thumb_caching

@@ -16,6 +16,7 @@ logger = loggers.get_logger(
 try:
     import shutil
     from bk_services import config
+    from bk_services import graphic_utils
     from datetime import datetime
     from PIL import Image
     import api_models.Model_Files
@@ -71,9 +72,13 @@ try:
                 thumb_height = upload_info.get("ThumbHeight", 350)
                 scale_width, scale_height = 350, 350
                 file_path = real_file_path
+                thumb_sizes = context.info.get('thumb_sizes')
+                thumb_dir = os.path.join(temp_thumb, app_name)
+                if thumb_sizes is not None:
+                    graphic_utils.make_thumbs(thumb_dir, file_path, thumb_sizes, db, app_name, upload_id)
                 image = Image.open(file_path)
                 h, w = image.size
-                thumb_dir = os.path.join(temp_thumb, app_name)
+
                 if not os.path.isdir(thumb_dir):
                     os.makedirs(thumb_dir)
                 thumb_file_path = os.path.join(thumb_dir, upload_id + ".webp")
