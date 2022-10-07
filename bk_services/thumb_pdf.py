@@ -128,8 +128,13 @@ try:
             logger.debug(e)
 
 
+    from bk_services import arg_reader
+
+    arg_config = arg_reader.get_config()
+    config.fs_crawler_path = arg_config.fs_crawler_path
+    config.config['db'] = arg_config.db_config
     client.config(
-        msg_folder="./tmp/msg",
+        msg_folder=arg_config.msg_folder,
         logger=logger
     )
     th = client.watch(

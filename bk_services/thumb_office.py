@@ -26,7 +26,7 @@ try:
     import ReCompact.thumbnal
     from moviepy.editor import *
     import subprocess
-    from bk_services.watchers import start, Info, start_thead
+
     from bk_services import mongodb as mongo_db
 
     path = config.watch_path
@@ -136,13 +136,16 @@ try:
                     )
                 )
                 os.remove(thumb_file_path)
-                print(context.full_path)
+
         except Exception as e:
             logger.debug(e)
 
-
+    from bk_services import arg_reader
+    arg_config = arg_reader.get_config()
+    config.fs_crawler_path = arg_config.fs_crawler_path
+    config.config['db'] = arg_config.db_config
     client.config(
-        msg_folder="./tmp/msg",
+        msg_folder=arg_config.msg_folder,
         logger=logger
     )
     th = client.watch(
@@ -151,6 +154,15 @@ try:
         delay_in_second = 0.1,
         max_age_of_msg_in_minutes=10
     )
+    logger.info(f"Start {__file__}")
+    logger.info(f"msg-folder={arg_config.msg_folder}")
+    logger.info(f"fs-crawler-folder={config.fs_crawler_path}")
+
+    for k, v in config.config['db'].items():
+        if k == 'password':
+            logger.info(f"{k}=*******")
+        else:
+            logger.info(f"{k}={v}")
     th.join()
 except Exception as e:
     logger.debug(e)

@@ -112,10 +112,13 @@ try:
         except Exception as e:
             logger.debug(e)
 
-    msg_folder = arg_reader.get_arg('msg-folder',"./tmp/msg")
-    config.fs_crawler_path =arg_reader.get_arg('fs-path',config.fs_crawler_path)
+
+    arg_config=arg_reader.get_config()
+
+    config.fs_crawler_path =arg_config.fs_crawler_path
+    config.config['db'] = arg_config.db_config
     client.config(
-        msg_folder=msg_folder,
+        msg_folder=arg_config.msg_folder,
         logger=logger
     )
     th = client.watch(
@@ -125,14 +128,12 @@ try:
         max_age_of_msg_in_minutes=10
 
     )
-    share_key = arg_reader.get_arg('share-key',None)
-    db_config = arg_reader.get_arg_and_decode_to_dict('db-config',share_key)
     logger.info(f"Start {__file__}")
-    logger.info(f"msg-folder={msg_folder}")
+    logger.info(f"msg-folder={arg_config.msg_folder}")
     logger.info(f"fs-crawler-folder={config.fs_crawler_path}")
-    config.config['db'] = db_config
-    for k,v in config.config['db'].items():
-        if k=='password':
+
+    for k, v in config.config['db'].items():
+        if k == 'password':
             logger.info(f"{k}=*******")
         else:
             logger.info(f"{k}={v}")
