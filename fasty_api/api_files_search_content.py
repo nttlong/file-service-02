@@ -1,3 +1,4 @@
+import enigma
 import fasty
 from fastapi import Request, Depends, Body, Response
 import fasty.JWT
@@ -136,7 +137,7 @@ async def file_search(request:Request, app_name: str, content: str = Body(embed=
 
     db_context = get_db_context(db_name)
     ret_items = []
-    url = fasty.config.app.api_url
+    url = enigma.get_root_api_url()
     for x in search_result["items"]:
         upload_id = x["server_file_id"].split('.')[0]  # tách lấy id upload
         upload_doc_item = await db_context.find_one_async(

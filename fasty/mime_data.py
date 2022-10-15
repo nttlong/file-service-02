@@ -127,7 +127,7 @@ mime_data[".jpeg"]="image/jpeg"
 mime_data[".jpg"]="image/jpeg"
 mime_data[".js"]="application/javascript"
 mime_data[".json"]="application/json"
-mime_data[".jsx"]="text/jscript"
+mime_data[".jsx"]="application/javascrip"
 mime_data[".latex"]="application/x-latex"
 mime_data[".lit"]="application/x-ms-reader"
 mime_data[".lpk"]="application/octet-stream"
@@ -383,7 +383,11 @@ mimetypes.types_map = {**mime_data,**mimetypes.types_map}
 __old__=mimetypes.guess_type
 def __new__fn__(url, strict=True):
     import os
-    a,b= __old__(url,strict)
+    items= url.split('.')
+    item="."+items[items.__len__()-1]
+    a,b = mime_data.get(item),None
+    if a is None:
+        a,b= __old__(url,strict)
     if a is None:
         x= os.path.splitext(url)[1]
         a = mime_data.get(x)

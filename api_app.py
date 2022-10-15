@@ -21,21 +21,18 @@ Nạp môi trường
 # from fastapi import FastAPI
 #
 # app = FastAPI()
-print('ok run')
+import enigma
 import fasty
 
-fasty.load_config(str(pathlib.Path(__file__).parent), "uvicorn.error")
+# fasty.load_config(str(pathlib.Path(__file__).parent), "uvicorn.error")
 import fasty.JWT as fjwt
-fjwt.set_default_db(fasty.config.db.authSource)
+# fjwt.set_default_db(enigma.app_config.get_config('admin_db_name'))
 
 
 
 
-db_server = os.environ.get('LV_API_DEFAULT_DB','lv-docs')
-if db_server is not None:
-    import fasty.JWT
-    fasty.JWT.set_default_db(db_server)
-print(db_server)
+
+
 import fasty
 import pathlib
 app = fasty.install_fastapi_app(__name__)

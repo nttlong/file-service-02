@@ -78,9 +78,12 @@ try:
                     out.write(stream.read())
                 stream.close()
                 del stream
+                defaut_thumb_file = graphic_utils.make_thumb(
+                    temp_thumbs_dir, tmp_image_file, 350,  app_name, upload_id
+                )
                 fs = ReCompact.db_context.create_mongodb_fs_from_file(
                     db,
-                    full_path_to_file=tmp_image_file,
+                    full_path_to_file=defaut_thumb_file,
                     chunk_size=1024 * 1024
                 )
                 thumb_sizes = context.info.get('thumb_sizes')

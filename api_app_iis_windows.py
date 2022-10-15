@@ -11,7 +11,7 @@ import fasty.JWT
 fasty.JWT.set_default_db(fasty.config.db.authSource)
 import api_app
 from a2wsgi import ASGIMiddleware
-fasty.config.logger.info("Web api run on iis start")
+enigma.app_logger.info("Web api run on iis start")
 
 
 

@@ -9,7 +9,7 @@ from fastapi import FastAPI, Request, Header, Response
 import api_models.documents as docs
 from ReCompact import db_async
 import json
-from db_connection import connection, default_db_name
+
 from . import api_files_schema
 from api_models.documents import Files,Fs_File
 from ReCompact import db_async

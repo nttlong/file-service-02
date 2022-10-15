@@ -1,0 +1,23 @@
+db:
+  host: localhost
+  port: 27017
+  username:
+  password:
+  tls: false
+  authSource:
+  tlsCAFile:
+admin_db_name: media-server
+binding_ip: 0.0.0.0
+binding_port: 8011
+jinja_templates_dir: ./templates
+static_dir: ./app_manager/static
+api_host_dir: api
+host_name: 192.168.1.11
+host_schema: http
+host_port: 8011
+jwt:
+  secret_key: 09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
+  algorithm: HS256
+  access_token_expire_minutes: 480
+tmp_upload_dir: ./tmp
+elastic_search: http://localhost:9200

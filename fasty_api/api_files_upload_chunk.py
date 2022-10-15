@@ -3,7 +3,7 @@ import os.path
 import pathlib
 import gc
 import uuid
-
+import enigma
 import ReCompact_Kafka.producer
 from fastapi import  File, Form,Response,Depends
 from pydantic import BaseModel, Field
@@ -71,17 +71,17 @@ def __kafka_producer_delivery_report__(error, msg):
 
 
         if error:
-            fasty.config.logger.debug("------------------------------------")
-            fasty.config.logger.debug("Kafka server error")
-            fasty.config.logger.debug(error)
-            fasty.config.logger.debug(msg)
-            fasty.config.logger.debug("------------------------------------")
+            enigma.app_logger.logger.debug("------------------------------------")
+            enigma.app_logger.debug("Kafka server error")
+            enigma.app_logger.debug(error)
+            enigma.app_logger.debug(msg)
+            enigma.app_logger.debug("------------------------------------")
         else:
-            fasty.config.logger.info("------------------------------------")
-            fasty.config.logger.info("Kafka server recive new topic")
-            fasty.config.logger.debug(error)
-            fasty.config.logger.debug(msg)
-            fasty.config.logger.debug("------------------------------------")
+            enigma.app_logger.info("------------------------------------")
+            enigma.app_logger.info("Kafka server recive new topic")
+            enigma.app_logger.debug(error)
+            enigma.app_logger.debug(msg)
+            enigma.app_logger.debug("------------------------------------")
 
 @fasty.api_post("/{app_name}/files/upload", response_model=UploadFilesChunkInfoResult)
 async def files_upload(app_name: str, FilePart: bytes = File(...),
@@ -108,17 +108,7 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
 
     ret = UploadFilesChunkInfoResult()
     db_name = await fasty.JWT.get_db_name_async(app_name)
-    path_to_broker_share = os.path.join(fasty.config.broker.share_directory, db_name)
-    if not os.path.isdir(path_to_broker_share):
-        """
-        Nếu không có thư mục tạo luôn
-        """
-        os.makedirs(path_to_broker_share)
-
-    if db_name is None:
-        gc.collect()
-        return Response(status_code=403)
-    db_context = get_db_context(app_name)
+    db_context = get_db_context(db_name)
     gfs = db_context.get_grid_fs()
     global __meta_upload_cache__
     global __lock__
@@ -140,7 +130,7 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
         ret.Error.Message =f"Upload with '{UploadId}' was not found"
         gc.collect()
         return ret
-    path_to_broker_share = os.path.join(path_to_broker_share,f"{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}")
+    # path_to_broker_share = os.path.join(path_to_broker_share,f"{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}")
     file_size=upload_item[docs.Files.SizeInBytes.__name__]
     size_uploaded=upload_item.get(docs.Files.SizeUploaded.__name__,0)
     num_of_chunks_complete = upload_item.get(docs.Files.NumOfChunksCompleted.__name__,0)
@@ -148,6 +138,8 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
     main_file_id= upload_item.get(docs.Files.MainFileId.__name__,None)
     chunk_size_in_bytes = upload_item.get(docs.Files.ChunkSizeInBytes.__name__,0)
     server_file_name =upload_item.get(docs.Files.ServerFileName.__name__)
+    path_to_broker_share = os.path.join(
+        enigma.get_temp_upload_dir(app_name), f"{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}")
 
     if num_of_chunks_complete==0:
         fs =ReCompact.db_context.mongodb_file_create(
@@ -157,6 +149,9 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
             file_size=file_size
         )
         ReCompact.db_context.mongodb_file_add_chunks(db_context.db.delegate,fs._id,Index,FilePart)
+
+
+
         if not os.path.isfile(path_to_broker_share):
             with open(path_to_broker_share, "wb") as file:
                 file.write(FilePart)
@@ -183,47 +178,26 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
     status=0
     if num_of_chunks_complete==nun_of_chunks:
         status=1
-        if fasty.config.broker.enable:
-            def send():
-                upload_item["UploadID"] = upload_item["_id"]
-                try:
-                    ReCompact_Kafka.producer.Bootstrap(
-                        fasty.config.broker.servers,
-                        delivery_report=__kafka_producer_delivery_report__
-                    ).send_msg_sync(topic_key, dict(
-                        AppName=app_name,
-                        FilePath=path_to_broker_share,
-                        UploadInfo=upload_item
+        jarior.emitor.config(
+            msg_folder="./tmp/msg",
+            file_folder="",
+            logger=jarior.loggers.get_logger("msg", "./logs/jarior"),
+            age_of_msg_in_minutes=24 * 60
 
-                    ))
-                except Exception as e:
-                    fasty.config.logger.debug(e)
-            th=  threading.Thread(target=send,args=())
-            th.start()
-            
-            """
-            Để bảo đảm tốc độ việc gời 1 thông điệp đến Kafka cần phải thông qua 1 tiến trình
-            """
-        else:
-            jarior.emitor.config(
-                msg_folder= "./tmp/msg",
-                file_folder= fasty.config.broker.share_directory,
-                logger= jarior.loggers.get_logger("msg","./logs/jarior"),
-                age_of_msg_in_minutes=24*60
+        )
+        jarior.emitor.commit(
+            msg_id=str(uuid.uuid4()),
+            msg_type="processing",
+            info=dict(
+                full_file_path=path_to_broker_share,
+                app_name=app_name,
+                upload_id=UploadId,
+                thumb_sizes=upload_item.get(docs.Files.AvailableThumbSize.__name__)
 
-            )
-            jarior.emitor.commit(
-                msg_id=str(uuid.uuid4()),
-                msg_type= "processing",
-                info=dict(
-                    full_file_path=path_to_broker_share,
-                    app_name =app_name,
-                    upload_id=UploadId,
-                    thumb_sizes= upload_item.get(docs.Files.AvailableThumbSize.__name__)
+            ),
+            files_path=[path_to_broker_share]
+        )
 
-                ),
-                files_path=[path_to_broker_share]
-            )
 
             # p_path=f"{db_name}.{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}"
             # p_path = os.path.join(fasty.config.broker.share_directory, p_path)

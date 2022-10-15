@@ -7,6 +7,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
+import enigma
 import fasty
 import fasty.JWT
 oauth2_scheme=fasty.JWT.get_oauth2_scheme()
@@ -21,7 +22,9 @@ async def do_get_current_user(token: str = Depends(oauth2_scheme)):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, fasty.config.app.jwt.secret_key, algorithms=[fasty.config.app.jwt.algorithm])
+        payload = jwt.decode(token,
+                             enigma.app_config.get_config('jwt').get('secret_key'),
+                             algorithms=[enigma.app_config.get_config('jwt').get('algorithm')])
         username: str = payload.get("sub")
         app_name = payload.get("application")
         if username is None:

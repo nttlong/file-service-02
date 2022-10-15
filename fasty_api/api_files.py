@@ -6,6 +6,7 @@ import re
 from time import strftime
 from time import gmtime
 import ReCompact.dbm
+import enigma
 import fasty
 from fastapi import FastAPI, Request,Response
 from pydantic import BaseModel
@@ -14,7 +15,7 @@ from typing import List
 from fastapi import Depends, FastAPI, HTTPException, status
 from ReCompact import db_async
 import json
-from db_connection import connection, default_db_name
+
 from . import api_files_schema
 import humanize.time
 import fasty.JWT
@@ -44,6 +45,7 @@ async def get_list_of_files(app_name: str, filter: api_files_schema.Filter, requ
         docs.Files.HasThumb,
         docs.Files.OCRFileId,
         docs.Files.PdfFileId,
+        docs.Files.AvailableThumbs,
         FileSize=docs.Files.SizeInBytes,
         ModifiedOn=docs.Files.LastModifiedOn,
         UploadId=docs.Files._id,
@@ -72,7 +74,7 @@ async def get_list_of_files(app_name: str, filter: api_files_schema.Filter, requ
 
 
     ret_list = await agg.to_list_async()
-    url = fasty.config.app.api_url
+    url = enigma.get_root_api_url()
 
     for x in ret_list:
         if x.get(docs.Files.FileNameOnly.__name__,None) is None:
@@ -131,6 +133,12 @@ async def get_list_of_files(app_name: str, filter: api_files_schema.Filter, requ
         if x.get(docs.Files.PdfFileId.__name__):
 
             x["PdfContentUrl"] = url + f"/{app_name}/file-pdf/{full_filename_without_extenstion}.pdf"
+        available_thumbs = x.get(docs.Files.AvailableThumbs.__name__,[])
+        a_t =[]
+        for ux in available_thumbs:
+            a_t+=[f"api/{app_name}/{ux}"]
+        x[docs.Files.AvailableThumbs.__name__]=a_t
+
 
 
 

@@ -3,7 +3,7 @@ Quản lý JWT
 """
 import threading
 
-from fasty import config
+
 from typing import Any, Dict, List, Optional, Union
 from fastapi.exceptions import HTTPException
 from fastapi.openapi.models import OAuth2 as OAuth2Model
@@ -60,11 +60,11 @@ def set_default_db(value):
 class TokenData(BaseModel):
     username: Union[str, None] = None
     application: Union[str, None] = None
-
+import enigma
 
 def get_token_url():
 
-    __api_host_dir__ = config.app.api
+    __api_host_dir__ = enigma.app_config.get_config('api_host_dir')
     if __api_host_dir__ is None:
         raise Exception("Please call fasty.JWT.set_api_host_dir at start application")
     ret = "/accounts/token"
@@ -102,8 +102,8 @@ class OAuth2Redirect(OAuth2PasswordBearer):
         if request.cookies.get('access_token_cookie', None) is not None:
             token = request.cookies['access_token_cookie']
             try:
-                ret_data = jwt.decode(token, fasty.config.app.jwt.secret_key,
-                                      algorithms=[fasty.config.app.jwt.algorithm],
+                ret_data = jwt.decode(token, enigma.app_config.get_config('jwt')['secret_key'],
+                                      algorithms=[enigma.app_config.get_config('jwt')['algorithm']],
                                       options={"verify_signature": False},
                                       )
 
@@ -130,8 +130,8 @@ class OAuth2Redirect(OAuth2PasswordBearer):
                 else:
                     return None
             try:
-                ret_data = jwt.decode(token, fasty.config.app.jwt.secret_key,
-                                      algorithms=[fasty.config.app.jwt.algorithm],
+                ret_data = jwt.decode(token,enigma.app_config.get_config('jwt').get('secret_key'),
+                                      algorithms=[enigma.app_config.get_config('jwt').get('algorithm')],
                                       options={"verify_signature": False},
                                       )
 
@@ -176,8 +176,8 @@ class OAuth2PasswordBearerAndCookie(OAuth2PasswordBearer):
         if request.cookies.get('access_token_cookie', None) is not None:
             token = request.cookies['access_token_cookie']
             try:
-                ret_data = jwt.decode(token, fasty.config.app.jwt.secret_key,
-                                      algorithms=[fasty.config.app.jwt.algorithm],
+                ret_data = jwt.decode(token, enigma.app_config.get_config('jwt').get('secret_key'),
+                                      algorithms=[enigma.app_config.get_config('jwt').get('algorithm')],
                                       options={"verify_signature": False},
                                       )
 
@@ -203,8 +203,8 @@ class OAuth2PasswordBearerAndCookie(OAuth2PasswordBearer):
                 else:
                     return None
             try:
-                ret_data = jwt.decode(token, fasty.config.app.jwt.secret_key,
-                                      algorithms=[fasty.config.app.jwt.algorithm],
+                ret_data = jwt.decode(token, enigma.app_config.get_config('jwt').get('secret_key'),
+                                      algorithms=[enigma.app_config.get_config('jwt').get('algorithm')],
                                       options={"verify_signature": False},
                                       )
 
@@ -276,10 +276,7 @@ def set_connection_string(cnn: str):
     ReCompact.db_async.set_connection_string(cnn)
 
 
-def check():
-    global CONNECTION_STRING
-    if CONNECTION_STRING is None:
-        raise Exception("Please call 'fasty.JWT.set_connection_string'")
+
 
 
 def sync(*args, **kwargs):
@@ -296,7 +293,7 @@ def sync(*args, **kwargs):
 
 
 async def get_user_by_username_async(db_name: str, username: str):
-    check()
+
 
     dbcntx = ReCompact.db_async.get_db_context(db_name)
     user = await dbcntx.find_one_async(JWT_Docs.Users, JWT_Docs.Users.UsernameLowerCase == username.lower())
@@ -308,7 +305,7 @@ def get_user_by_username(db_name: str, username: str):
 
 
 async def get_user_by_user_id_async(db_name: str, user_id: str):
-    check()
+
 
     dbcntx = ReCompact.db_async.get_db_context(db_name)
     user = await dbcntx.find_one_async(JWT_Docs.Users, JWT_Docs.Users._id == bson.ObjectId(user_id))
@@ -320,7 +317,7 @@ def get_user_by_user_id(db_name: str, username: str):
 
 
 async def create_user_async(db_name: str, Username: str, Password: str, Email: str, IsSysAdmin: bool = False):
-    check()
+
 
     dbcntx = ReCompact.db_async.get_db_context(db_name)
 
@@ -464,7 +461,7 @@ async def get_db_name_async(app_name):
     global __default_db__
     global __lock_cache_db_name__
     if __default_db__ is None:
-        raise Exception("Please call fasty.JWT.set_default_db when start application")
+        __default_db__ =enigma.app_config.get_config('admin_db_name')
     import fasty
     if app_name == "admin":
         return __default_db__

@@ -1,5 +1,7 @@
 import datetime
 import json
+import logging
+
 import bson
 import motor.motor_asyncio
 import pymongo
@@ -8,13 +10,19 @@ import ReCompact.dbm
 import ReCompact.dbm.DbObjects.Docs
 import threading
 import enum
-import quicky.yaml_reader
+
 import pathlib
 import os
 import pymongo.mongo_client
 # from motor import MotorGridFSBucket
 from motor.motor_asyncio import AsyncIOMotorGridFSBucket
 from bson import ObjectId
+
+__working_dir__ = str(pathlib.Path(__file__).parent.parent)
+"""
+Working dir from app dir
+"""
+__strong_foe_config__ = None
 
 
 class PyObjectId(ObjectId):
@@ -93,28 +101,56 @@ def set_connection_string(str_connection):
     __connection__ = motor.motor_asyncio.AsyncIOMotorClient(str_connection)
 
 
-def load_config(path_to_yalm_database_config):
-    global default_db_name
-    global db_config
-    global connection_string
+def set_config(host: str, port: int, username: str, password: str, tlsCAFile: str, ssl: bool, admin_db: str):
+    global __strong_foe_config__
     global __connection__
-    if not os.path.isfile(path_to_yalm_database_config):
-        raise Exception(f"'{path_to_yalm_database_config}' was not found")
+    if __strong_foe_config__ is None:
+        __lock__.acquire()
+        try:
+            __strong_foe_config__ = {
+                'host': host,
+                'port': port,
+                'username': username,
+                'password': password
+            }
+            if tlsCAFile is not None:
+                __strong_foe_config__['tlsCAFile'] = tlsCAFile
+            if ssl:
+                __strong_foe_config__['ssl'] = True
+            if admin_db is None:
+                raise Exception(f"'admin_db' is require or set 'admin'")
+            else:
+                __strong_foe_config__['admin_db'] = 'admin'
+            if tlsCAFile is not None:
+                __strong_foe_config__['tlsCAFile'] = 'admin'
+            __connection__ = motor.motor_asyncio.AsyncIOMotorClient(
+                host=host,
+                port=port,
+                username=username,
+                password=password
+            )
+        except Exception as e:
+            raise e
+        finally:
+            __lock__.release()
+import traceback
+def load_config_from_dict(data:dict,logger:logging.Logger):
+    global __connection__
+    if __connection__ is None:
+        __lock__.acquire()
+        try:
+            __connection__ =motor.motor_asyncio.AsyncIOMotorClient(
+                **data
+            )
+        except Exception as e:
+            logger.debug(traceback.print_exc())
+        finally:
+            __lock__.release()
 
-    db_config = quicky.yaml_reader.from_file(path_to_yalm_database_config)
-    default_db_name = db_config["authSource"]
-    str_auth = f'{db_config["username"]}:{db_config["password"]}'
-    str_host = None
-    if isinstance(db_config["host"], list):
-        str_host = ",".join(db_config["host"])
-    elif isinstance(db_config["host"], str):
-        str_host = f'{db_config["host"]}:{db_config["port"]}'
-    if db_config.get("replicaSet", None) is not None:
-        connection_string = f'mongodb://{db_config["username"]}:{db_config["password"]}@{str_host}/?authSource={db_config["authSource"]}&replicaSet={db_config["replicaSet"]}'
-        __connection__ = motor.motor_asyncio.AsyncIOMotorClient(connection_string)
-    else:
-        connection_string = f'mongodb://{db_config["username"]}:{db_config["password"]}@{str_host}/?authSource={db_config["authSource"]}'
-        __connection__ = motor.motor_asyncio.AsyncIOMotorClient(connection_string)
+
+
+    return None
+
 
 
 class ErrorType(enum.Enum):
@@ -186,7 +222,7 @@ def __fix_bson_object_id__(fx):
         return None
     ret = {}
 
-    if isinstance(fx,dict):
+    if isinstance(fx, dict):
         for k, v in fx.items():
             if isinstance(v, bson.ObjectId):
                 ret = {**ret, **{k: str(v)}}
@@ -537,7 +573,6 @@ async def update_one_async(db, docs, filter, *args, **kwargs):
 
 
 def update_one(db, docs, filter, *args, **kwargs):
-
     try:
         sync_db = db.delegate
         coll = ReCompact.dbm.DbObjects.__get_col__(sync_db, docs.__dict__["__collection_name__"])
@@ -689,14 +724,14 @@ class Aggregate:
         self.page_size = page_size
         return self
 
-    def match(self,filter):
-        _filter =filter
-        if isinstance(filter,ReCompact.dbm.Docs.Fields):
+    def match(self, filter):
+        _filter = filter
+        if isinstance(filter, ReCompact.dbm.Docs.Fields):
             _filter = filter.to_mongodb()
-        elif not isinstance(filter,dict):
+        elif not isinstance(filter, dict):
             raise Exception("aggregate match require filter with dict or ReCompact.dbm.Docs.Fields")
-        self.pineline+=[
-            {"$match":_filter}
+        self.pineline += [
+            {"$match": _filter}
         ]
         return self
 
@@ -747,9 +782,11 @@ class DbContext:
     async def update_one_async(self, docs, filter, *args, **kwargs):
         ret = await update_one_async(self.db, docs, filter, *args, **kwargs)
         return ret
+
     def update_one(self, docs, *args, **kwargs):
         ret = update_one(self.db, docs, *args, **kwargs)
         return ret
+
     async def delete_one_async(self, docs, filter):
         ret = await delete_one_async(self.db, docs, filter)
         return ret
@@ -788,6 +825,8 @@ def get_db_context(db_name) -> DbContext:
     if __all_instances_db_context__.get(db_name, None) is None:
         __lock_2__.acquire()
         try:
+            if not isinstance(db_name,str):
+                return
             cntx = DbContext(db_name)
             __all_instances_db_context__[db_name] = cntx
         finally:
@@ -809,3 +848,5 @@ def __parser_dict__(data):
         return ret
     else:
         return data
+
+

@@ -1,7 +1,7 @@
 """
 API lay thong tin upload
 """
-
+import enigma
 import fasty
 from fastapi import FastAPI, Request, Response
 from pydantic import BaseModel, Field
@@ -66,24 +66,24 @@ async def get_info(app_name: str, request: Request,
     ret.IsPublic = upload_info.get(docs.Files.IsPublic.__name__)
     ret.Status = upload_info.get(docs.Files.Status.__name__)
     ret.RelUrl = f"api/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}"
-    ret.FullUrl = f"{fasty.config.app.api_url}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}"
+    ret.FullUrl = f"{enigma.get_root_api_url()}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}"
     ret.HasThumb = upload_info.get(docs.Files.ThumbFileId.__name__) is not None
     available_thumbs=upload_info.get(docs.Files.AvailableThumbs.__name__,[])
     ret.AvailableThumbs=[]
     for x in available_thumbs:
-        ret.AvailableThumbs+=[f"{app_name}/{x}"]
+        ret.AvailableThumbs+=[f"api/{app_name}/{x}"]
     if ret.HasThumb:
         """
         http://172.16.7.25:8011/api/lv-docs/thumb/c4eade3a-63cb-428d-ac63-34aadd412f00/search.png.png
         """
         ret.RelUrlThumb = f"api/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.webp"
-        ret.UrlThumb = f"{fasty.config.app.api_url}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.webp"
+        ret.UrlThumb = f"{enigma.get_root_api_url()}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.webp"
     if ret.HasOCR:
         """
         http://172.16.7.25:8011/api/lv-docs/file-ocr/cc5728d0-c216-43f9-8475-72e84b6365fd/im-003.pdf
         """
         ret.RelUrlOCR = f"api/{app_name}/file-ocr/{ret.UploadId}/{ret.FileName.lower()}.pdf"
-        ret.UrlOCR = f"{fasty.config.app.api_url}/{app_name}/file-ocr/{ret.UploadId}/{ret.FileName.lower()}.pdf"
+        ret.UrlOCR = f"{enigma.get_root_api_url()}/{app_name}/file-ocr/{ret.UploadId}/{ret.FileName.lower()}.pdf"
     if upload_info.get(docs.Files.VideoResolutionWidth.__name__):
         ret.VideoInfo = VideoInfoClass()
         ret.VideoInfo.Width = upload_info.get(docs.Files.VideoResolutionWidth.__name__)

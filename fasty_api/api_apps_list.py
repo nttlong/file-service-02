@@ -7,7 +7,7 @@ from fastapi import FastAPI, Request, Response,Depends
 import api_models.documents as docs
 from ReCompact import db_async
 import json
-from db_connection import connection, default_db_name
+
 from . import api_files_schema
 import fasty.JWT
 from fastapi_jwt_auth import AuthJWT

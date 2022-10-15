@@ -23,7 +23,7 @@ def video_create_thumb(in_put,scale_witdh,scale_height,second=5)->io.BytesIO:
     clip = clip.subclip(second, second)
     frame = clip.get_frame(0)
     height,width,_ = frame.shape
-    rate = scale_witdh/width # Mac dinh la bop theo chieu rong
+    rate = 1.0 # Mac dinh la bop theo chieu rong
     if height>width: # Nhung vi anh co chieu cao lon hon chieu rong
         rate = scale_height/height # Nen quye dinh la bop theo chieu chie doc
     new_witdth,new_height= int(width*rate),int(height*rate)
