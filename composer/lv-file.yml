@@ -44,7 +44,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
-    command: python3 /app/bk_services/thumb_video.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-config=${DB_CONFIG}
+    command: python3 /app/bk_services/thumb_video.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-configuration=${DB_CONFIG}
   thumb-image:
     image: lv-file
     container_name: thumb-image
@@ -52,7 +52,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
-    command: python3 /app/bk_services/thumb_image.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-config=${DB_CONFIG}
+    command: python3 /app/bk_services/thumb_image.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-configuration=${DB_CONFIG}
   thumb-office:
     image: lv-file
     container_name: thumb-office
@@ -60,7 +60,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
-    command: python3 /app/bk_services/thumb_office.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-config=${DB_CONFIG}
+    command: python3 /app/bk_services/thumb_office.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-configuration=${DB_CONFIG}
   thumb-pdf:
     image: lv-file
     container_name: thumb-pdf
@@ -69,7 +69,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
 
-    command: python3 /app/bk_services/thumb_pdf.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-config=${DB_CONFIG}
+    command: python3 /app/bk_services/thumb_pdf.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-configuration=${DB_CONFIG}
   fs-crawler:
     image: nttlong/fscrawler:v2
     container_name: fs-crawler
@@ -94,7 +94,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/kb-logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
-    command: python3 /app/bk_services/fs_es_index.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-config=${DB_CONFIG}
+    command: python3 /app/bk_services/fs_es_index.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-configuration=${DB_CONFIG}
 #
   ocr-image:
     image: lv-file
@@ -103,7 +103,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
 
-    command: python3 /app/bk_services/ocr_image.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-config=${DB_CONFIG}
+    command: python3 /app/bk_services/ocr_image.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-configuration=${DB_CONFIG}
     container_name: ocr-image
   ocr-pdf:
     image: lv-file
@@ -112,7 +112,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
 
-    command: python3 /app/bk_services/ocr_pdf.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-config=${DB_CONFIG}
+    command: python3 /app/bk_services/ocr_pdf.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-configuration=${DB_CONFIG}
     container_name: ocr-pdf
   cleansing-chapel:
     image: lv-file
@@ -121,7 +121,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
 
-    command: python3 /app/bk_services/cleansing_chapel.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-config=${DB_CONFIG}
+    command: python3 /app/bk_services/cleansing_chapel.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-configuration=${DB_CONFIG}
     container_name: cleansing-chapel
   cleansing-town:
     image: lv-file
@@ -130,5 +130,5 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
 
-    command: python3 /app/bk_services/cleansing_town.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-config=${DB_CONFIG}
+    command: python3 /app/bk_services/cleansing_town.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-configuration=${DB_CONFIG}
     container_name: cleansing-town

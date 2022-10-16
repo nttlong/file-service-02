@@ -1,7 +1,7 @@
 class Config:
     def __init__(self, config_dir: str, logger_name, log_dir=None):
         """
-        Init config from config dir
+        Init configuration from configuration dir
         :param config_dir:
         """
 
@@ -33,7 +33,7 @@ class Config:
             self.master_config = self.load_yaml_file(self.path_to_star_yaml)
             self.host_yalm_path = self.master_config.get("host", None)
             if not self.host_yalm_path:
-                raise Exception(f"'host' point to host config file was not found in '{self.host_yalm_path}'")
+                raise Exception(f"'host' point to host configuration file was not found in '{self.host_yalm_path}'")
             if not os.path.isabs(self.host_yalm_path):
                 self.host_yalm_path = os.path.join(self.config_dir, self.host_yalm_path).replace('/', os.sep)
 
@@ -41,17 +41,17 @@ class Config:
 
             self.app_yaml_path = self.master_config.get("app", None)
             if not self.app_yaml_path:
-                raise Exception(f"'app' point to application config file was not found in '{self.host_yalm_path}'")
+                raise Exception(f"'app' point to application configuration file was not found in '{self.host_yalm_path}'")
             if not os.path.isabs(self.app_yaml_path):
                 self.app_yaml_path = os.path.join(self.config_dir, self.app_yaml_path).replace('/', os.sep)
             self.broker_yaml_path = self.master_config.get("broker", None)
             if self.broker_yaml_path is None:
-                raise Exception(f"'broker' point to broker server config file was not found in '{self.host_yalm_path}'")
+                raise Exception(f"'broker' point to broker server configuration file was not found in '{self.host_yalm_path}'")
             if not os.path.isabs(self.broker_yaml_path):
                 self.broker_yaml_path = os.path.join(self.config_dir, self.broker_yaml_path).replace('/', os.sep)
             self.search_yaml_Path = self.master_config.get("search", None)
             if self.search_yaml_Path is None:
-                raise Exception(f"'search' point to broker server config file was not found in '{self.host_yalm_path}'")
+                raise Exception(f"'search' point to broker server configuration file was not found in '{self.host_yalm_path}'")
             if not os.path.isabs(self.search_yaml_Path):
                 self.search_yaml_Path = os.path.join(self.config_dir, self.search_yaml_Path).replace('/', os.sep)
 
@@ -61,7 +61,7 @@ class Config:
             else:
                 self.db_yaml_path = self.master_config.get("db", None)
                 if not self.db_yaml_path:
-                    raise Exception(f"'db' point to database config file was not found in '{self.host_yalm_path}'")
+                    raise Exception(f"'db' point to database configuration file was not found in '{self.host_yalm_path}'")
                 if not os.path.isabs(self.db_yaml_path):
                     self.db_yaml_path = os.path.join(self.config_dir, self.db_yaml_path).replace('/', os.sep)
                 self.db_dict = self.load_yaml_file(self.db_yaml_path)
@@ -76,7 +76,7 @@ class Config:
 
             self.host = config_host()
             """
-            Host config info
+            Host configuration info
             """
             if self.is_from_os_env():
                 self.host_dict =self.load_host_binding_config_from_os()

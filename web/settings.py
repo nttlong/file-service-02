@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 import ReCompact.web
 import ReEngine
 ReCompact.web.set_working_dir(BASE_DIR)
-config_path = BASE_DIR.absolute().joinpath("config.yaml")
+config_path = BASE_DIR.absolute().joinpath("configuration.yaml")
 ReEngine.init(str(config_path))
 
 # Quick-start development settings - unsuitable for production
@@ -45,7 +45,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 TEMP_UPLOAD_DIR =r'\\192.168.18.36\Share\DjangoWeb'
 TEMP_UNZIP_DIR = r'\\192.168.18.36\Share\UnzipDjangoWeb'
 
-# Application definition
+# Applications definition
 # from apps.file_explorer.apps import FileExplorerConfig
 INSTALLED_APPS = [
     'corsheaders',
@@ -74,7 +74,7 @@ MIDDLEWARE = [
 ]
 import ReEngine
 import os
-ReEngine.init(os.path.join(BASE_DIR,"config.yaml"))
+ReEngine.init(os.path.join(BASE_DIR,"configuration.yaml"))
 ROOT_URLCONF = 'web.urls'
 TEMPLATES_DIR=[]
 for k,v in ReEngine.info["APPS"].items():

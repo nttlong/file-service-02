@@ -157,7 +157,7 @@ class config_host:
     def __init__(self):
         self.binding = config_host_binding()
         """
-        Binding config
+        Binding configuration
         """
 
 

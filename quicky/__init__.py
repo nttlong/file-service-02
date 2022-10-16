@@ -1,7 +1,7 @@
 # # import flask
 # # import flask_bcrypt
 # # from flask_restful import Resource, Api
-# # from . import config
+# # from . import configuration
 # # from flask_bcrypt import Bcrypt
 # # from flask import Flask, session
 # import db_connection
@@ -27,7 +27,7 @@
 #
 #
 # class QuickyApp(flask.app.Flask):
-#     def __init__(self, name, app_config: config.Config):
+#     def __init__(self, name, app_config: configuration.Config):
 #         from flask_simple_captcha import CAPTCHA
 #         super().__init__(
 #             name,
@@ -37,7 +37,7 @@
 #         )
 #         self.app_config = app_config
 #         CAPTCHA_CONFIG = {'SECRET_CAPTCHA_KEY': app_config.captcha.secret_key}
-#         CAPTCHA = CAPTCHA(config=CAPTCHA_CONFIG)
+#         CAPTCHA = CAPTCHA(configuration=CAPTCHA_CONFIG)
 #         self.api = Api(self)
 #         CAPTCHA.init_app(self)
 #         self.bcrypt:flask_bcrypt.Bcrypt = Bcrypt(self)
@@ -48,13 +48,13 @@
 #                 bcrypt.check_password_hash(pw_hash, 'hunter2') # returns True
 #
 #         """
-#         # self.config["SESSION_PERMANENT"] = False
-#         # self.config["SESSION_TYPE"] = "filesystem"
-#         self.config["SESSION_PERMANENT"] = False
-#         self.config["SESSION_TYPE"] = "mongodb"
-#         self.config["SESSION_MONGODB"] = db_connection.connection
-#         self.config["SESSION_MONGODB_DB"] = db_connection.default_db_name
-#         self.config["SESSION_MONGODB_COLLECTION"] = 'sys_sessions'
+#         # self.configuration["SESSION_PERMANENT"] = False
+#         # self.configuration["SESSION_TYPE"] = "filesystem"
+#         self.configuration["SESSION_PERMANENT"] = False
+#         self.configuration["SESSION_TYPE"] = "mongodb"
+#         self.configuration["SESSION_MONGODB"] = db_connection.connection
+#         self.configuration["SESSION_MONGODB_DB"] = db_connection.default_db_name
+#         self.configuration["SESSION_MONGODB_COLLECTION"] = 'sys_sessions'
 #         self.secret_key=app_config.captcha.secret_key
 #         """
 #         Khóa mật ẩn

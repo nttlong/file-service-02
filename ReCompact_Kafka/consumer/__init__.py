@@ -174,7 +174,7 @@ class Consumer_obj(Consumer):
 
 """
 _config = {
-    'bootstrap.servers': "'".join(re_process.config.kafka_broker),
+    'bootstrap.servers': "'".join(re_process.configuration.kafka_broker),
     'group.id': f'client.files.services.process.{g_id}',
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': False

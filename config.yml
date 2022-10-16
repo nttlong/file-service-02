@@ -6,8 +6,11 @@ db:
   tls: false
   authSource:
   tlsCAFile:
+# Default administrator database
 admin_db_name: media-server
+# unvicorn server listener list all ip
 binding_ip: 0.0.0.0
+# univocorn listen port
 binding_port: 8011
 jinja_templates_dir: ./templates
 static_dir: ./app_manager/static
@@ -20,4 +23,5 @@ jwt:
   algorithm: HS256
   access_token_expire_minutes: 480
 tmp_upload_dir: ./tmp
-elastic_search: http://localhost:9200
+elastic_search:
+  - http://localhost:9200

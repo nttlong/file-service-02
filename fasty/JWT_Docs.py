@@ -32,7 +32,7 @@ class User:
 @ReCompact.document(
     name="SYS_SingleSignOn",
     keys=[ "SSOID"],
-    indexes=["Token","Application","Application,Token","Application,SSOID","ReturnUrlAfterSignIn"]
+    indexes=["Token","Applications","Applications,Token","Applications,SSOID","ReturnUrlAfterSignIn"]
 
 )
 class SSO:

@@ -2,7 +2,7 @@ import logging
 import os.path
 import pathlib
 import threading
-__catch__ = dict()
+__catch_log__ = dict()
 __lock__ = threading.Lock()
 
 
@@ -10,7 +10,7 @@ __lock__ = threading.Lock()
 
 def get_logger(logger_name:str, logger_dir:str)-> logging.Logger:
     global __lock__
-    global __catch__
+    global __catch_log__
     if logger_dir[0:2]=="./":
         logger_dir=logger_dir[2:logger_dir.__len__()]
         working_dir = str(pathlib.Path(__file__).parent.parent.parent)

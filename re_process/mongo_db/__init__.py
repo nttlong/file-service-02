@@ -3,7 +3,7 @@ import pymongo.database
 
 def get_db(app_name) -> pymongo.database.Database:
     """
-    lấy mongodb database dựa vào cấu hình trong re_process.config
+    lấy mongodb database dựa vào cấu hình trong re_process.configuration
     :param app_name:
     :return:
     """

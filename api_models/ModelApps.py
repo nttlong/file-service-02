@@ -12,7 +12,7 @@ class sys_applications:
     Name = ReCompact.dbm.field(data_type=str, is_require=True)
     NameLower = ReCompact.dbm.field(data_type=str, is_require=True)
     """
-    Ten cua app
+    Để cho truy cập nhanh dùng NameLower so sánh với giá trị lower
     """
     RegisteredBy = ReCompact.dbm.field(data_type=str,is_require=True)
     RegisteredOn = ReCompact.dbm.field(data_type=datetime.datetime, is_require=True)

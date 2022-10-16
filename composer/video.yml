@@ -18,4 +18,4 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/fs/share-docs:/app/fs-docs
-    command: python3 /app/bk_services/thumb_video.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-config=${DB_CONFIG}
+    command: python3 /app/bk_services/thumb_video.py tmp-upload-folder=/app/tmp msg-folder=${MSG_FOLDER} fs-path=${FS_PATH} share-key=${SHARE_KEY} db-configuration=${DB_CONFIG}

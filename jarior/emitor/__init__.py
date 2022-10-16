@@ -73,7 +73,7 @@ def config(
         file_folder: str,
         age_of_msg_in_minutes: int = 1, logger: logging.Logger = None):
     """
-    Set up a config
+    Set up a configuration
     :param msg_folder: The folder of msg
     :param file_folder: The folder of content file
     :param age_of_msg_in_minutes: Clean if the age of  msg log file older than

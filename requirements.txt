@@ -39,3 +39,4 @@ python-multipart~=0.0.5
 pdfminer.six
 pdfplumber~=0.7.1
 bcrypt
+kink~=0.6.5

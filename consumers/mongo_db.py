@@ -3,12 +3,12 @@ from  consumers import config
 
 def get_db(app_name) -> pymongo.database.Database:
     """
-    lấy mongodb database dựa vào cấu hình trong re_process.config
+    lấy mongodb database dựa vào cấu hình trong re_process.configuration
     :param app_name:
     :return:
     """
     import ReCompact.db_context
-    # import config
+    # import configuration
     db= None
     if config.mongo_db_config.get("replicaSet"):
         db = ReCompact.db_context.get_db_connection(

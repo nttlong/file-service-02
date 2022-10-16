@@ -22,12 +22,12 @@
 #
 #
 #
-# def init(config, on_process, on_error):
+# def init(configuration, on_process, on_error):
 #
 #     """
 #     Khở tạo consumer xử lý file upload
 #     Chạy với topic "file.services.upload"
-#     :param config:
+#     :param configuration:
 #     :param on_process:
 #     :param on_error:
 #     :return:
@@ -46,7 +46,7 @@
 #
 #     __on_error__ = on_error
 #     __on_process__ = on_process
-#     __consumer__ = ReCompact_Kafka.consumer.Consumer_obj(config)
+#     __consumer__ = ReCompact_Kafka.consumer.Consumer_obj(configuration)
 #
 # def get_consumer():
 #     global __consumer__

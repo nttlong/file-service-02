@@ -5,9 +5,9 @@ from pydantic import BaseModel, Field
 
 class AppInfo(BaseModel):
     """
-    Thông tim cơ bản của Application
+    Thông tim cơ bản của Applications
     """
-    AppId: Union[str,None] = Field(description="Application Id cái này đi kèm với secret key sẽ lấy được token")
+    AppId: Union[str,None] = Field(description="Applications Id cái này đi kèm với secret key sẽ lấy được token")
     """
     Id cua application
     """

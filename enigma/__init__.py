@@ -11,7 +11,7 @@ import enigma.config
 import enigma.loggers
 app_config=enigma.config.AppConfig()
 """
-All config access here. in order to use the app_config you must start app with config_path arg
+All configuration access here. in order to use the app_config you must start app with config_path arg
 """
 app_logger = enigma.loggers.ELogger()
 

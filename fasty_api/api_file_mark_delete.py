@@ -48,5 +48,5 @@ async def mark_delete(app_name: str, UploadId: str = Body(embed=True),IsDelete:b
             body={"doc": {
                 "MarkDelete": IsDelete
             }})
-        # search_engine.get_client().delete(index=fasty.config.search.index, id=es_id)
+        # search_engine.get_client().delete(index=fasty.configuration.search.index, id=es_id)
     return dict()

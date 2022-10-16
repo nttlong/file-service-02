@@ -28,4 +28,6 @@ class User:
     CreatedOn= field(data_type=datetime.datetime,is_require= True)
     IsLocked= field(data_type=bool,is_require=True)
     LockedOn = field(data_type=datetime.datetime)
+    CreatedOnUTC= field(data_type=datetime.datetime)
+    IsSysAdmin= field(data_type=bool)
 

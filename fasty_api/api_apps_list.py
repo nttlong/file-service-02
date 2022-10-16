@@ -22,8 +22,8 @@ async def get_list_of_apps(app_name: str,
     \n
     :param app_name: \n If thy does not use 'admin', the API server will refuse \n
     :return: [\n {\n
-        AppId:".." Id of Application, \n
-        Name:"" Application name \n
+        AppId:".." Id of Applications, \n
+        Name:"" Applications name \n
         Decription:"..." Decription of app \n
     },..\n]
     """

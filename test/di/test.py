@@ -1,11 +1,22 @@
 import pathlib
+
+import kink
 import sys
 sys.path.append(str(pathlib.Path(__file__).parent.parent.parent))
-sys.path.append(r'C:\code\python\file-service-02\enigma')
-
-import enigma
-import enigma.services
-p=enigma.app_config.config_path
-db = enigma.app_config.get_config('db')
-accounts =enigma.services.accounts.client.get_db('admin')
-print(p)
+import enig
+import enig_frames.db_context
+import enig_frames.services.applications
+import enig_frames.services.accounts
+apps= enig.create_instance(enig_frames.services.applications.Applications)
+apps.create(
+    name="long-test",
+    login_url="http://localhost:8011",
+    domain="localhost",
+    description=""
+)
+accs=enig.create_instance(enig_frames.services.accounts.Accounts)
+app_name="admin"
+username="root"
+password="rootdsada"
+ret=accs.verify(app_name, username,password)
+print(ret)

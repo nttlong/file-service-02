@@ -57,7 +57,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    # access_token_expires = timedelta(minutes=fasty.config.app.jwt.access_token_expire_minutes)
+    # access_token_expires = timedelta(minutes=fasty.configuration.app.jwt.access_token_expire_minutes)
     access_token =fasty.JWT. create_access_token(
         data={
             "sub": user[fasty.JWT.JWT_Docs.Users.Username.__name__] ,

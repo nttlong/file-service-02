@@ -329,6 +329,88 @@ async def __get_collection__(db, collection_name, keys, index):
 
     return coll
 
+def __get_collection_sync__(db, collection_name, keys, index):
+    coll = getattr(db, collection_name)
+    global __cache_index_creator__
+    global __lock__
+    key = f"{db.name}/{collection_name}".lower()
+
+    if not __cache_index_creator__.get(key, None):
+        __lock__.acquire()
+        try:
+            index_info = coll.index_information()
+
+            def check(key):
+                set_key = set(key)
+                for k, v in index_info.items():
+                    set_key_in_db = set([x[0] for x in v.get('key')])
+                    if len(set_key_in_db & set_key) > 0:
+                        return True
+                return False
+
+            if isinstance(keys, list):
+                for k in keys:
+                    key_name = k
+                    items = k.split(',')
+                    is_already = check(items)
+                    if is_already:
+                        continue
+                    indexs = []
+                    partialFilterExpression_dict = {}
+                    for item in items:
+                        indexs.append(
+                            (item, pymongo.ASCENDING)
+                        )
+                        partialFilterExpression_dict = {
+                            **partialFilterExpression_dict,
+                            **{
+                                item: {
+                                    "$exists": None
+                                }
+                            }
+
+                        }
+                    try:
+
+                        coll.create_index(
+                            indexs,
+                            unique=True,
+                            sparse=True,
+                            # partialFilterExpression =partialFilterExpression_dict,
+                            background=True
+                        )
+                    except:
+                        pass
+                    finally:
+                        pass
+
+            if isinstance(index, list):
+                for k in index:
+                    key_name = k
+                    items = k.split(',')
+                    is_already = check(items)
+                    if is_already:
+                        continue
+                    indexs = []
+                    for item in items:
+                        indexs.append(
+                            (item, pymongo.ASCENDING)
+                        )
+                    try:
+                        coll.create_index(
+                            indexs,
+                            background=True
+                        )
+                    except:
+                        pass
+                    finally:
+                        pass
+        finally:
+            __cache_index_creator__[key] = key
+            __lock__.release()
+            return coll
+
+    return coll
 
 async def find_one_async(db: motor.motor_asyncio.AsyncIOMotorDatabase, docs, filter=None):
     """
@@ -356,8 +438,23 @@ async def find_one_async(db: motor.motor_asyncio.AsyncIOMotorDatabase, docs, fil
 
 
 def find_one(db: motor.motor_asyncio.AsyncIOMotorDatabase, docs, filter=None):
-    ret = sync(find_one_async(db, docs, filter))
-    return ret
+    real_db=db
+    if isinstance(db,motor.motor_asyncio.AsyncIOMotorDatabase):
+        real_db =db.delegate
+    coll = __get_collection_sync__(
+        real_db,
+        docs.__dict__["__collection_name__"],
+        docs.__dict__["__collection_keys__"],
+        docs.__dict__["__collection_index__"]
+    )
+    if filter is None:
+        filter = {}
+    _filter = filter
+    if isinstance(filter, ReCompact.dbm.DbObjects.Docs.Fields):
+        _filter = filter.to_mongodb()
+    ret =  coll.find_one(_filter)
+    ret_dict = __fix_bson_object_id__(ret)
+    return ret_dict
 
 
 async def find_async(db: motor.motor_asyncio.AsyncIOMotorDatabase,
@@ -766,7 +863,10 @@ class DbContext:
         return ret
 
     def find_one(self, docs, filter):
-        return sync(self.find_one_async(docs, filter))
+        ret= find_one(
+            self.db.delegate, docs,filter
+        )
+        return ret
 
     async def find_async(self, docs, filter, skip=0, limit=100):
         ret = await find_async(self.db, docs, filter, skip, limit)

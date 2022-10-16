@@ -198,7 +198,7 @@ def handler_use_libre_office(consumer: ReCompact_Kafka.consumer.Consumer_obj, ms
         ]
         full_comand_line = " ".join(arg_list)
         logger.info(full_comand_line)
-        # full_comand_line = f'"{config.libre_office_path}"  --convert-to png --outdir {out_put_dir} -env:UserInstallation=file:///{full_user_profile_path.replace(os.sep, "/")} '
+        # full_comand_line = f'"{configuration.libre_office_path}"  --convert-to png --outdir {out_put_dir} -env:UserInstallation=file:///{full_user_profile_path.replace(os.sep, "/")} '
         logger.debug(full_comand_line)
         # full_comand_line =r'"C:\Program Files\LibreOffice\program\soffice.exe"  --convert-to png --outdir C:\test C:\test\x.docx -env:UserInstallation=file:///C:/dj-apps-2022-05-25/jd-apps/consumers/LibreOfficeTempProfiles/xxx --headless --accept=Negotiate=0,ForceSynchronous=1;'
         p = subprocess.Popen(full_comand_line  , shell=False)

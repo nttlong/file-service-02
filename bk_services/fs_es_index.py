@@ -142,7 +142,7 @@ except Exception as e:
     logger.debug(e)
 # How to use
 # Go to site: https://dinochiesa.github.io/jwt/
-# Encrypt db config including:
+# Encrypt db configuration including:
 #   "host": "...",
 #   "port": ...,
 #   "username": "...",
@@ -150,5 +150,5 @@ except Exception as e:
 #   "authSource": "...",
 #   "replicaSet": "...",
 #   "authMechanism": "SCRAM-SHA-1"
-# python bk_services/fs_es_index.py msg-folder={} fs-path={} share-key={Symmetric Key from site} db-config={token form site}
-# python bk_services/fs_es_index.py msg-folder=/app/tmp fs-path=/app/fs-docs share-key=f7ce559d-f717-49ce-9b7d-46516a3a6180 db-config=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0IjoiMTkyLjE2OC4xOC4zNiIsInBvcnQiOjI3MDE4LCJ1c2VybmFtZSI6ImFkbWluLWRvYyIsImF1dGhTb3VyY2UiOiJsdi1kb2NzIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJyZXBsaWNhU2V0IjoiIiwiYXV0aE1lY2hhbmlzbSI6IlNDUkFNLVNIQS0xIn0.LQ44Swc6XeEIex59xtTWg9LPpGTPzCWBB5HDnvKv31A
+# python bk_services/fs_es_index.py msg-folder={} fs-path={} share-key={Symmetric Key from site} db-configuration={token form site}
+# python bk_services/fs_es_index.py msg-folder=/app/tmp fs-path=/app/fs-docs share-key=f7ce559d-f717-49ce-9b7d-46516a3a6180 db-configuration=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0IjoiMTkyLjE2OC4xOC4zNiIsInBvcnQiOjI3MDE4LCJ1c2VybmFtZSI6ImFkbWluLWRvYyIsImF1dGhTb3VyY2UiOiJsdi1kb2NzIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJyZXBsaWNhU2V0IjoiIiwiYXV0aE1lY2hhbmlzbSI6IlNDUkFNLVNIQS0xIn0.LQ44Swc6XeEIex59xtTWg9LPpGTPzCWBB5HDnvKv31A

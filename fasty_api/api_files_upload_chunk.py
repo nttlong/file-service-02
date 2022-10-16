@@ -200,7 +200,7 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
 
 
             # p_path=f"{db_name}.{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}"
-            # p_path = os.path.join(fasty.config.broker.share_directory, p_path)
+            # p_path = os.path.join(fasty.configuration.broker.share_directory, p_path)
             # with open(p_path,"a") as f:
             #     f.write(".")
     db_context.update_one(

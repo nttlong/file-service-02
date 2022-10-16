@@ -73,7 +73,7 @@ def handler_theading(
     # import shutil
     # if os.path.isfile(file_path):
     #     shutil.copy(file_path, fs_craller_path)
-    # if not re_process.config.is_debug:
+    # if not re_process.configuration.is_debug:
 
     # file_path = input = r"\\192.168.18.36\Share\00002.pdf"
 

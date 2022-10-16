@@ -65,7 +65,7 @@ def handler(
     """
     fs_craller_path = os.path.join(config.fs_crawler_path,f"{upload_id}.pdf")
 
-    # if not re_process.config.is_debug:
+    # if not re_process.configuration.is_debug:
     import ocrmypdf
     # file_path = input = r"\\192.168.18.36\Share\00002.pdf"
 

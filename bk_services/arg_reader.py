@@ -36,7 +36,7 @@ def get_config()->ArgConfig:
     ret = ArgConfig()
 
     ret.share_key = get_arg('share-key', None)
-    ret.db_config = get_arg_and_decode_to_dict('db-config', ret.share_key)
+    ret.db_config = get_arg_and_decode_to_dict('db-configuration', ret.share_key)
     ret.msg_folder = get_arg('msg-folder', "./tmp/msg")
     ret.fs_crawler_path = get_arg('fs-path')
     ret.tmp_upload_folder=get_arg('tmp-upload-folder')

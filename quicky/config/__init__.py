@@ -31,7 +31,7 @@ class MediaConfig(object):
             1 - Ở chế độ này Server sẽ streaming liên tục cho đến hết nôi dung, kg ngắt quãng.
             2- Tất cả mọi thiết bị nhận được đầy đủ thông tin
             Chú ý: Ở chế độ này khi host trên IIS với FastCGI thì phải vào thư mục:
-            C:\Windows\System32\inetsrv\config tìm trang applicationHost.config
+            C:\Windows\System32\inetsrv\configuration tìm trang applicationHost.configuration
             Thẻ fastCgi bổ sung thêm activityTimeout="60000" requestTimeout="60000" instanceMaxRequests="1000000"
               
         """
@@ -81,11 +81,11 @@ class Config:
         else:
             app_file = str(pathlib.Path(app_file).parent)
         """
-        Create config form app_dir
+        Create configuration form app_dir
         :param app_dir:
         """
         self.name = "Noname"
-        self.description = "Create congfig.yaml and mappall quicky.config.Congfig attr to congfig.yaml"
+        self.description = "Create congfig.yaml and mappall quicky.configuration.Congfig attr to congfig.yaml"
         self.host_dir = '/'
         self.debug = True
         """
@@ -114,7 +114,7 @@ class Config:
         """
         Đường dẫn tương đối đến thư mục template
         """
-        self.app_config_file = os.path.join(self.app_dir, "config.yaml")
+        self.app_config_file = os.path.join(self.app_dir, "configuration.yaml")
         """
         Đường dẫn đến file cấu hình của tàn bộ app
         """
