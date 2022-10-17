@@ -128,7 +128,7 @@ try:
                         os.makedirs(fs_index_dir)
                     if is_ocr:
                         """
-                        Transfer to elastic search
+                        Transfer to elastic search_engine
                         """
                         if not os.path.isfile(real_file_path):
                             return

@@ -16,8 +16,8 @@ def get_logger(logger_name:str, logger_dir:str)-> logging.Logger:
         working_dir = str(pathlib.Path(__file__).parent.parent.parent)
         logger_dir = os.path.join(working_dir,logger_dir)
 
-    if __catch__.get(logger_name) is not None:
-        return __catch__.get(logger_name)
+    if __catch_log__.get(logger_name) is not None:
+        return __catch_log__.get(logger_name)
     __lock__.acquire()
     try:
         # create logger for prd_ci
@@ -34,7 +34,7 @@ def get_logger(logger_name:str, logger_dir:str)-> logging.Logger:
         info_handler.setFormatter(formatter)
 
         log.addHandler(info_handler)
-        __catch__[logger_name]=log
+        __catch_log__[logger_name]=log
         return log
     finally:
         __lock__.release()

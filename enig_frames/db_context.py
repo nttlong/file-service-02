@@ -33,6 +33,17 @@ class DbContext(enig.Singleton):
                         filter=api_models.documents.Apps.NameLower == app_name.lower()
                     )
                     if app is None:
+                        app = db.find_one(
+                            docs=api_models.documents.Apps,
+                            filter=api_models.documents.Apps.Name == app_name
+                        )
+                        if app is not None:
+                            db.update_one(
+                                api_models.documents.Apps,
+                                api_models.documents.Apps.Name == app_name,
+                                api_models.documents.Apps.NameLower==app_name.lower()
+                            )
+                    if app is None:
                         return None
                     __cache__[app_name.lower()] = app_name
                 finally:

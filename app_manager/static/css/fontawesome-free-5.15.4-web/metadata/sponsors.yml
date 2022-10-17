@@ -623,8 +623,8 @@ supple:
     - mail-bulk
     - poll
     - poll-h
-    - search-dollar
-    - search-location
+    - search_engine-dollar
+    - search_engine-location
     - supple
   label: Supple
   url: 'https://supple.com.au'

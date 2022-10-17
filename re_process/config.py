@@ -20,10 +20,10 @@ Thư mục tạm profile để cho phép LibreOffice chạy song song khai báo 
 temp_libre_office_user_profile_dir = r"D:\lv-files\jd-apps\jd-apps\temp-office"
 """
 Thư mục dành cho fs_crawler
-Để đánh Elastich search trên nội dung văn bản hệ thống này đang dùng 1 tiến trình ngoại vi
+Để đánh Elastich search_engine trên nội dung văn bản hệ thống này đang dùng 1 tiến trình ngoại vi
 (Hệ thống không kiểm soát được) gọi là fscrawler phiên bản 7-2.9
 fs-crawler sẽ tự động quét thư mục dưới đây sau mỗi 24 phút (đây là thời gian mặc định, tuy nhiên vẫn có thể cấu hình lại)
-Vì vậy việc tạo index cho elastic search chỉ đơn giản là bỏ file vào thư mục dưới đây
+Vì vậy việc tạo index cho elastic search_engine chỉ đơn giản là bỏ file vào thư mục dưới đây
 Thành công hay thất bại phải vào logs của fs-crawler xem 
 """
 fs_crawler_path =r"\\192.168.18.36\fscrawler-es7-2.9\docs"

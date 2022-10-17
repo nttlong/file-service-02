@@ -213,14 +213,14 @@ async def clone(app_name: str, UploadId: str = Body(embed=True), token: str = De
                         "path.virtual": f'/{app_name}/{UploadId}'}}
             }
         }
-        resp = search_engine.get_client().search(index=fasty.config.search.index, query=bool_body)
+        resp = search_engine.get_client().search(index=fasty.config.search_engine.index, query=bool_body)
         if resp.body.get('hits') and resp.body['hits']['hits'] and resp.body['hits']['hits'].__len__() > 0:
             es_id = resp.body['hits']['hits'][0]['_id']
             body = resp.body['hits']['hits'][0].get('_source')
             body['path']['virtual'] = f'/{app_name}/{ret.UploadId}.{item[Files.FileExt.__name__]}'
             body['MarkDelete']=False
             search_engine.get_client().index(
-                index=fasty.config.search.index,
+                index=fasty.config.search_engine.index,
                 id=ret.UploadId,
                 body=body)
 

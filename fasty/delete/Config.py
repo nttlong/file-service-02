@@ -49,9 +49,9 @@ class Config:
                 raise Exception(f"'broker' point to broker server configuration file was not found in '{self.host_yalm_path}'")
             if not os.path.isabs(self.broker_yaml_path):
                 self.broker_yaml_path = os.path.join(self.config_dir, self.broker_yaml_path).replace('/', os.sep)
-            self.search_yaml_Path = self.master_config.get("search", None)
+            self.search_yaml_Path = self.master_config.get("search_engine", None)
             if self.search_yaml_Path is None:
-                raise Exception(f"'search' point to broker server configuration file was not found in '{self.host_yalm_path}'")
+                raise Exception(f"'search_engine' point to broker server configuration file was not found in '{self.host_yalm_path}'")
             if not os.path.isabs(self.search_yaml_Path):
                 self.search_yaml_Path = os.path.join(self.config_dir, self.search_yaml_Path).replace('/', os.sep)
 

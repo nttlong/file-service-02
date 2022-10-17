@@ -1,4 +1,4 @@
-db:
+db_25:
 #  host: localhost
 #  port: 27017
   host: 172.16.7.25
@@ -8,8 +8,17 @@ db:
   tls: false
   authSource:
   tlsCAFile:
+db:
+  host: 192.168.18.36
+  port: 27018
+  username: 'admin-doc'
+  password: '123456'
+  authSource: 'lv-docs'
+  replicaSet:
+  authMechanism: SCRAM-SHA-1
 # Default administrator database
-admin_db_name: media-server
+admin_db_name_25: media-server
+admin_db_name: lv-docs
 # unvicorn server listener list all ip
 binding_ip: 0.0.0.0
 # univocorn listen port
@@ -27,4 +36,7 @@ jwt:
   access_token_expire_minutes: 480
 tmp_upload_dir: ./tmp
 elastic_search:
-  - http://localhost:9200
+  server:
+    - http://192.168.18.36:9200
+  index: lv-files-server-v2
+

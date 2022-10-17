@@ -69,7 +69,7 @@ def search_content_of_file(app_name: str, content: str):
 
         }
     }
-    resp = es_connection.es_client.search(index=es_connection.es_index, query=bool_body, highlight=highlight)
+    resp = es_connection.es_client.search_engine(index=es_connection.es_index, query=bool_body, highlight=highlight)
     total_items = resp['hits']['total']['value']
     max_score = resp["hits"].get('max_score')
     ret_list = []

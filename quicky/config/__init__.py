@@ -40,7 +40,7 @@ class ElasticSearch(object):
     def __init__(self):
         self.url =""
         """
-        Url của elastic search server
+        Url của elastic search_engine server
         """
         self.index =""
         """
@@ -64,7 +64,7 @@ class Config:
     def __init__(self, app_file_or_folder):
         self.elastic_search =ElasticSearch()
         """
-        Cấu hình elastic search
+        Cấu hình elastic search_engine
         """
         self.media = MediaConfig()
         """

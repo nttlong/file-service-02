@@ -39,8 +39,8 @@ async def files_delete(app_name: str, UploadId: str = Body(embed=True), token: s
                 {"match":{"path.virtual": f'/{app_name}/{delete_item.get(Files._id.__name__)}.{delete_item.get(Files.FileExt.__name__)}'}}
         }
     }
-    resp = search_engine.get_client().search(index=fasty.config.search.index, query=bool_body)
+    resp = search_engine.get_client().search(index=fasty.config.search_engine.index, query=bool_body)
     if resp.body.get('hits') and resp.body['hits']['hits'] and resp.body['hits']['hits'].__len__()>0:
         es_id = resp.body['hits']['hits'][0]['_id']
-        search_engine.get_client().delete(index= fasty.config.search.index,id= es_id)
+        search_engine.get_client().delete(index= fasty.config.search_engine.index, id= es_id)
     return dict()

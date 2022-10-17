@@ -24,7 +24,7 @@ async def register_new_app(app_name: str, Data:AppInfo=Body(embed=True),token: s
     """
     Tạo một application mới\n
     Mỗi một application là một isolate tenant bao gồm:\n
-        1- Elastich search engine
+        1- Elastich search_engine engine
         2- Mongo Database
         3- Seperated file partition
 

@@ -1,3 +1,4 @@
+import enig_frames.containers
 import enigma
 import fasty
 from fastapi import Request, Depends, Body, Response
@@ -17,6 +18,7 @@ def search_content_of_file(app_name: str, content: str,page_size:int,page_index:
     :param content: nội dung
     :return:
     """
+    container = enig_frames.containers.Container
     str_content = content
     highlight = {
         "pre_tags": ["<em>"],
@@ -88,13 +90,16 @@ def search_content_of_file(app_name: str, content: str,page_size:int,page_index:
         }
     }
     from_= page_size*page_index
-    resp = search_engine.get_client().search(
-        index=fasty.config.search.index,
-        query=bool_body,
-        highlight=highlight,
-        from_=from_,
-        size=page_size
+    resp = container.Services.search_engine.search(
+        index=container.config.config.elastic_search.index,
+            search_definition=dict(
+                query=bool_body,
+                highlight=highlight,
+                from_=from_,
+                size=page_size
+            )
     )
+
     total_items = resp['hits']['total']['value']
     max_score = resp["hits"].get('max_score')
     ret_list = []
@@ -129,21 +134,22 @@ async def file_search(request:Request, app_name: str, content: str = Body(embed=
     :param token:
     :return:
     """
-
-    db_name = await fasty.JWT.get_db_name_async(app_name)
+    container = enig_frames.containers.Container
+    db_name = container.db_context.get_db_name(app_name)
     if db_name is None:
         return Response(status_code=403)
     search_result = search_content_of_file(app_name, content,page_size,page_index)
 
-    db_context = get_db_context(db_name)
+
     ret_items = []
-    url = enigma.get_root_api_url()
+    url = container.Services.host.root_api_url
     for x in search_result["items"]:
         upload_id = x["server_file_id"].split('.')[0]  # tách lấy id upload
-        upload_doc_item = await db_context.find_one_async(
-            Docs.Files,
-            Docs.Files._id == upload_id
-        )  # upload_docs.find_one(upload_docs._id == upload_id)
+        upload_doc_item =await container.Services.files.get_item_by_upload_id_async(
+            app_name=app_name,
+            upload_id=upload_id
+        )
+
 
         if upload_doc_item:
             upload_doc_item['Highlight'] = x.get('highlight', [])
