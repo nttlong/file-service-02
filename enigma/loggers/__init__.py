@@ -5,7 +5,7 @@ import threading
 from kink import inject
 import traceback
 import sys
-__catch_log__ = dict()
+__cach_log__ = dict()
 __lock__ = threading.Lock()
 
 
@@ -13,14 +13,14 @@ __lock__ = threading.Lock()
 
 def get_logger(logger_name:str, logger_dir:str)-> logging.Logger:
     global __lock__
-    global __catch_log__
+    global __cach_log__
     if logger_dir[0:2]=="./":
         logger_dir=logger_dir[2:logger_dir.__len__()]
         working_dir = str(pathlib.Path(__file__).parent.parent.parent)
         logger_dir = os.path.join(working_dir,logger_dir)
 
-    if __catch__.get(logger_name) is not None:
-        return __catch__.get(logger_name)
+    if __cach_log__.get(logger_name) is not None:
+        return __cach_log__.get(logger_name)
     __lock__.acquire()
     try:
         # create logger for prd_ci
@@ -37,7 +37,7 @@ def get_logger(logger_name:str, logger_dir:str)-> logging.Logger:
         info_handler.setFormatter(formatter)
 
         log.addHandler(info_handler)
-        __catch__[logger_name]=log
+        __cach_log__[logger_name]=log
         return log
     finally:
         __lock__.release()

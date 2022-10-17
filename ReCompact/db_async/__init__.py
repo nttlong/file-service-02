@@ -851,6 +851,25 @@ class Aggregate:
             ret = ret + [__fix_bson_object_id__(doc)]
 
         return ret
+    def to_list(self):
+        coll = __get_collection_sync__(
+            self.db,
+            self.name,
+            self.keys,
+            self.indexes
+        )
+        ret = []
+        if self.page_size is not None and self.page_index is not None:
+            self.pineline += [{
+                "$skip": self.page_index * self.page_size
+            }, {
+                "$limit": self.page_size
+            }]
+
+        for doc in coll.delegate.aggregate(self.pineline):
+            ret = ret + [__fix_bson_object_id__(doc)]
+
+        return ret
 
 
 class DbContext:

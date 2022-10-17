@@ -11,3 +11,10 @@ class Configuration:
                 del ret[k]
         return ret
 
+
+    def get_root_url(self):
+        ret = f"{self.config.host_schema}://{self.config.host_name}"
+        if self.config.host_port is not None:
+            ret=f"{ret}:{self.config.host_port}"
+        return  ret
+

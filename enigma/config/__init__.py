@@ -11,6 +11,7 @@ __config__ = None
 __lock__ = threading.Lock()
 __working_dir__ = str(pathlib.Path(__file__).parent.parent.parent)
 __config_path__ = None
+DEFAULT_SETTINGS_CONFIG_PATH = "./config.yml"
 
 
 @inject
@@ -36,7 +37,7 @@ class AppConfig:
                         __cache__[x.split('=')[0]] = x.split('=')[1]
                 __config_path__ = self.get_sys_arg('config_path')
                 if __config_path__ is None:
-                    __config_path__ = "./configuration.yml"
+                    __config_path__ = DEFAULT_SETTINGS_CONFIG_PATH
                 if __config_path__[0:2] == './':
                     __config_path__ = __config_path__[2:]
                     __config_path__ = __config_path__.replace('/', os.sep)
@@ -67,7 +68,9 @@ class AppConfig:
         global __config__
         global __lock__
         if __config__ is None:
+
             __lock__.acquire()
+            __config__ = {}
             try:
                 with open(self.config_path, 'r') as stream:
                     try:
@@ -89,4 +92,3 @@ class AppConfig:
                     del ret[k]
             __config__[key] = ret
         return __config__.get(key)
-

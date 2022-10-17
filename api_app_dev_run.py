@@ -1,4 +1,6 @@
 import enigma
+import enig
+import enig_frames.config
 import sys
 
 # from werkzeug import debug
@@ -11,14 +13,14 @@ import fasty.JWT
 
 import os
 import uvicorn
-
+configuration:enig_frames.config.Configuration = enig.create_instance(enig_frames.config.Configuration)
 
 if __name__ == "__main__":
 
     uvicorn.run(
         "api_app:app",
-        host=enigma.app_config.get_config('binding_ip'),
-        port=enigma.app_config.get_config('binding_port'),
+        host=configuration.config.binding_ip,
+        port=configuration.config.binding_port,
         workers=1,
         ws='websockets',
         ws_max_size=16777216*1024,

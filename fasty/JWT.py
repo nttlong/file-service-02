@@ -16,6 +16,8 @@ from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN, HTTP_301
 import bson
 from fastapi_jwt_auth import AuthJWT
 
+import enig
+import enig_frames.services.sercurities
 import fasty
 from . import JWT_Docs
 from datetime import datetime, timedelta
@@ -176,10 +178,8 @@ class OAuth2PasswordBearerAndCookie(OAuth2PasswordBearer):
         if request.cookies.get('access_token_cookie', None) is not None:
             token = request.cookies['access_token_cookie']
             try:
-                ret_data = jwt.decode(token, enigma.app_config.get_config('jwt').get('secret_key'),
-                                      algorithms=[enigma.app_config.get_config('jwt').get('algorithm')],
-                                      options={"verify_signature": False},
-                                      )
+                sercurity_services= enig.depen(enig_frames.services.sercurities.Sercurities)
+                ret_data=sercurity_services.decode_token(token)
 
                 setattr(request, "usernane", ret_data.get("sup"))
                 setattr(request, "application_name", ret_data.get("application"))

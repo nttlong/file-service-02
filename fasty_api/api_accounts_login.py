@@ -2,9 +2,11 @@
 API liệt kê danh sách các file
 """
 import ReCompact.dbm
+import enig
+import enig_frames.services.accounts
 
 import fasty
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 import api_models.documents as docs
 from ReCompact import db_async
 import json
@@ -21,22 +23,31 @@ from pydantic import BaseModel
 from fastapi_jwt_auth import AuthJWT
 import enigma
 import enigma.services
+
+
 class Token(BaseModel):
     access_token: str
 
-@fasty.api_post("/accounts/token",response_model=Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),Authorize: AuthJWT = Depends()):
+
+
+
+@fasty.api_post("/accounts/token", response_model=Token)
+async def login_for_access_token(
+        form_data: OAuth2PasswordRequestForm = Depends(),
+        Authorize: AuthJWT = Depends()
+):
+
     username = form_data.username
-    app_name=""
+    app_name = ""
     if '/' in form_data.username:
-        items =form_data.username.split('/')
-        app_name =items[0]
-        username =form_data.username[app_name.__len__()+1:]
+        items = form_data.username.split('/')
+        app_name = items[0]
+        username = form_data.username[app_name.__len__() + 1:]
     elif '@' in form_data.username:
         items = form_data.username.split('@')
         app_name = items[-1]
-        username = form_data.username[0:-app_name.__len__()-1]
-    db_name= await fasty.JWT.get_db_name_async(app_name)
+        username = form_data.username[0:-app_name.__len__() - 1]
+    db_name = await fasty.JWT.get_db_name_async(app_name)
 
     await enigma.services.apps.create(
         app_name=app_name
@@ -49,8 +60,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-
-    user =await fasty.JWT.authenticate_user_async(db_name, username, form_data.password)
+    user = await fasty.JWT.authenticate_user_async(db_name, username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -58,10 +68,10 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             headers={"WWW-Authenticate": "Bearer"},
         )
     # access_token_expires = timedelta(minutes=fasty.configuration.app.jwt.access_token_expire_minutes)
-    access_token =fasty.JWT. create_access_token(
+    access_token = fasty.JWT.create_access_token(
         data={
-            "sub": user[fasty.JWT.JWT_Docs.Users.Username.__name__] ,
-            "application":app_name
+            "sub": user[fasty.JWT.JWT_Docs.Users.Username.__name__],
+            "application": app_name
         },
         # expires_delta=access_token_expires
 

@@ -1,6 +1,8 @@
 db:
-  host: localhost
-  port: 27017
+#  host: localhost
+#  port: 27017
+  host: 172.16.7.25
+  port: 27018
   username:
   password:
   tls: false
@@ -15,7 +17,8 @@ binding_port: 8011
 jinja_templates_dir: ./templates
 static_dir: ./app_manager/static
 api_host_dir: api
-host_name: 192.168.1.11
+_host_name: 192.168.1.11
+host_name: 172.16.13.72
 host_schema: http
 host_port: 8011
 jwt:

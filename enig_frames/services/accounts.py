@@ -54,4 +54,12 @@ class Accounts(enig.Singleton):
 
             )
 
+
+    def get_sso_login(self, SSOID):
+        sso_info =self.repo.get_sso_info(SSOID)
+        return sso_info
+    async def get_sso_login_asycn(self, SSOID):
+        sso_info =await self.repo.get_sso_info_async(SSOID)
+        return sso_info
+
         

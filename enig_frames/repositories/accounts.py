@@ -37,3 +37,18 @@ class Accounts(enig.Singleton):
             api_models.documents.Users.IsSysAdmin == is_sys_admin
 
         )
+
+    def get_sso_info(self, SSOID):
+        ret = self.db.context('admin').find_one(
+            docs=api_models.documents.SSOs,
+            filter=api_models.documents.SSOs.SSOID==SSOID
+        )
+        return ret
+
+    async def get_sso_info_async(self, SSOID):
+        ret = await self.db.context('admin').find_one_async(
+            docs=api_models.documents.SSOs,
+            filter=api_models.documents.SSOs.SSOID == SSOID
+        )
+        return ret
+

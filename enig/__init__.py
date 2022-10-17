@@ -9,6 +9,8 @@ __catch_log__ ={}
 import kink
 import yaml
 from kink import di
+from matplotlib import __getattr__
+
 T = TypeVar('T')
 __cache_yam_dict__ = {}
 
@@ -113,3 +115,36 @@ def get_logger(logger_name:str="enig", logger_dir:str="./logs")-> logging.Logger
         return log
     finally:
         __lock__.release()
+
+def container(*args,**kwargs):
+    fx=args
+    def container_wrapper(cls):
+        old_getattr=None
+        if hasattr(cls,"__getattribute__"):
+            old_getattr = getattr(cls,"__getattribute__")
+
+        def __container__getattribute____(obj, item):
+            ret= None
+            if item[0:2]=="__" and item[-2]=="__":
+                if old_getattr is not None:
+                    return old_getattr(obj,item)
+                else:
+                    ret = cls.__dict__.get(item)
+
+            else:
+                ret = cls.__dict__.get(item)
+            if ret is None:
+                __annotations__ = cls.__dict__.get('__annotations__')
+                if isinstance(__annotations__,dict):
+                    ret =__annotations__.get(item)
+            import inspect
+            if inspect.isclass(ret):
+                ret=container_wrapper(ret)
+                return ret
+
+
+            return ret
+        setattr(cls,"__getattribute__",__container__getattribute____)
+        return cls()
+
+    return container_wrapper

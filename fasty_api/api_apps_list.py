@@ -11,6 +11,7 @@ import json
 from . import api_files_schema
 import fasty.JWT
 from fastapi_jwt_auth import AuthJWT
+import enig_frames.containers
 @fasty.api_post("/{app_name}/apps")
 async def get_list_of_apps(app_name: str,
                            filter: api_files_schema.Filter,
@@ -27,30 +28,13 @@ async def get_list_of_apps(app_name: str,
         Decription:"..." Decription of app \n
     },..\n]
     """
-
+    container = enig_frames.containers.Container
     if app_name!='admin':
         return Response(status_code=403)
-    db_name= await fasty.JWT.get_db_name_async(app_name)
-    db = db_async.get_db_context(db_name)
-    agg = db.aggregate(docs.Apps)
-    agg.project(
-        # docs.Files._id,
-
-        docs.Apps.Name,
-        docs.Apps.Domain,
-        docs.Apps.LoginUrl,
-        docs.Apps.ReturnUrlAfterSignIn,
-        docs.Apps.Description,
-        CreatedOn= docs.Apps.RegisteredOn,
-        AppId=docs.Apps._id
-    ).sort(
-        ReCompact.dbm.FIELDS.CreatedOn.desc(),
-        ReCompact.dbm.FIELDS.Name.desc()
-
-    ).pager(
-        filter.PageIndex, filter.PageSize
-    )
-
-    ret_list = await agg.to_list_async()
+    ret_list = await container.Services.applications.get_list_async(
+        app_name=app_name,
+        page_index=filter.PageIndex,
+        page_size=filter.PageSize,
+        value_search=filter.ValueSearch)
     return ret_list
 

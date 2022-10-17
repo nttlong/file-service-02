@@ -1,6 +1,8 @@
 import motor
 
 import ReCompact.dbm
+import enig_frames.services.accounts
+import enig_frames.config
 import fasty
 from fastapi import FastAPI, Request, Header, Response
 import api_models.documents as docs
@@ -13,6 +15,7 @@ from ReCompact import db_async
 from fastapi.responses import StreamingResponse
 import os
 import mimetypes
+import api_models.documents
 import fasty.mongo_fs_http_streaming
 from  fastapi import Depends,status,Request,Response
 from fastapi.responses import RedirectResponse, HTMLResponse
@@ -21,6 +24,7 @@ import fasty.JWT
 import fasty.JWT_Docs
 from ReCompact.db_async import get_db_context,default_db_name
 from fastapi_jwt_auth import AuthJWT
+import enig
 @fasty.api_get("/sso/signin/{SSOID}")
 async def do_sign_in(SSOID:str,request:Request, Authorize: AuthJWT = Depends()):
     """
@@ -36,19 +40,23 @@ async def do_sign_in(SSOID:str,request:Request, Authorize: AuthJWT = Depends()):
     :param Authorize:
     :return:
     """
-    db_name = await fasty.JWT.get_db_name_async(default_db_name)
-    if db_name is None:
-        return Response(status_code=403)
-    db_context= get_db_context(db_name)
-    ret_item = await db_context.find_one_async(
-        fasty.JWT_Docs.SSOs,
-        fasty.JWT_Docs.SSOs.SSOID==SSOID
-    )
-    ret_url=ret_item.get(fasty.JWT_Docs.SSOs.ReturnUrlAfterSignIn.__name__,fasty.config.app.root_url)
-    Authorize.set_access_cookies(ret_item[fasty.JWT_Docs.SSOs.Token.__name__])
+    accounts_services= enig.depen(enig_frames.services.accounts.Accounts)
+    config =enig.depen(enig_frames.config.Configuration)
+    sso_info=  await accounts_services.get_sso_login_asycn(SSOID)
+
+    # db_name = await fasty.JWT.get_db_name_async(default_db_name)
+    # if db_name is None:
+    #     return Response(status_code=403)
+    # db_context= get_db_context(db_name)
+    # ret_item = await db_context.find_one_async(
+    #     fasty.JWT_Docs.SSOs,
+    #     fasty.JWT_Docs.SSOs.SSOID==SSOID
+    # )
+    ret_url=sso_info.get(api_models.documents.SSOs.ReturnUrlAfterSignIn.__name__,config.get_root_url())
+    Authorize.set_access_cookies(sso_info[api_models.documents.SSOs.Token.__name__])
     ret_url = request.query_params.get('ret',ret_url)
 
 
     res = RedirectResponse(url=ret_url, status_code=status.HTTP_303_SEE_OTHER)
-    res.set_cookie("access_token_cookie",ret_item[fasty.JWT_Docs.SSOs.Token.__name__])
+    res.set_cookie("access_token_cookie",sso_info[api_models.documents.SSOs.Token.__name__])
     return res
