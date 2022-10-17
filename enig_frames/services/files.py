@@ -9,3 +9,5 @@ class Files(enig.Singleton):
     async def get_item_by_upload_id_async(self,app_name:str, upload_id:str):
         return await self.repo.get_item_by_upload_id_async(app_name, upload_id)
 
+    async def delete_by_id_async(self,app_name:str, upload_id:str):
+        return await self.repo.delete_by_id_async(app_name, upload_id)

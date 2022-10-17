@@ -15,3 +15,6 @@ class FullTextSearch(enig.Singleton):
             **{**args, **definition}
         )
         return ret
+
+    def delete_by_id(self, index, id):
+        self.client.delete(index= index, id= id)

@@ -13,3 +13,10 @@ class Files(enig.Singleton):
             filter= api_models.documents.Files._id==upload_id
         )
         return ret
+
+    async def delete_by_id_async(self, app_name, upload_id):
+        ret = await self.db.context(app_name).delete_one_async(
+            docs=api_models.documents.Files,
+            filter=api_models.documents.Files._id == upload_id
+        )
+        return ret

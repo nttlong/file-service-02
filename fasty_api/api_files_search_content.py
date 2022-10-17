@@ -11,7 +11,7 @@ import ReCompact.es_search as search_engine
 from typing import Optional
 
 
-def search_content_of_file(app_name: str, content: str,page_size:int,page_index:int):
+def search_content_of_file(app_name: str, content: str, page_size: int, page_index: int):
     """
     Thực hiện tìm kiếm ter6n nội dung của file
     :param app_name: app
@@ -38,11 +38,11 @@ def search_content_of_file(app_name: str, content: str,page_size:int,page_index:
             }
         }
     }
-    f_mark_dele={"match": { "MarkDelete": False}}
-    f_not_exist_mark_dele = {"bool": {"must_not": {"exists": {'field':'MarkDelete'}}}}
+    f_mark_dele = {"match": {"MarkDelete": False}}
+    f_not_exist_mark_dele = {"bool": {"must_not": {"exists": {'field': 'MarkDelete'}}}}
     filter_by_mark_delete = {
         "bool": {
-            "should": [f_mark_dele,f_not_exist_mark_dele]}
+            "should": [f_mark_dele, f_not_exist_mark_dele]}
     }
 
     search_body_2 = {
@@ -84,20 +84,19 @@ def search_content_of_file(app_name: str, content: str,page_size:int,page_index:
                 should_body,
                 filter_by_mark_delete
 
-
             ]
 
         }
     }
-    from_= page_size*page_index
+    from_ = page_size * page_index
     resp = container.Services.search_engine.search(
         index=container.config.config.elastic_search.index,
-            search_definition=dict(
-                query=bool_body,
-                highlight=highlight,
-                from_=from_,
-                size=page_size
-            )
+        search_definition=dict(
+            query=bool_body,
+            highlight=highlight,
+            from_=from_,
+            size=page_size
+        )
     )
 
     total_items = resp['hits']['total']['value']
@@ -123,7 +122,9 @@ def search_content_of_file(app_name: str, content: str,page_size:int,page_index:
 
 
 @fasty.api_post("/{app_name}/search")
-async def file_search(request:Request, app_name: str, content: str = Body(embed=True),page_size:Optional[int]=Body(embed=True),page_index:Optional[int]=Body(embed=True), token: str = Depends(fasty.JWT.oauth2_scheme)):
+async def file_search(request: Request, app_name: str, content: str = Body(embed=True),
+                      page_size: Optional[int] = Body(embed=True), page_index: Optional[int] = Body(embed=True),
+                      token: str = Depends(fasty.JWT.oauth2_scheme)):
     """
     Tim kiem noi dung
     :param request:
@@ -138,18 +139,16 @@ async def file_search(request:Request, app_name: str, content: str = Body(embed=
     db_name = container.db_context.get_db_name(app_name)
     if db_name is None:
         return Response(status_code=403)
-    search_result = search_content_of_file(app_name, content,page_size,page_index)
-
+    search_result = search_content_of_file(app_name, content, page_size, page_index)
 
     ret_items = []
     url = container.Services.host.root_api_url
     for x in search_result["items"]:
         upload_id = x["server_file_id"].split('.')[0]  # tách lấy id upload
-        upload_doc_item =await container.Services.files.get_item_by_upload_id_async(
+        upload_doc_item = await container.Services.files.get_item_by_upload_id_async(
             app_name=app_name,
             upload_id=upload_id
         )
-
 
         if upload_doc_item:
             upload_doc_item['Highlight'] = x.get('highlight', [])
