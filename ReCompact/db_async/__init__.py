@@ -459,6 +459,8 @@ async def find_one_async(db: motor.motor_asyncio.AsyncIOMotorDatabase, docs, fil
     if isinstance(filter, ReCompact.dbm.DbObjects.Docs.Fields):
         _filter = filter.to_mongodb()
     ret = await coll.find_one(_filter)
+    if ret is None:
+        return None
     ret_dict = __fix_bson_object_id__(ret)
     ret_dict = DocumentItem(ret_dict)
     return ret_dict
