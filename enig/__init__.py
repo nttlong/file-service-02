@@ -1,6 +1,7 @@
 import logging
 import os.path
 import pathlib
+import sys
 import threading
 from typing import TypeVar, Generic, List
 __working_dir__=None
@@ -148,3 +149,48 @@ def container(*args,**kwargs):
         return cls()
 
     return container_wrapper
+
+
+def convert_to_dict(str_path:str,value):
+    items = str_path.split('.')
+    if items.__len__()==1:
+        return {items[0]:value}
+    else:
+        return {items[0]: convert_to_dict(str_path[items[0].__len__()+1:],value)}
+
+from copy import deepcopy
+
+def __dict_of_dicts_merge__(x, y):
+    z = {}
+    if isinstance(x,dict) and isinstance(y,dict):
+        overlapping_keys = x.keys() & y.keys()
+        for key in overlapping_keys:
+            z[key] = __dict_of_dicts_merge__(x[key], y[key])
+        for key in x.keys() - overlapping_keys:
+            z[key] = deepcopy(x[key])
+        for key in y.keys() - overlapping_keys:
+            z[key] = deepcopy(y[key])
+        return z
+    else:
+        return y
+
+def combine_agruments(data:dict):
+    ret={}
+    for x in sys.argv:
+        if x.split('=').__len__()==2:
+            k=x.split('=')[0]
+            v=x.split('=')[1]
+            c= convert_to_dict(k,v)
+            ret=__dict_of_dicts_merge__(ret,c)
+    ret = __dict_of_dicts_merge__(data,ret)
+    return ret
+def combine_os_variables(data:dict):
+    import os
+    ret={}
+    for k,v in os.environ.items():
+        if k.startswith('config.'):
+            k=k['config.'.__len__():]
+            c = convert_to_dict(k,v)
+            ret=__dict_of_dicts_merge__(ret,c)
+    ret = __dict_of_dicts_merge__(data,ret)
+    return ret

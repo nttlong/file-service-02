@@ -6,6 +6,7 @@ import bson
 import motor
 import pymongo.database
 
+import enig_frames.containers
 import enigma
 import fasty
 from fastapi import Body, Depends, Response
@@ -130,12 +131,13 @@ async def clone(app_name: str, UploadId: str = Body(embed=True), token: str = De
     :param token:
     :return:
     """
-
+    container = enig_frames.containers.Container
     ret_copy = CloneFileResult()
     # 2123d6ba-7c77-4a98-b4b7-7d45c8bc97ab
-    db_name = await get_db_name_async(app_name)
+    db_name = container.db_context.get_db_name(app_name)
     if db_name is None:
         return Response(status_code=403)
+
     db_context = get_db_context(db_name)
     item = await db_context.find_one_async(Files, Files._id == UploadId)
     if item is None:

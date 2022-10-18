@@ -17,7 +17,7 @@ import bson
 from fastapi_jwt_auth import AuthJWT
 
 import enig
-import enig_frames.services.sercurities
+# import enig_frames.services.sercurities
 import fasty
 from . import JWT_Docs
 from datetime import datetime, timedelta
@@ -175,6 +175,7 @@ class OAuth2PasswordBearerAndCookie(OAuth2PasswordBearer):
         )
 
     async def __call__(self, request: Request) -> Optional[str]:
+        import enig_frames.services.sercurities
         if request.cookies.get('access_token_cookie', None) is not None:
             token = request.cookies['access_token_cookie']
             try:

@@ -12,6 +12,12 @@ import fasty.JWT
 
 
 import os
+os.environ['config.db.host']='172.16.7.25'
+os.environ['config.db.port']='27018'
+os.environ['config.db.username']=''
+os.environ['config.db.password']=''
+os.environ['config.db.authMechanism']=''
+os.environ['config.admin_db_name']='enigma-media'
 import uvicorn
 configuration:enig_frames.config.Configuration = enig.create_instance(enig_frames.config.Configuration)
 

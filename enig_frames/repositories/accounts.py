@@ -13,15 +13,22 @@ class Accounts(enig.Singleton):
             api_models.documents.Users,
             api_models.documents.Users.UsernameLowerCase==username.lower()
         )
+        if ret is None:
+            ret = dbc.find_one(
+                api_models.documents.Users,
+                api_models.documents.Users.Username == username
+            )
+            if ret is not None:
+                ret= dbc.find_one(
+                    api_models.documents.Users,
+                    api_models.documents.Users.Username == username,
+                    api_models.documents.Users.UsernameLowerCase == username.lower()
+
+                )
+
         return ret
 
-    async def get_user_by_username_async(self, app_name:str, username:str):
-        dbc=self.db.context(app_name)
-        ret= await dbc.find_one_async(
-            api_models.documents.Users,
-            api_models.documents.Users.UsernameLowerCase==username.lower()
-        )
-        return ret
+
 
     def create(self, app_name:str, username:str,email:str,is_sys_admin:bool, hash_password):
         dbctx=self.db.context(app_name)
@@ -52,3 +59,9 @@ class Accounts(enig.Singleton):
         )
         return ret
 
+    async def get_user_by_username_async(self,app_name:str,username:str):
+        ret = await self.db.context(app_name).find_one_async(
+            docs=api_models.documents.Users,
+            filter=api_models.documents.Users.UsernameLowerCase==username.lower()
+        )
+        return ret

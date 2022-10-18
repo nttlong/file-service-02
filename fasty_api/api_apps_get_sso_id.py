@@ -70,7 +70,8 @@ async def get_sso_token(request:Request, token: str = Depends(get_oauth2_scheme(
     app_name = request.application_name
     if app_name is None:
         return Response(status_code=401)
-    db_name = await fasty.JWT.get_db_name_async(app_name)
+    import enig_frames.containers
+    db_name = enig_frames.containers.Container.db_context.get_db_name(app_name)
     if db_name is None:
         return Response(status_code=403)
     db_context = get_db_context(db_name)

@@ -76,6 +76,7 @@ class AppConfig:
                     try:
                         __config__ = yaml.safe_load(stream)
 
+
                     except yaml.YAMLError as exc:
                         self.logger.error(exc)
             except Exception as e:

@@ -3,6 +3,8 @@ import os.path
 import pathlib
 import gc
 import uuid
+
+import enig_frames.containers
 import enigma
 import ReCompact_Kafka.producer
 from fastapi import  File, Form,Response,Depends
@@ -105,10 +107,10 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
     path_to_broker_share: có thể là share file trong mang LAN, nếu tiến trình xử lý không cùng nằm trên 1 PC
     
     """
-
+    container = enig_frames.containers.Container
     ret = UploadFilesChunkInfoResult()
-    db_name = await fasty.JWT.get_db_name_async(app_name)
-    db_context = get_db_context(db_name)
+    db_name = container.db_context.get_db_name(app_name)
+    db_context =  get_db_context(db_name)
     gfs = db_context.get_grid_fs()
     global __meta_upload_cache__
     global __lock__
@@ -192,7 +194,7 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
                 full_file_path=path_to_broker_share,
                 app_name=app_name,
                 upload_id=UploadId,
-                thumb_sizes=upload_item.get(docs.Files.AvailableThumbSize.__name__)
+                thumb_sizes=upload_item.get(docs.Files.AvailableThumbSize)
 
             ),
             files_path=[path_to_broker_share]
@@ -212,10 +214,10 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
         docs.Files.MainFileId == main_file_id
 
     )
-    upload_item[docs.Files.SizeUploaded.__name__] = size_uploaded
-    upload_item[docs.Files.NumOfChunksCompleted.__name__] = num_of_chunks_complete
-    upload_item[docs.Files.Status.__name__] = status
-    upload_item[docs.Files.MainFileId.__name__] = main_file_id
+    upload_item[docs.Files.SizeUploaded] = size_uploaded
+    upload_item[docs.Files.NumOfChunksCompleted] = num_of_chunks_complete
+    upload_item[docs.Files.Status] = status
+    upload_item[docs.Files.MainFileId] = main_file_id
     gc.collect()
     del FilePart
     return ret

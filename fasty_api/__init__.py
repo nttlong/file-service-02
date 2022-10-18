@@ -1,5 +1,5 @@
 import enigma.services
-accounts = enigma.services.accounts
+
 import fasty
 import fasty.JWT
 from . import api_files

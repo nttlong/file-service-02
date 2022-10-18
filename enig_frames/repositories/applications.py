@@ -83,3 +83,11 @@ class Applications(enig.Singleton):
 
         return await ret.to_list_async()
 
+
+    def get_app_by_name(self, app_name:str):
+        ret = self.db.context('admin').find_one(
+            api_models.documents.Apps,
+            api_models.documents.Apps.NameLower==app_name.lower()
+        )
+        return ret
+

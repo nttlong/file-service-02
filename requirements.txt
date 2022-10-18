@@ -40,3 +40,4 @@ pdfminer.six
 pdfplumber~=0.7.1
 bcrypt
 kink~=0.6.5
+hypercorn[trio]

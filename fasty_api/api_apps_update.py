@@ -12,7 +12,8 @@ import api_models.documents as docs
 from ReCompact.db_async import get_db_context
 @fasty.api_post("/{app_name}/apps/update/{app_edit}",response_model=EditAppResutl)
 async def application_update(app_name: str, app_edit: str,Data: AppInfo = Body(embed=True) ,token: str = Depends(fasty.JWT.oauth2_scheme)):
-    db_name =await fasty.JWT.get_db_name_async(app_name)
+    import enig_frames.containers
+    db_name = enig_frames.containers.Container.db_context.get_db_name(app_name)
     ret=EditAppResutl()
     if app_name!="admin":
         return Response(status_code=403)

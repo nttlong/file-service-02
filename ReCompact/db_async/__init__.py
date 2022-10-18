@@ -25,6 +25,29 @@ Working dir from app dir
 __strong_foe_config__ = None
 
 
+class DocumentItem(dict):
+    def __init__(self, *args, **kwargs):
+        dict.__init__(self, *args, **kwargs)
+
+    def __getitem__(self, item):
+        import ReCompact.dbm.DbObjects.Docs
+        if isinstance(item, ReCompact.dbm.DbObjects.Docs.Fields):
+            return self.get(item.__name__)
+        return self.get(item)
+
+    def __setitem__(self, key, value):
+        import ReCompact.dbm.DbObjects.Docs
+        if isinstance(key, ReCompact.dbm.DbObjects.Docs.Fields):
+            return self.update({key.__name__: value})
+        return self.update({key: value})
+
+    def get(self, key, dv=None):
+        import ReCompact.dbm.DbObjects.Docs
+        if isinstance(key, ReCompact.dbm.DbObjects.Docs.Fields):
+            return dict.get(self, key.__name__, dv)
+        return dict.get(self, key, dv)
+
+
 class PyObjectId(ObjectId):
     """ Custom Type for reading MongoDB IDs """
 
@@ -133,13 +156,17 @@ def set_config(host: str, port: int, username: str, password: str, tlsCAFile: st
             raise e
         finally:
             __lock__.release()
+
+
 import traceback
-def load_config_from_dict(data:dict,logger:logging.Logger):
+
+
+def load_config_from_dict(data: dict, logger: logging.Logger):
     global __connection__
     if __connection__ is None:
         __lock__.acquire()
         try:
-            __connection__ =motor.motor_asyncio.AsyncIOMotorClient(
+            __connection__ = motor.motor_asyncio.AsyncIOMotorClient(
                 **data
             )
         except Exception as e:
@@ -147,10 +174,7 @@ def load_config_from_dict(data:dict,logger:logging.Logger):
         finally:
             __lock__.release()
 
-
-
     return None
-
 
 
 class ErrorType(enum.Enum):
@@ -329,6 +353,7 @@ async def __get_collection__(db, collection_name, keys, index):
 
     return coll
 
+
 def __get_collection_sync__(db, collection_name, keys, index):
     coll = getattr(db, collection_name)
     global __cache_index_creator__
@@ -412,6 +437,7 @@ def __get_collection_sync__(db, collection_name, keys, index):
 
     return coll
 
+
 async def find_one_async(db: motor.motor_asyncio.AsyncIOMotorDatabase, docs, filter=None):
     """
 
@@ -434,13 +460,14 @@ async def find_one_async(db: motor.motor_asyncio.AsyncIOMotorDatabase, docs, fil
         _filter = filter.to_mongodb()
     ret = await coll.find_one(_filter)
     ret_dict = __fix_bson_object_id__(ret)
+    ret_dict = DocumentItem(ret_dict)
     return ret_dict
 
 
 def find_one(db: motor.motor_asyncio.AsyncIOMotorDatabase, docs, filter=None):
-    real_db=db
-    if isinstance(db,motor.motor_asyncio.AsyncIOMotorDatabase):
-        real_db =db.delegate
+    real_db = db
+    if isinstance(db, motor.motor_asyncio.AsyncIOMotorDatabase):
+        real_db = db.delegate
     coll = __get_collection_sync__(
         real_db,
         docs.__dict__["__collection_name__"],
@@ -452,8 +479,10 @@ def find_one(db: motor.motor_asyncio.AsyncIOMotorDatabase, docs, filter=None):
     _filter = filter
     if isinstance(filter, ReCompact.dbm.DbObjects.Docs.Fields):
         _filter = filter.to_mongodb()
-    ret =  coll.find_one(_filter)
-    ret_dict = __fix_bson_object_id__(ret)
+    ret = coll.find_one(_filter)
+    if ret is None:
+        return  None
+    ret_dict = DocumentItem(__fix_bson_object_id__(ret))
     return ret_dict
 
 
@@ -595,6 +624,7 @@ async def insert_one_async(db, docs, *args, **kwargs):
 
         ret = await coll.insert_one(data)
         data["_id"] = ret.inserted_id
+        data = DocumentItem(data)
         return data
     except pymongo.errors.DuplicateKeyError as e:
         r_e = __parse_error__(e)
@@ -833,6 +863,7 @@ class Aggregate:
         return self
 
     async def to_list_async(self):
+
         coll = await __get_collection__(
             self.db,
             self.name,
@@ -847,10 +878,16 @@ class Aggregate:
                 "$limit": self.page_size
             }]
 
+
+
         async for doc in coll.aggregate(self.pineline):
-            ret = ret + [__fix_bson_object_id__(doc)]
+            if doc is not None:
+                ret = ret + [DocumentItem(__fix_bson_object_id__(doc))]
+            else:
+                ret+=[None]
 
         return ret
+
     def to_list(self):
         coll = __get_collection_sync__(
             self.db,
@@ -867,7 +904,10 @@ class Aggregate:
             }]
 
         for doc in coll.delegate.aggregate(self.pineline):
-            ret = ret + [__fix_bson_object_id__(doc)]
+            if doc is None:
+                ret+=[None]
+            else:
+                ret = ret + [DocumentItem(__fix_bson_object_id__(doc))]
 
         return ret
 
@@ -882,8 +922,8 @@ class DbContext:
         return ret
 
     def find_one(self, docs, filter):
-        ret= find_one(
-            self.db.delegate, docs,filter
+        ret = find_one(
+            self.db.delegate, docs, filter
         )
         return ret
 
@@ -944,7 +984,7 @@ def get_db_context(db_name) -> DbContext:
     if __all_instances_db_context__.get(db_name, None) is None:
         __lock_2__.acquire()
         try:
-            if not isinstance(db_name,str):
+            if not isinstance(db_name, str):
                 return
             cntx = DbContext(db_name)
             __all_instances_db_context__[db_name] = cntx
@@ -967,5 +1007,3 @@ def __parser_dict__(data):
         return ret
     else:
         return data
-
-

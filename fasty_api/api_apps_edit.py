@@ -32,7 +32,8 @@ async def application_edit(app_name: str, app_edit: str,token: str = Depends(fas
     """
     if app_name!="admin":
         return Response(status_code=403)
-    db_name = await fasty.JWT.get_db_name_async(app_name)
+    import enig_frames.containers
+    db_name = enig_frames.containers.Container.db_context.get_db_name(app_name)
     dbctx = ReCompact.db_async.get_db_context(db_name)
     app = await  dbctx.find_one_async(docs.Apps,docs.Apps.Name==app_edit.lower())
     ret= AppInfo(

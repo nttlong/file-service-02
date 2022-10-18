@@ -7,6 +7,8 @@ import uuid
 import os
 import mimetypes
 import ReCompact.dbm
+import enig
+import enig_frames.containers
 import enigma
 import fasty
 from fastapi import FastAPI, Request, Response
@@ -54,6 +56,7 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo = Body(emb
     :param token:
     :return:
     """
+    container = enig_frames.containers.Container
     ret = RegisterUploadInfoResult()
     for k in list(Data.__dict__.keys()):
         if Data.__dict__.get(k, None) is None:
@@ -66,7 +69,7 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo = Body(emb
     """
     Số upload
     """
-    db_name = await fasty.JWT.get_db_name_async(app_name)
+    db_name = container.db_context.get_db_name(app_name)
     if db_name is None:
         """
         Applcation không tìm thấy
@@ -82,6 +85,7 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo = Body(emb
     if remain > 0:
         num_of_chunks += 1
     filename_only = Path(Data.FileName).stem.replace('#','_').replace('?','_').replace('/','_')
+
     ret_upload = await  db_context.insert_one_async(
         docs.Files,
         docs.Files._id == upload_id,
@@ -117,15 +121,15 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo = Body(emb
 
     )
     ret.Data = register_new_upload_input.RegisterUploadResult()
-    ret.Data.SizeInHumanReadable = ret_upload[docs.Files.SizeInHumanReadable.__name__]
+    ret.Data.SizeInHumanReadable = ret_upload[docs.Files.SizeInHumanReadable]
 
-    ret.Data.UrlThumb = f"{enigma.get_root_api_url()}/thumb/{ret_upload[docs.Files._id.__name__]}/{ret_upload[docs.Files.FileNameLower.__name__]}.webp"
-    ret.Data.RelUrlThumb = f"api/{app_name}/thumb/{ret_upload[docs.Files._id.__name__]}/{ret_upload[docs.Files.FileNameLower.__name__]}.webp"
-    ret.Data.ServerFilePath=ret_upload[docs.Files.ServerFileName.__name__]
+    ret.Data.UrlThumb = f"{enigma.get_root_api_url()}/thumb/{ret_upload[docs.Files._id]}/{ret_upload[docs.Files.FileNameLower.__name__]}.webp"
+    ret.Data.RelUrlThumb = f"api/{app_name}/thumb/{ret_upload[docs.Files._id]}/{ret_upload[docs.Files.FileNameLower.__name__]}.webp"
+    ret.Data.ServerFilePath=ret_upload[docs.Files.ServerFileName]
     ret.Data.UrlOfServerPath =f"{enigma.get_root_api_url()}/{app_name}/file/{upload_id}/{ret_upload['FileName']}"
     ret.Data.RelUrlOfServerPath = f"api/{app_name}/file/{upload_id}/{ret_upload['FileName']}"
     ret.Data.UploadId = ret_upload["_id"]
-    ret.Data.ServerFilePath=ret_upload[docs.Files.FullFileName.__name__]
+    ret.Data.ServerFilePath=ret_upload[docs.Files.FullFileName]
     ret.Data.NumOfChunks = num_of_chunks
     ret.Data.ChunkSizeInBytes = chunk_size
     ret.Data.MimeType = mime_type

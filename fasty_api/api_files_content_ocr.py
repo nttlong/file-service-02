@@ -32,7 +32,8 @@ async def get_ocr_content_of_files(app_name: str, directory: str, request: Reque
     :return:
     """
     CHUNK_SIZE = 1024 * 1024
-    db_name = await fasty.JWT.get_db_name_async(app_name)
+    import enig_frames.containers
+    db_name = enig_frames.containers.Container.db_context.get_db_name(app_name)
     if db_name is None:
         return Response(status_code=401)
     full_filename_without_ext = f"{str(pathlib.Path(directory).parent)}/{pathlib.Path(directory).stem}"

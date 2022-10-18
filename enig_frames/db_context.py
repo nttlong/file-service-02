@@ -11,6 +11,7 @@ __cache__ = {}
 class DbContext(enig.Singleton):
     def __init__(self, config=enig.depen(enig_frames.config.Configuration)):
         self.configuration: enig_frames.config.Configuration = config
+        config.get_value_by_key('db')['port']=int(config.get_value_by_key('db')['port'])
         load_config_from_dict(config.get_value_by_key('db'), enig.get_logger())
 
     @property

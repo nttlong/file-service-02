@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 import enig
@@ -20,3 +21,23 @@ class Files(enig.Singleton):
             filter=api_models.documents.Files._id == upload_id
         )
         return ret
+
+    async def clone_async(self, app_name, UploadId):
+        item = await self.db.context(app_name).find_one_async(
+            api_models.documents.Files,
+            api_models.documents.Files._id == UploadId
+        )
+
+        if item is None:
+            return None
+        item[api_models.documents.Files._id] = str(uuid.uuid4())
+        item[api_models.documents.Files.Status]=0
+        item[api_models.documents.Files.ThumbFileId] = None
+        item[api_models.documents.Files.MainFileId] = None
+        item[api_models.documents.Files.OCRFileId] = None
+        item[api_models.documents.Files.AvailableThumbs] = []
+        await self.db.context(app_name).insert_one_async(
+            api_models.documents.Files,
+            item
+        )
+        return item

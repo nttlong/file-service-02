@@ -44,14 +44,7 @@ async def do_sign_in(SSOID:str,request:Request, Authorize: AuthJWT = Depends()):
     config =enig.depen(enig_frames.config.Configuration)
     sso_info=  await accounts_services.get_sso_login_asycn(SSOID)
 
-    # db_name = await fasty.JWT.get_db_name_async(default_db_name)
-    # if db_name is None:
-    #     return Response(status_code=403)
-    # db_context= get_db_context(db_name)
-    # ret_item = await db_context.find_one_async(
-    #     fasty.JWT_Docs.SSOs,
-    #     fasty.JWT_Docs.SSOs.SSOID==SSOID
-    # )
+
     ret_url=sso_info.get(api_models.documents.SSOs.ReturnUrlAfterSignIn.__name__,config.get_root_url())
     Authorize.set_access_cookies(sso_info[api_models.documents.SSOs.Token.__name__])
     ret_url = request.query_params.get('ret',ret_url)

@@ -23,7 +23,7 @@ from pydantic import BaseModel
 from fastapi_jwt_auth import AuthJWT
 import enigma
 import enigma.services
-
+import enig_frames.containers
 
 class Token(BaseModel):
     access_token: str
@@ -36,7 +36,7 @@ async def login_for_access_token(
         form_data: OAuth2PasswordRequestForm = Depends(),
         Authorize: AuthJWT = Depends()
 ):
-
+    container = enig_frames.containers.Container
     username = form_data.username
     app_name = ""
     if '/' in form_data.username:
@@ -47,11 +47,9 @@ async def login_for_access_token(
         items = form_data.username.split('@')
         app_name = items[-1]
         username = form_data.username[0:-app_name.__len__() - 1]
-    db_name = await fasty.JWT.get_db_name_async(app_name)
+    db_name = container.db_context.get_db_name(app_name)
 
-    await enigma.services.apps.create(
-        app_name=app_name
-    )
+
 
     if db_name is None:
         raise HTTPException(
@@ -59,23 +57,27 @@ async def login_for_access_token(
             detail="Someting wrong, maybe incorrect domain",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
-    user = await fasty.JWT.authenticate_user_async(db_name, username, form_data.password)
+    user = await container.Services.accounts.authenticate_user_async(app_name,username,form_data.password)
+    # user = await fasty.JWT.authenticate_user_async(db_name, username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    # access_token_expires = timedelta(minutes=fasty.configuration.app.jwt.access_token_expire_minutes)
-    access_token = fasty.JWT.create_access_token(
-        data={
-            "sub": user[fasty.JWT.JWT_Docs.Users.Username.__name__],
-            "application": app_name
-        },
-        # expires_delta=access_token_expires
-
+    access_token=  container.Services.security.create_access_token(
+        app_name=app_name,
+        username=username
     )
+    # access_token_expires = timedelta(minutes=fasty.configuration.app.jwt.access_token_expire_minutes)
+    # access_token = fasty.JWT.create_access_token(
+    #     data={
+    #         "sub": user[fasty.JWT.JWT_Docs.Users.Username.__name__],
+    #         "application": app_name
+    #     },
+    #     # expires_delta=access_token_expires
+    #
+    # )
     # Create the tokens and passing to set_access_cookies or set_refresh_cookies
     # access_token = Authorize.create_access_token(subject=username)
     # refresh_token = Authorize.create_refresh_token(subject=username)
