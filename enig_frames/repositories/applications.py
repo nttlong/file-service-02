@@ -89,5 +89,16 @@ class Applications(enig.Singleton):
             api_models.documents.Apps,
             api_models.documents.Apps.NameLower==app_name.lower()
         )
+        if ret is None:
+            ret = self.db.context('admin').find_one(
+                api_models.documents.Apps,
+                api_models.documents.Apps.Name == app_name
+            )
+            if ret is not None:
+                self.db.context('admin').update_one(
+                    api_models.documents.Apps,
+                    api_models.documents.Apps.Name == app_name,
+                    api_models.documents.Apps.NameLower == app_name.lower()
+                )
         return ret
 

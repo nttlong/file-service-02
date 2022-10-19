@@ -15,18 +15,7 @@ import uvicorn
 print("-----port--------------")
 print(os.getenv('file_server_bind_port'))
 sys.path.append(str(pathlib.Path(__file__).parent.parent.absolute()))
-"""
-Nạp môi trường 
-"""
-# from fastapi import FastAPI
-#
-# app = FastAPI()
-import enigma
-import fasty
 
-# fasty.load_config(str(pathlib.Path(__file__).parent), "uvicorn.error")
-import fasty.JWT as fjwt
-# fjwt.set_default_db(enigma.app_config.get_config('admin_db_name'))
 
 
 
@@ -46,6 +35,11 @@ import fasty_pages
 """
 Nap trang quan ly
 """
-fasty.logger.logger.info("start in iis")
+import enig_frames.containers
+enig_frames.containers.Container.loggers.get_logger(__name__).info(
+    f" start app {__name__} in {__file__}"
+)
+
+# fasty.logger.logger.info("start in iis")
 
 #uvicorn api_app:app --reload

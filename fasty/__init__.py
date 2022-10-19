@@ -5,7 +5,7 @@ The pakage support for FastAPI
 # from fastapi.middleware.cors import CORSMiddleware
 import mimetypes
 
-import enigma
+import enig_frames.containers
 
 from . import mime_data
 
@@ -19,7 +19,7 @@ import os
 from fastapi import FastAPI
 from starlette.requests import Request
 from starlette.responses import Response
-__api_host_dir__ =enigma.app_config.get_config('api_host_dir')
+__api_host_dir__ =enig_frames.containers.Container.config.config.api_host_dir
 if __api_host_dir__[0] != "/":
     __api_host_dir__ = '/' + __api_host_dir__
 # path_to_yam_db =os.path.join(str(pathlib.Path(__file__).parent.parent.absolute()),"database.yaml")
@@ -27,10 +27,14 @@ if __api_host_dir__[0] != "/":
 # ReCompact.db_async.load_config(path_to_yam_db)
 from . import start
 from fastapi import FastAPI
+import enig_frames.containers
 import ReCompact.db_async
 import sys
 app = None
+container = enig_frames.containers.Container
+logger = container.loggers.get_logger(__name__)
 def install_fastapi_app(module_name:str):
+
     from fastapi.middleware.cors import CORSMiddleware
     global app
     global config
@@ -45,8 +49,8 @@ def install_fastapi_app(module_name:str):
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    app.middleware(enigma.get_host_schema())(catch_exceptions_middleware)
-    app.mount("/static", StaticFiles(directory=enigma.get_static_dir()), name="static")
+    app.middleware(container.config.config.host_schema)(catch_exceptions_middleware)
+    app.mount("/static", StaticFiles(directory=container.Services.applications.configuration.static_dir), name="static")
 
 
     return app
@@ -62,28 +66,29 @@ def api_get(url_path:str,response_class=None):
     global __api_host_dir__
     if __api_host_dir__ is not None and __api_host_dir__!="":
         if response_class is None:
-            enigma.app_logger.info("------------------handler ------------")
-            enigma.app_logger.info(__api_host_dir__+ url_path)
-            enigma.app_logger.info("------------------handler ------------")
+
+            logger.info("------------------handler ------------")
+            logger.info(__api_host_dir__+ url_path)
+            logger.info("------------------handler ------------")
             fn = app.get(__api_host_dir__ + url_path)
             return fn
         else:
-            enigma.app_logger.info("------------------handler ------------")
-            enigma.app_logger.info(__api_host_dir__ + url_path)
-            enigma.app_logger.info("------------------handler ------------")
+            logger.info("------------------handler ------------")
+            logger.info(__api_host_dir__ + url_path)
+            logger.info("------------------handler ------------")
             fn = app.get(__api_host_dir__+url_path,response_class=response_class)
             return fn
     else:
         if response_class is None:
-            enigma.app_logger.info("------------------handler ------------")
-            enigma.app_logger.info(url_path)
-            enigma.app_logger.info("------------------handler ------------")
+            logger.info("------------------handler ------------")
+            logger.info(url_path)
+            logger.info("------------------handler ------------")
             fn = app.get(url_path)
             return fn
         else:
-            enigma.app_logger.info("------------------handler ------------")
-            enigma.app_logger.info(url_path)
-            enigma.app_logger.info("------------------handler ------------")
+            logger.info("------------------handler ------------")
+            logger.info(url_path)
+            logger.info("------------------handler ------------")
             fn=app.get(url_path,response_class=response_class)
             return  fn
 
@@ -119,9 +124,7 @@ async def catch_exceptions_middleware(request: Request, call_next):
        return res
    except Exception as e:
        import fasty.start
-       enigma.app_logger.debug(e)
-       enigma.app_logger.debug(traceback.format_exc())
-       # you probably want some kind of logging here
+       logger.exception(e)
        return Response("Internal server error", status_code=500)
 
 

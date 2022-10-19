@@ -1,9 +1,7 @@
 import datetime
-import uuid
 
 from fastapi import Depends, status, Response
 
-import enigma
 from fasty.JWT import get_oauth2_scheme
 import uuid
 import fasty.JWT
@@ -76,7 +74,7 @@ async def get_sso_token(request:Request, token: str = Depends(get_oauth2_scheme(
         return Response(status_code=403)
     db_context = get_db_context(db_name)
     ret_id = str(uuid.uuid4())
-    ret_url=enigma.get_root_url()
+    ret_url=enig_frames.containers.Container.Services.host.root_url
 
     if app_name!='admin':
         app_item = await db_context.find_one_async(

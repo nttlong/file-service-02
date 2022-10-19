@@ -6,19 +6,13 @@ import re
 from time import strftime
 from time import gmtime
 import ReCompact.dbm
-import enig
-import enigma
-import fasty
-from fastapi import FastAPI, Request, Response
-from pydantic import BaseModel
+
+from fastapi import Request, Response
 import api_models.documents as docs
-from typing import List
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends
 from ReCompact import db_async
-import json
 
 from . import api_files_schema
-import humanize.time
 import fasty.JWT
 from pathlib import Path
 import enig_frames.containers
@@ -81,7 +75,7 @@ async def get_list_of_files(app_name: str, filter: api_files_schema.Filter, requ
     )
 
     ret_list = await agg.to_list_async()
-    url = enigma.get_root_api_url()
+    url = container.Services.host.root_api_url
 
     for x in ret_list:
         if x[docs.Files.FileNameOnly] is None:
@@ -91,9 +85,9 @@ async def get_list_of_files(app_name: str, filter: api_files_schema.Filter, requ
                 docs.Files._id == x["UploadId"],
                 docs.Files.FileNameOnly == file_name_only
             )
-            x[docs.Files.FileNameOnly.__name__] = file_name_only
-        if x.get(docs.Files.RegisterOnDays.__name__, None) is None:
-            date_val = x.get(docs.Files.RegisterOn.__name__, None)
+            x[docs.Files.FileNameOnly] = file_name_only
+        if x[docs.Files.RegisterOnDays] is None:
+            date_val = x[docs.Files.RegisterOn]
             if date_val is not None and isinstance(date_val, datetime.datetime):
                 await  db.update_one_async(
                     docs.Files,

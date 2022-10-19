@@ -5,9 +5,7 @@ import gc
 import uuid
 
 import enig_frames.containers
-import enigma
-import ReCompact_Kafka.producer
-from fastapi import  File, Form,Response,Depends
+from fastapi import  File, Form,Depends
 from pydantic import BaseModel, Field
 from typing import Union
 
@@ -50,40 +48,7 @@ class UploadFilesChunkInfoResult(BaseModel):
     Error: Union[ret_error, None] = Field(description="Lỗi")
 
 
-def __kafka_producer_delivery_report__(error, msg):
-        """
-        Hàm này dùng để tiếp nhận lỗi từ Kafka
-        :param error:
-        :param msg:
-        :return:
-        """
-        import asyncio
-        import json
-        data =json.loads(msg.value().decode("utf8"))
-        app_name =data["AppName"]
-        topic_key =msg.topic()
-        db_context = get_db_context(app_name)
-        ret = db_context.insert_one(
-            Sys_Kafka_Track_Doc,
-            Sys_Kafka_Track_Doc.Data == data,
-            Sys_Kafka_Track_Doc.Error == error,
-            Sys_Kafka_Track_Doc.Topic == topic_key,
-            Sys_Kafka_Track_Doc.CreatedOn == datetime.datetime.now()
-        )
 
-
-        if error:
-            enigma.app_logger.logger.debug("------------------------------------")
-            enigma.app_logger.debug("Kafka server error")
-            enigma.app_logger.debug(error)
-            enigma.app_logger.debug(msg)
-            enigma.app_logger.debug("------------------------------------")
-        else:
-            enigma.app_logger.info("------------------------------------")
-            enigma.app_logger.info("Kafka server recive new topic")
-            enigma.app_logger.debug(error)
-            enigma.app_logger.debug(msg)
-            enigma.app_logger.debug("------------------------------------")
 
 @fasty.api_post("/{app_name}/files/upload", response_model=UploadFilesChunkInfoResult)
 async def files_upload(app_name: str, FilePart: bytes = File(...),
@@ -141,7 +106,8 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
     chunk_size_in_bytes = upload_item.get(docs.Files.ChunkSizeInBytes.__name__,0)
     server_file_name =upload_item.get(docs.Files.ServerFileName.__name__)
     path_to_broker_share = os.path.join(
-        enigma.get_temp_upload_dir(app_name), f"{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}")
+        container.Services.host.get_temp_upload_dir(app_name),
+         f"{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}")
 
     if num_of_chunks_complete==0:
         fs =ReCompact.db_context.mongodb_file_create(

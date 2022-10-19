@@ -7,22 +7,13 @@ import uuid
 import os
 import mimetypes
 import ReCompact.dbm
-import enig
+
 import enig_frames.containers
-import enigma
-import fasty
-from fastapi import FastAPI, Request, Response
+from fastapi import Response
 import api_models.documents as docs
 from ReCompact import db_async
-import json
-
-from . import api_files_schema
-from .models import AppInfo
 from fastapi import Depends
 from fastapi import Body
-from .models import EditAppResutl, Error, ErrorType, AppInfo
-from api_models.documents import Apps
-from ReCompact.db_async import get_db_context, default_db_name, Error as Db_Error
 import fasty.JWT
 import fasty.JWT_Docs
 from .models import register_new_upload_input
@@ -123,10 +114,10 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo = Body(emb
     ret.Data = register_new_upload_input.RegisterUploadResult()
     ret.Data.SizeInHumanReadable = ret_upload[docs.Files.SizeInHumanReadable]
 
-    ret.Data.UrlThumb = f"{enigma.get_root_api_url()}/thumb/{ret_upload[docs.Files._id]}/{ret_upload[docs.Files.FileNameLower.__name__]}.webp"
+    ret.Data.UrlThumb = f"{container.Services.host.root_api_url}/thumb/{ret_upload[docs.Files._id]}/{ret_upload[docs.Files.FileNameLower.__name__]}.webp"
     ret.Data.RelUrlThumb = f"api/{app_name}/thumb/{ret_upload[docs.Files._id]}/{ret_upload[docs.Files.FileNameLower.__name__]}.webp"
     ret.Data.ServerFilePath=ret_upload[docs.Files.ServerFileName]
-    ret.Data.UrlOfServerPath =f"{enigma.get_root_api_url()}/{app_name}/file/{upload_id}/{ret_upload['FileName']}"
+    ret.Data.UrlOfServerPath =f"{container.Services.host.root_api_url}/{app_name}/file/{upload_id}/{ret_upload['FileName']}"
     ret.Data.RelUrlOfServerPath = f"api/{app_name}/file/{upload_id}/{ret_upload['FileName']}"
     ret.Data.UploadId = ret_upload["_id"]
     ret.Data.ServerFilePath=ret_upload[docs.Files.FullFileName]

@@ -1,4 +1,3 @@
-import enigma
 import enig
 import enig_frames.config
 import sys

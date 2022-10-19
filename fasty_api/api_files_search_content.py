@@ -1,5 +1,5 @@
 import enig_frames.containers
-import enigma
+
 import fasty
 from fastapi import Request, Depends, Body, Response
 import fasty.JWT

@@ -3,7 +3,6 @@ Quản lý JWT
 """
 import threading
 
-
 from typing import Any, Dict, List, Optional, Union
 from fastapi.exceptions import HTTPException
 from fastapi.openapi.models import OAuth2 as OAuth2Model
@@ -31,6 +30,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 import jose
+import enig_frames.containers
 
 
 class Settings(BaseModel):
@@ -62,11 +62,12 @@ def set_default_db(value):
 class TokenData(BaseModel):
     username: Union[str, None] = None
     application: Union[str, None] = None
-import enigma
+
 
 def get_token_url():
+    import enig_frames.containers
 
-    __api_host_dir__ = enigma.app_config.get_config('api_host_dir')
+    __api_host_dir__ = enig_frames.containers.Container.config.config.api_host_dir
     if __api_host_dir__ is None:
         raise Exception("Please call fasty.JWT.set_api_host_dir at start application")
     ret = "/accounts/token"
@@ -100,12 +101,12 @@ class OAuth2Redirect(OAuth2PasswordBearer):
         )
 
     async def __call__(self, request: Request) -> Optional[str]:
-
+        container = enig_frames.containers.Container
         if request.cookies.get('access_token_cookie', None) is not None:
             token = request.cookies['access_token_cookie']
             try:
-                ret_data = jwt.decode(token, enigma.app_config.get_config('jwt')['secret_key'],
-                                      algorithms=[enigma.app_config.get_config('jwt')['algorithm']],
+                ret_data = jwt.decode(token, container.config.config.jwt.secret_key,
+                                      algorithms=[container.config.jwt.algorithm],
                                       options={"verify_signature": False},
                                       )
 
@@ -132,8 +133,11 @@ class OAuth2Redirect(OAuth2PasswordBearer):
                 else:
                     return None
             try:
-                ret_data = jwt.decode(token,enigma.app_config.get_config('jwt').get('secret_key'),
-                                      algorithms=[enigma.app_config.get_config('jwt').get('algorithm')],
+                ret_data = jwt.decode(token,
+                                      container.config.config.jwt.secret_key,
+                                      algorithms=[
+                                          container.config.config.jwt.algorithm
+                                      ],
                                       options={"verify_signature": False},
                                       )
 
@@ -179,8 +183,8 @@ class OAuth2PasswordBearerAndCookie(OAuth2PasswordBearer):
         if request.cookies.get('access_token_cookie', None) is not None:
             token = request.cookies['access_token_cookie']
             try:
-                sercurity_services= enig.depen(enig_frames.services.sercurities.Sercurities)
-                ret_data=sercurity_services.decode_token(token)
+                sercurity_services = enig.depen(enig_frames.services.sercurities.Sercurities)
+                ret_data = sercurity_services.decode_token(token)
 
                 setattr(request, "usernane", ret_data.get("sup"))
                 setattr(request, "application_name", ret_data.get("application"))
@@ -204,8 +208,9 @@ class OAuth2PasswordBearerAndCookie(OAuth2PasswordBearer):
                 else:
                     return None
             try:
-                ret_data = jwt.decode(token, enigma.app_config.get_config('jwt').get('secret_key'),
-                                      algorithms=[enigma.app_config.get_config('jwt').get('algorithm')],
+                ret_data = jwt.decode(token,
+                                      enig_frames.containers.Container.config.config.jwt.secret_key,
+                                      algorithms=[enig_frames.containers.Container.config.config.jwt.algorithm],
                                       options={"verify_signature": False},
                                       )
 
@@ -277,9 +282,6 @@ def set_connection_string(cnn: str):
     ReCompact.db_async.set_connection_string(cnn)
 
 
-
-
-
 def sync(*args, **kwargs):
     """
     Khử sync
@@ -294,8 +296,6 @@ def sync(*args, **kwargs):
 
 
 async def get_user_by_username_async(db_name: str, username: str):
-
-
     dbcntx = ReCompact.db_async.get_db_context(db_name)
     user = await dbcntx.find_one_async(JWT_Docs.Users, JWT_Docs.Users.UsernameLowerCase == username.lower())
     return user
@@ -306,8 +306,6 @@ def get_user_by_username(db_name: str, username: str):
 
 
 async def get_user_by_user_id_async(db_name: str, user_id: str):
-
-
     dbcntx = ReCompact.db_async.get_db_context(db_name)
     user = await dbcntx.find_one_async(JWT_Docs.Users, JWT_Docs.Users._id == bson.ObjectId(user_id))
     return user
@@ -318,8 +316,6 @@ def get_user_by_user_id(db_name: str, username: str):
 
 
 async def create_user_async(db_name: str, Username: str, Password: str, Email: str, IsSysAdmin: bool = False):
-
-
     dbcntx = ReCompact.db_async.get_db_context(db_name)
 
     UsernameLower = Username.lower()
@@ -453,16 +449,20 @@ async def authenticate_user_async(app_name, username: str, password: str):
 
 def authenticate_user(app_name, username: str, password: str):
     return sync(authenticate_user_async(app_name, username, password))
-__cache_app_info__ ={}
-__lock_cache_app_info__ =threading.Lock()
+
+
+__cache_app_info__ = {}
+__lock_cache_app_info__ = threading.Lock()
 __cache_db_name__ = {}
 __lock_cache_db_name__ = threading.Lock()
+
+
 async def get_db_name_async(app_name):
     global __cache_db_name__
     global __default_db__
     global __lock_cache_db_name__
     if __default_db__ is None:
-        __default_db__ =enigma.app_config.get_config('admin_db_name')
+        __default_db__ = enig_frames.containers.Container.config.config.admin_db_name
     import fasty
     if app_name == "admin":
         return __default_db__
@@ -478,7 +478,7 @@ async def get_db_name_async(app_name):
             return ret
         else:
             __lock_cache_db_name__.acquire()
-            __cache_db_name__[app_name]=app_name
+            __cache_db_name__[app_name] = app_name
             __lock_cache_db_name__.release()
             return app_name
 
@@ -491,7 +491,7 @@ async def get_app_info_async(app_name):
     if app_name == "admin":
         return __default_db__
     else:
-        ret= __cache_app_info__.get(app_name)
+        ret = __cache_app_info__.get(app_name)
         if ret is not None:
             return ret
 
@@ -500,6 +500,6 @@ async def get_app_info_async(app_name):
         dbctx = ReCompact.db_async.get_db_context(__default_db__)
         ret = await dbctx.find_one_async(api_models.documents.Apps, api_models.documents.Apps.Name == app_name.lower())
         __lock_cache_app_info__.acquire()
-        __cache_app_info__[app_name]=ret
+        __cache_app_info__[app_name] = ret
         __lock_cache_app_info__.release()
         return ret

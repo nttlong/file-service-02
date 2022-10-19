@@ -7,7 +7,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
-import enigma
+import enig_frames.containers
 import fasty
 import fasty.JWT
 oauth2_scheme=fasty.JWT.get_oauth2_scheme()
@@ -16,6 +16,7 @@ oauth2_scheme=fasty.JWT.get_oauth2_scheme()
 
 
 async def do_get_current_user(token: str = Depends(oauth2_scheme)):
+    container = enig_frames.containers.Container
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -23,8 +24,9 @@ async def do_get_current_user(token: str = Depends(oauth2_scheme)):
     )
     try:
         payload = jwt.decode(token,
-                             enigma.app_config.get_config('jwt').get('secret_key'),
-                             algorithms=[enigma.app_config.get_config('jwt').get('algorithm')])
+
+                             container.config.jwt.secret_key,
+                             algorithms=[container.config.jwt.algorithm])
         username: str = payload.get("sub")
         app_name = payload.get("application")
         if username is None:

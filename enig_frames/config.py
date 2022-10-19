@@ -1,16 +1,14 @@
+import pathlib
+import os
 import enig
 class Configuration:
     def __init__(self,yam_file:str="./config.yml"):
         self.config= enig.cls_dict(enig.load_from_yam_file(yam_file))
         self.config.__data__= enig.combine_agruments(self.config.__data__)
-        import os
-        for k,v in os.environ.items():
-            print(k)
-            print("---------------")
-            print(v)
+        self.working_dir = str(pathlib.Path(__file__).parent.parent)
 
         self.config.__data__ = enig.combine_os_variables(self.config.__data__)
-        print(self.config.__data__)
+        self.static_dir = self.__get_static_dir__()
 
     def get_value_by_key(self, key):
         ret= self.config.__data__.get(key)
@@ -27,3 +25,9 @@ class Configuration:
             ret=f"{ret}:{self.config.host_port}"
         return  ret
 
+    def __get_static_dir__(self):
+        ret = self.config.static_dir
+        if ret[0:2][0:2] == "./":
+            ret = ret[2:]
+            ret= os.path.join(self.working_dir, ret).replace('/', os.sep)
+        return ret

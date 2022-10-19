@@ -2,8 +2,6 @@ import enig
 import enig_frames.services.hosts
 import enig_frames.services.web_apps
 import enig_frames.containers
-import enigma
-import fasty
 from fastapi import FastAPI, Request,Response,Depends
 import fasty.JWT
 import os
@@ -41,8 +39,9 @@ async def page_index(request: Request):
     )
 @fasty.page_get("/{directory:path}")
 async def page_single(directory:str, request: Request):
+    container = enig_frames.containers.Container
     directory=directory.split('?')[0]
-    check_dir_path = os.path.join(enigma.get_static_dir(),"views", directory.replace('/', os.sep))
+    check_dir_path = os.path.join(container.config.static_dir,"views", directory.replace('/', os.sep))
     host_services = enig.create_instance(enig_frames.services.hosts.Hosts)
     web_app = enig.create_instance(enig_frames.services.web_apps.WebApp)
     if not os.path.exists(check_dir_path):

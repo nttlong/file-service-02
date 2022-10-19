@@ -10,8 +10,8 @@ import enig_frames.services.files
 import enig_frames.services.file_system
 import enig_frames.config
 import enig_frames.db_context
-
-
+import enig_fast_api.application
+import enig_frames.loggers
 @enig.container()
 class Container(enig.Singleton):
     class Services(enig.Singleton):
@@ -32,3 +32,5 @@ class Container(enig.Singleton):
 
     config = enig.create_instance(enig_frames.config.Configuration)
     db_context = enig.create_instance(enig_frames.db_context.DbContext)
+    web_application = enig.create_instance(enig_fast_api.application.WebApp)
+    loggers = enig.create_instance(enig_frames.loggers.Loggers)

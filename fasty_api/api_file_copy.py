@@ -7,7 +7,7 @@ import motor
 import pymongo.database
 
 import enig_frames.containers
-import enigma
+
 import fasty
 from fastapi import Body, Depends, Response
 from api_models.documents import Files
@@ -174,7 +174,7 @@ async def clone(app_name: str, UploadId: str = Body(embed=True), token: str = De
         ret.IsPublic = n_item.get(Files.IsPublic.__name__)
         ret.Status = n_item.get(Files.Status.__name__)
         ret.RelUrl = f"api/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}"
-        ret.FullUrl = f"{enigma.get_root_api_url()}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}"
+        ret.FullUrl = f"{container.Services.host.root_api_url}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}"
         ret.HasThumb = n_item.get(Files.HasThumb.__name__)
 
 
@@ -189,13 +189,13 @@ async def clone(app_name: str, UploadId: str = Body(embed=True), token: str = De
             http://172.16.7.25:8011/api/lv-docs/thumb/c4eade3a-63cb-428d-ac63-34aadd412f00/search.png.png
             """
             ret.RelUrlThumb = f"api/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.png"
-            ret.UrlThumb = f"{enigma.get_root_api_url()}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.png"
+            ret.UrlThumb = f"{container.Services.host.root_api_url}/{app_name}/thumb/{ret.UploadId}/{ret.FileName.lower()}.png"
         if ret.HasOCR:
             """
             http://172.16.7.25:8011/api/lv-docs/file-ocr/cc5728d0-c216-43f9-8475-72e84b6365fd/im-003.pdf
             """
             ret.RelUrlOCR = f"api/{app_name}/file-ocr/{ret.UploadId}/{ret.FileName.lower()}.pdf"
-            ret.UrlOCR = f"{enigma.get_root_api_url()}/{app_name}/file-ocr/{ret.UploadId}/{ret.FileName.lower()}.pdf"
+            ret.UrlOCR = f"{container.Services.host.root_api_url}/{app_name}/file-ocr/{ret.UploadId}/{ret.FileName.lower()}.pdf"
             ocr_file_id = item.get(Files.OCRFileId.__name__)
             if ocr_file_id is not None:
                 fsg_ocr: AsyncIOMotorGridOut = await db_context.get_file_by_id(ocr_file_id)
