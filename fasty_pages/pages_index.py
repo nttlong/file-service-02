@@ -22,7 +22,7 @@ async def login(request: Request):
         }
     )
 @fasty.page_get("/")
-async def page_index(request: Request):
+async def page_index(request: Request,token: str = Depends(fasty.JWT.oauth2_scheme)):
     container = enig_frames.containers.Container
     # host_services = enig.create_instance(enig_frames.services.hosts.Hosts)
     app_data = dict(
@@ -38,7 +38,7 @@ async def page_index(request: Request):
         }
     )
 @fasty.page_get("/{directory:path}")
-async def page_single(directory:str, request: Request):
+async def page_single(directory:str, request: Request,token: str = Depends(fasty.JWT.oauth2_scheme)):
     container = enig_frames.containers.Container
     directory=directory.split('?')[0]
     check_dir_path = os.path.join(container.config.static_dir,"views", directory.replace('/', os.sep))

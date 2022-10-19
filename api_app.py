@@ -8,7 +8,8 @@ Chạy uvicorn api_app:app --reload
 import os
 import sys
 import pathlib
-
+for x in sys.argv:
+    print(x)
 import uvicorn.server
 import fasty
 import uvicorn

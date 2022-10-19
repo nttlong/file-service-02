@@ -54,7 +54,7 @@ class UploadFilesChunkInfoResult(BaseModel):
 async def files_upload(app_name: str, FilePart: bytes = File(...),
                        UploadId: Union[str, None] = Form(...),
                        Index: Union[int, None] = Form(...),
-                        token: str = Depends(fasty.JWT.oauth2_scheme)
+                       token: str = Depends(fasty.JWT.oauth2_scheme)
                        ):
     topic_key = "files.services.upload"
     """

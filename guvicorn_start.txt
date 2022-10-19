@@ -11,4 +11,9 @@ export file_server_root_url='http://172.16.13.72:8011'
 export file_server_api_url='http://172.16.13.72:8011/api'
 export file_server_es_url='http://192.168.18.36:9200,'
 gunicorn -w 4 --worker-class uvicorn.workers.UvicornWorker api_app:app --bind 0.0.0.0:8011
+gunicorn -w 4 api_app:app -w 4 --bind 0.0.0.0:8011
+hypercorn api_app:app -w 4 --bind '0.0.0.0:8011'
+Truong hop them tham so
+hypercorn 'api_app:app(foo="bar")' -w 4 --bind '0.0.0.0:8011'
 python test_port.py
+ python hypercorn_start.py db.host=172.16.7.25 db.port=27017 db.username='' db.password='' db.authSource=''

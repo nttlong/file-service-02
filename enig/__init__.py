@@ -91,8 +91,10 @@ def get_logger(logger_name:str="enig", logger_dir:str="./logs")-> logging.Logger
     global __catch_log__
     if logger_dir[0:2]=="./":
         logger_dir=logger_dir[2:logger_dir.__len__()]
-        working_dir = str(pathlib.Path(__file__).parent.parent.parent)
+        working_dir = str(pathlib.Path(__file__).parent.parent)
         logger_dir = os.path.join(working_dir,logger_dir)
+        if not os.path.isdir(logger_dir):
+            os.makedirs(logger_dir)
 
     if __catch_log__.get(logger_name) is not None:
         return __catch_log__.get(logger_name)
@@ -179,9 +181,13 @@ def combine_agruments(data:dict):
     for x in sys.argv:
         if x.split('=').__len__()==2:
             k=x.split('=')[0]
-            v=x.split('=')[1]
-            c= convert_to_dict(k,v)
-            ret=__dict_of_dicts_merge__(ret,c)
+            if x.split('=').__len__()==2:
+                v=x.split('=')[1]
+                c= convert_to_dict(k,v)
+                ret=__dict_of_dicts_merge__(ret,c)
+            else:
+                c = convert_to_dict(k, None)
+                ret = __dict_of_dicts_merge__(ret, c)
     ret = __dict_of_dicts_merge__(data,ret)
     return ret
 def combine_os_variables(data:dict):

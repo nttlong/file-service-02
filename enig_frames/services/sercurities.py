@@ -46,7 +46,7 @@ class Sercurities(enig.Singleton):
                 "sub": username,
                 "application": app_name
             },
-            expires_delta=self.configuration.config.jwt.access_token_expires
+            # expires_delta=self.configuration.config.jwt.access_token_expires
 
         )
         return ret

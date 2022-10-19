@@ -1,3 +1,16 @@
+# in order to start with hypercorn
+# python hypercorn_start.py
+# You may also change default config.yml by past arguments
+# For example in config.yml at
+# db:
+#    host: 192.168.18.26
+#    port: 27018
+# if you would like to change db.port juts past db.port=<new port>
+# Important: some item in config.yml could be removed at runtime if you set nothing
+# Example: some Mongod for developer needn't set authenticate
+# So you can pass db.usrername= db.password= db.authSource= db.authMechanism=
+# python hypercorn_start.py db.host=172.16.7.25 db.port=27018 db.username= db.password= db.authSource= db.authMechanism= admin_db_name=enigma-media
+
 db_25:
 #  host: localhost
 #  port: 27017
@@ -9,8 +22,11 @@ db_25:
   authSource:
   tlsCAFile:
 db:
+  # Host of mongodb
   host: 192.168.18.36
+  # Port of mongodb
   port: 27018
+
   username: 'admin-doc'
   password: '123456'
   authSource: 'lv-docs'
@@ -18,6 +34,10 @@ db:
   authMechanism: SCRAM-SHA-1
 # Default administrator database
 admin_db_name_25: media-server
+# Below setting tell the system that must create new administrator database in mongodb
+# Admin db name is the name of administrator database
+# What is inside administrator database?
+# Administrator database maintain some mongodb collections. Accord to manage tanent
 admin_db_name: lv-docs
 # unvicorn server listener list all ip
 binding_ip: 0.0.0.0
@@ -27,8 +47,12 @@ jinja_templates_dir: ./templates
 static_dir: ./app_manager/static
 api_host_dir: api
 _host_name: 192.168.1.11
+# Below setting is the real hostname when end user who'd like to reach UI of website
+# just serve for UI. For API the setting is not crucial
 host_name: 172.16.13.72
+#This is important when thous use SSL
 host_schema: http
+# Thous could change below setting by using args when start app just set host_port=<new desire port>
 host_port: 8011
 jwt:
   secret_key: 09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
