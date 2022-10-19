@@ -38,26 +38,25 @@ class Sercurities(enig.Singleton):
                               )
         return ret_data
 
-
-
     def create_access_token(self, app_name: str, username: str):
         ret = self.generate_access_token(
             data={
                 "sub": username,
                 "application": app_name
             },
-            # expires_delta=self.configuration.config.jwt.access_token_expires
+            expires_delta=10000000
+            # self.configuration.config.jwt.access_token_expire_minutes
 
         )
         return ret
 
     def generate_access_token(self, data: dict, expires_delta=None):
         to_encode = data.copy()
-        if expires_delta:
-            expire = datetime.utcnow() + expires_delta
-        else:
-            expire = datetime.utcnow() + timedelta(minutes=15)
-        to_encode.update({"exp": expire})
+        # if expires_delta:
+        #     expire = datetime.utcnow() + expires_delta
+        # else:
+        #     expire = datetime.utcnow() + timedelta(minutes=15)
+        # to_encode.update({"exp":317125598072})
         encoded_jwt = jwt.encode(
             to_encode,
             self.configuration.config.jwt.secret_key,
