@@ -49,6 +49,7 @@ class BasePlugin(enig.Singleton):
                         value= available_thumbs
 
                     )
+                    os.remove(dynamic_thumb_file)
 
     def get_file_extenstion(self, file_path) -> str:
         ret = os.path.splitext(file_path)[1]

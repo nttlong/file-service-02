@@ -7,7 +7,7 @@ import enig_frames.services.PDFs
 import enig_frames.services.images
 import enig_frames.services.file_system
 import enig_frames.services.files
-class PlugInPdf(enig_frames.plugins.base_plugin.BasePlugin):
+class PDF(enig_frames.plugins.base_plugin.BasePlugin):
     def __init__(
             self,
             configuration: enig_frames.config.Configuration = enig.depen(

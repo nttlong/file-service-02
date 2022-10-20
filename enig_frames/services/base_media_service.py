@@ -15,6 +15,6 @@ class BaseMediaService(enig.Singleton):
         self.processing_folder = os.path.join(self.processing_folder, name)
         self.processing_folder = self.processing_folder.replace('/', os.sep)
         if not os.path.isdir(self.processing_folder):
-            os.makedirs(self.processing_folder)
+            os.makedirs(self.processing_folder,exist_ok=True)
 
 

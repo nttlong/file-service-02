@@ -65,5 +65,6 @@ elastic_search:
   index: lv-files-server-v2
 tmp_media_processing_folder: ./tmp_media
 media_plugins:
-  - enig_frames.plugins.video:PlugInVideo
-  - enig_frames.plugins.pdf:PlugInPdf
+  - enig_frames.plugins.thumbs.video:Video
+  - enig_frames.plugins.thumbs.pdf:PDF
+  - enig_frames.plugins.thumbs.images:Images

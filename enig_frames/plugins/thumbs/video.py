@@ -1,3 +1,5 @@
+import os
+
 import api_models.documents
 import enig
 import enig_frames.config
@@ -9,7 +11,7 @@ import enig_frames.services.files
 
 
 
-class PlugInVideo(enig_frames.plugins.base_plugin.BasePlugin):
+class Video(enig_frames.plugins.base_plugin.BasePlugin):
     def __init__(self,
                  configuration: enig_frames.config.Configuration = enig.depen(
                      enig_frames.config.Configuration
@@ -78,6 +80,9 @@ class PlugInVideo(enig_frames.plugins.base_plugin.BasePlugin):
                 file_services=self.file_services
 
             )
+            os.remove(file_path)
+            os.remove(image_file)
+
 
 
 
