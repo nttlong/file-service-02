@@ -17,9 +17,4 @@ class BaseMediaService(enig.Singleton):
         if not os.path.isdir(self.processing_folder):
             os.makedirs(self.processing_folder)
 
-    def get_file_extenstion(self, file_path) -> str:
-        ret = os.path.splitext(file_path)[1]
-        return ret[1:]
 
-    def get_file_name_only(self, file_path):
-        return pathlib.Path(file_path).stem

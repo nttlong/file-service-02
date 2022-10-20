@@ -6,8 +6,7 @@ import enig_frames.services.images
 import enig_frames.plugins.base_plugin
 import enig_frames.services.file_system
 import enig_frames.services.files
-import fasty.mime_data
-import mimetypes
+
 
 
 class PlugInVideo(enig_frames.plugins.base_plugin.BasePlugin):
@@ -26,23 +25,27 @@ class PlugInVideo(enig_frames.plugins.base_plugin.BasePlugin):
                  ),
                  file_services: enig_frames.services.files.Files = enig.depen(
                      enig_frames.services.files.Files
-                 ) ):
+                 ),
+                 file_system_utils:enig_frames.services.file_system_utils.FileSystemUtils=enig.depen(
+                     enig_frames.services.file_system_utils.FileSystemUtils
+                 )):
         enig_frames.plugins.base_plugin.BasePlugin.__init__(self)
         self.configuration: enig_frames.config.Configuration = configuration
         self.video_services: enig_frames.services.videos.VideoService = video_services
         self.image_service:enig_frames.services.images.ImageServices = image_service
         self.file_system_services: enig_frames.services.file_system.FileSystem = file_system_services
         self.file_services: enig_frames.services.files.Files = file_services
+        self.file_system_utils:enig_frames.services.file_system_utils.FileSystemUtils = file_system_utils
 
     def process(self, file_path: str, app_name: str, upload_id: str):
-        m_type, _ = mimetypes.guess_type(file_path)
+        m_type:str = self.file_system_utils.get_mime_type(file_path)
         if m_type.startswith('video/'):
             image_file: str = self.video_services.get_image_from_frame(
                 file_path=file_path
             )
             thumb_file = self.image_service.create_thumbs(image_file,450)
-            file_name_only = self.image_service.get_file_name_only(file_path)
-            file_ext_only = self.image_service.get_file_extenstion(thumb_file)
+            file_name_only = self.file_system_utils.get_file_name_only(file_path)
+            file_ext_only = self.file_system_utils.get_file_extenstion(thumb_file)
             file_info = self.file_system_services.upload(
                 app_name=app_name,
                 full_path_to_file=thumb_file

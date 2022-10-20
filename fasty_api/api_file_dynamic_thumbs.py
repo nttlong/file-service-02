@@ -12,7 +12,7 @@ from ReCompact import db_async
 import json
 
 from . import api_files_schema
-from api_models.documents import Files,Fs_File
+from api_models.documents import Files, Fs_File
 from ReCompact import db_async
 from fastapi.responses import StreamingResponse
 import os
@@ -21,20 +21,26 @@ import mimetypes
 import fasty.mongo_fs_http_streaming
 import threading
 
-__cache__ ={}
+__cache__ = {}
 __lock__ = threading.Lock()
+
 from fasty_api import thumb_caching
-def get_from_cahe(id:str)->dict:
+
+
+def get_from_cahe(id: str) -> dict:
     global __cache__
     return __cache__.get(id.lower())
-def set_to_cache(id,data):
 
+
+def set_to_cache(id, data):
     global __cache__
     try:
         __lock__.acquire()
-        __cache__[id.lower()]=data
+        __cache__[id.lower()] = data
     finally:
         __lock__.release()
+
+
 @fasty.api_get("/{app_name}/thumbs/{directory:path}")
 async def get_thumb_of_files(app_name: str, directory: str, request: Request):
     """
@@ -43,21 +49,22 @@ async def get_thumb_of_files(app_name: str, directory: str, request: Request):
     :return:
     """
     container = enig_frames.containers.Container
-    cach_thumb_path = thumb_caching.check(directory.replace('/','__'))
-    if cach_thumb_path is not None:
+    cache_thumb_path = thumb_caching.check(directory.replace('/', '__'))
+    if cache_thumb_path is not None:
         from fastapi.responses import FileResponse
-        res_fs = FileResponse(cach_thumb_path)
+        res_fs = FileResponse(cache_thumb_path)
         res_fs.headers.append("Cache-Control", "max-age=86400")
         return res_fs
     fsg = await container.Services.file_system.get_by_rel_path_async(
         app_name=app_name,
-        rel_file_path = f"thumbs/{directory.lower()}"
+        rel_file_path=f"thumbs/{directory.lower()}"
     )
 
     if fsg is None:
         return Response(status_code=401, content=f"'{directory}' in '{app_name} was not found")
-    thumb_caching.sync(fsg.delegate._id, container.db_context.context(app_name).db.delegate, directory.replace('/','__'))
-    content_type,_=mimetypes.guess_type(directory)
+    thumb_caching.sync(fsg.delegate._id, container.db_context.context(app_name).db.delegate,
+                       directory.replace('/', '__'))
+    content_type, _ = mimetypes.guess_type(directory)
     res = await fasty.mongo_fs_http_streaming.streaming(fsg, request, content_type)
     res.headers.append("Cache-Control", "max-age=86400")
     return res

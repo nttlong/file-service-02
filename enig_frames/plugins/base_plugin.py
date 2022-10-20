@@ -2,7 +2,8 @@ import enig
 import api_models.documents
 import enig_frames.services.file_system
 import enig_frames.services.files
-
+import pathlib
+import os
 class BasePlugin(enig.Singleton):
     def process(self, file_path: str, app_name: str, upload_id: str):
         raise NotImplemented
@@ -49,3 +50,9 @@ class BasePlugin(enig.Singleton):
 
                     )
 
+    def get_file_extenstion(self, file_path) -> str:
+        ret = os.path.splitext(file_path)[1]
+        return ret[1:]
+
+    def get_file_name_only(self, file_path):
+        return pathlib.Path(file_path).stem
