@@ -64,7 +64,16 @@ elastic_search:
     - http://192.168.18.36:9200
   index: lv-files-server-v2
 tmp_media_processing_folder: ./tmp_media
+ext_office_file: [
+                   docx,doc,xls,xlsx,txt,pdf,ppx,pptx,json,psd,html,xml,js,otg,svg,vsd,
+                    ODT,CSV,DB,DOC,DOCX,DOTX,FODP,FODS,FODT,MML,ODB,ODF,ODG,ODM,ODP,ODS,OTG,OTP,OTS,OTT,OXT,
+                    PPTX,PSW,SDA,SDC,SDD,SDP,SDW,SLK,SMF,STC ,
+                    STD,STI,STW,SXC,SXG,SXI,SXM,UOF,UOP,UOS,UOT,
+                    VSD,VSDX,WDB,WPS,WRI,XLS,XLSX
+]
+libre_office_path: /usr/bin/soffice
 media_plugins:
   - enig_frames.plugins.thumbs.video:Video
   - enig_frames.plugins.thumbs.pdf:PDF
   - enig_frames.plugins.thumbs.images:Images
+  - enig_frames.plugins.thumbs.office:Office
