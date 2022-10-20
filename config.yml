@@ -69,7 +69,7 @@ ext_office_file: [
                     ODT,CSV,DB,DOC,DOCX,DOTX,FODP,FODS,FODT,MML,ODB,ODF,ODG,ODM,ODP,ODS,OTG,OTP,OTS,OTT,OXT,
                     PPTX,PSW,SDA,SDC,SDD,SDP,SDW,SLK,SMF,STC ,
                     STD,STI,STW,SXC,SXG,SXI,SXM,UOF,UOP,UOS,UOT,
-                    VSD,VSDX,WDB,WPS,WRI,XLS,XLSX
+                    VSD,VSDX,WDB,WPS,WRI,XLS,XLSX,pem,yaml,ym,toml,json,jsx,ts,tsx,cs,csx
 ]
 libre_office_path: /usr/bin/soffice
 media_plugins:
@@ -77,3 +77,4 @@ media_plugins:
   - enig_frames.plugins.thumbs.pdf:PDF
   - enig_frames.plugins.thumbs.images:Images
   - enig_frames.plugins.thumbs.office:Office
+  - enig_frames.plugins.thumbs.exe_file:ExeFile
