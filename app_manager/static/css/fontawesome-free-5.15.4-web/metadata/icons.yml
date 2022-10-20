@@ -7358,7 +7358,7 @@ file-video:
     - '4.1'
     - 5.0.0
     - 5.10.2
-  label: Video File
+  label: VideoService File
   search:
     terms:
       - document
@@ -14274,7 +14274,7 @@ phone-volume:
 photo-video:
   changes:
     - 5.9.0
-  label: Photo Video
+  label: Photo VideoService
   search:
     terms:
       - av
@@ -20745,7 +20745,7 @@ video:
     - '1'
     - 5.0.0
     - 5.0.9
-  label: Video
+  label: VideoService
   search:
     terms:
       - camera
@@ -20760,7 +20760,7 @@ video:
 video-slash:
   changes:
     - 5.0.9
-  label: Video Slash
+  label: VideoService Slash
   search:
     terms:
       - add

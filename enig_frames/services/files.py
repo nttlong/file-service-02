@@ -19,7 +19,27 @@ class Files(enig.Singleton):
 
     async def get_item_by_upload_id_async(self, app_name: str, upload_id: str):
         return await self.repo.get_item_by_upload_id_async(app_name, upload_id)
-
+    def get_item_by_upload_id(self, app_name: str, upload_id: str):
+        return self.repo.get_item_by_upload_id(app_name, upload_id)
     async def delete_by_id_async(self, app_name: str, upload_id: str):
         return await self.repo.delete_by_id_async(app_name, upload_id)
+
+    def update_rel_path(self, app_name, file_id, rel_file_path):
+        if self.repo.get_file_system_by_rel_path(
+            app_name=app_name,
+                rel_file_path=rel_file_path
+        ) is None:
+            return self.repo.update_rel_path(
+                app_name=app_name,
+                file_id=file_id,
+                rel_file_path=rel_file_path
+            )
+
+    def update_file_field(self, app_name, upload_id, field, value):
+        return self.repo.update_file_field(
+            app_name=app_name,
+            upload_id=upload_id,
+            field=field,
+            value=value
+        )
 

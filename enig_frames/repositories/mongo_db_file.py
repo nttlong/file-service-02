@@ -1,10 +1,12 @@
+import bson
+
 import enig
 import enig_frames.db_context
 from motor.motor_asyncio import AsyncIOMotorGridFSBucket
 from bson import ObjectId
 import api_models.documents
-
-
+import gridfs
+import ReCompact.db_context
 class MongoFiles(enig.Singleton):
     def __init__(self, db=enig.depen(enig_frames.db_context.DbContext)):
         self.db: enig_frames.db_context.DbContext = db
@@ -28,4 +30,34 @@ class MongoFiles(enig.Singleton):
         )
         if d_fs is not None:
             self.get_grid_fs(app_name).delete(ObjectId(d_fs.get("_id")))
+
+    def upload(self, app_name:str, full_path_to_file:str,rel_file_path:str=None)-> gridfs.grid_file.GridIn:
+        ret = ReCompact.db_context.create_mongodb_fs_from_file(
+            db=self.db.context(app_name).db.delegate,
+            full_path_to_file=full_path_to_file,
+
+        )
+        if rel_file_path is not None:
+            self.db.context(app_name).update_one(
+                api_models.documents.Fs_File,
+                api_models.documents.Fs_File._id==ret._id,
+                api_models.documents.Fs_File.rel_file_path==rel_file_path
+            )
+        return ret
+
+    async def get_by_id_async(self, app_name, file_id):
+        gfs = self.get_grid_fs(app_name)
+        if isinstance(file_id, str):
+            file_id = bson.ObjectId(file_id)
+        ret = await gfs.open_download_stream(file_id)
+        return ret
+
+    async def get_by_rel_path_async(self, app_name:str, rel_file_path:str):
+        fs = await self.db.context(app_name).find_one_async(
+            api_models.documents.Fs_File,
+            api_models.documents.Fs_File.rel_file_path==rel_file_path
+        )
+        if fs is not None:
+            ret = await self.get_by_id_async(app_name,fs["_id"])
+            return ret
 

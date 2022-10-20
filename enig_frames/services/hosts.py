@@ -9,7 +9,7 @@ class Hosts(enig.Singleton):
     def __init__(self,
                  configuration: enig_frames.config.Configuration = enig.depen(enig_frames.config.Configuration)):
         self.configuration: enig_frames.config.Configuration = configuration
-        self.working_folder = str(pathlib.Path(__file__).parent.parent)
+        self.working_folder = str(pathlib.Path(__file__).parent.parent.parent)
         self.tmp_upload_dir = self.configuration.config.tmp_upload_dir
 
         if self.tmp_upload_dir[0:2] == "./":

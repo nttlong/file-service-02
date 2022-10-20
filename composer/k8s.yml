@@ -1,6 +1,6 @@
 #Full file service including:
 # 1- Web API and Web app for documentation of storage
-# 2- Video Process Thumb
+# 2- VideoService Process Thumb
 version: '3.7'
 
 services:

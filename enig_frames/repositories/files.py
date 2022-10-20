@@ -1,6 +1,8 @@
 import uuid
 from datetime import datetime
 
+import bson
+
 import enig
 import enig_frames.db_context
 import api_models.documents
@@ -14,7 +16,12 @@ class Files(enig.Singleton):
             filter= api_models.documents.Files._id==upload_id
         )
         return ret
-
+    def get_item_by_upload_id(self, app_name, upload_id):
+        ret = self.db.context(app_name).find_one(
+            docs=api_models.documents.Files,
+            filter=api_models.documents.Files._id == upload_id
+        )
+        return ret
     async def delete_by_id_async(self, app_name, upload_id):
         ret = await self.db.context(app_name).delete_one_async(
             docs=api_models.documents.Files,
@@ -41,3 +48,27 @@ class Files(enig.Singleton):
             item
         )
         return item
+
+    def update_rel_path(self, app_name:str, file_id:str, rel_file_path:str):
+        return self.db.context(app_name).update_one(
+            api_models.documents.Fs_File,
+            api_models.documents.Fs_File._id==bson.ObjectId(file_id),
+            api_models.documents.Fs_File.rel_file_path==rel_file_path
+        )
+
+    def update_file_field(self, app_name, upload_id, field, value):
+        ret = self.db.context(app_name).update_one(
+            api_models.documents.Files,
+            api_models.documents.Files._id==upload_id,
+            field==value
+        )
+        return ret
+
+    def get_file_system_by_rel_path(self, app_name, rel_file_path):
+        ret = self.db.context(app_name).update_one(
+            api_models.documents.Fs_File,
+            api_models.documents.Fs_File.rel_file_path == rel_file_path
+        )
+        return ret
+
+

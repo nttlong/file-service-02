@@ -119,7 +119,7 @@ def streaming_content(
                 Sau khi thăm dò nội dung xong 
                 Nếu đây là video hoặc audio thiết bị sẽ đọc phần cuối của nội dung
                 nhằm xác định nội dung có hơp lệ hay không
-                Độ dài phần cuối này thường là 354203 bytes với Video
+                Độ dài phần cuối này thường là 354203 bytes với VideoService
                 Audio thì tìm kiếm trên mạng mà xem hoặc upload thử file mp3 rồi debug
         """
         start = request.range.ranges[0][0]

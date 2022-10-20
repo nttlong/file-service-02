@@ -201,7 +201,7 @@ audio-video:
     - volume-off
     - volume-up
     - youtube
-  label: Audio & Video
+  label: Audio & VideoService
 automotive:
   icons:
     - air-freshener

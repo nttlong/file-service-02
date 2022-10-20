@@ -56,6 +56,7 @@ def load_from_yam_file(path_to_yam_file)->dict:
     if __cache_yam_dict__.get(p) is None:
         try:
             __lock__.acquire()
+            print(f"Load config from {p}")
             with open(p, 'r') as stream:
                 __config__ = yaml.safe_load(stream)
                 __cache_yam_dict__[p] = __config__
@@ -200,3 +201,11 @@ def combine_os_variables(data:dict):
             ret=__dict_of_dicts_merge__(ret,c)
     ret = __dict_of_dicts_merge__(data,ret)
     return ret
+def create_instance_from_moudle(module_name,class_name,force_reload=False):
+    import importlib
+    if force_reload:
+        if module_name in list(sys.modules.keys()):
+            importlib.reload(sys.modules[module_name])
+    mdl = importlib.import_module(module_name)
+    cls = getattr(mdl,class_name)
+    return depen(cls)

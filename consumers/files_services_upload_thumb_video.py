@@ -35,7 +35,7 @@ def handler(
         upload_info = data["UploadInfo"]
         upload_id = upload_info["_id"]
         scale_width,scale_height = upload_info.get("ThumbWidth",350),upload_info.get("ThumbHeight",350)
-        logger.info(f"Create Video Thumb file {file_path}")
+        logger.info(f"Create VideoService Thumb file {file_path}")
         logger.info(data)
         stream =ReCompact.thumbnal.video_create_thumb(
             in_put= file_path,
@@ -69,10 +69,10 @@ def handler(
             )
         )
         consumer.commit(msg)
-        logger.info(f"Create Video Thumb file {file_path} is ok")
+        logger.info(f"Create VideoService Thumb file {file_path} is ok")
         logger.info(data)
     except Exception as e:
-        logger.info(f"Create Video Thumb file {file_path} is fail")
+        logger.info(f"Create VideoService Thumb file {file_path} is fail")
         logger.info(data)
         logger.debug(e)
 
