@@ -49,7 +49,7 @@ class ExeFile(enig_frames.plugins.base_plugin.BasePlugin):
 
     def process(self, file_path: str, app_name: str, upload_id: str):
         file_ext = self.file_system_utils.get_file_extenstion(file_path)
-        if file_ext=="exe":
+        if file_ext=="exe" or file_ext=="msi":
             file_ext_only = self.file_system_utils.get_file_extenstion(file_path)
             image_path = self.exe_service.extract_icon(exe_file=file_path)
             thumb_file = self.image_service.create_thumbs(image_path, 450)

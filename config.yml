@@ -72,9 +72,12 @@ ext_office_file: [
                     VSD,VSDX,WDB,WPS,WRI,XLS,XLSX,pem,yaml,ym,toml,json,jsx,ts,tsx,cs,csx
 ]
 libre_office_path: /usr/bin/soffice
+fs_crawler_path: ./fscrawler
 media_plugins:
   - enig_frames.plugins.thumbs.video:Video
   - enig_frames.plugins.thumbs.pdf:PDF
   - enig_frames.plugins.thumbs.images:Images
   - enig_frames.plugins.thumbs.office:Office
   - enig_frames.plugins.thumbs.exe_file:ExeFile
+  - enig_frames.plugins.ocr.images:Images
+  - enig_frames.plugins.ocr.pdf_file:PdfFile
