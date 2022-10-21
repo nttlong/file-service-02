@@ -61,7 +61,7 @@ class Applications(enig.Singleton):
 
         return ret.to_list()
 
-    async def get_list_async(self,app_name, page_index, page_size, value_search):
+    async def get_list_async(self, app_name, page_index, page_size, value_search):
         ret = self.db.context(app_name).aggregate(
             api_models.documents.Apps
         ).project(
@@ -83,11 +83,10 @@ class Applications(enig.Singleton):
 
         return await ret.to_list_async()
 
-
-    def get_app_by_name(self, app_name:str):
+    def get_app_by_name(self, app_name: str):
         ret = self.db.context('admin').find_one(
             api_models.documents.Apps,
-            api_models.documents.Apps.NameLower==app_name.lower()
+            api_models.documents.Apps.NameLower == app_name.lower()
         )
         if ret is None:
             ret = self.db.context('admin').find_one(
@@ -101,4 +100,3 @@ class Applications(enig.Singleton):
                     api_models.documents.Apps.NameLower == app_name.lower()
                 )
         return ret
-

@@ -468,7 +468,7 @@ async def find_one_async(db: motor.motor_asyncio.AsyncIOMotorDatabase, docs, fil
     return ret_dict
 
 
-def find_one(db: motor.motor_asyncio.AsyncIOMotorDatabase, docs, filter=None):
+def find_one(db: motor.motor_asyncio.AsyncIOMotorDatabase, docs, filter=None)->DocumentItem:
     real_db = db
     if isinstance(db, motor.motor_asyncio.AsyncIOMotorDatabase):
         real_db = db.delegate
@@ -921,11 +921,11 @@ class DbContext:
         cnn = get_connection()
         self.db = getattr(cnn, db_name)
 
-    async def find_one_async(self, docs, filter):
+    async def find_one_async(self, docs, filter)->DocumentItem:
         ret = await find_one_async(self.db, docs, filter)
         return ret
 
-    def find_one(self, docs, filter):
+    def find_one(self, docs, filter)->DocumentItem:
         ret = find_one(
             self.db.delegate, docs, filter
         )

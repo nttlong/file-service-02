@@ -2,6 +2,7 @@ import datetime
 
 from fastapi import Depends, status, Response
 
+import api_models.documents
 from fasty.JWT import get_oauth2_scheme
 import uuid
 import fasty.JWT
@@ -9,6 +10,7 @@ import fasty.JWT_Docs
 from ReCompact.db_async import get_db_context,default_db_name
 import api_models.documents as docs
 from  fastapi import Request, Response
+
 @fasty.api_post("/get_sso_token")
 async def get_sso_token(request:Request, token: str = Depends(get_oauth2_scheme())):
     """
@@ -63,12 +65,14 @@ async def get_sso_token(request:Request, token: str = Depends(get_oauth2_scheme(
     :param token:
     :return:
     """
+    import enig_frames.containers
+    container = enig_frames.containers.Container
     if not hasattr(request,'application_name'):
         return Response(status_code=401)
     app_name = request.application_name
     if app_name is None:
         return Response(status_code=401)
-    import enig_frames.containers
+
     db_name = enig_frames.containers.Container.db_context.get_db_name(app_name)
     if db_name is None:
         return Response(status_code=403)
@@ -77,17 +81,16 @@ async def get_sso_token(request:Request, token: str = Depends(get_oauth2_scheme(
     ret_url=enig_frames.containers.Container.Services.host.root_url
 
     if app_name!='admin':
-        app_item = await db_context.find_one_async(
-            docs.Apps,
-            docs.Apps.NameLower==app_name.lower()
+        app_item = enig_frames.containers.Container.Services.applications.get_app_by_name(
+            app_name
         )
-        ret_url = app_item[docs.Apps.ReturnUrlAfterSignIn.__name__]
-    ret = await db_context.insert_one_async(
-        fasty.JWT_Docs.SSOs,
-        fasty.JWT_Docs.SSOs.Token == token,
-        fasty.JWT_Docs.SSOs.SSOID == ret_id,
-        fasty.JWT_Docs.SSOs.CreatedOn==datetime.datetime.utcnow(),
-        fasty.JWT_Docs.SSOs.ReturnUrlAfterSignIn==ret_url
+        ret_url = app_item.get(docs.Apps.ReturnUrlAfterSignIn.__name__,container.Services.host.root_url)
+    ret = await container.Services.accounts.create_sso_id_async(
+        app_name='admin',
+        token = token,
+        return_url =ret_url
+
     )
 
-    return {"token": ret_id}
+
+    return {"token": ret[api_models.documents.SSOs.SSOID]}

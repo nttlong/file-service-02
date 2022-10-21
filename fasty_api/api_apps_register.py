@@ -4,6 +4,7 @@ API liệt kê danh sách các file
 import datetime
 
 import ReCompact.dbm
+import api_models.documents
 import fasty
 from fastapi import FastAPI, Request
 import api_models.documents as docs
@@ -19,6 +20,7 @@ from api_models.documents import Apps
 from ReCompact.db_async import get_db_context,default_db_name,Error as Db_Error
 import fasty.JWT
 import fasty.JWT_Docs
+import enig_frames.containers
 @fasty.api_post("/{app_name}/apps/register",response_model=EditAppResutl)
 async def register_new_app(app_name: str, Data:AppInfo=Body(embed=True),token: str = Depends(fasty.JWT.oauth2_scheme)):
     """
@@ -31,6 +33,7 @@ async def register_new_app(app_name: str, Data:AppInfo=Body(embed=True),token: s
     :param app_name:
     :return:
     """
+    container = enig_frames.containers.Container
     ret = EditAppResutl()
     require_fields=['Name', 'LoginUrl', 'Domain', 'ReturnUrlAfterSignIn','Username','Password' ]
     for k in require_fields:
@@ -40,44 +43,51 @@ async def register_new_app(app_name: str, Data:AppInfo=Body(embed=True),token: s
             ret.Error.Fields=[k]
             ret.Error.Message=f"'{k}' is require"
             return ret
+
     if Data.Name in ["admin","adminstrator","administrators",default_db_name]:
         ret.Error = Error()
         ret.Error.Code = ErrorType.DUPLICATE_DATA.value
         ret.Error.Fields = ["Name"]
         ret.Error.Message = f"Value of 'Name' is already exists"
         return ret
-    #Bat dau tao app
-    db_context=db_async.get_db_context(default_db_name)
-    app_item = await db_context.find_one_async(Apps,Apps.NameLower==Data.Name.lower())
-    try:
-        ret_app = await  db_context.insert_one_async(
-            Apps,
-            Apps.Name==Data.Name,
-            Apps.NameLower==Data.Name.lower(),
-            Apps.Domain==Data.Domain,
-            Apps.LoginUrl==Data.LoginUrl,
-            Apps.RegisteredOn==datetime.datetime.utcnow(),
-            Apps.Email==Data.Email,
-            Apps.Description==Data.Description,
-            Apps.ReturnUrlAfterSignIn==Data.ReturnUrlAfterSignIn,
+    if Data.Username is None or Data.Username=='':
+        Data.Username='root'
+        Data.Password = 'root'
 
+    #Bat dau tao app
+    app = container.Services.applications.get_app_by_name(name=Data.Name)
+    if app is not None:
+        container.Services.accounts.check_root_user(
+            app_name=Data.Name,
+            username=Data.Username,
+            password=Data.Password,
+            email= Data.Email
         )
-        ret.Data = Data
-        ret.Data.AppId=ret_app["_id"]
-    except Db_Error as e:
-        ret.Error=()
-        ret.Error.Code=e.code
-        ret.Error.Fields=e.fields
-        ret.Error.Message=e.message
+        ret.Error=Error()
+        ret.Error.Code=ErrorType.DUPLICATE_DATA.name
+        ret.Error.Message=f"{Data.Name} is already existing"
+        ret.Error.Fields=["Name"]
         return ret
-    # Tạo user root cho app
-    app_root_user =await fasty.JWT.create_user_async(
-        Data.Name.lower(),
-        Data.Username,
-        Data.Password,
-        Data.Email,
-        IsSysAdmin=True
+
+    app = container.Services.applications.create(
+        name=Data.Name,
+        domain=Data.Domain,
+        login_url=Data.LoginUrl,
+        description= Data.Description
+
     )
+    container.Services.accounts.check_root_user(
+        app_name=Data.Name,
+        username=Data.Username,
+        password=Data.Password,
+        email=Data.Email
+    )
+    ret.Data=AppInfo()
+    ret.Data.AppId =app[api_models.documents.Apps._id]
+    ret.Data.Name = app[api_models.documents.Apps.Name]
+    ret.Data.Domain =app[api_models.documents.Apps.Domain]
+    ret.Data.Description = app[api_models.documents.Apps.Description]
+    ret.Data.LoginUrl = app[api_models.documents.Apps.LoginUrl]
 
 
     return ret

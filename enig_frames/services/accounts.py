@@ -61,18 +61,16 @@ class Accounts(enig.Singleton):
         else:
             return True
 
-    def check_root_user(self):
-        app_name = "admin"
-        username = "root"
-        password = "root"
-        admin_roor_user = self.repo.get_user_by_username('admin', 'root')
+    def check_root_user(self,username:str='root',password:str='root',email:str='', app_name:str='admin'):
+
+        admin_roor_user = self.repo.get_user_by_username(app_name, 'root')
         if admin_roor_user is None:
             hash_password = self.sercurity.get_password_hash(username.lower() + "/" + password)
             admin_roor_user = self.repo.create(
                 app_name=app_name,
                 username=username,
                 hash_password=hash_password,
-                email="",
+                email=email,
                 is_sys_admin=True
 
             )
@@ -82,8 +80,8 @@ class Accounts(enig.Singleton):
         sso_info = self.repo.get_sso_info(SSOID)
         return sso_info
 
-    async def get_sso_login_asycn(self, SSOID):
-        sso_info = await self.repo.get_sso_info_async(SSOID)
+    async def get_sso_login_asycn(self,app_name:str='admin', SSOID=None):
+        sso_info = await self.repo.get_sso_info_async(app_name, SSOID)
         return sso_info
 
     async def get_user_by_username_async(self, app_name, username):
@@ -92,4 +90,5 @@ class Accounts(enig.Singleton):
             username=username
         )
 
-
+    async def create_sso_id_async(self, app_name:str,token:str,return_url:str):
+        return await self.repo.create_sso_id_async(app_name,token,return_url)

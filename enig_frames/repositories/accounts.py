@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 import enig
@@ -52,7 +53,7 @@ class Accounts(enig.Singleton):
         )
         return ret
 
-    async def get_sso_info_async(self, SSOID):
+    async def get_sso_info_async(self,app_name:str='admin',SSOID=None):
         ret = await self.db.context('admin').find_one_async(
             docs=api_models.documents.SSOs,
             filter=api_models.documents.SSOs.SSOID == SSOID
@@ -63,5 +64,18 @@ class Accounts(enig.Singleton):
         ret = await self.db.context(app_name).find_one_async(
             docs=api_models.documents.Users,
             filter=api_models.documents.Users.UsernameLowerCase==username.lower()
+        )
+        return ret
+
+    async def create_sso_id_async(self, app_name, token, return_url):
+        sso_id= str(uuid.uuid4())
+        ret = await  self.db.context('admin').insert_one_async(
+            api_models.documents.SSOs,
+            api_models.documents.SSOs.SSOID==sso_id,
+            api_models.documents.SSOs.Token==token,
+            api_models.documents.SSOs.CreatedOn==datetime.utcnow(),
+            api_models.documents.SSOs.ReturnUrlAfterSignIn ==return_url,
+            api_models.documents.SSOs.Application==app_name
+
         )
         return ret

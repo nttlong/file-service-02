@@ -48,3 +48,6 @@ class Applications(enig.Singleton):
 
 
             )
+
+    def get_app_by_name(self,name:str):
+        return self.repo.get_app_by_name(app_name=name)
