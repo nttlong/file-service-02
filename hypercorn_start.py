@@ -12,13 +12,19 @@ In order to start with hypercorn
                         So you can pass db.usrername= db.password= db.authSource= db.authMechanism=
 python hypercorn_start.py db.host=172.16.7.25 db.port=27018 db.username= db.password= db.authSource= db.authMechanism= admin_db_name=enigma-media
 """
+import sys
+for x in sys.argv:
+    print(x)
 import asyncio
 from hypercorn.config import Config
 from hypercorn.asyncio import serve
 
 import enig_frames.containers
+log=enig_frames.containers.Container.loggers.get_logger("web")
+log.info(f"Start web from {__file__}")
 from api_app import app
 hyper_conf =Config()
+
 hyper_conf.bind=[
     f"{enig_frames.containers.Container.config.config.binding_ip}:{enig_frames.containers.Container.config.config.binding_port}"
 ]

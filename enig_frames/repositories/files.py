@@ -71,4 +71,15 @@ class Files(enig.Singleton):
         )
         return ret
 
+    def update_video_info_by_id(self,app_name, upload_id, duration, fps, width, height):
+        ret = self.db.context(app_name).update_one(
+            api_models.documents.Files,
+            api_models.documents.Files._id==upload_id,
+            api_models.documents.Files.VideoDuration==duration,
+            api_models.documents.Files.VideoFPS==fps,
+            api_models.documents.Files.VideoResolutionWidth==width,
+            api_models.documents.Files.VideoResolutionHeight ==height
+        )
+        return ret
+
 

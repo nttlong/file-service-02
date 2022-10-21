@@ -8,8 +8,9 @@ import enig_frames.services.file_system_utils
 import enig_frames.loggers
 import img2pdf
 import ocrmypdf
-
-
+from _avif import ffi, lib
+from avif import Decoder
+import pillow_avif
 class ImageServices(enig_frames.services.base_media_service.BaseMediaService):
     def __init__(self,
                  configuration: enig_frames.config.Configuration = enig.depen(
@@ -33,6 +34,9 @@ class ImageServices(enig_frames.services.base_media_service.BaseMediaService):
             os.makedirs(self.convert_folder, exist_ok=True)
 
     def create_thumbs(self, image_file_path, size: int = 350):
+
+        ext_file = self.file_system_utils.get_file_extenstion(image_file_path)
+
         try:
             filename_only = self.file_system_utils.get_file_name_only(image_file_path)
 
@@ -63,3 +67,6 @@ class ImageServices(enig_frames.services.base_media_service.BaseMediaService):
         image.close()
         file.close()
         return ret
+
+
+

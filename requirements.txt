@@ -42,3 +42,6 @@ bcrypt
 kink~=0.6.5
 hypercorn[trio]
 icoextract~=0.1.4
+avif~=0.5.0
+pillow-avif-plugin~=1.2.2
+tika~=1.24

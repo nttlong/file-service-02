@@ -43,3 +43,19 @@ class Files(enig.Singleton):
             value=value
         )
 
+    def update_video_info_by_id(self,
+                                app_name:str,
+                                upload_id:str,
+                                duration,
+                                height,
+                                width,
+                                fps
+            ):
+        return self.repo.update_video_info_by_id(
+            app_name=app_name,
+            upload_id=upload_id,
+            duration=duration,
+            fps=fps,
+            width=width,
+            height=height
+        )

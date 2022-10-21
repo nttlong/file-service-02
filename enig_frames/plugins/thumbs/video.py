@@ -72,6 +72,16 @@ class Video(enig_frames.plugins.base_plugin.BasePlugin):
                 value=file_info._id
 
             )
+            info = self.video_services.get_info(file_path)
+            self.file_services.update_video_info_by_id(
+                app_name=app_name,
+                upload_id=upload_id,
+                duration=info.duration,
+                height=info.height,
+                width=info.width,
+                fps=info.fps
+            )
+
             self.make_available_thumbs(
                 upload_id=upload_id,
                 app_name=app_name,
@@ -80,6 +90,7 @@ class Video(enig_frames.plugins.base_plugin.BasePlugin):
                 file_services=self.file_services
 
             )
+
             os.remove(file_path)
             os.remove(image_file)
 

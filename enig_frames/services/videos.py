@@ -10,6 +10,14 @@ import io
 import enig_frames.services.base_media_service
 
 
+class VideoInfo:
+    def __init__(self):
+        self.duration = None
+        self.fps = None
+        self.width = None
+        self.height = None
+
+
 class VideoService(enig_frames.services.base_media_service.BaseMediaService):
     def __init__(self,
                  configuration: enig_frames.config.Configuration = enig.depen(
@@ -17,7 +25,7 @@ class VideoService(enig_frames.services.base_media_service.BaseMediaService):
                      enig_frames.config.Configuration
                  )):
         enig_frames.services.base_media_service.BaseMediaService.__init__(
-            self,__name__, configuration
+            self, __name__, configuration
         )
 
     def get_image_from_frame(self, file_path: str) -> str:
@@ -46,3 +54,18 @@ class VideoService(enig_frames.services.base_media_service.BaseMediaService):
         del img
         del clip
         return ret_file
+
+    def get_info(self, file_path) -> VideoInfo:
+        if not os.path.isfile(file_path):
+            return None
+        clip = VideoFileClip(
+            file_path
+        )
+        ret = VideoInfo()
+        ret.duration = clip.duration
+        ret.fps = clip.fps
+        ret.width = clip.size[0]
+        ret.height = clip.size[1]
+        clip.close()
+        del clip
+        return ret

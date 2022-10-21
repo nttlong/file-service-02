@@ -1,18 +1,21 @@
 import pathlib
 import os
+import sys
 
 import enig
 
 
 class Configuration:
     def __init__(self, yam_file: str = "./config.yml"):
+
         self.config_file =yam_file
         self.config = enig.cls_dict(enig.load_from_yam_file(yam_file))
         self.config.__data__ = enig.combine_agruments(self.config.__data__)
         self.working_dir = str(pathlib.Path(__file__).parent.parent)
 
-        self.config.__data__ = enig.combine_os_variables(self.config.__data__)
+        # self.config.__data__ = enig.combine_os_variables(self.config.__data__)
         self.static_dir = self.__get_static_dir__()
+
     def test(self):
         print("OK")
     def reload(self):

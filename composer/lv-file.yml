@@ -17,7 +17,10 @@ services:
 
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
-    command: hypercorn api_app:app -w 4 --bind '0.0.0.0:80'
+    command: python3 /app/test_tika.py
+#    command: ls /app
+#    command: python3 /app/hypercorn_start.py binding_port=80 db.host=172.16.7.25 db.port=27018 db.username= db.password= db.authSource= db.authMechanism= admin_db_name=enigma-media
+#    command: hypercorn api_app:app -w 4 --bind '0.0.0.0:80'
 #    command: python3 /app/api_app_dev_run.py --port 8000 --api-url http://${HOST_IP}:${API_PORT}
 #    command: gunicorn -w 4 --worker-class uvicorn.workers.UvicornWorker api_app:app --bind 0.0.0.0:80
 
