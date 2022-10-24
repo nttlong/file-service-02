@@ -21,7 +21,10 @@ class TextProcessService(enig.Singleton):
             """
         output = content
         for regex, replace in self.patterns_vn.items():
-            output = re.sub(regex, replace, output)
-            # deal with upper case
-            output = re.sub(regex.upper(), replace.upper(), output)
+            try:
+                output = re.sub(regex, replace, output)
+                # deal with upper case
+                output = re.sub(regex.upper(), replace.upper(), output)
+            except Exception as e:
+                fx=1
         return output
