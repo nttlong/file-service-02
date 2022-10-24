@@ -68,7 +68,7 @@ elastic_search:
   server:
     - http://192.168.18.36:9200
   index: lv-files-server-v2
-  prefix_index: enig
+  prefix_index: lv-codx
 tmp_media_processing_folder: ./tmp_media
 ext_office_file: [
                    docx,doc,xls,xlsx,txt,pdf,ppx,pptx,json,psd,html,xml,js,otg,svg,vsd,

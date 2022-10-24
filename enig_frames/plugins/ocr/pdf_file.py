@@ -10,7 +10,8 @@ import enig_frames.services.images
 import enig_frames.services.file_system
 import enig_frames.services.files
 import enig_frames.services.ocr_pdf
-
+import enig_frames.services.search_engine
+import enig_frames.services.text_processors
 
 class PdfFile(enig_frames.plugins.base_plugin.BasePlugin):
     def __init__(
@@ -35,6 +36,12 @@ class PdfFile(enig_frames.plugins.base_plugin.BasePlugin):
             ),
             ocr_pdf_services: enig_frames.services.ocr_pdf.OcrPdfService = enig.depen(
                 enig_frames.services.ocr_pdf.OcrPdfService
+            ),
+            search_engine_service: enig_frames.services.search_engine.SearchEngineService = enig.depen(
+                enig_frames.services.search_engine.SearchEngineService
+            ),
+            text_processor_service: enig_frames.services.text_processors.TextProcessService = enig.depen(
+                enig_frames.services.text_processors.TextProcessService
             )
     ):
         self.configuration: enig_frames.config.Configuration = configuration
@@ -44,15 +51,22 @@ class PdfFile(enig_frames.plugins.base_plugin.BasePlugin):
         self.file_system_services: enig_frames.services.file_system.FileSystem = file_system_services
         self.file_services: enig_frames.services.files.Files = file_services
         self.ocr_pdf_services: enig_frames.services.ocr_pdf.OcrPdfService = ocr_pdf_services
+        self.search_engine_service: enig_frames.services.search_engine.SearchEngineService=search_engine_service
+        self.text_processor_service: enig_frames.services.text_processors.TextProcessService = text_processor_service
         enig_frames.plugins.base_plugin.BasePlugin.__init__(self)
 
     def process(self, file_path: str, app_name: str, upload_id: str):
         file_ext_only = self.file_system_utils.get_file_extenstion(file_path)
         if file_ext_only.lower()=="pdf":
             if self.ocr_pdf_services.detect_is_ocr(file_path):
-                self.fs_crawler.move_to_fs_crawler_directory(
+                self.search_engine_service.make_index_content(
+                    file_path=file_path,
                     app_name=app_name,
-                    file_path=file_path
+                    upload_id=upload_id,
+                    data_item= self.file_services.get_item_by_upload_id(
+                        app_name=app_name,
+                        upload_id=upload_id
+                    )
                 )
                 return
 
@@ -81,6 +95,15 @@ class PdfFile(enig_frames.plugins.base_plugin.BasePlugin):
                 field=api_models.documents.Files.OCRFileId,
                 value=file_info._id
 
+            )
+            self.search_engine_service.make_index_content(
+                file_path=ocr_pdf_file,
+                app_name=app_name,
+                upload_id=upload_id,
+                data_item=self.file_services.get_item_by_upload_id(
+                    app_name=app_name,
+                    upload_id=upload_id
+                )
             )
 
 

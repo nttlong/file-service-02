@@ -10,7 +10,8 @@ import enig_frames.services.images
 import enig_frames.services.file_system
 import enig_frames.services.files
 import enig_frames.services.ocr_pdf
-
+import enig_frames.services.search_engine
+import enig_frames.services.text_processors
 class Images(enig_frames.plugins.base_plugin.BasePlugin):
     def __init__(
             self,
@@ -34,6 +35,12 @@ class Images(enig_frames.plugins.base_plugin.BasePlugin):
             ),
             ocr_pdf_services: enig_frames.services.ocr_pdf.OcrPdfService = enig.depen(
                 enig_frames.services.ocr_pdf.OcrPdfService
+            ),
+            search_engine_service: enig_frames.services.search_engine.SearchEngineService = enig.depen(
+                enig_frames.services.search_engine.SearchEngineService
+            ),
+            text_processor_service: enig_frames.services.text_processors.TextProcessService = enig.depen(
+                enig_frames.services.text_processors.TextProcessService
             )
     ):
         self.configuration: enig_frames.config.Configuration = configuration
@@ -43,6 +50,8 @@ class Images(enig_frames.plugins.base_plugin.BasePlugin):
         self.file_system_services: enig_frames.services.file_system.FileSystem = file_system_services
         self.file_services: enig_frames.services.files.Files = file_services
         self.ocr_pdf_services: enig_frames.services.ocr_pdf.OcrPdfService = ocr_pdf_services
+        self.search_engine_service: enig_frames.services.search_engine.SearchEngineService =search_engine_service
+        self.text_processor_service: enig_frames.services.text_processors.TextProcessService = text_processor_service
         enig_frames.plugins.base_plugin.BasePlugin.__init__(self)
 
     def process(self, file_path: str, app_name: str, upload_id: str):
@@ -75,6 +84,15 @@ class Images(enig_frames.plugins.base_plugin.BasePlugin):
                 field=api_models.documents.Files.OCRFileId,
                 value=file_info._id
 
+            )
+            self.search_engine_service.make_index_content(
+                upload_id=upload_id,
+                app_name=app_name,
+                file_path=ocr_pdf_file,
+                data_item= self.file_services.get_item_by_upload_id(
+                    app_name==app_name,
+                    upload_id=upload_id
+                )
             )
 
 

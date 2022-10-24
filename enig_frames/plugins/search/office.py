@@ -48,8 +48,6 @@ class Office(enig_frames.plugins.base_plugin.BasePlugin):
         #         or file_ext.upper() in self.configuration.config.ext_office_file:
         if file_ext.lower()!="pdf" and not mime_type.lower().startswith('image/'):
             file_ext_only = self.file_system_utils.get_file_extenstion(file_path)
-
-
             file_name_only = self.file_system_utils.get_file_name_only(file_path)
             self.search_engine.make_index_content(
                 app_name=app_name,
