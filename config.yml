@@ -26,12 +26,17 @@ db:
   host: 192.168.18.36
   # Port of mongodb
   port: 27018
+db_:
+  # Host of mongodb
+  host: 192.168.18.36
+  # Port of mongodb
+  port: 27018
 
-  username: 'admin-doc'
-  password: '123456'
-  authSource: 'lv-docs'
-  replicaSet:
-  authMechanism: SCRAM-SHA-1
+  username_: 'admin-doc'
+  password_: '123456'
+  authSource_: 'lv-docs'
+  replicaSet_:
+  authMechanism_: SCRAM-SHA-1
 # Default administrator database
 admin_db_name_25: media-server
 # Below setting tell the system that must create new administrator database in mongodb
@@ -63,6 +68,7 @@ elastic_search:
   server:
     - http://192.168.18.36:9200
   index: lv-files-server-v2
+  prefix_index: enig
 tmp_media_processing_folder: ./tmp_media
 ext_office_file: [
                    docx,doc,xls,xlsx,txt,pdf,ppx,pptx,json,psd,html,xml,js,otg,svg,vsd,
@@ -74,6 +80,7 @@ ext_office_file: [
 libre_office_path: /usr/bin/soffice
 fs_crawler_path: ./fscrawler
 media_plugins:
+  - enig_frames.plugins.search.office:Office
   - enig_frames.plugins.thumbs.video:Video
   - enig_frames.plugins.thumbs.pdf:PDF
   - enig_frames.plugins.thumbs.images:Images

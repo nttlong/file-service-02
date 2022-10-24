@@ -91,7 +91,7 @@ class Video(enig_frames.plugins.base_plugin.BasePlugin):
 
             )
 
-            os.remove(file_path)
+            # os.remove(file_path)
             os.remove(image_file)
 
 

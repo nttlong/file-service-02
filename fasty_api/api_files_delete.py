@@ -29,6 +29,8 @@ async def files_delete(app_name: str, UploadId: str = Body(embed=True), token: s
 
         )
 
+    container.Services.search_engine.remove_doc(app_name,id=UploadId)
+
     main_file_id = delete_item.get(Files.MainFileId.__name__)
     if main_file_id:
         await container.Services.file_system.delete_by_id_async(app_name,main_file_id)
@@ -37,21 +39,6 @@ async def files_delete(app_name: str, UploadId: str = Body(embed=True), token: s
         await container.Services.file_system.delete_by_id_async(app_name, thumb_file_id)
 
     ret = await container.Services.files.delete_by_id_async(app_name,upload_id=UploadId)
-    bool_body = {
-        "bool": {
-            "must":
-                {"match":{"path.virtual": f'/{app_name}/{delete_item.get(Files._id.__name__)}.{delete_item.get(Files.FileExt.__name__)}'}}
-        }
-    }
-    resp = container.Services.search_engine.search(
-        index=container.config.config.elastic_search.index,
-        query=bool_body
-    )
-    if resp.body.get('hits') and resp.body['hits']['hits'] and resp.body['hits']['hits'].__len__()>0:
-        es_id = resp.body['hits']['hits'][0]['_id']
-        container.Services.search_engine.delete_by_id(
-            index=container.config.config.elastic_search.index,
-            id=es_id
-        )
+    
 
     return dict()

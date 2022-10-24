@@ -10,7 +10,6 @@ import enig_frames.services.images
 import enig_frames.services.file_system
 import enig_frames.services.files
 import enig_frames.services.ocr_pdf
-import enig_frames.services.fs_crawlers
 
 class Images(enig_frames.plugins.base_plugin.BasePlugin):
     def __init__(
@@ -35,9 +34,6 @@ class Images(enig_frames.plugins.base_plugin.BasePlugin):
             ),
             ocr_pdf_services: enig_frames.services.ocr_pdf.OcrPdfService = enig.depen(
                 enig_frames.services.ocr_pdf.OcrPdfService
-            ),
-            fs_crawler:enig_frames.services.fs_crawlers.FsCrawler =enig.depen(
-                enig_frames.services.fs_crawlers.FsCrawler
             )
     ):
         self.configuration: enig_frames.config.Configuration = configuration
@@ -47,7 +43,6 @@ class Images(enig_frames.plugins.base_plugin.BasePlugin):
         self.file_system_services: enig_frames.services.file_system.FileSystem = file_system_services
         self.file_services: enig_frames.services.files.Files = file_services
         self.ocr_pdf_services: enig_frames.services.ocr_pdf.OcrPdfService = ocr_pdf_services
-        self.fs_crawler:enig_frames.services.fs_crawlers.FsCrawler = fs_crawler
         enig_frames.plugins.base_plugin.BasePlugin.__init__(self)
 
     def process(self, file_path: str, app_name: str, upload_id: str):
@@ -80,10 +75,6 @@ class Images(enig_frames.plugins.base_plugin.BasePlugin):
                 field=api_models.documents.Files.OCRFileId,
                 value=file_info._id
 
-            )
-            self.fs_crawler.move_to_fs_crawler_directory(
-                app_name=app_name,
-                file_path=ocr_pdf_file
             )
 
 

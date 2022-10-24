@@ -18,3 +18,6 @@ class FileSystemUtils(enig.Singleton):
         import mimetypes
         ret, _ = mimetypes.guess_type(file_path)
         return ret
+
+    def get_file_name(self, file_path):
+        return f"{self.get_file_name_only(file_path)}.{self.get_file_extenstion(file_path)}"

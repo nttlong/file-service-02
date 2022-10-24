@@ -10,7 +10,6 @@ import enig_frames.services.images
 import enig_frames.services.file_system
 import enig_frames.services.files
 import enig_frames.services.office
-import enig_frames.services.fs_crawlers
 
 
 class Office(enig_frames.plugins.base_plugin.BasePlugin):
@@ -34,11 +33,8 @@ class Office(enig_frames.plugins.base_plugin.BasePlugin):
             file_services: enig_frames.services.files.Files = enig.depen(
                 enig_frames.services.files.Files
             ),
-            office_service : enig_frames.services.office.OfficeService =enig.depen(
+            office_service : enig_frames.services.office.OfficeService = enig.depen(
                 enig_frames.services.office.OfficeService
-            ),
-            fs_crawler: enig_frames.services.fs_crawlers.FsCrawler = enig.depen(
-                enig_frames.services.fs_crawlers.FsCrawler
             )
     ):
         self.configuration: enig_frames.config.Configuration = configuration
@@ -48,7 +44,7 @@ class Office(enig_frames.plugins.base_plugin.BasePlugin):
         self.file_system_services:enig_frames.services.file_system.FileSystem = file_system_services
         self.file_services:enig_frames.services.files.Files= file_services
         self.office_service:enig_frames.services.office.OfficeServices = office_service
-        self.fs_crawler: enig_frames.services.fs_crawlers.FsCrawler = fs_crawler
+
         enig_frames.plugins.base_plugin.BasePlugin.__init__(self)
 
     def process(self, file_path: str, app_name: str, upload_id: str):
@@ -95,7 +91,4 @@ class Office(enig_frames.plugins.base_plugin.BasePlugin):
 
             )
             os.remove(thumb_file)
-            self.fs_crawler.move_to_fs_crawler_directory(
-                app_name=app_name,
-                file_path=file_path
-            )
+

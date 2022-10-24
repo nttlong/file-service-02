@@ -139,18 +139,20 @@ async def file_search(request: Request, app_name: str, content: str = Body(embed
     db_name = container.db_context.get_db_name(app_name)
     if db_name is None:
         return Response(status_code=403)
-    search_result = search_content_of_file(app_name, content, page_size, page_index)
+    # search_result = search_content_of_file(app_name, content, page_size, page_index)
+    search_result=container.Services.search_engine.do_full_text_search(
+        app_name=app_name,
+        content =content,
+        page_size=page_size,
+        page_index=page_index
+    )
 
     ret_items = []
     url = container.Services.host.root_api_url
     for x in search_result["items"]:
-        upload_id = x["server_file_id"].split('.')[0]  # tách lấy id upload
-        upload_doc_item = await container.Services.files.get_item_by_upload_id_async(
-            app_name=app_name,
-            upload_id=upload_id
-        )
-
+        upload_doc_item = x.get('data_item')
         if upload_doc_item:
+            upload_doc_item['UploadId'] = upload_doc_item["_id"]
             upload_doc_item['Highlight'] = x.get('highlight', [])
             upload_doc_item[
                 "UrlOfServerPath"] = url + f"/{app_name}/file/{upload_doc_item[Docs.Files.FullFileName.__name__]}"

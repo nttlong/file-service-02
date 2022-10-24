@@ -5,7 +5,6 @@ import enig_frames.services.applications
 import enig_frames.services.sercurities
 import enig_frames.services.hosts
 import enig_frames.services.web_apps
-import enig_frames.services.full_text_search
 import enig_frames.services.files
 import enig_frames.services.file_system
 import enig_frames.config
@@ -13,6 +12,7 @@ import enig_frames.db_context
 import enig_fast_api.application
 import enig_frames.loggers
 import enig_frames.services.file_system_utils
+import enig_frames.services.search_engine
 @enig.container()
 class Container(enig.Singleton):
     class Services(enig.Singleton):
@@ -27,9 +27,10 @@ class Container(enig.Singleton):
         """
         accounts = enig.create_instance(enig_frames.services.accounts.Accounts)
         security = enig.create_instance(enig_frames.services.sercurities.Sercurities)
-        search_engine = enig.create_instance(enig_frames.services.full_text_search.FullTextSearch)
+        search_engine = enig.create_instance(enig_frames.services.search_engine.SearchEngineService)
         files = enig.create_instance(enig_frames.services.files.Files)
         file_system:enig_frames.services.file_system.FileSystem = enig.create_instance(enig_frames.services.file_system.FileSystem)
+
 
     config = enig.create_instance(enig_frames.config.Configuration)
     db_context = enig.create_instance(enig_frames.db_context.DbContext)

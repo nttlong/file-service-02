@@ -1,5 +1,6 @@
 import bson
 
+import enig_frames.containers
 import fasty
 from fastapi import Body, Depends, Response
 from api_models.documents import Files
@@ -17,7 +18,7 @@ async def mark_delete(app_name: str, UploadId: str = Body(embed=True),IsDelete:b
     :param token:
     :return:
     """
-
+    container = enig_frames.containers.Container
     # 2123d6ba-7c77-4a98-b4b7-7d45c8bc97ab
     db_name = await  get_db_name_async(app_name)
     if db_name is None:
@@ -30,23 +31,7 @@ async def mark_delete(app_name: str, UploadId: str = Body(embed=True),IsDelete:b
     ret = await db_context.update_one_async(Files, Files._id == UploadId,
         Files.MarkDelete==IsDelete
     )
-    bool_body = {
-        "bool": {
-            "must":
-                {"prefix": {
-                    "path.virtual": f'/{app_name}/{delete_item.get(Files._id.__name__)}'}}
-        }
-    }
-    resp = search_engine.get_client().search(index=fasty.config.search_engine.index, query=bool_body)
-    if resp.body.get('hits') and resp.body['hits']['hits'] and resp.body['hits']['hits'].__len__() > 0:
-        es_id = resp.body['hits']['hits'][0]['_id']
-        body = resp.body['hits']['hits'][0].get('_source')
-        body['MarkDelete']=mark_delete
-        search_engine.get_client().update(
-            index=fasty.config.search_engine.index,
-            id=es_id,
-            body={"doc": {
-                "MarkDelete": IsDelete
-            }})
+    container.Services.search_engine.mark_delete(app_name=app_name,id=UploadId,mark_delete_value=True)
+
         # search_engine.get_client().delete(index=fasty.configuration.search_engine.index, id=es_id)
     return dict()
