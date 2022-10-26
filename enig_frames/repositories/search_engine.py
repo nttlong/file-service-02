@@ -19,6 +19,9 @@ class SearchEngineRepo(enig.Singleton):
         )
 
     def create_doc(self,id:str, index_name, body:dict):
+        check = self.es_client.exists(index=index_name, id=id)
+        if check.body == True:
+            self.es_client.delete(index=index_name,id=id)
         ret=self.es_client.create(id=id,index=index_name, body=body)
         return ret
 

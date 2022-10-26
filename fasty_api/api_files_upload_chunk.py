@@ -27,7 +27,7 @@ __lock__ = threading.Lock()
 """
 Lock dành cach meta, tránh gọi về Database nhiều lần
 """
-__meta_upload_cache__ = {}
+
 """
 Cache meta upload. Trong quá trình upload hệ thống sẽ tham khảo đến database của mongodb để xác định quá trình upload
 Ví dụ: Hệ thống sẽ cần phải xác định xem nội dung upload đã đạt được bao nhiêu phần trăm.
@@ -80,18 +80,10 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
     db_name = container.db_context.get_db_name(app_name)
     db_context = get_db_context(db_name)
     gfs = db_context.get_grid_fs()
-    global __meta_upload_cache__
-    global __lock__
-    upload_item = __meta_upload_cache__.get(UploadId)
-    if not upload_item:
-        __lock__.acquire()
-        try:
-            upload_item = await db_context.find_one_async(docs.Files, docs.Files._id == UploadId)
-            __meta_upload_cache__[UploadId] = upload_item
-        except Exception as ex:
-            fasty.logger.logger.debug(ex)
-        finally:
-            __lock__.release()
+
+
+
+    upload_item = await db_context.find_one_async(docs.Files, docs.Files._id == UploadId)
 
     if upload_item is None:
         ret.Error = ret_error()

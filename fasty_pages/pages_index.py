@@ -10,9 +10,10 @@ async def login(request: Request):
     container=enig_frames.containers.Container
     # host_services = enig.create_instance(enig_frames.services.hosts.Hosts)
     app_data = dict(
-        full_url_app=container.Services.host.root_url,
+        full_url_app=container.Services.host.base_ui_url,
         full_url_root=container.Services.host.root_url,
-        api_url=container.Services.host.root_api_url
+        api_url=container.Services.host.base_api_url,
+        host_dir = container.config.config.host_dir
     )
     return container.Services.web.render(
         file="index.html",
@@ -26,9 +27,10 @@ async def page_index(request: Request,token: str = Depends(fasty.JWT.oauth2_sche
     container = enig_frames.containers.Container
     # host_services = enig.create_instance(enig_frames.services.hosts.Hosts)
     app_data = dict(
-        full_url_app=container.Services.host.root_url,
+        full_url_app=container.Services.host.base_ui_url,
         full_url_root=container.Services.host.root_url,
-        api_url=container.Services.host.root_api_url
+        api_url=container.Services.host.base_api_url,
+        host_dir = container.config.config.host_dir
     )
     return container.Services.web.render(
         file="index.html",
@@ -49,9 +51,10 @@ async def page_single(directory:str, request: Request,token: str = Depends(fasty
     container = enig_frames.containers.Container
     # host_services = enig.create_instance(enig_frames.services.hosts.Hosts)
     app_data = dict(
-        full_url_app=container.Services.host.root_url,
+        full_url_app=container.Services.host.base_ui_url,
         full_url_root=container.Services.host.root_url,
-        api_url=container.Services.host.root_api_url
+        api_url=container.Services.host.base_api_url,
+        host_dir = container.config.config.host_dir
     )
     return container.Services.web.render(
         file="index.html",

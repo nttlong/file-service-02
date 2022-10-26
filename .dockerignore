@@ -31,6 +31,7 @@
 /bk_services/ocr_pdf/
 /composer/images/
 /bk_services/logs/
+/fix_data_es/files/
 /cache/
 /tmp_media/
 /fscrawler/

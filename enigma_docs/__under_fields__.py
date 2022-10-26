@@ -29,7 +29,7 @@ def __compiler__(op, a, b):
                    fa: {
                        op: fb
                    }
-               }, None
+               }, False
     if not isinstance(fa, dict) and not isinstance(fb, dict):
         if op == "$ne":
             if fa is None:
@@ -68,19 +68,19 @@ def __compiler__(op, a, b):
             else:
                 return {
                     fa: fb
-                }
+                },False
         else:
             return {
                        fa: {
                            op: fb
                        }
-                   }, None
+                   }, False
     if isinstance(fa, dict) and not isinstance(fb, dict):
         return {
                    fb: {
                        op: fa
                    }
-               }, None
+               }, False
 
 
 def __compiler_math__(op, a, b):

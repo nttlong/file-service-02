@@ -51,6 +51,9 @@ binding_port: 8011
 jinja_templates_dir: ./templates
 static_dir: ./app_manager/static
 api_host_dir: api
+host_dir: lv-file
+base_ui_url: http://172.16.13.72:8011/lv-file
+base_api_url: http://172.16.13.72:8011/lv-file/api
 _host_name: 192.168.1.11
 # Below setting is the real hostname when end user who'd like to reach UI of website
 # just serve for UI. For API the setting is not crucial
@@ -71,6 +74,23 @@ elastic_search:
   prefix_index: lv-codx
 tmp_media_processing_folder: ./tmp_media
 ext_office_file: [
+                   xds,ini,config,md,
+                   abap,ash,ampl,mod,g4,apib,apl,ascx,asax,axd,dats,hats,sats,as,
+                   ada,ads,agda,als,conf,apacheconf,vhost,cls,applescript,scpt,
+                   arc,ino,asciidoc,adoc,asc,aj,asm,inc,nasm,aug,ahk,ahk1,au3,
+                   awk,auk,gawk,mawk,nawk,cmd,bat,yml,yaml,bison,bb,decls,bmx,
+                   bsv,boo,b,bf,brs,bro,cats,idc,w,cake,cshtml,c++,cc,cxx,hh,hpp,
+                   hxx,inc,inl,ipp,tcc,tpp,c-objdump,json,chs,clp,cmake,cmake.in,
+                   cod,cbl,cobol,cpy,mss,chpl,ceylon,chpl,ch,ck,circu,clw,icl,dcl,
+                   clikc,clj,boot,cl2,cljs,cljs,cljs.hl,cljscm,hic,
+                   coffee,_coffee,cjsx,cson,iced,crm,cfml,
+                   cfc,lisp,asd,cl,l,lsp,ny,podsl,sexp,cp,cps,coq,v,
+                   cppobjdump,c++-objdump,c++objdump,cpp-objdump,cxx-objdump,
+                   creole,cr,feature,cu,cuh,cy,pyx,pxd,pxi,dart,dockerfile,
+                   dylan,dyl,intr,lid,
+                   sql,log,email,eml,emlx,msg,oft,ost,pst,vcf,bat,py,pl,
+                   sh,asp,aspx,cs,csx,css,htm,js,jsp,php,rss,xhtml,key,opd,pps,c,class,
+                   cpp,h,java,swift,vb,vbx,ods,wpd,rtf,tex,
                    docx,doc,xls,xlsx,txt,pdf,ppx,pptx,json,psd,html,xml,js,otg,svg,vsd,
                     ODT,CSV,DB,DOC,DOCX,DOTX,FODP,FODS,FODT,MML,ODB,ODF,ODG,ODM,ODP,ODS,OTG,OTP,OTS,OTT,OXT,
                     PPTX,PSW,SDA,SDC,SDD,SDP,SDW,SLK,SMF,STC ,

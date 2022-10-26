@@ -16,6 +16,15 @@ class FileContentExtractorService(enig.Singleton):
             importlib.reload(sys.modules["tika"])
 
     def get_text(self, file_path) -> (str, dict):
+        """
+        With Giga bytes file pdf, or other office file, need split to small doc with 100 pages oer doc
+        :param file_path:
+        :return:
+        """
+
         from tika import parser
-        ret = parser.from_file(file_path)
+        headers = {
+
+        }
+        ret = parser.from_file(file_path,  requestOptions={'headers': headers, 'timeout': 30000})
         return ret['content'], ret['metadata']

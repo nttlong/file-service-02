@@ -20,8 +20,11 @@ from fastapi import FastAPI
 from starlette.requests import Request
 from starlette.responses import Response
 __api_host_dir__ =enig_frames.containers.Container.config.config.api_host_dir
+__host_dir__ =enig_frames.containers.Container.config.config.host_dir
 if __api_host_dir__[0] != "/":
     __api_host_dir__ = '/' + __api_host_dir__
+if __host_dir__ and __host_dir__!="":
+    __api_host_dir__ = '/'+__host_dir__+__api_host_dir__
 # path_to_yam_db =os.path.join(str(pathlib.Path(__file__).parent.parent.absolute()),"database.yaml")
 
 # ReCompact.db_async.load_config(path_to_yam_db)
@@ -49,16 +52,29 @@ def install_fastapi_app(module_name:str):
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    app.middleware(container.config.config.host_schema)(catch_exceptions_middleware)
-    app.mount("/static", StaticFiles(directory=container.Services.applications.configuration.static_dir), name="static")
+    app.middleware("http")(catch_exceptions_middleware)
+    rel_static_url="/static"
+    if enig_frames.containers.Container.config.config.host_dir is not None and enig_frames.containers.Container.config.config.host_dir!="":
+        rel_static_url =  "/"+enig_frames.containers.Container.config.config.host_dir+"/static"
+    app.mount(rel_static_url, StaticFiles(directory=container.Services.applications.configuration.static_dir), name="static")
 
 
     return app
 
 def page_get(url_path:str,response_class=HTMLResponse):
     global app
-    fn = app.get(url_path, response_class=response_class)
-    return fn
+    fn=None
+    map_url=None
+    if enig_frames.containers.Container.config.config.host_dir and enig_frames.containers.Container.config.config.host_dir!="":
+        if url_path=="/":
+            map_url=f"/{enig_frames.containers.Container.config.config.host_dir}"
+
+        else:
+            map_url=f"/{enig_frames.containers.Container.config.config.host_dir}{url_path}"
+    else:
+        map_url=url_path
+    print(map_url)
+    return app.get(map_url, response_class=response_class)
 
 
 def api_get(url_path:str,response_class=None):

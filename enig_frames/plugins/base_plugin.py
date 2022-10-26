@@ -1,3 +1,5 @@
+import datetime
+
 import enig
 import api_models.documents
 import enig_frames.services.file_system
@@ -50,6 +52,13 @@ class BasePlugin(enig.Singleton):
 
                     )
                     os.remove(dynamic_thumb_file)
+        self.file_services.update_file_field(
+            app_name=app_name,
+            upload_id=upload_id,
+            field=api_models.documents.Files.LastModifiedOn,
+            value=datetime.datetime.utcnow()
+
+        )
 
     def get_file_extenstion(self, file_path) -> str:
         ret = os.path.splitext(file_path)[1]
