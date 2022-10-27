@@ -16,18 +16,21 @@ class SearchEngineRepo(enig.Singleton):
         self.configuration: enig_frames.config.Configuration = configuration
         self.es_server = self.configuration.config.elastic_search.server
         self.db_log: enig_frames.db_logs.DbLogs = db_log
+        self.doc_type = "_doc"
         if isinstance(self.es_server, str):
             self.es_server = self.es_server.split(',')
         self.es_client = Elasticsearch(
             self.es_server,
             http_auth=["elastic", "changeme"],
+            headers={"Content-type": "application/json"}
+
         )
 
     def create_doc(self, id: str, index_name, body: dict):
-        check = self.es_client.exists(index=index_name, id=id)
-        if check.body == True:
-            self.es_client.delete(index=index_name, id=id)
-        ret = self.es_client.create(id=id, index=index_name, body=body)
+        check = self.es_client.exists(index=index_name, id=id,doc_type=self.doc_type)
+        if check:
+            self.es_client.delete(index=index_name, id=id,doc_type=self.doc_type)
+        ret = self.es_client.create(id=id, index=index_name, body=body,doc_type=self.doc_type)
         return ret
 
     def do_full_text_search(self, index_name, page_size, page_index, content):
@@ -102,12 +105,8 @@ class SearchEngineRepo(enig.Singleton):
 
             resp = self.es_client.search(
                 index=index_name,
-
-                query=bool_body,
-                highlight=highlight,
-                from_=from_,
-                size=page_size
-            )
+                body={"query": bool_body, "highlight": highlight,
+                      "from": from_,"size": page_size})
 
             total_items = resp['hits']['total']['value']
             max_score = resp["hits"].get('max_score')
@@ -137,10 +136,10 @@ class SearchEngineRepo(enig.Singleton):
             self.db_log.debug(index_name, e)
 
     def remove_doc(self, index_name, id):
-        check = self.es_client.exists(index=index_name, id=id)
-        if check.body == True:
-            ret = self.es_client.delete(index=index_name, id=id)
-            return check.body
+        check = self.es_client.exists(index=index_name, id=id,doc_type=self.doc_type)
+        if check:
+            ret = self.es_client.delete(index=index_name, id=id,doc_type=self.doc_type)
+            return check
         return False
 
     def mark_delete(self, index_name: str, id: str, mark_delete_value: bool):
@@ -148,6 +147,7 @@ class SearchEngineRepo(enig.Singleton):
         ret = self.es_client.update(
             index=index_name,
             id=id,
+            doc_type=self.doc_type,
             body=dict(
                 doc=dict(
                     mark_delete=mark_delete_value
