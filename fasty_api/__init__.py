@@ -20,6 +20,7 @@ from . import api_apps_update
 from . import api_accounts_register
 from . import api_accounts_login
 from . import api_accounts_current_user
+from . import api_logs_view
 from fastapi_jwt_auth import AuthJWT
 from fastapi import FastAPI, HTTPException, Depends, Request
 import fasty

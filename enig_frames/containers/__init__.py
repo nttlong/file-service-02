@@ -13,6 +13,7 @@ import enig_fast_api.application
 import enig_frames.loggers
 import enig_frames.services.file_system_utils
 import enig_frames.services.search_engine
+import enig_frames.db_logs
 @enig.container()
 class Container(enig.Singleton):
     class Services(enig.Singleton):
@@ -37,3 +38,4 @@ class Container(enig.Singleton):
     web_application = enig.create_instance(enig_fast_api.application.WebApp)
     loggers = enig.create_instance(enig_frames.loggers.Loggers)
     file_system_utils_service = enig.create_instance(enig_frames.services.file_system_utils.FileSystemUtils)
+    db_log = enig.create_instance(enig_frames.db_logs.DbLogs)

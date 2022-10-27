@@ -154,6 +154,7 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
                         upload_id =upload_item[api_models.documents.Files._id]
                     )
                 except Exception as e:
+                    container.db_log.debug(app_name,e)
                     loggger.exception(e)
             threading.Thread(target=start_plugin,args=(_media_plugin,)).start()
 
