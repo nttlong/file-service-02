@@ -1,10 +1,11 @@
-from .Model_Files import DocUploadRegister as __DocUploadRegister__, FsFile as __FsFile__
+from .Model_Files import DocUploadRegister as __DocUploadRegister__, FsFile as __FsFile__, FsChunks as __FsChunks__
 from .ModelApps import sys_applications as __sys_applications__
 from .Model_Users import User
 from .Model_Container import ZipContainer as __ZipContainer__
 from .Model_SSO import SSO as __SSO__
 Fs_File = __FsFile__()
 Files = __DocUploadRegister__()
+FsChunks = __FsChunks__()
 """
 Mongodb Document của phần Upload File
 """

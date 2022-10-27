@@ -278,8 +278,19 @@ class DocUploadRegister:
     AvailableThumbs = ReCompact.dbm.field(data_type=type([]))
 @ReCompact.dbm.table(
     "fs.files",
-    keys=["rel_file_path"]
+    keys=["rel_file_path"],
+    index=["filename"]
 )
 class FsFile:
     _id = ReCompact.dbm.field(data_type=bson.ObjectId)
     rel_file_path=ReCompact.dbm.field(data_type=str)
+    filename=ReCompact.dbm.field(data_type=str)
+@ReCompact.dbm.table(
+    "fs.chunks",
+    index=["files_id","n","files_id,n"]
+)
+class FsChunks:
+    _id = ReCompact.dbm.field(data_type=bson.ObjectId)
+    files_id= ReCompact.dbm.field(data_type=bson.ObjectId)
+    n= ReCompact.dbm.field(data_type=int)
+    data =ReCompact.dbm.field(data_type=bytes)

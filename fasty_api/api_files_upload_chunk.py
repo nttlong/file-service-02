@@ -4,6 +4,8 @@ import pathlib
 import gc
 import uuid
 
+import bson
+
 import api_models.documents
 import enig
 import enig_frames.containers
@@ -103,7 +105,10 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
     path_to_broker_share = os.path.join(
         container.Services.host.get_temp_upload_dir(app_name),
         f"{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}")
-
+    # path_to_broker_share=os.path.join(
+    #     r"/home/vmadmin/python/v6/file-service-02/cache/upload",
+    #     f"{UploadId}[{}].{upload_item[docs.Files.FileExt]}"
+    # )
     if num_of_chunks_complete == 0:
         fs = ReCompact.db_context.mongodb_file_create(
             db_context.db.delegate,
@@ -113,6 +118,26 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
         )
         ReCompact.db_context.mongodb_file_add_chunks(db_context.db.delegate, fs._id, Index, FilePart)
 
+        if num_of_chunks_complete>Index:
+            fs_object = db_context.find_one(
+                api_models.documents.Fs_File,
+                api_models.documents.Fs_File.filename == server_file_name
+            )
+            if fs_object is not None:
+                for i in range(Index,num_of_chunks_complete):
+                    fs_chunk = db_context.find_one(
+                        api_models.documents.FsChunks,
+                        filter=dict(
+                            files_id=bson.ObjectId(fs_object["_id"]),
+                            n=i
+                        )
+                    )
+                    if not os.path.isfile(path_to_broker_share):
+                        with open(path_to_broker_share, "wb") as file:
+                            file.write(fs_chunk["data"])
+                    else:
+                        with open(path_to_broker_share, "ab") as file:
+                            file.write(fs_chunk["data"])
         if not os.path.isfile(path_to_broker_share):
             with open(path_to_broker_share, "wb") as file:
                 file.write(FilePart)
@@ -123,6 +148,27 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
         main_file_id = fs._id
     else:
         ReCompact.db_context.mongodb_file_add_chunks(db_context.db.delegate, main_file_id, Index, FilePart)
+        if num_of_chunks_complete > Index:
+            fs_object = db_context.find_one(
+                api_models.documents.Fs_File,
+                api_models.documents.Fs_File.filename == server_file_name
+            )
+            if fs_object is not None:
+                for i in range(Index, num_of_chunks_complete):
+                    fs_chunk = db_context.find_one(
+                        api_models.documents.FsChunks,
+                        filter=dict(
+                            files_id=bson.ObjectId(fs_object["_id"]),
+                            n=i
+                        )
+                    )
+                    if not os.path.isfile(path_to_broker_share):
+                        with open(path_to_broker_share, "wb") as file:
+                            file.write(fs_chunk["data"])
+                    else:
+                        with open(path_to_broker_share, "ab") as file:
+                            file.write(fs_chunk["data"])
+
         if not os.path.isfile(path_to_broker_share):
             with open(path_to_broker_share, "wb") as file:
                 file.write(FilePart)
