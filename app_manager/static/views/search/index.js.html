@@ -53,6 +53,13 @@
     <div class="header layout-rows">
         <div class="layout-rows header-panel">
             <div>
+                <span style="margin:4px">highlight</span>
+            </div>
+            <div style="padding:4px">
+
+                <input type="checkbox" ng-model="highlight">
+            </div>
+            <div>
                 <select style="min-width:220px" ng-model="currentAppName" class="form-control form-control-sm">
                     <option ng-repeat="p in listOfApp" value="{{p.Name}}">
                         {{p.Name}}
@@ -67,6 +74,7 @@
                     </div>
                 </div>
             </div>
+
             
 
 

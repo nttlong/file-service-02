@@ -14,6 +14,7 @@ import enig
 import enig_frames.repositories.files
 import enig_frames.services.file_system
 import enig_frames.services.hosts
+import enig_frames.services.search_engine
 import enig_frames.loggers
 import enig_frames.config
 import enig_frames.db_logs
@@ -39,6 +40,9 @@ class PlugInService(enig.Singleton):
                  ),
                  db_logs: enig_frames.db_logs.DbLogs = enig.depen(
                      enig_frames.db_logs.DbLogs
+                 ),
+                 search_service: enig_frames.services.search_engine.SearchEngineService = enig.depen(
+                     enig_frames.services.search_engine.SearchEngineService
                  )):
         self.repo: enig_frames.repositories.files.Files = repo
         self.file_system = file_system
@@ -46,6 +50,7 @@ class PlugInService(enig.Singleton):
         self.configuration = configuration
         self.logger = logger
         self.db_logs = db_logs
+        self.search_service: enig_frames.services.search_engine.SearchEngineService = search_service
 
     def start(self, app_name: str, upload_id: str, file_id: str):
         if isinstance(file_id, str):
@@ -70,7 +75,7 @@ class PlugInService(enig.Singleton):
                     [
 
                         {
-                            "$match":{
+                            "$match": {
                                 "$and": [
                                     {api_models.documents.FsChunks.files_id.__name__: _file_id},
                                     {"n": {"$gte": chunk_index}},
@@ -79,7 +84,7 @@ class PlugInService(enig.Singleton):
                         }
                     ]
                 )
-                ls=list(agg)
+                ls = list(agg)
                 for fs_chunk in ls:
                     if not os.path.isfile(_file_path):
                         with open(_file_path, "wb") as f:
@@ -103,7 +108,7 @@ class PlugInService(enig.Singleton):
             if chunk_index >= _total_chunk - 1:
                 self.start_plug_ins(_app_name, _upload_id, _file_path)
 
-        threading.Thread(target=runner, args=(app_name, upload_id,file_path, file_id, _db, _num_of_chunks,)).start()
+        threading.Thread(target=runner, args=(app_name, upload_id, file_path, file_id, _db, _num_of_chunks,)).start()
 
     def start_plug_ins(self, app_name: str, upload_id, file_path):
         def run_plugin_sync(_app_name: str, _upload_id, _file_path):
@@ -123,6 +128,17 @@ class PlugInService(enig.Singleton):
                             app_name=_app_name,
                             upload_id=_upload_id
                         )
+                        upload_item = self.repo.get_item_by_upload_id(
+                            app_name=app_name,
+                            upload_id=upload_id
+                        )
+                        self.search_service.update_upload_register(
+                            app_name=app_name,
+                            id=upload_id,
+                            upload_register=upload_item
+                        )
+
+
                     except Exception as e:
                         self.db_log.debug(app_name, e)
                         logger.exception(e)

@@ -51,9 +51,9 @@ binding_port: 8011
 jinja_templates_dir: ./templates
 static_dir: ./app_manager/static
 api_host_dir: api
-host_dir: lv-file
-base_ui_url: http://172.16.13.72:8011/lv-file
-base_api_url: http://172.16.13.72:8011/lv-file/api
+host_dir:
+base_ui_url: # http://172.16.13.72:8011/lv-file
+base_api_url: # http://172.16.13.72:8011/lv-file/api
 _host_name: 192.168.1.11
 # Below setting is the real hostname when end user who'd like to reach UI of website
 # just serve for UI. For API the setting is not crucial
@@ -72,7 +72,8 @@ elastic_search:
     - http://192.168.18.36:9200
   index: lv-files-server-v2
   prefix_index: lv-codx
-  max_analyzed_offset: 10000
+  index_max_analyzed_offset: 60000000
+  max_analyzed_offset: 1000
 tmp_media_processing_folder: ./tmp_media
 ext_office_file: [
                    xds,ini,config,md,

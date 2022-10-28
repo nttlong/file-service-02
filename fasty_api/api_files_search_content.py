@@ -11,119 +11,13 @@ import ReCompact.es_search as search_engine
 from typing import Optional
 
 
-def search_content_of_file(app_name: str, content: str, page_size: int, page_index: int):
-    """
-    Thực hiện tìm kiếm ter6n nội dung của file
-    :param app_name: app
-    :param content: nội dung
-    :return:
-    """
-    container = enig_frames.containers.Container
-    str_content = content
-    highlight = {
-        "pre_tags": ["<em>"],
-        "post_tags": ["</em>"],
-        "fields": {
-            "content": {}
-        }
-    }
-    match_phraseBody = {
-        "match_phrase": {
-            "content": {
-                "query": str_content,
-                "slop": 3,
-                "analyzer": "standard",
-                "zero_terms_query": "none",
-                "boost": 4.5
-            }
-        }
-    }
-    f_mark_dele = {"match": {"MarkDelete": False}}
-    f_not_exist_mark_dele = {"bool": {"must_not": {"exists": {'field': 'MarkDelete'}}}}
-    filter_by_mark_delete = {
-        "bool": {
-            "should": [f_mark_dele, f_not_exist_mark_dele]}
-    }
 
-    search_body_2 = {
-        "match": {
-            "content": {
-                "query": str_content,
-                "boost": 0.5
-
-            }
-        }
-    }
-    search_body = {
-        "multi_match": {
-            "query": str_content,
-            "fields": ["content"],
-            "type": "phrase"
-        }
-    }
-    should_body = {
-        "bool": {
-            "should": [
-                match_phraseBody,
-                search_body_2,
-
-                # search_body
-
-            ]
-        }
-    }
-    prefix_app = {
-        "prefix": {
-            "path.virtual": f'/{app_name}/'
-        }
-    }
-    bool_body = {
-        "bool": {
-            "must": [
-                prefix_app,
-                should_body,
-                filter_by_mark_delete
-
-            ]
-
-        }
-    }
-    from_ = page_size * page_index
-    resp = container.Services.search_engine.search(
-        index=container.config.config.elastic_search.index,
-        search_definition=dict(
-            query=bool_body,
-            highlight=highlight,
-            from_=from_,
-            size=page_size
-        )
-    )
-
-    total_items = resp['hits']['total']['value']
-    max_score = resp["hits"].get('max_score')
-    ret_list = []
-    for hit in resp['hits']['hits']:
-        highlight_contents = hit["highlight"].get('content', [])
-        res_content = hit["_source"].get('content')
-        score = hit.get("score")
-        file_name = hit["_source"]["file"]["filename"]
-        ret_list.append(dict(
-            highlight=highlight_contents,
-            content=res_content,
-            score=score,
-            server_file_id=file_name  # Tên file
-        ))
-    return dict(
-        total_items=total_items,
-        max_score=max_score,
-        items=ret_list,
-        text_search=content
-    )
 
 
 @fasty.api_post("/{app_name}/search")
 async def file_search(request: Request, app_name: str, content: str = Body(embed=True),
                       page_size: Optional[int] = Body(embed=True), page_index: Optional[int] = Body(embed=True),
+                      highlight: Optional[bool] =Body(None,embed=True),
                       token: str = Depends(fasty.JWT.oauth2_scheme)):
     """
     Tim kiem noi dung
@@ -135,6 +29,8 @@ async def file_search(request: Request, app_name: str, content: str = Body(embed
     :param token:
     :return:
     """
+    if highlight is None:
+        highlight=False
     container = enig_frames.containers.Container
     db_name = container.db_context.get_db_name(app_name)
     if db_name is None:
@@ -144,7 +40,8 @@ async def file_search(request: Request, app_name: str, content: str = Body(embed
         app_name=app_name,
         content =content,
         page_size=page_size,
-        page_index=page_index
+        page_index=page_index,
+        highlight=highlight
     )
 
     ret_items = []

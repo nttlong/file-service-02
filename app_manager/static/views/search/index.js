@@ -8,6 +8,7 @@ var searchView = await View(import.meta, class SearchView extends BaseScope {
     listOfApp = [1]
     currentApp = undefined
     listOfFiles = []
+    highlight=false
     currentAppName = undefined
     async init() {
 
@@ -20,13 +21,23 @@ var searchView = await View(import.meta, class SearchView extends BaseScope {
         this.$apply();
     }
     async doFullTextSearch() {
-       
-        this.data = await api.post(`${this.currentAppName}/search`, {
-            content: this.searchContent,
-            page_size:1000,
-            page_index:0
-        });
-        this.$applyAsync();
+       if(this.highlight){
+            this.data = await api.post(`${this.currentAppName}/search`, {
+                content: this.searchContent,
+                page_size:1000,
+                page_index:0,
+                highlight:this.highlight
+            });
+            this.$applyAsync();
+        }
+        else {
+            this.data = await api.post(`${this.currentAppName}/search`, {
+                content: this.searchContent,
+                page_size:1000,
+                page_index:0
+            });
+            this.$applyAsync();
+        }
     }
     
     
