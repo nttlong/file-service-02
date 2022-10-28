@@ -1,3 +1,4 @@
+import datetime
 import threading
 import threading
 import pymongo
@@ -10,6 +11,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import io
 from gridfs import GridFSBucket
+
 __lock__ = threading.Lock()
 __cnn__ = None
 __cnns__ = {}
@@ -114,7 +116,7 @@ def get_mongodb_file_by_file_name(db: pymongo.database.Database, file_name) -> g
     """
     Lấy file grid trong mongodb
     """
-    fs= GridFSBucket(db,chunk_size_bytes=1024*1024*10)
+    fs = GridFSBucket(db, chunk_size_bytes=1024 * 1024 * 10)
     ret = fs.open_download_stream_by_name(
         file_name
     )
@@ -129,7 +131,7 @@ def get_mongodb_file_by_file_id(db: pymongo.database.Database,
 
     """
     assert isinstance(file_id, bson.objectid.ObjectId), 'id must be pymongo.bson.objectid.ObjectId'
-    fs = GridFSBucket(db,chunk_size_bytes= 4194304 )
+    fs = GridFSBucket(db, chunk_size_bytes=4194304)
     ret = fs.open_download_stream(
         file_id
     )
@@ -169,8 +171,8 @@ def mongodb_file_add_chunks(
         chunk_index: int,
         data: bytes
 ):
-    if isinstance(fs_id,str):
-        fs_id=bson.ObjectId(fs_id)
+    if isinstance(fs_id, str):
+        fs_id = bson.ObjectId(fs_id)
     assert isinstance(fs_id, bson.ObjectId)
     fs_chunks = db.get_collection("fs.chunks")
     fs_chunks.insert_one({
@@ -279,3 +281,29 @@ def create_mongodb_fs_from_io_array(
     finally:
         fs.close()
     return fs
+
+
+def download_mongodb_fs_to_file(
+        db: pymongo.database.Database,
+        file_id,
+        full_path_to_file
+) -> str:
+    """
+    Tạo file trong mongodb theo noi dung nam trong full_path_to_file
+    """
+    if isinstance(file_id, str):
+        file_id = bson.ObjectId(file_id)
+    fs = gridfs.GridFS(db)
+    file = fs.get(file_id)
+    bff = file.read(file.chunk_size)
+    read_size =1024*1024*50
+    t=datetime.datetime.utcnow()
+    with open(full_path_to_file, "wb") as f:
+        f.write(bff)
+    while bff.__len__() > 0:
+        del bff
+        bff = file.read(file.chunk_size)
+        with open(full_path_to_file, "ab") as f:
+            f.write(bff)
+    n=(datetime.datetime.utcnow()-t).total_seconds()
+    return n

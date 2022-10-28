@@ -276,6 +276,7 @@ class DocUploadRegister:
     Thumbnail constraint generator: After material successfully uploaded. The system will generate a default thumbnail in size of 700pxx700px. However if thy desire more thumbnails with various  sizes such as: 200x200,450x450,... Thy just set 200,450,.. Example: for 200x200, 350x350 and 1920x1920 just set 200,350,1920
     """
     AvailableThumbs = ReCompact.dbm.field(data_type=type([]))
+    IsProcessed = ReCompact.dbm.field(data_type=bool)
 @ReCompact.dbm.table(
     "fs.files",
     keys=["rel_file_path"],
@@ -294,3 +295,12 @@ class FsChunks:
     files_id= ReCompact.dbm.field(data_type=bson.ObjectId)
     n= ReCompact.dbm.field(data_type=int)
     data =ReCompact.dbm.field(data_type=bytes)
+@ReCompact.dbm.table(
+    "MediaTracking",
+    index=["UploadId,CurrentChunkIndex","UploadId","CurrentChunkIndex"]
+)
+class MediaTracking:
+    _id = ReCompact.dbm.field(data_type=bson.ObjectId)
+    UploadId =ReCompact.dbm.field(data_type=str)
+    CurrentChunkIndex=ReCompact.dbm.field(data_type=int)
+    NumOfChunks =ReCompact.dbm.field(data_type=int)

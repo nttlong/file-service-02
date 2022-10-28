@@ -5,6 +5,7 @@ import gc
 import uuid
 
 import bson
+import pymongo.database
 
 import api_models.documents
 import enig
@@ -55,6 +56,9 @@ class UploadFilesChunkInfoResult(BaseModel):
     Error: Union[ret_error, None] = Field(description="Lỗi")
 
 
+
+
+
 @fasty.api_post("/{app_name}/files/upload", response_model=UploadFilesChunkInfoResult)
 async def files_upload(app_name: str, FilePart: bytes = File(...),
                        UploadId: Union[str, None] = Form(...),
@@ -102,13 +106,10 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
     main_file_id = upload_item.get(docs.Files.MainFileId.__name__, None)
     chunk_size_in_bytes = upload_item.get(docs.Files.ChunkSizeInBytes.__name__, 0)
     server_file_name = upload_item.get(docs.Files.ServerFileName.__name__)
-    path_to_broker_share = os.path.join(
-        container.Services.host.get_temp_upload_dir(app_name),
-        f"{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}")
-    # path_to_broker_share=os.path.join(
-    #     r"/home/vmadmin/python/v6/file-service-02/cache/upload",
-    #     f"{UploadId}[{}].{upload_item[docs.Files.FileExt]}"
-    # )
+    # path_to_broker_share = os.path.join(
+    #     container.Services.host.get_temp_upload_dir(app_name),
+    #     f"{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}")
+
     if num_of_chunks_complete == 0:
         fs = ReCompact.db_context.mongodb_file_create(
             db_context.db.delegate,
@@ -117,64 +118,21 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
             file_size=file_size
         )
         ReCompact.db_context.mongodb_file_add_chunks(db_context.db.delegate, fs._id, Index, FilePart)
+        container.Services.plugin_services.start(
+            app_name=app_name,
+            upload_id = UploadId,
+            file_id = fs._id
 
-        if num_of_chunks_complete>Index:
-            fs_object = db_context.find_one(
-                api_models.documents.Fs_File,
-                api_models.documents.Fs_File.filename == server_file_name
-            )
-            if fs_object is not None:
-                for i in range(Index,num_of_chunks_complete):
-                    fs_chunk = db_context.find_one(
-                        api_models.documents.FsChunks,
-                        filter=dict(
-                            files_id=bson.ObjectId(fs_object["_id"]),
-                            n=i
-                        )
-                    )
-                    if not os.path.isfile(path_to_broker_share):
-                        with open(path_to_broker_share, "wb") as file:
-                            file.write(fs_chunk["data"])
-                    else:
-                        with open(path_to_broker_share, "ab") as file:
-                            file.write(fs_chunk["data"])
-        if not os.path.isfile(path_to_broker_share):
-            with open(path_to_broker_share, "wb") as file:
-                file.write(FilePart)
-        else:
-            with open(path_to_broker_share, "ab") as file:
-                file.write(FilePart)
+        )
+
+
 
         main_file_id = fs._id
     else:
         ReCompact.db_context.mongodb_file_add_chunks(db_context.db.delegate, main_file_id, Index, FilePart)
-        if num_of_chunks_complete > Index:
-            fs_object = db_context.find_one(
-                api_models.documents.Fs_File,
-                api_models.documents.Fs_File.filename == server_file_name
-            )
-            if fs_object is not None:
-                for i in range(Index, num_of_chunks_complete):
-                    fs_chunk = db_context.find_one(
-                        api_models.documents.FsChunks,
-                        filter=dict(
-                            files_id=bson.ObjectId(fs_object["_id"]),
-                            n=i
-                        )
-                    )
-                    if not os.path.isfile(path_to_broker_share):
-                        with open(path_to_broker_share, "wb") as file:
-                            file.write(fs_chunk["data"])
-                    else:
-                        with open(path_to_broker_share, "ab") as file:
-                            file.write(fs_chunk["data"])
-
-        if not os.path.isfile(path_to_broker_share):
-            with open(path_to_broker_share, "wb") as file:
-                file.write(FilePart)
-        else:
-            with open(path_to_broker_share, "ab") as file:
-                file.write(FilePart)
+        # save_to_file(
+        #     db_context, num_of_chunks_complete, Index, server_file_name, path_to_broker_share
+        # )
     size_uploaded += len(FilePart)
     ret.Data = UploadChunkResult()
     ret.Data.Percent = round((size_uploaded * 100) / file_size, 2)
@@ -185,50 +143,7 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
     status = 0
     if num_of_chunks_complete == nun_of_chunks:
         status = 1
-        for _media_plugin in container.config.config.media_plugins:
 
-            def start_plugin(media_plugin:str):
-                loggger = container.loggers.get_logger(media_plugin.replace(':','--'))
-                try:
-                    module_name = media_plugin.split(':')[0]
-                    class_name = media_plugin.split(':')[1]
-                    plugin_instance:enig_frames.plugins.base_plugin.BasePlugin = enig.create_instance_from_moudle(module_name, class_name)
-
-                    plugin_instance.process(
-                        file_path=path_to_broker_share,
-                        app_name =app_name,
-                        upload_id =upload_item[api_models.documents.Files._id]
-                    )
-                except Exception as e:
-                    container.db_log.debug(app_name,e)
-                    loggger.exception(e)
-            threading.Thread(target=start_plugin,args=(_media_plugin,)).start()
-
-
-        # jarior.emitor.config(
-        #     msg_folder="./tmp/msg",
-        #     file_folder="",
-        #     logger=jarior.loggers.get_logger("msg", "./logs/jarior"),
-        #     age_of_msg_in_minutes=24 * 60
-        #
-        # )
-        # jarior.emitor.commit(
-        #     msg_id=str(uuid.uuid4()),
-        #     msg_type="processing",
-        #     info=dict(
-        #         full_file_path=path_to_broker_share,
-        #         app_name=app_name,
-        #         upload_id=UploadId,
-        #         thumb_sizes=upload_item.get(docs.Files.AvailableThumbSize)
-        #
-        #     ),
-        #     files_path=[path_to_broker_share]
-        # )
-
-        # p_path=f"{db_name}.{UploadId}.{upload_item.get(docs.Files.FileExt.__name__)}"
-        # p_path = os.path.join(fasty.configuration.broker.share_directory, p_path)
-        # with open(p_path,"a") as f:
-        #     f.write(".")
     db_context.update_one(
         docs.Files,
         docs.Files._id == UploadId,
@@ -242,6 +157,8 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
     upload_item[docs.Files.NumOfChunksCompleted] = num_of_chunks_complete
     upload_item[docs.Files.Status] = status
     upload_item[docs.Files.MainFileId] = main_file_id
+
+
     gc.collect()
     del FilePart
     return ret

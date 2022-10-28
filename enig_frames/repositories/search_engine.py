@@ -41,9 +41,10 @@ class SearchEngineRepo(enig.Singleton):
                 "post_tags": ["</em>"],
                 "fields": {
                     "content": {}
-                },
-                "max_analyzed_offset": 1000000
+                }
             }
+            if self.configuration.config.es_max_analyzed_offset is not None:
+                highlight["max_analyzed_offset"]=int(self.configuration.config.elastic_search.max_analyzed_offset)
             match_phraseBody = {
                 "match_phrase": {
                     "content": {

@@ -14,6 +14,9 @@ import enig_frames.loggers
 import enig_frames.services.file_system_utils
 import enig_frames.services.search_engine
 import enig_frames.db_logs
+import enig_frames.services.plugins
+
+
 @enig.container()
 class Container(enig.Singleton):
     class Services(enig.Singleton):
@@ -30,8 +33,11 @@ class Container(enig.Singleton):
         security = enig.create_instance(enig_frames.services.sercurities.Sercurities)
         search_engine = enig.create_instance(enig_frames.services.search_engine.SearchEngineService)
         files = enig.create_instance(enig_frames.services.files.Files)
-        file_system:enig_frames.services.file_system.FileSystem = enig.create_instance(enig_frames.services.file_system.FileSystem)
-
+        file_system: enig_frames.services.file_system.FileSystem = enig.create_instance(
+            enig_frames.services.file_system.FileSystem)
+        plugin_services: enig_frames.services.plugins.PlugInService = enig.create_instance(
+            enig_frames.services.plugins.PlugInService
+        )
 
     config = enig.create_instance(enig_frames.config.Configuration)
     db_context = enig.create_instance(enig_frames.db_context.DbContext)

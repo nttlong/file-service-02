@@ -10,7 +10,7 @@
 # Example: some Mongod for developer needn't set authenticate
 # So you can pass db.usrername= db.password= db.authSource= db.authMechanism=
 # python hypercorn_start.py db.host=172.16.7.25 db.port=27018 db.username= db.password= db.authSource= db.authMechanism= admin_db_name=enigma-media
-
+version: rc.0.0.15
 db_25:
 #  host: localhost
 #  port: 27017
@@ -72,6 +72,7 @@ elastic_search:
     - http://192.168.18.36:9200
   index: lv-files-server-v2
   prefix_index: lv-codx
+  max_analyzed_offset: 10000
 tmp_media_processing_folder: ./tmp_media
 ext_office_file: [
                    xds,ini,config,md,

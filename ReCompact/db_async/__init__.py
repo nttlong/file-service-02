@@ -524,8 +524,25 @@ def find(db, docs,
          filter=None,
          skip=0,
          limit=100):
-    ret = sync(find_async(db, docs, filter, skip, limit))
-    return ret
+    _db=db
+    if isinstance(db,motor.motor_asyncio.AsyncIOMotorDatabase):
+        _db=db.delegate
+    async_db = __set_connection__(db)
+
+    coll = __get_collection_sync__(
+        _db,
+        docs.__dict__["__collection_name__"],
+        docs.__dict__["__collection_keys__"],
+        docs.__dict__["__collection_index__"]
+    )
+
+    _filter = filter
+    if isinstance(filter, ReCompact.dbm.DbObjects.Docs.Fields):
+        _filter = filter.to_mongodb()
+    ret_cursor = coll.delegate.find(_filter)
+    # ret = await ret_cursor.skip(skip).to_list(limit)
+    # lst = list(__fix_bson_object_id_in_list__(ret))
+    return ret_cursor
 
 
 async def delete_many_async(db, docs, filter):
@@ -936,7 +953,7 @@ class DbContext:
         return ret
 
     def find(self, docs, filter, skip=0, limit=100):
-        return sync(self.find_async(docs, filter, skip, limit))
+        return find(self.db,docs,filter)
 
     async def insert_one_async(self, docs, *args, **kwargs):
         ret = await insert_one_async(self.db, docs, *args, **kwargs)
