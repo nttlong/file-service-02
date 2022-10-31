@@ -120,6 +120,7 @@ class Field(__BaseField__):
         self.__value__ = None
         self.__has_set_value__ = False
         self.__alias__ = None
+        self.__sort__ = 1
 
     def __lshift__(self, other):
         self.__has_set_value__ = True
@@ -537,6 +538,20 @@ class Field(__BaseField__):
         else:
             raise Exception(f"Thous can not alias mongodb expression with {type(other)}")
         return self
+    def asc(self):
+        init_data = self.__field_name__
+        if self.__field_name__ is None:
+            init_data = self.__data__
+        ret = Field(init_data)
+        ret.__sort__= 1
+        return ret
+    def desc(self):
+        init_data = self.__field_name__
+        if self.__field_name__ is None:
+            init_data = self.__data__
+        ret = Field(init_data)
+        ret.__sort__= -1
+        return ret
 import pymongo.mongo_client
 
 
@@ -863,6 +878,66 @@ class AggregateDocument:
             }
         ]
 
+        return self
+    def match(self,filter):
+        if isinstance(filter,dict):
+            self.pipeline+=[
+                {
+                    "$match":filter
+                }
+            ]
+        elif isinstance(filter,Field):
+            self.pipeline += [
+                {
+                    "$match": filter.to_mongo_db_expr()
+                }
+            ]
+        return self
+    def sort(self,*args,**kwargs):
+        stage = {
+
+        }
+        if isinstance(args, Field):
+            if args.__alias__ is not None:
+                stage[args.__alias__] = args.to_mongo_db_expr()
+            elif args.__field_name__ is not None:
+                stage[args.__field_name__] = args.__sort__
+            else:
+                raise Exception(f"Thous can not sort stage with {args}")
+        for x in args:
+            if isinstance(x, Field):
+                if x.__alias__ is not None:
+                    raise Exception(f"Thous can not sort stage with {x}")
+                elif x.__field_name__ is not None:
+                    stage[x.__field_name__] = x.__sort__
+                else:
+                    raise Exception(f"Thous can not sort stage with {x}")
+
+            else:
+                raise Exception(f"Thous can not use sort stage with {x}")
+
+        stage = {**stage, **kwargs}
+
+        self.pipeline += [
+            {
+                "$sort": stage
+            }
+        ]
+
+        return self
+    def skip(self,len:int):
+        self.pipeline+=[
+            {
+                "$skip":len
+            }
+        ]
+        return self
+    def limit(self,len:int):
+        self.pipeline+=[
+            {
+                "$limit":len
+            }
+        ]
         return self
     def __repr__(self):
         ret_pipe=""

@@ -17,7 +17,13 @@ test_docs = cy_docs.get_doc(
 
 agg = test_docs[db_name].aggregate().project(
     cy_docs.fields.username,
-    (cy_docs.Funcs.concat (cy_docs.fields.username,'/',cy_docs.fields.password)>>cy_docs.fields.FullName)
+    (cy_docs.Funcs.concat (cy_docs.fields.username,'/',cy_docs.fields.password)>>cy_docs.fields.FullName),
+    cy_docs.fields.create_on
+).match(
+    (cy_docs.fields.FullName== 'user991/password991') |
+    (cy_docs.fields.username=="user100")
+).sort(
+    cy_docs.fields.create_on.desc()
 )
 for x in agg:
     print(x)
