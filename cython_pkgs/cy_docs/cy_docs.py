@@ -20,6 +20,9 @@ Special:
     find_items = my_doc['my-db'].find(cy_docs.fields.code!='001' & cy_docs.fields.age < 32) can be changed
     find_items = my_doc['my-db']>>(cy_docs.fields.code!='001' & cy_docs.fields.age < 32) can be changed
 """
+import threading
+
+
 def get_version() -> str:
     return "0.0.0"
 
@@ -116,10 +119,24 @@ class Field(__BaseField__):
         __BaseField__.__init__(self, init_value, oprator)
         self.__value__ = None
         self.__has_set_value__ = False
+        self.__alias__ = None
 
     def __lshift__(self, other):
         self.__has_set_value__ = True
-        self.__value__ = other
+        data = {}
+        if isinstance(other,tuple):
+            for x in other:
+                if isinstance(x,Field):
+                    if not x.__has_set_value__:
+                        raise Exception(f"Thous must set {x.__field_name__}. Example:{x.__field_name__}<<my_value")
+                    data[x.__field_name__]=x.__value__
+                elif isinstance(x,dict):
+                    data = {**data,**x}
+                else:
+                    raise Exception("Invalid expression")
+            self.__value__ = data
+        else:
+            self.__value__ = other
         return self
 
     def __getattr__(self, item):
@@ -407,8 +424,119 @@ class Field(__BaseField__):
                     other
                 ]
             }, "$add")
+    def __sub__(self, other):
+        op="$sub"
+        if isinstance(other, Field):
+            return Field({
+                op: [
+                    self.to_mongo_db_expr(),
+                    other.to_mongo_db_expr()
+                ]
+            }, op)
+        else:
+            return Field({
+                op: [
+                    self.to_mongo_db_expr(),
+                    other
+                ]
+            }, op)
+    def __mul__(self, other):
+        op = "$multiply"
+        if isinstance(other, Field):
+            return Field({
+                op: [
+                    self.to_mongo_db_expr(),
+                    other.to_mongo_db_expr()
+                ]
+            }, op)
+        else:
+            return Field({
+                op: [
+                    self.to_mongo_db_expr(),
+                    other
+                ]
+            }, op)
+    def __truediv__(self, other):
+        op="$divide"
+        if isinstance(other, Field):
+            return Field({
+                op: [
+                    self.to_mongo_db_expr(),
+                    other.to_mongo_db_expr()
+                ]
+            }, op)
+        else:
+            return Field({
+                op: [
+                    self.to_mongo_db_expr(),
+                    other
+                ]
+            }, op)
+    def __mod__(self, other):
+        op="$mod"
+        if isinstance(other, Field):
+            return Field({
+                op: [
+                    self.to_mongo_db_expr(),
+                    other.to_mongo_db_expr()
+                ]
+            }, op)
+        else:
+            return Field({
+                op: [
+                    self.to_mongo_db_expr(),
+                    other
+                ]
+            }, op)
+    def __pow__(self, power, modulo=None):
+        op = "$pow"
+        if isinstance(power, Field):
+            return Field({
+                op: [
+                    self.to_mongo_db_expr(),
+                    power.to_mongo_db_expr()
+                ]
+            }, op)
+        else:
+            return Field({
+                op: [
+                    self.to_mongo_db_expr(),
+                    power
+                ]
+            }, op)
+    def __floordiv__(self, other):
+        op = "$floor"
+        if isinstance(other, Field):
+            return Field({
+                op: [
+                    self.to_mongo_db_expr(),
+                    other.to_mongo_db_expr()
+                ]
+            }, op)
+        else:
+            return Field({
+                op: [
+                    self.to_mongo_db_expr(),
+                    other
+                ]
+            }, op)
+    # Alias
+    def __rshift__(self, other):
+        init_data = self.__field_name__
+        if self.__field_name__ is None:
+            init_data = self.__data__
+        if isinstance(other,Field):
 
-
+            ret= Field(init_data)
+            ret.__alias__ =other.__field_name__
+            return ret
+        elif isinstance(other,str):
+            ret = Field(init_data)
+            ret.__alias__ = other
+            return ret
+        else:
+            raise Exception(f"Thous can not alias mongodb expression with {type(other)}")
+        return self
 import pymongo.mongo_client
 
 
@@ -633,6 +761,54 @@ class DBDocument:
             return self.collection.count_documents(filter)
         elif isinstance(filter, Field):
             return self.collection.count_documents(filter.to_mongo_db_expr())
+
+    def update(self,filter,*args,**kwargs):
+        _filter ={}
+        if isinstance(filter,Field):
+            _filter =filter.to_mongo_db_expr()
+        updater ={}
+        for x in args:
+            if isinstance(x,Field):
+                if not x.__has_set_value__:
+                    raise Exception(f"Thous must set {x.__field_name__} a value. Exmaple: {x.__field_name__}<<my_value")
+                updater[x.__field_name__]=x.__value__
+            elif isinstance(x,dict):
+                updater={**updater,**x}
+        updater = {**updater,**kwargs}
+        ret= self.collection.update_many(
+            filter=_filter,
+            update={
+                "$set":updater
+            }
+        )
+        return ret
+    async def update_async(self,filter,*args,**kwargs):
+        from motor.motor_asyncio import AsyncIOMotorClient
+        client = AsyncIOMotorClient()
+        fx = self.collection
+        client.delegate = fx.database.client
+
+        coll = client.get_database(fx.database.name).get_collection(fx.name)
+        _filter ={}
+        if isinstance(filter,Field):
+            _filter =filter.to_mongo_db_expr()
+        updater ={}
+        for x in args:
+            if isinstance(x,Field):
+                if not x.__has_set_value__:
+                    raise Exception(f"Thous must set {x.__field_name__} a value. Exmaple: {x.__field_name__}<<my_value")
+                updater[x.__field_name__]=x.__value__
+            elif isinstance(x,dict):
+                updater={**updater,**x}
+        updater = {**updater,**kwargs}
+        ret= await coll.update_many(
+            filter=_filter,
+            update={
+                "$set":updater
+            }
+        )
+        return ret
+
     async def count_async(self, filter):
         from motor.motor_asyncio import AsyncIOMotorClient
         client = AsyncIOMotorClient()
@@ -645,22 +821,133 @@ class DBDocument:
         elif isinstance(filter, Field):
             return await coll.count_documents(filter.to_mongo_db_expr())
 
+    def aggregate(self):
+        return AggregateDocument(self)
 
+class AggregateDocument:
+    def __init__(self,owner:DBDocument):
+        self.owner=owner
+        self.pipeline=[]
+    def project(self,*args,**kwargs):
+
+        stage={
+
+        }
+        if isinstance(args,Field):
+            if args.__alias__ is not None:
+                stage[args.__alias__] = args.to_mongo_db_expr()
+            elif args.__field_name__ is not None:
+                stage[args.__field_name__] = 1
+            else:
+                raise Exception(f"Thous can not use project stage with {args}")
+        for x in args:
+            if isinstance(x,Field):
+                if x.__alias__ is not None:
+                    stage[x.__alias__]=x.to_mongo_db_expr()
+                elif x.__field_name__ is not None:
+                    stage[x.__field_name__] = 1
+                else:
+                    raise Exception(f"Thous can not use project stage with {x}")
+            elif isinstance(x,dict):
+                stage={**stage,**x}
+            elif isinstance(x,str):
+                stage[x]=1
+            else:
+                raise Exception(f"Thous can not use project stage with {x}")
+
+        stage={**stage,**kwargs}
+
+        self.pipeline+=[
+            {
+                "$project":stage
+            }
+        ]
+
+        return self
+    def __repr__(self):
+        ret_pipe=""
+        for x in self.pipeline:
+
+            b = to_json_convertable(x)
+            ret_pipe+=json.dumps(b)+","
+        ret_pipe=ret_pipe[:-1]
+        ret=f"db.getCollection('{self.owner.collection.name}').aggregate({ret_pipe})"
+        return ret
+
+    def __iter__(self):
+        ret = self.owner.collection.aggregate(
+            self.pipeline
+        )
+        for x in ret:
+            yield DocumentObject(x)
+
+__cache_index__ = dict()
+__cache_unique__ = dict()
+__lock__ = threading.Lock()
 class Document:
-    def __init__(self, collection_name: str, client: pymongo.mongo_client.MongoClient):
+    def __init__(self, collection_name: str, client: pymongo.mongo_client.MongoClient,indexes=[],unique_keys=[]):
         self.client = client
         self.collection_name = collection_name
+        self.indexes= indexes
+        self.unique_keys =unique_keys
 
     def __getitem__(self, item):
+        global __cache_index__
+        global __cache_unique__
+        global __lock__
+
         coll = self.client.get_database(item).get_collection(
             self.collection_name
         )
+        for x in self.unique_keys:
+            key=f"{item}.{self.collection_name}.{x}"
+            if __cache_unique__.get(key) is None:
+                __lock__.acquire()
+                try:
+                    indexes=[]
+                    for y in x.split(','):
+                        indexes.append(
+                            (y, pymongo.ASCENDING)
+                        )
+                    coll.create_index(
+                        indexes,
+                        background=True,
+                        unique=True,
+                        sparse=True,
+                    )
+                except Exception as e:
+                    pass
+                finally:
+                    __lock__.release()
+                    __cache_unique__[key]=key
+        for x in self.indexes:
+            key=f"{item}.{self.collection_name}.{x}"
+            if __cache_index__.get(key) is None:
+                __lock__.acquire()
+                try:
+                    indexes=[]
+                    for y in x.split(','):
+                        indexes.append(
+                            (y, pymongo.ASCENDING)
+                        )
+                    coll.create_index(
+                        indexes,
+                        background=True
+                    )
+                except Exception as e:
+                    pass
+                finally:
+                    __lock__.release()
+                    __cache_index__[key]=key
+
+
         return DBDocument(coll)
+
 
 
 def get_doc(collection_name: str, client: pymongo.mongo_client.MongoClient, indexes: List[str] = [],
             unique_keys: List[str] = []) -> Document:
-    return Document(collection_name, client)
+    return Document(collection_name, client,indexes=indexes,unique_keys=unique_keys)
 
 class Funcs:
     @staticmethod

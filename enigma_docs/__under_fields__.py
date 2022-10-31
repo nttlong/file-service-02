@@ -165,7 +165,7 @@ def __wrapper_logical_operator__():
     def wrapper(cls):
         logical_operator = {
             "__and__": "$and",
-            "__or__": "$r",
+            "__or__": "$or",
         }
 
         def mk(op):
