@@ -20,6 +20,7 @@ Special:
     find_items = my_doc['my-db'].find(cy_docs.fields.code!='001' & cy_docs.fields.age < 32) can be changed
     find_items = my_doc['my-db']>>(cy_docs.fields.code!='001' & cy_docs.fields.age < 32) can be changed
 """
+print(__file__)
 import threading
 
 
