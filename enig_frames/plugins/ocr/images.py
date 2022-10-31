@@ -90,7 +90,7 @@ class Images(enig_frames.plugins.base_plugin.BasePlugin):
                 app_name=app_name,
                 file_path=ocr_pdf_file,
                 data_item= self.file_services.get_item_by_upload_id(
-                    app_name==app_name,
+                    app_name=app_name,
                     upload_id=upload_id
                 )
             )

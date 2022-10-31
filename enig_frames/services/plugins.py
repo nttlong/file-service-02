@@ -140,7 +140,7 @@ class PlugInService(enig.Singleton):
 
 
                     except Exception as e:
-                        self.db_log.debug(app_name, e)
+                        self.db_logs.debug(app_name, e)
                         logger.exception(e)
 
                 threading.Thread(target=start_plugin, args=(_media_plugin,)).start()
