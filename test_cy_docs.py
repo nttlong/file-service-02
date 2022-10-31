@@ -1,4 +1,5 @@
 import datetime
+import json
 
 import cy_docs
 import asyncio
@@ -25,8 +26,8 @@ agg = test_docs[db_name].aggregate().project(
 ).sort(
     cy_docs.fields.create_on.desc()
 )
-for x in agg:
-    print(x)
+for x in agg.to_json_convertable():
+    print(json.dumps(x))
 print(agg)
 async def test():
     t1 = datetime.datetime.now()

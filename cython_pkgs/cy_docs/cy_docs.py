@@ -568,6 +568,8 @@ def to_json_convertable(data):
         return ret
     elif isinstance(data, bson.ObjectId):
         return data.__str__()
+    elif isinstance(data,datetime.datetime):
+        return data.isoformat()
     else:
         return data
 
@@ -955,6 +957,9 @@ class AggregateDocument:
         )
         for x in ret:
             yield DocumentObject(x)
+    def to_json_convertable(self):
+        for x in self:
+            yield to_json_convertable(x)
 
 __cache_index__ = dict()
 __cache_unique__ = dict()
