@@ -15,18 +15,58 @@ from matplotlib import __getattr__
 T = TypeVar('T')
 __cache_yam_dict__ = {}
 
-
+__DbContext__cache__ ={}
+__DbContext__init__ ={}
+__DbContext__cache__lock__ = threading.Lock()
 class Singleton(object):
     def __new__(cls, *args, **kw):
+        global __DbContext__cache__
+        global __DbContext__init__
+        global __DbContext__cache__lock__
+        key = f"{cls.__module__}/{cls.__name__}"
         if not hasattr(cls, '_instance'):
-            orig = super(Singleton, cls)
-            cls._instance = orig.__new__(cls, *args, **kw)
+            __DbContext__cache__lock__.acquire()
+            try:
+                orig = super(Singleton, cls)
+                cls._instance = orig.__new__(cls)
+               # old_init=getattr(cls,"__init__")
+
+                # cls._instance.__init__(*args, **kw)
+                # def empty(obj,*a,**b):
+                #     if __DbContext__init__.get(key) is None:
+                #         old_init(obj,*a,**b)
+                #         __DbContext__init__[key]=key
+                #
+                #
+                # setattr(cls,"__init__",empty)
+            except Exception as e:
+                raise e
+            finally:
+                __DbContext__cache__lock__.release()
         return cls._instance
+
+
 def inject(cls,*args,**kwargs):
     return kink.inject(cls,*args,**kwargs)
+__cache_depen__ = {}
+__lock_depen__ =threading.Lock()
 def depen(cls:T,*args,**kwargs)->T:
-    ret= kink.inject(cls)
-    return ret(*args,**kwargs)
+    if issubclass(cls,Singleton):
+        key=f"{cls.__module__}/{cls.__name__}"
+        ret= None
+        if __cache_depen__.get(key) is None:
+            __lock_depen__.acquire()
+            try:
+                ret= kink.inject(cls)
+                v=ret(*args,**kwargs)
+                __cache_depen__[key] = v
+
+            finally:
+                __lock_depen__.release()
+        return __cache_depen__[key]
+    else:
+        ret = kink.inject(cls)
+        return  ret(*args,**kwargs)
 def create_instance(cls:T,*args,**kwargs)->T:
     ret = kink.inject(cls)
     return ret(*args, **kwargs)

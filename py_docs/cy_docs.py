@@ -20,12 +20,12 @@ Special:
     find_items = my_doc['my-db'].find(cy_docs.fields.code!='001' & cy_docs.fields.age < 32) can be changed
     find_items = my_doc['my-db']>>(cy_docs.fields.code!='001' & cy_docs.fields.age < 32) can be changed
 """
-print(__file__)
+
 import threading
 
 
 def get_version() -> str:
-    return "0.0.0"
+    return "0.0.1"
 
 
 import datetime
@@ -1105,3 +1105,24 @@ class Funcs:
             })
         else:
             raise Exception(f"exists require cy_docs.fields.<field-name> or str")
+
+__DbContext__cache__ ={}
+__DbContext__cache__lock__ = threading.Lock()
+class DbContext(object):
+    def __new__(cls, *args, **kw):
+        global __DbContext__cache__
+        global __DbContext__cache__lock__
+        if not hasattr(cls, '_instance'):
+            __DbContext__cache__lock__.acquire()
+            try:
+                orig = super(DbContext, cls)
+                cls._instance = orig.__new__(cls)
+                cls._instance.__init__(*args, **kw)
+                def empty(obj,*a,**b):pass
+
+                setattr(cls,"__init__",empty)
+            except Exception as e:
+                raise e
+            finally:
+                __DbContext__cache__lock__.release()
+        return cls._instance

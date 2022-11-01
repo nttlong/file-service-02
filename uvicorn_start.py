@@ -31,6 +31,9 @@ for x in sys.argv:
                 worker =int(x.split(':')[1])
 print(f"worker={worker}")
 if __name__ == "__main__":
+        timeout_keep_alive = enig_frames.containers.Container.config.config.timeout_keep_alive
+        if timeout_keep_alive is None:
+                timeout_keep_alive=5
         uvicorn.run(
                 "api_app:app",
                 host= enig_frames.containers.Container.config.config.binding_ip,
@@ -40,7 +43,7 @@ if __name__ == "__main__":
                 ws_max_size=16777216*1024,
                 backlog=1000,
                 # interface='WSGI',
-                timeout_keep_alive=True,
+                timeout_keep_alive=timeout_keep_alive,
                 lifespan='on'
                 # reload=False,
 

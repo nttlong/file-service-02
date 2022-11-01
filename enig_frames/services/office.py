@@ -1,5 +1,6 @@
 import os
 import pathlib
+import time
 
 import enig
 import enig_frames.config
@@ -53,6 +54,12 @@ class OfficeService(enig_frames.services.base_media_service.BaseMediaService):
             shell=False
         )
         ret = pid.communicate()  # Đợi
+        time.sleep(1)
+        import signal
+
+
+        pid.kill()
+        pid.terminate()
         filename_only = pathlib.Path(office_file_path).stem
         shutil.rmtree(full_user_profile_path)
         ret_file = os.path.join(self.output_dir, f"{filename_only}.png")

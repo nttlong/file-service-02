@@ -1,3 +1,5 @@
+import gc
+
 import api_models.documents
 import enig
 import enig_frames.db_context
@@ -45,6 +47,10 @@ class SearchEngineService(enig.Singleton):
             meta_info=meta_info,
             data_item=data_item
         ))
+        del content
+        del meta_info
+        del vn_on_accent_content
+        gc.collect()
 
     def get_index_name(self, app_name) -> str:
         ret = f"{self.configuration.config.elastic_search.prefix_index}_{app_name}"

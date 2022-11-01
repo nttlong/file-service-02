@@ -181,6 +181,7 @@ def mongodb_file_add_chunks(
         "n": chunk_index,
         "data": data
     })
+    del data
 
 
 def create_mongodb_fs_from_file(

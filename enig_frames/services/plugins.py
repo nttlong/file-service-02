@@ -51,6 +51,16 @@ class PlugInService(enig.Singleton):
         self.logger = logger
         self.db_logs = db_logs
         self.search_service: enig_frames.services.search_engine.SearchEngineService = search_service
+        self.plugin_instances = {}
+        self.plugin_loggers ={}
+        for x in self.configuration.config.media_plugins:
+            module_name = x.split(':')[0]
+            class_name = x.split(':')[1]
+            plugin_instance: enig_frames.plugins.base_plugin.BasePlugin = enig.create_instance_from_moudle(
+                module_name, class_name)
+            self.plugin_instances[x] = enig.create_instance_from_moudle(
+                module_name, class_name)
+            self.plugin_loggers[x]=self.logger.get_logger(x.replace(':', '--'))
 
     def start(self, app_name: str, upload_id: str, file_id: str):
         if isinstance(file_id, str):
@@ -60,6 +70,7 @@ class PlugInService(enig.Singleton):
         _db: ReCompact.db_async.DbContext = self.repo.db.context(app_name)
 
         expire_time_by_seconds = 60 * 60 * 8
+        expire_time_by_seconds_when_not_new = 60 * 60
         file_path = os.path.join(
             self.host.get_temp_upload_dir(app_name),
             f"{upload_id}.{upload_info[api_models.documents.Files.FileExt]}")
@@ -85,6 +96,9 @@ class PlugInService(enig.Singleton):
                     ]
                 )
                 ls = list(agg)
+                if ls.__len__()==0:
+                    if expire_time_by_seconds<(start_time-datetime.datetime.utcnow()).total_seconds()
+                        return
                 for fs_chunk in ls:
                     if not os.path.isfile(_file_path):
                         with open(_file_path, "wb") as f:
@@ -111,18 +125,19 @@ class PlugInService(enig.Singleton):
         threading.Thread(target=runner, args=(app_name, upload_id, file_path, file_id, _db, _num_of_chunks,)).start()
 
     def start_plug_ins(self, app_name: str, upload_id, file_path):
+
         def run_plugin_sync(_app_name: str, _upload_id, _file_path):
 
             for _media_plugin in self.configuration.config.media_plugins:
 
                 def start_plugin(media_plugin: str):
-                    logger = self.logger.get_logger(media_plugin.replace(':', '--'))
+                    logger = self.plugin_loggers[media_plugin]
                     try:
-                        module_name = media_plugin.split(':')[0]
-                        class_name = media_plugin.split(':')[1]
-                        plugin_instance: enig_frames.plugins.base_plugin.BasePlugin = enig.create_instance_from_moudle(
-                            module_name, class_name)
-
+                        # module_name = media_plugin.split(':')[0]
+                        # class_name = media_plugin.split(':')[1]
+                        # plugin_instance: enig_frames.plugins.base_plugin.BasePlugin = enig.create_instance_from_moudle(
+                        #     module_name, class_name)
+                        plugin_instance=self.plugin_instances[media_plugin]
                         plugin_instance.process(
                             file_path=_file_path,
                             app_name=_app_name,
