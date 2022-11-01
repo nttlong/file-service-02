@@ -70,7 +70,7 @@ class PlugInService(enig.Singleton):
         _db: ReCompact.db_async.DbContext = self.repo.db.context(app_name)
 
         expire_time_by_seconds = 60 * 60 * 8
-        expire_time_by_seconds_when_not_new = 60 * 60
+        expire_time_by_seconds_when_not_new = 60 * 2
         file_path = os.path.join(
             self.host.get_temp_upload_dir(app_name),
             f"{upload_id}.{upload_info[api_models.documents.Files.FileExt]}")
@@ -97,7 +97,7 @@ class PlugInService(enig.Singleton):
                 )
                 ls = list(agg)
                 if ls.__len__()==0:
-                    if expire_time_by_seconds<(start_time-datetime.datetime.utcnow()).total_seconds()
+                    if expire_time_by_seconds_when_not_new<(start_time-datetime.datetime.utcnow()).total_seconds()
                         return
                 for fs_chunk in ls:
                     if not os.path.isfile(_file_path):
