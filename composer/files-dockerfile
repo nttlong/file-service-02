@@ -11,8 +11,9 @@ RUN apt-get update  --fix-missing
 RUN apt-get install tesseract-ocr-vie
 RUN apt-get install -y libopencv-dev python3-opencv
 RUN apt update
-
-
+RUN apt install htop -y
+RUN apt-get install procps -y
+RUN apt-get install psmisc -y
 WORKDIR /app
 
 RUN /usr/local/bin/python -m pip install --upgrade pip

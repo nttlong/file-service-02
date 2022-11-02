@@ -138,10 +138,17 @@ async def catch_exceptions_middleware(request: Request, call_next):
            res.headers['content-type'] = t
 
        return res
+
    except Exception as e:
        import fasty.start
        logger.exception(e)
        return Response("Internal server error", status_code=500)
 
-
+   finally:
+       enig_frames.containers.Container.clean_up_service.clean_up()
+       import psutil
+       import signal
+       for x in psutil.process_iter():
+           if x.status() == 'sleeping' and x.name() == 'java':
+               os.kill(x.pid, signal.SIGKILL)
 

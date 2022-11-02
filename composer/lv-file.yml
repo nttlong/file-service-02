@@ -18,7 +18,7 @@ services:
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
 #    command: python3 /app/test_cy_docs.py
-    command: python3 /app/hypercorn_start.py host_name=172.16.13.72 host_port=8011 host_dir= binding_port=80 db.host=192.168.18.36 db.port=27018 db.username=admin-doc db.password=123456 db.authSource=lv-docs admin_db_name=lv-docs elastic_search.server=http://192.168.18.36:9200 elastic_search.prefix_index=lv-codx  w:10
+    command: python3 /app/uvicorn_start.py host_name=172.16.13.72 host_port=8011 host_dir= binding_port=80 db.host=192.168.18.36 db.port=27018 db.username=admin-doc db.password=123456 db.authSource=lv-docs admin_db_name=lv-docs elastic_search.server=http://192.168.18.36:9200 elastic_search.prefix_index=lv-codx  w:4 interface=asgi3 timeout_keep_alive=3600
 #    command: ls /app/enig_frames/services/ext_libs
 #    command: python3 /app/test_tika.py
 #    command: ls /app

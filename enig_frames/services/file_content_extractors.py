@@ -22,6 +22,7 @@ class FileContentExtractorService(enig.Singleton):
         :return:
         """
 
+
         from tika import parser
         headers = {
 

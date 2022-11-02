@@ -12,6 +12,7 @@ In order to start with hypercorn
                         So you can pass db.usrername= db.password= db.authSource= db.authMechanism=
 python hypercorn_start.py db.host=172.16.7.25 db.port=27018 db.username= db.password= db.authSource= db.authMechanism= admin_db_name=enigma-media
 """
+import os
 import sys
 for x in sys.argv:
     print(x)
@@ -31,7 +32,16 @@ for x in sys.argv:
                 worker =int(x.split(':')[1])
 print(f"worker={worker}")
 if __name__ == "__main__":
+        import signal
+
+        signal.signal(signal.SIGCHLD, signal.SIG_IGN)
+
+
         timeout_keep_alive = enig_frames.containers.Container.config.config.timeout_keep_alive
+        interface = 'auto'
+        if enig_frames.containers.Container.config.config.interface:
+                interface = enig_frames.containers.Container.config.config.interface
+        print(f"Inteface {interface}")
         if timeout_keep_alive is None:
                 timeout_keep_alive=5
         uvicorn.run(
@@ -42,8 +52,9 @@ if __name__ == "__main__":
                 ws='websockets',
                 ws_max_size=16777216*1024,
                 backlog=1000,
-                # interface='WSGI',
-                timeout_keep_alive=timeout_keep_alive,
+                interface=interface,
+
+                # timeout_keep_alive=timeout_keep_alive,
                 lifespan='on'
                 # reload=False,
 

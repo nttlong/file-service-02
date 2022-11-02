@@ -53,6 +53,9 @@ class VideoService(enig_frames.services.base_media_service.BaseMediaService):
         clip.close()
         del img
         del clip
+        import ctypes
+        libc = ctypes.CDLL("libc.so.6")
+        libc.malloc_trim(0)
         return ret_file
 
     def get_info(self, file_path) -> VideoInfo:
@@ -68,4 +71,8 @@ class VideoService(enig_frames.services.base_media_service.BaseMediaService):
         ret.height = clip.size[1]
         clip.close()
         del clip
+        import ctypes
+        libc = ctypes.CDLL("libc.so.6")
+        libc.malloc_trim(0)
+
         return ret

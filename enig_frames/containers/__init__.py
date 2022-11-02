@@ -15,7 +15,7 @@ import enig_frames.services.file_system_utils
 import enig_frames.services.search_engine
 import enig_frames.db_logs
 import enig_frames.services.plugins
-
+import enig_frames.services.gc_collect
 
 @enig.container()
 class Container(enig.Singleton):
@@ -38,7 +38,7 @@ class Container(enig.Singleton):
         plugin_services: enig_frames.services.plugins.PlugInService = enig.create_instance(
             enig_frames.services.plugins.PlugInService
         )
-
+    clean_up_service=enig.create_instance(enig_frames.services.gc_collect.GCCollec)
     config = enig.create_instance(enig_frames.config.Configuration)
     db_context = enig.create_instance(enig_frames.db_context.DbContext)
     web_application = enig.create_instance(enig_fast_api.application.WebApp)

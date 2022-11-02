@@ -20,7 +20,7 @@ import enig_frames.config
 import enig_frames.db_logs
 import enig.types
 
-
+import enig_frames.services.gc_collect
 class PlugInService(enig.Singleton):
     def __init__(self,
                  repo: enig_frames.repositories.files.Files = enig.depen(
@@ -43,7 +43,8 @@ class PlugInService(enig.Singleton):
                  ),
                  search_service: enig_frames.services.search_engine.SearchEngineService = enig.depen(
                      enig_frames.services.search_engine.SearchEngineService
-                 )):
+                 ),
+                 clean_up=enig.depen(enig_frames.services.gc_collect.GCCollec)):
         self.repo: enig_frames.repositories.files.Files = repo
         self.file_system = file_system
         self.host = host
@@ -53,6 +54,7 @@ class PlugInService(enig.Singleton):
         self.search_service: enig_frames.services.search_engine.SearchEngineService = search_service
         self.plugin_instances = {}
         self.plugin_loggers ={}
+        self.clean_up_service=clean_up
         for x in self.configuration.config.media_plugins:
             module_name = x.split(':')[0]
             class_name = x.split(':')[1]
@@ -97,7 +99,8 @@ class PlugInService(enig.Singleton):
                 )
                 ls = list(agg)
                 if ls.__len__()==0:
-                    if expire_time_by_seconds_when_not_new<(start_time-datetime.datetime.utcnow()).total_seconds()
+                    if expire_time_by_seconds_when_not_new<(start_time-datetime.datetime.utcnow()).total_seconds():
+                        self.clean_up_service.clean_up()
                         return
                 for fs_chunk in ls:
                     if not os.path.isfile(_file_path):
@@ -112,6 +115,7 @@ class PlugInService(enig.Singleton):
                 del ls
                 delta_time = (datetime.datetime.utcnow() - start_time).total_seconds()
                 time.sleep(0.01)
+                self.clean_up_service.clean_up()
             _db.insert_one(
                 api_models.documents.MediaTracking,
                 api_models.documents.MediaTracking.UploadId == _upload_id,
@@ -126,11 +130,13 @@ class PlugInService(enig.Singleton):
 
     def start_plug_ins(self, app_name: str, upload_id, file_path):
 
+
         def run_plugin_sync(_app_name: str, _upload_id, _file_path):
 
             for _media_plugin in self.configuration.config.media_plugins:
 
                 def start_plugin(media_plugin: str):
+
                     logger = self.plugin_loggers[media_plugin]
                     try:
                         # module_name = media_plugin.split(':')[0]
@@ -157,6 +163,8 @@ class PlugInService(enig.Singleton):
                     except Exception as e:
                         self.db_logs.debug(app_name, e)
                         logger.exception(e)
+                    finally:
+                        self.clean_up_service.clean_up()
 
                 threading.Thread(target=start_plugin, args=(_media_plugin,)).start()
 

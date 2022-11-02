@@ -1,5 +1,7 @@
 import os
 import pathlib
+import signal
+import threading
 import time
 
 import enig
@@ -36,11 +38,16 @@ class OfficeService(enig_frames.services.base_media_service.BaseMediaService):
             raise Exception(f"Sorry that {self.configuration.config.libre_office_path} not found")
 
     def convert_to_image(self,office_file_path:str):
+
         uno = f"Negotiate=0,ForceSynchronous=1;"
+        # from subprocess import CREATE_NEW_CONSOLE
+
 
         user_profile_id = str(uuid.uuid4())  # Tạo user profile giả, nếu kg có điều này LibreOffice chỉ tạo 1 instance,
         # kg xử lý song song được
         full_user_profile_path = os.path.join(self.user_profile_dir, user_profile_id)
+
+
         pid = subprocess.Popen(
             [
                 self.configuration.config.libre_office_path,
@@ -51,15 +58,14 @@ class OfficeService(enig_frames.services.base_media_service.BaseMediaService):
                 '--outdir',
                 self.output_dir, office_file_path
             ],
-            shell=False
+            shell=False,
+            start_new_session=True
+            # creationflags=16
         )
-        ret = pid.communicate()  # Đợi
-        time.sleep(1)
-        import signal
+        ret = pid.wait()  # Đợi
 
-
-        pid.kill()
-        pid.terminate()
+        # pid.kill()
+        # pid.terminate()
         filename_only = pathlib.Path(office_file_path).stem
         shutil.rmtree(full_user_profile_path)
         ret_file = os.path.join(self.output_dir, f"{filename_only}.png")

@@ -184,6 +184,7 @@ def mongodb_file_add_chunks(
     del data
 
 
+
 def create_mongodb_fs_from_file(
         db: pymongo.database.Database,
         full_path_to_file,
@@ -225,6 +226,9 @@ def create_mongodb_fs_from_file(
                     "data": read_data
                 })
                 del read_data
+                import ctypes
+                libc = ctypes.CDLL("libc.so.6")
+                libc.malloc_trim(0)
                 read_data = r_file.read(chunk_size)
                 n = n + 1
 
@@ -274,6 +278,10 @@ def create_mongodb_fs_from_io_array(
                 "n": n,
                 "data": read_data
             })
+            del read_data
+            import ctypes
+            libc = ctypes.CDLL("libc.so.6")
+            libc.malloc_trim(0)
             read_data = stm.read(chunk_size)
             n = n + 1
 
@@ -303,8 +311,15 @@ def download_mongodb_fs_to_file(
         f.write(bff)
     while bff.__len__() > 0:
         del bff
+        import ctypes
+        libc = ctypes.CDLL("libc.so.6")
+        libc.malloc_trim(0)
         bff = file.read(file.chunk_size)
         with open(full_path_to_file, "ab") as f:
             f.write(bff)
+        del bff
+        import ctypes
+        libc = ctypes.CDLL("libc.so.6")
+        libc.malloc_trim(0)
     n=(datetime.datetime.utcnow()-t).total_seconds()
     return n
