@@ -19,12 +19,13 @@ import os
 from fastapi import FastAPI
 from starlette.requests import Request
 from starlette.responses import Response
-__api_host_dir__ =enig_frames.containers.Container.config.config.api_host_dir
-__host_dir__ =enig_frames.containers.Container.config.config.host_dir
+
+__api_host_dir__ = enig_frames.containers.Container.config.config.api_host_dir
+__host_dir__ = enig_frames.containers.Container.config.config.host_dir
 if __api_host_dir__[0] != "/":
     __api_host_dir__ = '/' + __api_host_dir__
-if __host_dir__ and __host_dir__!="":
-    __api_host_dir__ = '/'+__host_dir__+__api_host_dir__
+if __host_dir__ and __host_dir__ != "":
+    __api_host_dir__ = '/' + __host_dir__ + __api_host_dir__
 # path_to_yam_db =os.path.join(str(pathlib.Path(__file__).parent.parent.absolute()),"database.yaml")
 
 # ReCompact.db_async.load_config(path_to_yam_db)
@@ -33,11 +34,13 @@ from fastapi import FastAPI
 import enig_frames.containers
 import ReCompact.db_async
 import sys
+
 app = None
 container = enig_frames.containers.Container
 logger = container.loggers.get_logger(__name__)
-def install_fastapi_app(module_name:str):
 
+
+def install_fastapi_app(module_name: str):
     from fastapi.middleware.cors import CORSMiddleware
     global app
     global config
@@ -53,38 +56,39 @@ def install_fastapi_app(module_name:str):
         allow_headers=["*"],
     )
     app.middleware("http")(catch_exceptions_middleware)
-    rel_static_url="/static"
-    if enig_frames.containers.Container.config.config.host_dir is not None and enig_frames.containers.Container.config.config.host_dir!="":
-        rel_static_url =  "/"+enig_frames.containers.Container.config.config.host_dir+"/static"
-    app.mount(rel_static_url, StaticFiles(directory=container.Services.applications.configuration.static_dir), name="static")
-
+    rel_static_url = "/static"
+    if enig_frames.containers.Container.config.config.host_dir is not None and enig_frames.containers.Container.config.config.host_dir != "":
+        rel_static_url = "/" + enig_frames.containers.Container.config.config.host_dir + "/static"
+    app.mount(rel_static_url, StaticFiles(directory=container.Services.applications.configuration.static_dir),
+              name="static")
 
     return app
 
-def page_get(url_path:str,response_class=HTMLResponse):
+
+def page_get(url_path: str, response_class=HTMLResponse):
     global app
-    fn=None
-    map_url=None
-    if enig_frames.containers.Container.config.config.host_dir and enig_frames.containers.Container.config.config.host_dir!="":
-        if url_path=="/":
-            map_url=f"/{enig_frames.containers.Container.config.config.host_dir}"
+    fn = None
+    map_url = None
+    if enig_frames.containers.Container.config.config.host_dir and enig_frames.containers.Container.config.config.host_dir != "":
+        if url_path == "/":
+            map_url = f"/{enig_frames.containers.Container.config.config.host_dir}"
 
         else:
-            map_url=f"/{enig_frames.containers.Container.config.config.host_dir}{url_path}"
+            map_url = f"/{enig_frames.containers.Container.config.config.host_dir}{url_path}"
     else:
-        map_url=url_path
+        map_url = url_path
     print(map_url)
     return app.get(map_url, response_class=response_class)
 
 
-def api_get(url_path:str,response_class=None):
+def api_get(url_path: str, response_class=None):
     global app
     global __api_host_dir__
-    if __api_host_dir__ is not None and __api_host_dir__!="":
+    if __api_host_dir__ is not None and __api_host_dir__ != "":
         if response_class is None:
 
             logger.info("------------------handler ------------")
-            logger.info(__api_host_dir__+ url_path)
+            logger.info(__api_host_dir__ + url_path)
             logger.info("------------------handler ------------")
             fn = app.get(__api_host_dir__ + url_path)
             return fn
@@ -92,7 +96,7 @@ def api_get(url_path:str,response_class=None):
             logger.info("------------------handler ------------")
             logger.info(__api_host_dir__ + url_path)
             logger.info("------------------handler ------------")
-            fn = app.get(__api_host_dir__+url_path,response_class=response_class)
+            fn = app.get(__api_host_dir__ + url_path, response_class=response_class)
             return fn
     else:
         if response_class is None:
@@ -105,50 +109,47 @@ def api_get(url_path:str,response_class=None):
             logger.info("------------------handler ------------")
             logger.info(url_path)
             logger.info("------------------handler ------------")
-            fn=app.get(url_path,response_class=response_class)
-            return  fn
+            fn = app.get(url_path, response_class=response_class)
+            return fn
 
-def api_post(url_path:str,response_class=None,response_model=None):
+
+def api_post(url_path: str, response_class=None, response_model=None):
     global app
     global __api_host_dir__
     if __api_host_dir__ is not None and __api_host_dir__ != "":
 
         if response_class is None:
             if response_model is None:
-                fn = app.post(__api_host_dir__+url_path)
+                fn = app.post(__api_host_dir__ + url_path)
                 return fn
             else:
-                fn = app.post(__api_host_dir__ + url_path,response_model=response_model)
+                fn = app.post(__api_host_dir__ + url_path, response_model=response_model)
                 return fn
         else:
-            fn = app.post(__api_host_dir__ + url_path,response_class=response_class)
+            fn = app.post(__api_host_dir__ + url_path, response_class=response_class)
             return fn
     else:
         if response_class is None:
             fn = app.post(url_path)
             return fn
         else:
-            fn=app.post(url_path,response_class=response_class)
-            return  fn
+            fn = app.post(url_path, response_class=response_class)
+            return fn
+
+
 async def catch_exceptions_middleware(request: Request, call_next):
-   try:
-       res = await call_next(request)
-       if request.url.path.endswith('.js') and '/static/' in request.url.path:
-           t,_ =mimetypes.guess_type(request.url.path)
-           res.headers['content-type'] = t
+    try:
+        res = await call_next(request)
+        if request.url.path.endswith('.js') and '/static/' in request.url.path:
+            t, _ = mimetypes.guess_type(request.url.path)
+            res.headers['content-type'] = t
 
-       return res
+        return res
 
-   except Exception as e:
-       import fasty.start
-       logger.exception(e)
-       return Response("Internal server error", status_code=500)
+    except Exception as e:
+        import fasty.start
+        logger.exception(e)
+        return Response("Internal server error", status_code=500)
 
-   finally:
-       enig_frames.containers.Container.clean_up_service.clean_up()
-       import psutil
-       import signal
-       for x in psutil.process_iter():
-           if x.status() == 'sleeping' and x.name() == 'java':
-               os.kill(x.pid, signal.SIGKILL)
-
+    finally:
+        enig_frames.containers.Container.clean_up_service.clean_up()

@@ -1,6 +1,8 @@
 from .Model_Files import DocUploadRegister as __DocUploadRegister__, \
     FsFile as __FsFile__, \
-    FsChunks as __FsChunks__,MediaTracking as __MediaTracking__
+    FsChunks as __FsChunks__,MediaTracking as __MediaTracking__, \
+    SysMessage as __SysMessage__
+
 
 from .ModelApps import sys_applications as __sys_applications__
 from .Model_Users import User
@@ -27,3 +29,4 @@ Thông tin của các file nằm trong file zip sẽ được đóng gói ở đ
 """
 SSOs = __SSO__()
 MediaTracking=__MediaTracking__()
+SysMessage = __SysMessage__()

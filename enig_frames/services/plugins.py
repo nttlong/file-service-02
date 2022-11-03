@@ -65,11 +65,13 @@ class PlugInService(enig.Singleton):
             self.plugin_loggers[x]=self.logger.get_logger(x.replace(':', '--'))
 
     def start(self, app_name: str, upload_id: str, file_id: str):
+
         if isinstance(file_id, str):
             file_id = bson.ObjectId(file_id)
         upload_info = self.repo.get_item_by_upload_id(app_name, upload_id)
         _num_of_chunks = upload_info[api_models.documents.Files.NumOfChunks]
         _db: ReCompact.db_async.DbContext = self.repo.db.context(app_name)
+
 
         expire_time_by_seconds = 60 * 60 * 8
         expire_time_by_seconds_when_not_new = 60 * 2

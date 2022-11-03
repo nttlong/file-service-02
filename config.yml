@@ -111,3 +111,4 @@ media_plugins:
   - enig_frames.plugins.ocr.images:Images
   - enig_frames.plugins.ocr.pdf_file:PdfFile
 timeout_keep_alive: 5
+tika_server: http://localhost:12345

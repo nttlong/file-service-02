@@ -5,7 +5,7 @@ import sys
 import enig
 
 
-class Configuration:
+class Configuration (enig.Singleton):
     def __init__(self, yam_file: str = "./config.yml"):
 
         self.config_file =yam_file

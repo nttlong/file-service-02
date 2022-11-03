@@ -302,5 +302,31 @@ class FsChunks:
 class MediaTracking:
     _id = ReCompact.dbm.field(data_type=bson.ObjectId)
     UploadId =ReCompact.dbm.field(data_type=str)
-    CurrentChunkIndex=ReCompact.dbm.field(data_type=int)
+    FileXet = ReCompact.dbm.field(data_type=str)
     NumOfChunks =ReCompact.dbm.field(data_type=int)
+    file_id = ReCompact.dbm.field(data_type=bson.ObjectId)
+    AppName = ReCompact.dbm.field(data_type=str)
+    CreatedOn = ReCompact.dbm.field(data_type=datetime)
+    PlugInRunner = ReCompact.dbm.field(data_type=dict)
+    IsSync = ReCompact.dbm.field(data_type=bool)
+    Status = ReCompact.dbm.field(data_type=int)
+    IsInSync= ReCompact.dbm.field(data_type=bool)
+    StartDownloadAt = ReCompact.dbm.field(data_type=datetime.datetime)
+    IsDownloadComplete = ReCompact.dbm.field(data_type=bool)
+    EndDownloadAt = ReCompact.dbm.field(data_type=datetime.datetime)
+    DownloadTimeInSeconds = ReCompact.dbm.field(data_type=float)
+
+@ReCompact.dbm.table(
+    "Sys_messages",
+    index=["MsgType","CreatedOn","AppName","MsgId"]
+)
+class SysMessage:
+    """
+    Message
+    """
+    MsgId = ReCompact.dbm.field(data_type=str)
+    AppName=ReCompact.dbm.field(data_type=str)
+    MsgType=ReCompact.dbm.field(data_type=str)
+    Data=ReCompact.dbm.field(data_type=dict)
+    CreatedOn = ReCompact.dbm.field(data_type=datetime)
+    IsFinish = ReCompact.dbm.field(data_type=bool)

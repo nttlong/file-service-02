@@ -369,9 +369,11 @@ def __get_collection_sync__(db, collection_name, keys, index):
 
             def check(key):
                 set_key = set(key)
+                if key=="files_id":
+                    print(key)
                 for k, v in index_info.items():
                     set_key_in_db = set([x[0] for x in v.get('key')])
-                    if len(set_key_in_db & set_key) > 0:
+                    if set_key_in_db == set_key:
                         return True
                 return False
 
@@ -535,11 +537,12 @@ def find(db, docs,
         docs.__dict__["__collection_keys__"],
         docs.__dict__["__collection_index__"]
     )
-
+    if isinstance(coll,motor.motor_asyncio.AsyncIOMotorCollection):
+        coll = coll.delegate
     _filter = filter
     if isinstance(filter, ReCompact.dbm.DbObjects.Docs.Fields):
         _filter = filter.to_mongodb()
-    ret_cursor = coll.delegate.find(_filter)
+    ret_cursor = coll.find(_filter)
     # ret = await ret_cursor.skip(skip).to_list(limit)
     # lst = list(__fix_bson_object_id_in_list__(ret))
     return ret_cursor
@@ -590,7 +593,22 @@ async def delete_one_async(db, docs, filter):
 
 
 def delete_one(db, docs, filter):
-    return sync(delete_one_async(db, docs, filter))
+    async_db = __set_connection__(db)
+    coll = __get_collection_sync__(
+        async_db.delegate,
+        docs.__dict__["__collection_name__"],
+        docs.__dict__["__collection_keys__"],
+        docs.__dict__["__collection_index__"]
+    )
+    _filter = {}
+    if isinstance(filter, ReCompact.dbm.Docs.Fields):
+        _filter = filter.to_mongodb()
+    elif isinstance(filter, dict):
+        _filter = filter
+    else:
+        raise Exception("filter must be ReCompact.dbm.Docs.Fields or dict")
+    ret = coll.delete_one(_filter)
+    return ret
 
 
 async def update_one_async(db, docs, filter, *args, **kwargs):
@@ -970,7 +988,9 @@ class DbContext:
     async def delete_one_async(self, docs, filter):
         ret = await delete_one_async(self.db, docs, filter)
         return ret
-
+    def delete_one(self, docs, filter):
+        ret = delete_one(self.db, docs, filter)
+        return ret
     def insert_one(self, docs, *args, **kwargs):
         ret = insert_one(self.db, docs, *args, **kwargs)
         return ret

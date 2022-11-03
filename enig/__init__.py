@@ -55,14 +55,15 @@ def depen(cls:T,*args,**kwargs)->T:
         key=f"{cls.__module__}/{cls.__name__}"
         ret= None
         if __cache_depen__.get(key) is None:
-            __lock_depen__.acquire()
+            # __lock_depen__.acquire()
             try:
                 ret= kink.inject(cls)
                 v=ret(*args,**kwargs)
                 __cache_depen__[key] = v
-
-            finally:
-                __lock_depen__.release()
+            except Exception as e:
+                raise e
+            # finally:
+            #     __lock_depen__.release()
         return __cache_depen__[key]
     else:
         ret = kink.inject(cls)

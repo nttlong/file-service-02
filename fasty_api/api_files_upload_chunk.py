@@ -118,12 +118,33 @@ async def files_upload(app_name: str, FilePart: bytes = File(...),
             file_size=file_size
         )
         ReCompact.db_context.mongodb_file_add_chunks(db_context.db.delegate, fs._id, Index, FilePart)
-        container.Services.plugin_services.start(
-            app_name=app_name,
-            upload_id = UploadId,
-            file_id = fs._id
+        upload_item[api_models.documents.Files.MainFileId] = fs._id
+        container.Services.msg_service.emit(
+            app_name= app_name,
+            message_type="files.upload",
+            data= upload_item
 
         )
+
+        # admin_db = container.db_context.context('admin')
+        # admin_db.insert_one(
+        #     api_models.documents.MediaTracking,
+        #     api_models.documents.MediaTracking.UploadId == UploadId,
+        #     api_models.documents.MediaTracking.NumOfChunks == nun_of_chunks,
+        #     api_models.documents.MediaTracking.file_id == fs._id,
+        #     api_models.documents.MediaTracking.PlugInRunner == dict(),
+        #     api_models.documents.MediaTracking.AppName == app_name,
+        #     api_models.documents.MediaTracking.CreatedOn == datetime.datetime.utcnow(),
+        #     api_models.documents.MediaTracking.IsSync == False,
+        #     api_models.documents.MediaTracking.IsDownloadComplete == False
+        #
+        # )
+        # container.Services.plugin_services.start(
+        #     app_name=app_name,
+        #     upload_id = UploadId,
+        #     file_id = fs._id
+        #
+        # )
 
 
 
