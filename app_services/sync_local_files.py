@@ -1,6 +1,7 @@
 import datetime
 import os.path
 import pathlib
+import threading
 import time
 
 import bson
@@ -12,7 +13,9 @@ import enig_frames.db_context
 import enig_frames.loggers
 import enig_frames.services.gc_collect
 import enig_frames.services.msgs
-
+from concurrent.futures import ThreadPoolExecutor
+import multiprocessing
+from typing import List
 class SyncToLocalService(enig.Singleton):
     def __init__(self, db=enig.depen(
         enig_frames.db_context.DbContext,
@@ -99,6 +102,7 @@ class SyncToLocalService(enig.Singleton):
             total_seconds = (datetime.datetime.utcnow() - start_time).total_seconds()
             self.logs.info(f"sync file {full_file_path} complete in {total_seconds} second")
 
+
             return full_file_path
 
         except Exception as e:
@@ -106,3 +110,24 @@ class SyncToLocalService(enig.Singleton):
 
         finally:
             self.clean_up.clean_up()
+    def sync_file_in_thread(self,item:enig_frames.services.msgs.MessageInfo,plugins):
+        def run():
+            full_file_path = self.sync_file(item)
+            app_name = item.AppName
+            upload_id = item.Data["_id"]
+            list_of_plugin_threads:List[threading.Thread] =[]
+            for x in plugins:
+                list_of_plugin_threads+=[threading.Thread(target=x,args=(full_file_path, app_name, upload_id,))]
+            # with ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()-1) as executor:
+            #     ordinal = 1
+            #     for x in plugins:
+            #         executor.submit(x, (full_file_path, app_name, upload_id))
+            for t in list_of_plugin_threads:
+                t.start()
+            for t in list_of_plugin_threads:
+                t.join()
+            os.remove(full_file_path)
+            self.msg_service.delete(item)
+
+        th_run = threading.Thread(target=run).start()
+        return th_run

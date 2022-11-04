@@ -30,9 +30,9 @@ class FileContentExtractorService(enig.Singleton):
 
         }
         ret = parser.from_file(file_path,  requestOptions={'headers': headers, 'timeout': 30000})
-        import psutil
-        import signal
-        for x in psutil.process_iter():
-            if x.status() == 'sleeping' and x.name() == 'java':
-                os.kill(x.pid, signal.SIGKILL)
+        # import psutil
+        # import signal
+        # for x in psutil.process_iter():
+        #     if x.status() == 'sleeping' and x.name() == 'java':
+        #         os.kill(x.pid, signal.SIGKILL)
         return ret['content'], ret['metadata']

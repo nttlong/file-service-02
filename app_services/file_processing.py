@@ -6,7 +6,7 @@ import sys
 working_dir = pathlib.Path(__file__).parent.parent.__str__()
 sys.path.append(working_dir)
 
-
+print("running")
 if __name__ == "__main__":
     import watcher
     watcher.run()

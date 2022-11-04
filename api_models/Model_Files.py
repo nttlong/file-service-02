@@ -324,9 +324,13 @@ class SysMessage:
     """
     Message
     """
+    _id = ReCompact.dbm.field(data_type=bson.ObjectId)
     MsgId = ReCompact.dbm.field(data_type=str)
     AppName=ReCompact.dbm.field(data_type=str)
     MsgType=ReCompact.dbm.field(data_type=str)
     Data=ReCompact.dbm.field(data_type=dict)
     CreatedOn = ReCompact.dbm.field(data_type=datetime)
     IsFinish = ReCompact.dbm.field(data_type=bool)
+    IsLock = ReCompact.dbm.field(data_type=bool)
+    InstancesLock = ReCompact.dbm.field(data_type=dict)
+    RunInsLock = ReCompact.dbm.field(data_type=str)
