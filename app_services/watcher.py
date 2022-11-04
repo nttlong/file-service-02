@@ -38,20 +38,38 @@ plug_in_list =[
 
 
 ]
+import multiprocessing
+import concurrent.futures
 def run():
     while True:
         items = message_service.get_message(
             message_type='files.upload'
         )
-        for x in items:
-            upload_item = x.Data
-            app_name = x.AppName
-            file_ext = upload_item[api_models.documents.Files.FileExt.__name__]
-            mime_type = upload_item[api_models.documents.Files.MimeType.__name__]
-            full_file_path = sync_local_service.sync_file_in_thread(
-                item=x,
-                plugins=plug_in_list)
-            print(f"{upload_item['_id']}.{file_ext}")
+        output={}
+        def run(x):
+            if message_service.is_lock(x):
+                return
+            message_service.lock(x)
+            try:
+                upload_item = x.Data
+                app_name = x.AppName
+                file_ext = upload_item[api_models.documents.Files.FileExt.__name__]
+
+                mime_type = upload_item[api_models.documents.Files.MimeType.__name__]
+                full_file_path = sync_local_service.sync_file_in_thread(
+                    item=x,
+                    plugins=plug_in_list, output=output)
+                print(f"{upload_item['_id']}.{file_ext}")
+                print(output)
+            except Exception as e:
+                print(e)
+                message_service.unlock(x)
+            finally:
+                message_service.delete(x)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max(multiprocessing.cpu_count() - 1,3)) as executor:
+
+            for x in items:
+                executor.submit(run,x)
 
 
-        time.sleep(0.2)
+        time.sleep(0.05)

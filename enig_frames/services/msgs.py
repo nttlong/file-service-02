@@ -75,6 +75,8 @@ class Message(enig.Singleton):
                           {"RunInsLock":{"$exists":False}},
                           {"RunInsLock":{"$ne":self.instance_id}}
                       ]
+                    },{
+                        "$or":[{"IsLock":False},{"IsLock":{"$exists":False}}]
                     }]
             }
         ).sort(
@@ -105,3 +107,26 @@ class Message(enig.Singleton):
             api_models.documents.SysMessage,
             api_models.documents.SysMessage.MsgId==item.Id
         )
+
+    def lock(self,  item:MessageInfo):
+        self.db.context('admin').update_one(
+            api_models.documents.SysMessage,
+            api_models.documents.SysMessage.MsgId == item.Id,
+            api_models.documents.SysMessage.IsLock==True
+        )
+
+    def unlock(self,  item:MessageInfo):
+        self.db.context('admin').update_one(
+            api_models.documents.SysMessage,
+            api_models.documents.SysMessage.MsgId == item.Id,
+            api_models.documents.SysMessage.IsLock == False
+        )
+
+
+    def is_lock(self,  item:MessageInfo):
+        item = self.db.context('admin').find_one(
+            api_models.documents.SysMessage,
+            api_models.documents.SysMessage.MsgId == item.Id
+        )
+        ret = item.get(api_models.documents.SysMessage.IsLock.__name__)
+        return  ret== True

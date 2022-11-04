@@ -1,4 +1,5 @@
 import bson
+import pymongo.errors
 
 import enig
 import enig_frames.db_context
@@ -38,11 +39,14 @@ class MongoFiles(enig.Singleton):
 
         )
         if rel_file_path is not None:
-            self.db.context(app_name).update_one(
-                api_models.documents.Fs_File,
-                api_models.documents.Fs_File._id==ret._id,
-                api_models.documents.Fs_File.rel_file_path==rel_file_path
-            )
+            try:
+                self.db.context(app_name).update_one(
+                    api_models.documents.Fs_File,
+                    api_models.documents.Fs_File._id==ret._id,
+                    api_models.documents.Fs_File.rel_file_path==rel_file_path
+                )
+            except pymongo.errors.DuplicateKeyError as e:
+                return ret
         return ret
 
     async def get_by_id_async(self, app_name, file_id):

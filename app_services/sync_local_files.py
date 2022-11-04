@@ -18,7 +18,8 @@ import multiprocessing
 from typing import List
 class SyncToLocalService(enig.Singleton):
     def __init__(self, db=enig.depen(
-        enig_frames.db_context.DbContext,
+        enig_frames.db_context.DbContext
+
 
     ),
                  loggers=enig.depen(
@@ -81,6 +82,7 @@ class SyncToLocalService(enig.Singleton):
                 )
                 if timeout_count > 100:
                     self.logs.info(f"sync file {full_file_path} fail, timeout {timeout_count / 2} senconds")
+                    os.remove(full_file_path)
 
                     return
                 if chunk is None:
@@ -99,6 +101,7 @@ class SyncToLocalService(enig.Singleton):
                         del chunk["data"]
                         self.clean_up.clean_up()
                     current_chunk_index += 1
+                time.sleep(0.001)
             total_seconds = (datetime.datetime.utcnow() - start_time).total_seconds()
             self.logs.info(f"sync file {full_file_path} complete in {total_seconds} second")
 
@@ -110,24 +113,45 @@ class SyncToLocalService(enig.Singleton):
 
         finally:
             self.clean_up.clean_up()
-    def sync_file_in_thread(self,item:enig_frames.services.msgs.MessageInfo,plugins):
-        def run():
-            full_file_path = self.sync_file(item)
-            app_name = item.AppName
-            upload_id = item.Data["_id"]
-            list_of_plugin_threads:List[threading.Thread] =[]
-            for x in plugins:
-                list_of_plugin_threads+=[threading.Thread(target=x,args=(full_file_path, app_name, upload_id,))]
-            # with ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()-1) as executor:
-            #     ordinal = 1
-            #     for x in plugins:
-            #         executor.submit(x, (full_file_path, app_name, upload_id))
-            for t in list_of_plugin_threads:
-                t.start()
-            for t in list_of_plugin_threads:
-                t.join()
-            os.remove(full_file_path)
-            self.msg_service.delete(item)
+    def sync_file_in_thread(self,item:enig_frames.services.msgs.MessageInfo,plugins,output:dict):
+        def run(_output:dict):
+            _output={}
+            try:
+                full_file_path = self.sync_file(item)
+                if full_file_path is None:
 
-        th_run = threading.Thread(target=run).start()
+                    return
+                app_name = item.AppName
+                upload_id = item.Data["_id"]
+                list_of_plugin_threads:List[threading.Thread] =[]
+                for x in plugins:
+                    def run(call,full_file_path, app_name, upload_id):
+                        try:
+                            if callable(call):
+                                print(f"{call.__module__}/{call.__name__}\n")
+                                call(full_file_path,app_name,upload_id)
+                                print(f"file { full_file_path}\n")
+                        except Exception as e:
+                            print(f"file fail {full_file_path}\n")
+                            os.remove(full_file_path)
+                            self.msg_service.delete(item)
+                    list_of_plugin_threads+=[threading.Thread(target=run,args=(x,full_file_path, app_name, upload_id,))]
+                # with ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()-1) as executor:
+                #     ordinal = 1
+                #     for x in plugins:
+                #         executor.submit(x, (full_file_path, app_name, upload_id))
+                for t in list_of_plugin_threads:
+                    t.start()
+                for t in list_of_plugin_threads:
+                    t.join()
+                os.remove(full_file_path)
+                self.msg_service.delete(item)
+                self.clean_up.clean_up()
+            except Exception as e:
+
+                self.logs.exception(e)
+                _output['error']=e
+
+
+        th_run = threading.Thread(target=run,args=(output,)).start()
         return th_run
