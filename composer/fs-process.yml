@@ -9,7 +9,7 @@ services:
     build:
       context: ./..
       dockerfile: ./composer/files-dockerfile
-  restart: on-failure
+#  restart: on-failure
   file-processing:
     image: lv-file
     container_name: lv-file-proccessing

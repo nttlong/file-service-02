@@ -66,7 +66,8 @@ def run():
                 message_service.unlock(x)
             finally:
                 message_service.delete(x)
-        with concurrent.futures.ThreadPoolExecutor(max_workers=max(multiprocessing.cpu_count() - 1,3)) as executor:
+        workers_numbers=max(multiprocessing.cpu_count() - 1,2)*10
+        with concurrent.futures.ThreadPoolExecutor(max_workers=workers_numbers) as executor:
 
             for x in items:
                 executor.submit(run,x)
