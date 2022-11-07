@@ -4,13 +4,13 @@ import os
 """
 api_version_2/re_quicky/source/build/lib.linux-x86_64-3.8/pyx_re_quicky.cpython-38-x86_64-linux-gnu.so
 """
-# if sys.platform != "linux":
-#     raise Exception(f"The module is not available for {sys.platform}")
-# else:
-#     sys.path.append(
-#         os.path.join(pathlib.Path(__file__).parent.__str__(), "source","build","lib.linux-x86_64-3.8")
-#     )
-
+if sys.platform != "linux":
+    raise Exception(f"The module is not available for {sys.platform}")
+else:
+    sys.path.append(
+        os.path.join(pathlib.Path(__file__).parent.__str__(), "build","lib.linux-x86_64-3.8","re_quicky")
+    )
+__is_build__ = False
 
 from typing import List
 def create_app(
@@ -19,10 +19,17 @@ def create_app(
                  host_url: str = "http://localhost:8011",
                  logs_dir: str = "./logs",
                  controller_dirs: List[str] = [],
-                 dev_mode:bool=False
+                 static_dir=None,
+                 dev_mode:bool=False,
+                 template_dir:str=None
 ):
     global __app__
-    from . import pyx_re_quicky
+    global __is_build__
+    if not  __is_build__:
+        import pyx_re_quicky
+
+    else:
+        from . import pyx_re_quicky
     # from pyx_re_quicky import WebApp
     __app__ = pyx_re_quicky.WebApp(
         working_dir=working_dir,
@@ -30,26 +37,88 @@ def create_app(
         host_url=host_url,
         logs_dir=logs_dir,
         controller_dirs=controller_dirs,
-        dev_mode =dev_mode
+        dev_mode =dev_mode,
+        static_dir=static_dir,
+        template_dir= template_dir
 
     )
     return __app__
+
+import fastapi.templating
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse, Response
+def init_SPA(web_app):
+
+    url = "/"
+    if web_app.host_url is not None and web_app.host_dir != "":
+        url = web_app.host_dir
+
+    @web_app.app.get(url, response_class=HTMLResponse)
+    def home_page():
+        data = dict(
+            host_url=web_app.host_url,
+            full_app_url=web_app.host_url + "/",
+            host_dir=web_app.host_dir,
+            host_api_url=web_app.host_api_url
+        )
+
+        return web_app.templates.TemplateResponse("index.html", {"request": data})
+
+    def get_dir(directory):
+        return directory
+
+    @web_app.app.get(url + "/{directory:path}", response_class=HTMLResponse)
+    async def page_single(directory: str = fastapi.Depends(get_dir)):
+
+        directory = directory.split('?')[0]
+        check_dir_path = os.path.join(web_app.static_dir, "views", directory.replace('/', os.sep))
+
+        if not os.path.exists(check_dir_path):
+            return Response(status_code=401)
+
+        # host_services = enig.create_instance(enig_frames.services.hosts.Hosts)
+        data = dict(
+            host_url=web_app.host_url,
+            full_app_url=web_app.host_url + "/",
+            host_dir=web_app.host_dir,
+            host_api_url=web_app.host_api_url
+        )
+
+        return web_app.templates.TemplateResponse("index.html", {"request": data})
+
 def uvicon_start():
     global __app__
+    init_SPA(__app__)
     __app__.start_with_uvicorn()
 
 def get(path:str):
-    from . import pyx_re_quicky_routers
+    global __is_build__
+    if not __is_build__:
+        import pyx_re_quicky_routers
+    else:
+        from . import pyx_re_quicky_routers
     # import pyx_re_quicky_routers
     return getattr(pyx_re_quicky_routers,"web_handler")(path,method="get")
 def post(path:str):
-    from . import pyx_re_quicky_routers
+    global __is_build__
+    if not __is_build__:
+        import pyx_re_quicky_routers
+    else:
+        from . import pyx_re_quicky_routers
     # import pyx_re_quicky_routers
     return getattr(pyx_re_quicky_routers,"web_handler")(path,method="post")
 def form_post(path:str):
-    from . import pyx_re_quicky_routers
+    global __is_build__
+    if not __is_build__:
+        import pyx_re_quicky_routers
+    else:
+        from . import pyx_re_quicky_routers
     # import pyx_re_quicky_routers
     return getattr(pyx_re_quicky_routers,"web_handler")(path,method="form")
 def check_is_need_pydantic(cls:type)->bool:
-    import pyx_re_quicky_routers
+    global __is_build__
+    if not __is_build__:
+        import pyx_re_quicky_routers
+    else:
+        from . import pyx_re_quicky_routers
     return getattr(pyx_re_quicky_routers, "check_is_need_pydantic")(type)

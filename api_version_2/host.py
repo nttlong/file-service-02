@@ -19,10 +19,12 @@ import re_quicky
 if __name__ =="__main__":
     re_quicky.create_app(
         working_dir=pathlib.Path(__file__).parent.__str__(),
-        host_url="http://172.16.13.72:8012",
+        host_url="http://172.16.13.72:8012/my_app",
         bind="0.0.0.0:8012",
         controller_dirs=["./controllers"],
-        dev_mode=True
+        # dev_mode=True,
+        static_dir="./../app_manager/static",
+        template_dir= "./../app_manager/html"
 
     )
     re_quicky.uvicon_start()

@@ -17,7 +17,11 @@ def get_app(app_name:str):
 #     )
 from  typing import List
 @re_quicky.form_post("{app_name}/login")
+
 def login(app_name:str,username:str,password:str,my_files:List[UploadFile]=File(),  appx=fastapi.Depends(get_app) )->Application:
+    """
+    Test
+    """
     return Application(
         Name=appx
 
