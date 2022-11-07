@@ -28,6 +28,7 @@ class __Base__:
         self.working_dir: str = None
         self.host_dir: str = None
         self.dev_mode:bool = False
+        self.api_host_dir="api"
 
     def start_with_uvicorn(self):
         import uvicorn
@@ -78,6 +79,8 @@ class __Base__:
             for k, v in _mdl_.__dict__.items():
                 if isinstance(v, pyx_re_quicky_routers.__hanlder__):
                     _path = "/" + v.path
+                    if self.api_host_dir is not None:
+                        _path ="/"+ self.api_host_dir +"/" + v.path
                     if self.host_dir is not None:
                         _path = self.host_dir + "/" + v.path
                     if v.return_type is not None:
@@ -108,8 +111,10 @@ class WebApp(__Base__):
                  host_url: str = "http://localhost:8011",
                  logs_dir: str = "./logs",
                  controller_dirs: List[str] = [],
+                 api_host_dir:str="api",
                  dev_mode:bool=False):
         global wellknown_app
+        self.api_host_dir=api_host_dir
         self.working_dir = working_dir
         self.logs_dir = logs_dir
         if self.logs_dir[0:2] == "./":

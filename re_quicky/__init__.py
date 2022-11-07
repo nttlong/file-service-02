@@ -38,11 +38,18 @@ def uvicon_start():
     global __app__
     __app__.start_with_uvicorn()
 
-def handle_get(path:str):
+def get(path:str):
     from . import pyx_re_quicky_routers
     # import pyx_re_quicky_routers
     return getattr(pyx_re_quicky_routers,"web_handler")(path,method="get")
-
+def post(path:str):
+    from . import pyx_re_quicky_routers
+    # import pyx_re_quicky_routers
+    return getattr(pyx_re_quicky_routers,"web_handler")(path,method="post")
+def form_post(path:str):
+    from . import pyx_re_quicky_routers
+    # import pyx_re_quicky_routers
+    return getattr(pyx_re_quicky_routers,"web_handler")(path,method="form")
 def check_is_need_pydantic(cls:type)->bool:
     import pyx_re_quicky_routers
     return getattr(pyx_re_quicky_routers, "check_is_need_pydantic")(type)

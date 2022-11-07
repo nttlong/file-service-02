@@ -4,14 +4,16 @@ import sys
 import fastapi
 import pydantic
 
-
+def get_appx(app_name:str):
+    return f"{app_name}_XXX"
 class Test(pydantic.BaseModel):
     pass
 fx= fastapi.FastAPI()
-@fx.get("X",response_model=Test)
-def test_a():
+class OK1(pydantic.BaseModel):
+    cod:str
+def test_a(c:str=fastapi.Form(),appx=fastapi.Depends(get_appx))->OK1:
     pass
-fc=test_a
+fc=fx.get("X",response_model=Test)(test_a)
 sys.path.append(pathlib.Path(__file__).parent.parent.__str__())
 import re_quicky
 if __name__ =="__main__":
