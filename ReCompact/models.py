@@ -10,7 +10,7 @@ import ReCompact.dbm
 )
 class User:
     import bson
-    _id = ReCompact.dbm.field(data_type=bson.objectid)
+    _id = bson.objectid)
     UserName=dbm.field(is_require=True)
     Email = dbm.field(is_require=True)
 
@@ -22,5 +22,5 @@ class User:
 class UploadRegister:
     import pymongo
     import  bson
-    _id= ReCompact.dbm.field(data_type=bson.objectid)
-    ServerFileName = ReCompact.dbm.field(data_type=str,max_len=50,is_require=True)
+    _id= bson.objectid)
+    ServerFileName = str,max_len=50,is_require=True)

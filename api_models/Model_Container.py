@@ -10,9 +10,9 @@ import datetime
 )
 class ZipContainer:
     import bson
-    _id = ReCompact.dbm.field(data_type=bson.ObjectId,is_require=False)
-    UploadId =ReCompact.dbm.field(data_type=str,is_require=True) # Trỏ đến UploadRegister
-    OriginalFileName =ReCompact.dbm.field(data_type=str,is_require=True) # Tên file zip nguyên gốc lúc upload
-    Files = ReCompact.dbm.field(data_type=list) # Danh sách file zip, chỉ lư địa chỉ tương đối
-    CreatedOn =ReCompact.dbm.field(data_type=datetime.datetime,is_require=True) #ngày tạo
+    _id = bson.ObjectId,is_require=False)
+    UploadId =str,is_require=True) # Trỏ đến UploadRegister
+    OriginalFileName =str,is_require=True) # Tên file zip nguyên gốc lúc upload
+    Files = list) # Danh sách file zip, chỉ lư địa chỉ tương đối
+    CreatedOn =datetime.datetime,is_require=True) #ngày tạo
 

@@ -12,10 +12,10 @@ import enig_frames.db_context
     index=["CreateDate", "Exception", "AppName"]
 )
 class SysAppLogs:
-    Content = ReCompact.dbm.field(data_type=str)
-    CreateDate = ReCompact.dbm.field(data_type=datetime.datetime)
-    Exception = ReCompact.dbm.field(data_type=str)
-    AppName = ReCompact.dbm.field(data_type=str)
+    Content = str)
+    CreateDate = datetime.datetime)
+    Exception = str)
+    AppName = str)
 
 
 SysAppLogsDoc = SysAppLogs()

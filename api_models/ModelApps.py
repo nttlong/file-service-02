@@ -8,22 +8,22 @@ import datetime
 )
 class sys_applications:
     import bson
-    _id = ReCompact.dbm.field(data_type=str)
-    Name = ReCompact.dbm.field(data_type=str, is_require=True)
-    NameLower = ReCompact.dbm.field(data_type=str, is_require=True)
+    _id = str)
+    Name = str, is_require=True)
+    NameLower = str, is_require=True)
     """
     Để cho truy cập nhanh dùng NameLower so sánh với giá trị lower
     """
-    RegisteredBy = ReCompact.dbm.field(data_type=str,is_require=True)
-    RegisteredOn = ReCompact.dbm.field(data_type=datetime.datetime, is_require=True)
-    ModifiedOn = ReCompact.dbm.field(data_type=datetime.datetime, is_require=True)
-    Domain = ReCompact.dbm.field(data_type=str, is_require=True)
-    LoginUrl = ReCompact.dbm.field(data_type=str, is_require=True)
+    RegisteredBy = str,is_require=True)
+    RegisteredOn = datetime.datetime, is_require=True)
+    ModifiedOn = datetime.datetime, is_require=True)
+    Domain = str, is_require=True)
+    LoginUrl = str, is_require=True)
 
-    SecretKey = ReCompact.dbm.field(data_type=str)
-    ReturnUrlAfterSignIn = ReCompact.dbm.field(data_type=str,is_require=True)
-    Description = ReCompact.dbm.field(data_type=str)
-    Email= ReCompact.dbm.field(data_type=str)
+    SecretKey = str)
+    ReturnUrlAfterSignIn = str,is_require=True)
+    Description = str)
+    Email= str)
     """
     Email dùng để liên lạc với application khi cần. Ví dụ dùng trong trường ho75ptruy tìm lại mật khẩu của user root trên app
     """

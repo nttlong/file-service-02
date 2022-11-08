@@ -723,7 +723,28 @@ class DBDocument:
         for document in await ret.to_list(length=100):
             ret_items += [DocumentObject(document)]
         return ret_items
+    def find(self, filter, linmit=10000):
 
+
+        _filter = filter
+        if isinstance(filter, Field):
+            _filter = filter.to_mongo_db_expr()
+
+        ret = self.collection.find(_filter)
+
+        for document in ret:
+            yield DocumentObject(document)
+    def find_to_json_convertable(self, filter, linmit=10000):
+
+
+        _filter = filter
+        if isinstance(filter, Field):
+            _filter = filter.to_mongo_db_expr()
+
+        ret = self.collection.find(_filter)
+
+        for document in ret:
+            yield DocumentObject(document).to_json_convertable()
     async def insert_one_async(self, *args, **kwargs):
         from motor.motor_asyncio import AsyncIOMotorClient
         client = AsyncIOMotorClient()
@@ -1126,3 +1147,10 @@ class DbContext(object):
             finally:
                 __DbContext__cache__lock__.release()
         return cls._instance
+def document_define(name:str,indexes:List[str],unique_keys:List[str]):
+    def wrapper(cls):
+        setattr(cls,"__document_name__",name)
+        setattr(cls, "__document_indexes__", indexes)
+        setattr(cls, "__document_unique_keys__", unique_keys)
+        return cls
+    return wrapper

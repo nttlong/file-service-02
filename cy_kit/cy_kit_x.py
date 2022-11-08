@@ -47,14 +47,14 @@ __cache_yam_dict__ = {}
 __cache_yam_dict_lock__ = threading.Lock()
 
 
-def single(cls: type, *args, **kwargs):
+def single(cls, *args, **kwargs):
     key = f"{cls.__module__}/{cls.__name__}"
     ret = None
     if __cache_depen__.get(key) is None:
         # __lock_depen__.acquire()
         try:
             ret = kink.inject(cls)
-            v = ret(*args, **kwargs)
+            v = ret(**ret.__init__.__annotations__)
             __cache_depen__[key] = v
         except Exception as e:
             raise e
@@ -63,9 +63,9 @@ def single(cls: type, *args, **kwargs):
     return __cache_depen__[key]
 
 
-def instance(cls: type, *args, **kwargs):
+def instance(cls, *args, **kwargs):
     ret = kink.inject(cls)
-    v = ret(*args, **kwargs)
+    v = ret(**ret.__init__.__annotations__)
     return v
 
 
@@ -94,6 +94,9 @@ class VALUE_DICT:
                 ret_list += {self.__parse__(x)}
             return ret_list
         return ret
+    def to_dict(self):
+        return self.__data__
+
 
 
 def yaml_config(full_path_to_yaml_file: str,apply_sys_args:bool=True):
