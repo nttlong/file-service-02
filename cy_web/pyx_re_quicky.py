@@ -71,6 +71,8 @@ class __Base__:
     def load_controller_from_dir(self, route_prefix: str = None, controller_dir: str = None):
         if controller_dir == None:
             return
+        if controller_dir[0:2] =="./":
+            controller_dir=os.path.join(self.working_dir,controller_dir[2:])
         if not os.path.isdir(controller_dir):
             print(f"{controller_dir} was not found")
             self.logs.error(msg=f"{controller_dir} was not found")
@@ -97,26 +99,29 @@ class __Base__:
 
         # import pyx_re_quicky_routers
         module_path = os.path.join(module_dir, "__init__.py")
-        ret = []
-        if os.path.isfile(module_path):
-            import importlib.util
-            import sys
-            spec = importlib.util.spec_from_file_location(f"controllers.{controller_name}", module_path)
-            _mdl_ = importlib.util.module_from_spec(spec)
-            sys.modules[f"controllers.{controller_name}"] = _mdl_
-            spec.loader.exec_module(_mdl_)
-            for k, v in _mdl_.__dict__.items():
-                if isinstance(v, pyx_re_quicky_routers.__hanlder__):
-                    _path = "/" + v.path
-                    if prefix is not None and prefix != "":
-                        _path = "/" + prefix + _path
-                    if self.host_dir is not None:
-                        _path = self.host_dir + _path
+        _, _, files = list(os.walk(module_dir))[0]
+        for _file_ in files:
+            if os.path.splitext(_file_)[1]==".py":
+                full_file_path = os.path.join(module_dir,_file_)
+                if os.path.isfile(full_file_path):
+                    import importlib.util
+                    import sys
+                    spec = importlib.util.spec_from_file_location(f"controllers.{controller_name}", full_file_path)
+                    _mdl_ = importlib.util.module_from_spec(spec)
+                    # sys.modules[f"controllers.{controller_name}"] = _mdl_
+                    spec.loader.exec_module(_mdl_)
+                    for k, v in _mdl_.__dict__.items():
+                        if isinstance(v, pyx_re_quicky_routers.__hanlder__):
+                            _path = "/" + v.path
+                            if prefix is not None and prefix != "":
+                                _path = "/" + prefix + _path
+                            if self.host_dir is not None:
+                                _path = self.host_dir + _path
 
-                    if v.return_type is not None:
-                        getattr(self.app, v.method)(_path, response_model=v.return_type)(v.handler)
-                    else:
-                        getattr(self.app, v.method)(_path)(v.handler)
+                            if v.return_type is not None:
+                                getattr(self.app, v.method)(_path, response_model=v.return_type)(v.handler)
+                            else:
+                                getattr(self.app, v.method)(_path)(v.handler)
 
     def set_on_auth(self, fn):
         setattr(self.oauth2_type, "__call__", fn)
@@ -209,6 +214,9 @@ class WebApp(__Base__):
                 self.controller_dirs += [x]
         for x in self.controller_dirs:
             self.load_controller_from_dir(x)
+        if self.host_dir is not None and self.host_dir!="":
+            self.url_get_token = self.host_dir+"/"+self.url_get_token
+
         self.oauth2_type = OAuth2PasswordBearerAndCookie
 
         return __instance__

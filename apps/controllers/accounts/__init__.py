@@ -6,19 +6,15 @@ from fastapi_jwt_auth import AuthJWT
 @cy_web.form_post("accounts/token")
 def accounts_get_token(
         username:str,
-        password:str,
-        form_data: OAuth2PasswordRequestForm = Depends(OAuth2PasswordRequestForm),
-        Authorize: AuthJWT = Depends(AuthJWT)):
-    username = form_data.username
-    app_name = ""
-    if '/' in form_data.username:
-        items = form_data.username.split('/')
+        password:str):
+    if '/' in username:
+        items = username.split('/')
         app_name = items[0]
-        username = form_data.username[app_name.__len__() + 1:]
-    elif '@' in form_data.username:
-        items = form_data.username.split('@')
+        username = username[app_name.__len__() + 1:]
+    elif '@' in username:
+        items = username.split('@')
         app_name = items[-1]
-        username = form_data.username[0:-app_name.__len__() - 1]
+        username = username[0:-app_name.__len__() - 1]
     # db_name = container.db_context.get_db_name(app_name)
 
 
@@ -58,4 +54,4 @@ def accounts_get_token(
     # Authorize.set_access_cookies(access_token)
     # # Authorize.set_refresh_cookies(refresh_token)
     # return {"access_token": access_token, "token_type": "bearer"}
-    return form_data
+    return "XXX"

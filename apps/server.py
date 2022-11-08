@@ -73,10 +73,14 @@ class WebContaner:
     config = cy_kit.yaml_config("/home/vmadmin/python/v6/file-service-02/config.yml")
 
 import cy_web
+app = None
+def get_app():
+    global app
+    return app
 if __name__ =="__main__":
-    cy_web.create_app(
+    web_app = cy_web.create_app(
         working_dir=pathlib.Path(__file__).parent.__str__(),
-        host_url="http://172.16.13.72:8012/my_app",
+        host_url="http://172.16.13.72:8012",
         bind="0.0.0.0:8012",
         # dev_mode=True,
         static_dir="./../app_manager/static",
@@ -86,6 +90,8 @@ if __name__ =="__main__":
         url_get_token="api/accounts/token"
 
     )
+
+    app = web_app.app
     cy_web.on_auth(on_auth)
     cy_web.add_controller("api","./controllers")
     cy_web.uvicon_start()

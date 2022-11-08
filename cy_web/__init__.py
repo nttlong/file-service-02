@@ -2,6 +2,7 @@ import pathlib
 import sys
 import os
 import fastapi.templating
+import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, Response
 
@@ -20,8 +21,11 @@ else:
     else:
         from . import pyx_mime_types
 
-
+sys.path.append(
+            os.path.join(pathlib.Path(__file__).parent.__str__())
+        )
 from typing import List
+fastapi_app= None
 __app__= None
 oauth2= None
 def create_app(working_dir: str,
@@ -59,6 +63,8 @@ def create_app(working_dir: str,
     )
     global oauth2
     oauth2= __app__.oauth2
+    global fastapi_app
+    fastapi_app = __app__.app
     return __app__
 
 
@@ -69,7 +75,7 @@ def add_controller(prefix_path:str,controller_dir):
 
 def init_SPA(web_app):
     url = "/"
-    if web_app.host_url is not None and web_app.host_dir != "":
+    if web_app.host_dir is not None and web_app.host_dir != "":
         url = web_app.host_dir
 
     @web_app.app.get(url, response_class=HTMLResponse)
@@ -105,11 +111,42 @@ def init_SPA(web_app):
 
         return web_app.templates.TemplateResponse("index.html", {"request": data})
 
-
+def get_current_app():
+    global __app__
+    return __app__.app
 def uvicon_start():
     global __app__
     init_SPA(__app__)
-    __app__.start_with_uvicorn()
+    if __app__.dev_mode:
+
+        class fakemodule(object):
+
+            @staticmethod
+            def method(a, b):
+                return a + b
+        sys.modules["__runner__"]=fakemodule
+        setattr(sys.modules["__runner__"],"current_app",__app__.app)
+        mdl_name = __app__.start_with_uvicorn.__func__.__module__
+        app_name = "wellknown_app"
+        uvicorn.run(
+            sys.modules[__app__.start_with_uvicorn.__func__.__module__].wellknown_app,
+
+            host=__app__.bind_ip,
+            port=__app__.bind_port,
+            workers=1,
+            ws='websockets',
+            ws_max_size=16777216 * 1024,
+            backlog=1000,
+            interface='asgi3',
+            timeout_keep_alive=True,
+            lifespan='on',
+
+
+            reload=True,
+
+        )
+    else:
+        __app__.start_with_uvicorn()
 
 
 def get(path: str):
