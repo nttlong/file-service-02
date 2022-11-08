@@ -5,13 +5,13 @@ from typing import List
 
 import fastapi
 
-import pyx_mime_types
+# from . import pyx_re_quicky_routers
 import pyx_re_quicky_routers
 from  starlette.status import HTTP_401_UNAUTHORIZED
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import HTTPException
-from  typing import Optional,Dict
+from  typing import Optional ,Dict
 from  fastapi.security.oauth2 import OAuth2PasswordBearer
 import jose
 import jwt
@@ -20,6 +20,13 @@ from fastapi.templating import Jinja2Templates
 
 wellknown_app: FastAPI = None
 __instance__ = None
+
+
+def load_controller_from_file(file):
+    if not os.path.isfile(file):
+        print(f"{file} was not found")
+        logging.Logger.error(f"{file} was not found")
+    pass
 
 
 class __Base__:
@@ -36,37 +43,32 @@ class __Base__:
         self.logs: logging.Logger = None
         self.working_dir: str = None
         self.host_dir: str = None
-        self.dev_mode:bool = False
-        self.api_host_dir="api"
-        self.static_dir:str =None
-        self.template_dir:str = None
-        self.templates:Jinja2Templates=None
-        self.url_get_token:str = None
-        self.oauth2:OAuth2PasswordBearerAndCookie=None
-        self.jwt_algorithm=None
-        self.jwt_secret_key=None
+        self.dev_mode :bool = False
+        self.api_host_dir ="api"
+        self.static_dir :str =None
+        self.template_dir: str = None
+        self.templates: Jinja2Templates = None
+        self.url_get_token: str = None
+        self.oauth2: OAuth2PasswordBearerAndCookie = None
+        self.jwt_algorithm = None
+        self.jwt_secret_key = None
+        self.oauth2_type = None
+        self.__on_auth__ = None
 
     def start_with_uvicorn(self):
         import uvicorn
-        if self.dev_mode:
-            uvicorn.run(
-                wellknown_app,
-                # f"{self.__module__}:wellknown_app",
-                host=self.bind_ip,
-                port=self.bind_port,
-                log_level="info",
-                reload= self.dev_mode
-            )
-        else:
-            uvicorn.run(
-                f"{self.__module__}:wellknown_app",
-                host=self.bind_ip,
-                port=self.bind_port,
-                log_level="info"
+        uvicorn.run(
+            f"{self.__module__}:wellknown_app",
+            host=self.bind_ip,
+            port=self.bind_port,
+            log_level="info",
+            # workers=8,
+            lifespan='on',
+            reload=self.dev_mode
 
-            )
+        )
 
-    def load_controller_from_dir(self,route_prefix:str=None, controller_dir: str=None):
+    def load_controller_from_dir(self, route_prefix: str = None, controller_dir: str = None):
         if controller_dir == None:
             return
         if not os.path.isdir(controller_dir):
@@ -80,8 +82,7 @@ class __Base__:
         for x in dirs:
             sys.path.append(x)
         for dir in dirs:
-            self.load_controller_module_dir(os.path.join(root_dir, dir), dir,route_prefix)
-
+            self.load_controller_module_dir(os.path.join(root_dir, dir), dir, route_prefix)
 
     def create_logs(self, logs_dir) -> logging.Logger:
         if not os.path.isdir(logs_dir):
@@ -92,7 +93,7 @@ class __Base__:
         _logs.addHandler(hdlr)
         return _logs
 
-    def load_controller_module_dir(self, module_dir, controller_name: str,prefix:str=None) -> List[object]:
+    def load_controller_module_dir(self, module_dir, controller_name: str, prefix: str = None) -> List[object]:
 
         # import pyx_re_quicky_routers
         module_path = os.path.join(module_dir, "__init__.py")
@@ -107,22 +108,26 @@ class __Base__:
             for k, v in _mdl_.__dict__.items():
                 if isinstance(v, pyx_re_quicky_routers.__hanlder__):
                     _path = "/" + v.path
-                    if prefix is not None and prefix!="":
-                        _path = "/"+prefix+_path
+                    if prefix is not None and prefix != "":
+                        _path = "/" + prefix + _path
                     if self.host_dir is not None:
-                        _path = self.host_dir  + _path
+                        _path = self.host_dir + _path
 
                     if v.return_type is not None:
-                        getattr(self.app, v.method)(_path,response_model=v.return_type)(v.handler)
+                        getattr(self.app, v.method)(_path, response_model=v.return_type)(v.handler)
                     else:
                         getattr(self.app, v.method)(_path)(v.handler)
 
+    def set_on_auth(self, fn):
+        setattr(self.oauth2_type, "__call__", fn)
 
-    def load_controller_from_file(self, file):
-        if not os.path.isfile(file):
-            print(f"{file} was not found")
-            logging.Logger.error(f"{file} was not found")
-        pass
+    def get_auth(self):
+        return self.oauth2_type(
+            token_url=self.url_get_token,
+            jwt_algorithm=self.jwt_algorithm,
+            jwt_secret_key=self.jwt_secret_key
+        )
+
 
 class WebApp(__Base__):
     def __new__(cls, *args, **kwargs):
@@ -139,24 +144,25 @@ class WebApp(__Base__):
                  host_url: str = "http://localhost:8011",
                  logs_dir: str = "./logs",
                  controller_dirs: List[str] = [],
-                 api_host_dir:str="api",
-                 static_dir:str=None,
-                 dev_mode:bool=False,
-                 template_dir:str=None,
-                 url_get_token:str="api/accounts/token",
-                 jwt_algorithm:str=None,
-                 jwt_secret_key:str= None
+                 api_host_dir: str = "api",
+                 static_dir: str = None,
+                 dev_mode: bool = False,
+                 template_dir: str = None,
+                 url_get_token: str = "api/accounts/token",
+                 jwt_algorithm: str = None,
+                 jwt_secret_key: str = None
                  ):
         global wellknown_app
-        self.jwt_algorithm=jwt_algorithm
-        self.jwt_secret_key=jwt_secret_key
-        self.template_dir =template_dir
-        self.dev_mode =dev_mode
-        self.api_host_dir=api_host_dir
+        self.url_get_token = url_get_token
+        self.jwt_algorithm = jwt_algorithm
+        self.jwt_secret_key = jwt_secret_key
+        self.template_dir = template_dir
+        self.dev_mode = dev_mode
+        self.api_host_dir = api_host_dir
         self.working_dir = working_dir
-        self.static_dir=static_dir
-        if self.static_dir is not None and self.static_dir[0:2]=="./":
-            self.static_dir =os.path.join(self.working_dir,self.static_dir[2:])
+        self.static_dir = static_dir
+        if self.static_dir is not None and self.static_dir[0:2] == "./":
+            self.static_dir = os.path.join(self.working_dir, self.static_dir[2:])
         self.logs_dir = logs_dir
         if self.logs_dir[0:2] == "./":
             self.logs_dir = os.path.join(self.working_dir, self.logs_dir[2:])
@@ -170,7 +176,7 @@ class WebApp(__Base__):
         remain = self.host_url[self.host_schema.__len__() + 3:]
         self.host_name = remain.split('/')[0].split(':')[0]
         self.host_port = None
-        self.host_api_url = self.host_url+"/"+self.api_host_dir
+        self.host_api_url = self.host_url + "/" + self.api_host_dir
         if remain.split('/')[0].split(':').__len__() == 2:
             self.host_port = int(remain.split('/')[0].split(':')[1])
             remain = remain[self.host_name.__len__() + str(self.host_port).__len__() + 1:]
@@ -182,13 +188,13 @@ class WebApp(__Base__):
         self.app = wellknown_app
         if self.static_dir is not None:
             from fastapi.staticfiles import StaticFiles
-            if self.host_dir is not None and self.host_dir!="":
-                wellknown_app.mount(self.host_dir+"/static", StaticFiles(directory=self.static_dir), name="static")
+            if self.host_dir is not None and self.host_dir != "":
+                wellknown_app.mount(self.host_dir + "/static", StaticFiles(directory=self.static_dir), name="static")
             else:
                 wellknown_app.mount("/static", StaticFiles(directory=self.static_dir),
                                     name="static")
-        if self.template_dir is not None and self.template_dir[0:2]=="./":
-            self.template_dir = os.path.join(self.working_dir,self.template_dir[2:])
+        if self.template_dir is not None and self.template_dir[0:2] == "./":
+            self.template_dir = os.path.join(self.working_dir, self.template_dir[2:])
         if self.template_dir is not None:
             self.templates = Jinja2Templates(directory=self.template_dir)
 
@@ -203,22 +209,22 @@ class WebApp(__Base__):
                 self.controller_dirs += [x]
         for x in self.controller_dirs:
             self.load_controller_from_dir(x)
+        self.oauth2_type = OAuth2PasswordBearerAndCookie
 
-        self.oauth2 = OAuth2PasswordBearerAndCookie(
-            token_url=url_get_token,
-            jwt_algorithm= self.jwt_algorithm,
-            jwt_secret_key= self.jwt_secret_key
-        )
-            
         return __instance__
+
+
+from fastapi import Request
+
+cy_request = fastapi.Request
 
 
 class OAuth2PasswordBearerAndCookie(OAuth2PasswordBearer):
     def __init__(
             self,
             token_url: str,
-            jwt_secret_key:str,
-            jwt_algorithm:str,
+            jwt_secret_key: str,
+            jwt_algorithm: str,
             scheme_name: Optional[str] = None,
             scopes: Optional[Dict[str, str]] = None,
             description: Optional[str] = None,
@@ -236,62 +242,3 @@ class OAuth2PasswordBearerAndCookie(OAuth2PasswordBearer):
         )
         self.jwt_secret_key = jwt_secret_key
         self.jwt_algorithm = jwt_algorithm
-
-    async def __call__(self, request: Request) -> Optional[str]:
-        import enig_frames.services.sercurities
-        if request.cookies.get('access_token_cookie', None) is not None:
-            token = request.cookies['access_token_cookie']
-            try:
-                ret_data = jwt.decode(token, self.jwt_secret_key,
-                              algorithms=[self.jwt_algorithm],
-                              options={"verify_signature": False},
-                              )
-
-                setattr(request, "usernane", ret_data.get("sup"))
-                setattr(request, "application_name", ret_data.get("application"))
-                return token
-            except jose.exceptions.ExpiredSignatureError as e:
-                raise HTTPException(
-                    status_code=HTTP_401_UNAUTHORIZED,
-                    detail="Not authenticated",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
-        else:
-            authorization: str = request.headers.get("Authorization")
-            scheme, token = fastapi.utils.get_authorization_scheme_param(authorization)
-            if not authorization or scheme.lower() != "bearer":
-                if self.auto_error:
-                    raise HTTPException(
-                        status_code=HTTP_401_UNAUTHORIZED,
-                        detail="Not authenticated",
-                        headers={"WWW-Authenticate": "Bearer"},
-                    )
-                else:
-                    return None
-            try:
-                ret_data = jwt.decode(token,
-                                      enig_frames.containers.Container.config.config.jwt.secret_key,
-                                      algorithms=[enig_frames.containers.Container.config.config.jwt.algorithm],
-                                      options={"verify_signature": False},
-                                      )
-
-                setattr(request, "usernane", ret_data.get("sup"))
-                setattr(request, "application_name", ret_data.get("application"))
-            except jose.exceptions.JWTError:
-                raise HTTPException(
-                    status_code=HTTP_401_UNAUTHORIZED,
-                    detail="Not authenticated",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
-            except jose.exceptions.ExpiredSignatureError as e:
-                raise HTTPException(
-                    status_code=HTTP_401_UNAUTHORIZED,
-                    detail="Not authenticated",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
-            return token
-
-
-
-
-

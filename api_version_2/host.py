@@ -10,16 +10,68 @@ sys.path.append(pathlib.Path(__file__).parent.parent.__str__())
 
 import cy_kit
 
+import jwt
+import jose
+from fastapi.exceptions import HTTPException
 
-class Services:
-    def test(self):
-        print("OK")
 
+async def on_auth(self, request:fastapi.Request):
+
+        if request.cookies.get('access_token_cookie', None) is not None:
+            token = request.cookies['access_token_cookie']
+            try:
+                ret_data = jwt.decode(token, self.jwt_secret_key,
+                              algorithms=[self.jwt_algorithm],
+                              options={"verify_signature": False},
+                              )
+
+                setattr(request, "usernane", ret_data.get("sup"))
+                setattr(request, "application_name", ret_data.get("application"))
+                return token
+            except jose.exceptions.ExpiredSignatureError as e:
+                raise HTTPException(
+                    status_code=401,
+                    detail="Not authenticated",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+        else:
+            authorization: str = request.headers.get("Authorization")
+            scheme, token = fastapi.utils.get_authorization_scheme_param(authorization)
+            if not authorization or scheme.lower() != "bearer":
+                if self.auto_error:
+                    raise HTTPException(
+                        status_code=401,
+                        detail="Not authenticated",
+                        headers={"WWW-Authenticate": "Bearer"},
+                    )
+                else:
+                    return None
+            try:
+                ret_data = jwt.decode(token,
+                                      self.jwt_secret_key ,
+                                      algorithms=[self.jwt_algorithm],
+                                      options={"verify_signature": False},
+                                      )
+
+                setattr(request, "usernane", ret_data.get("sup"))
+                setattr(request, "application_name", ret_data.get("application"))
+            except jose.exceptions.JWTError:
+                raise HTTPException(
+                    status_code=401,
+                    detail="Not authenticated",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+            except jose.exceptions.ExpiredSignatureError as e:
+                raise HTTPException(
+                    status_code=401,
+                    detail="Not authenticated",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+            return token
 @cy_kit.container()
 class WebContaner:
     config = cy_kit.yaml_config("/home/vmadmin/python/v6/file-service-02/config.yml")
-    service:cy_kit.single(Services)
-WebContaner.service.test()
+
 import cy_web
 if __name__ =="__main__":
     cy_web.create_app(
@@ -34,5 +86,6 @@ if __name__ =="__main__":
         url_get_token="api/accounts/token"
 
     )
+    cy_web.on_auth(on_auth)
     cy_web.add_controller("api","./controllers")
     cy_web.uvicon_start()

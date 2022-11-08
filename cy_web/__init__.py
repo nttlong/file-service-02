@@ -8,17 +8,22 @@ from fastapi.responses import HTMLResponse, Response
 """
 api_version_2/cy_web/source/build/lib.linux-x86_64-3.8/pyx_re_quicky.cpython-38-x86_64-linux-gnu.so
 """
+__is_build__ = False
 if sys.platform != "linux":
     raise Exception(f"The module is not available for {sys.platform}")
 else:
-    sys.path.append(
-        os.path.join(pathlib.Path(__file__).parent.__str__(), "build", "lib.linux-x86_64-3.8", "cy_web")
-    )
-__is_build__ = False
+    if not __is_build__:
+        sys.path.append(
+            os.path.join(pathlib.Path(__file__).parent.__str__(), "build", "lib.linux-x86_64-3.8", "cy_web")
+        )
+        import pyx_mime_types
+    else:
+        from . import pyx_mime_types
+
 
 from typing import List
-
-
+__app__= None
+oauth2= None
 def create_app(working_dir: str,
                bind: str = "0.0.0.0:8011",
                host_url: str = "http://localhost:8011",
@@ -52,6 +57,8 @@ def create_app(working_dir: str,
         url_get_token=url_get_token
 
     )
+    global oauth2
+    oauth2= __app__.oauth2
     return __app__
 
 
@@ -119,10 +126,12 @@ def post(path: str):
     global __is_build__
     if not __is_build__:
         import pyx_re_quicky_routers
+        return getattr(pyx_re_quicky_routers, "web_handler")(path, method="post")
     else:
         from . import pyx_re_quicky_routers
+        return pyx_re_quicky_routers.web_handler(path=path,method="post")
     # import pyx_re_quicky_routers
-    return getattr(pyx_re_quicky_routers, "web_handler")(path, method="post")
+
 
 
 def form_post(path: str):
@@ -142,3 +151,11 @@ def check_is_need_pydantic(cls: type) -> bool:
     else:
         from . import pyx_re_quicky_routers
     return getattr(pyx_re_quicky_routers, "check_is_need_pydantic")(type)
+
+
+def auth():
+    global __app__
+    return __app__.get_auth()
+def on_auth(fn):
+    global __app__
+    __app__.set_on_auth(fn)

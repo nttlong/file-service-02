@@ -40,12 +40,15 @@ def __wrap_pydantic__(pre, cls, is_lock=True):
     return __wrap_pydantic_cache__.get(f"{cls.__module__}/{cls.__name__}")
 
 
-def check_is_need_pydantic(cls: type):
+def check_is_need_pydantic(cls):
     import typing
-
+    if cls == fastapi.Request or issubclass(cls, fastapi.Request):
+        return False
+    if not inspect.isclass(cls) and callable(cls):
+        return False
     if hasattr(cls, "__origin__") and cls.__origin__ == typing.List.__origin__ and hasattr(cls,
                                                                                            "__args__") and isinstance(
-            cls.__args__, tuple):
+        cls.__args__, tuple):
         ret = []
         for x in cls.__args__:
             if check_is_need_pydantic(x):
@@ -75,12 +78,16 @@ class __hanlder__:
         for k, v in __annotations__.items():
 
             if method != "form":
-                if not "{" + k + "}" in self.path and check_is_need_pydantic(v):
-                    handler.__annotations__[k] = __wrap_pydantic__(handler.__name__, v)
+                if v == fastapi.Request:
+                    continue
+                if check_is_need_pydantic(v):
+                    handler.__annotations__[k] = __wrap_pydantic__("", v)
                     if k != "return":
                         __defaults__ += [fastapi.Body(title=k)]
+
                     else:
                         self.return_type = handler.__annotations__[k]
+
             else:
                 if k == "return":
                     if check_is_need_pydantic(v):
@@ -88,9 +95,9 @@ class __hanlder__:
 
                 if not "{" + k + "}" in self.path:
                     import typing
-                    if v == fastapi.UploadFile or \
-                            (hasattr(v, "__origin__") and v.__origin__ == typing.List[fastapi.UploadFile].__origin__
-                             and hasattr(v, "__args__") and v.__args__[0] == fastapi.UploadFile):
+                    if v == fastapi.UploadFile or v == fastapi.Request or \
+                                (hasattr(v, "__origin__") and v.__origin__ == typing.List[fastapi.UploadFile].__origin__
+                                 and hasattr(v, "__args__") and v.__args__[0] == fastapi.UploadFile):
                         continue
                     elif k != "return" and not v in [str, datetime, bool, float, int]:
                         continue
@@ -128,7 +135,3 @@ def web_handler(path: str, method: str):
             return __wrapper_func__(method, obj, path)
 
     return warpper
-
-
-
-
