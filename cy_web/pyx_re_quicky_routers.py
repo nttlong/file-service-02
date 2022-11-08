@@ -93,7 +93,7 @@ class __hanlder__:
                              and hasattr(v, "__args__") and v.__args__[0] == fastapi.UploadFile):
                         continue
                     elif k != "return" and not v in [str, datetime, bool, float, int]:
-                        raise Exception(f"Form post value must be in [str,datetime,bool,float,int")
+                        continue
                     elif k != "return":
                         __defaults__ += [fastapi.Form()]
                         # __wrap_pydantic__(handler.__name__, v)

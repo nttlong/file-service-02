@@ -8,7 +8,7 @@ if sys.platform != "linux":
     raise Exception(f"The module is not available for {sys.platform}")
 __cy_docs_path__ = os.path.join(
     __working_dir__,
-    "build", "lib.linux-x86_64-3.8", "py_docs"
+    "build", "lib.linux-x86_64-3.8", "cy_docs"
 )
 sys.path.append(__cy_docs_path__)
 import cy_docs

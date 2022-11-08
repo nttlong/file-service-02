@@ -24,6 +24,6 @@ setup(
 #     zip_safe=True,
 # )
 """
-cd re_quicky/source
+cd cy_web/source
 python pyx_imme_types_build.py build_ext --inplace
 """

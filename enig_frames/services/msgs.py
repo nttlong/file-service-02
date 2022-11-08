@@ -62,7 +62,7 @@ class Message(enig.Singleton):
         )
 
     def get_message(self, message_type: str, max_items: int = 1000) -> List[MessageInfo]:
-        import py_docs
+        import cy_docs
         ret_list = self.db.context('admin').aggregate(
             api_models.documents.SysMessage
         ).match(
