@@ -1,5 +1,6 @@
-
 import logging
+import pathlib
+import sys
 from datetime import datetime
 from typing import List
 
@@ -7,19 +8,20 @@ import fastapi
 
 # from . import pyx_re_quicky_routers
 import pyx_re_quicky_routers
-from  starlette.status import HTTP_401_UNAUTHORIZED
+from starlette.status import HTTP_401_UNAUTHORIZED
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import HTTPException
-from  typing import Optional ,Dict
-from  fastapi.security.oauth2 import OAuth2PasswordBearer
+from typing import Optional, Dict
+from fastapi.security.oauth2 import OAuth2PasswordBearer
 import jose
 import jwt
 import os
 from fastapi.templating import Jinja2Templates
 
-wellknown_app: FastAPI = None
-__instance__ = None
+
+# wellknown_app: FastAPI = None
+# __instance__ = None
 
 
 def load_controller_from_file(file):
@@ -31,6 +33,8 @@ def load_controller_from_file(file):
 
 class __Base__:
     def __init__(self):
+        self.application_name = None
+        self.main_module = None
         self.bind_ip = None
         self.bind_port = None
         self.host_url = None
@@ -43,9 +47,9 @@ class __Base__:
         self.logs: logging.Logger = None
         self.working_dir: str = None
         self.host_dir: str = None
-        self.dev_mode :bool = False
-        self.api_host_dir ="api"
-        self.static_dir :str =None
+        self.dev_mode: bool = False
+        self.api_host_dir = "api"
+        self.static_dir: str = None
         self.template_dir: str = None
         self.templates: Jinja2Templates = None
         self.url_get_token: str = None
@@ -55,24 +59,13 @@ class __Base__:
         self.oauth2_type = None
         self.__on_auth__ = None
 
-    def start_with_uvicorn(self):
-        import uvicorn
-        uvicorn.run(
-            f"{self.__module__}:wellknown_app",
-            host=self.bind_ip,
-            port=self.bind_port,
-            log_level="info",
-            # workers=8,
-            lifespan='on',
-            reload=self.dev_mode
 
-        )
 
     def load_controller_from_dir(self, route_prefix: str = None, controller_dir: str = None):
         if controller_dir == None:
             return
-        if controller_dir[0:2] =="./":
-            controller_dir=os.path.join(self.working_dir,controller_dir[2:])
+        if controller_dir[0:2] == "./":
+            controller_dir = os.path.join(self.working_dir, controller_dir[2:])
         if not os.path.isdir(controller_dir):
             print(f"{controller_dir} was not found")
             self.logs.error(msg=f"{controller_dir} was not found")
@@ -83,8 +76,10 @@ class __Base__:
         sys.path.append(root_dir)
         for x in dirs:
             sys.path.append(x)
+        for _file_ in files:
+            self.load_conttroler_from_file(os.path.join(root_dir, _file_), route_prefix)
         for dir in dirs:
-            self.load_controller_module_dir(os.path.join(root_dir, dir), dir, route_prefix)
+            self.load_controller_module_dir(os.path.join(root_dir, dir), route_prefix)
 
     def create_logs(self, logs_dir) -> logging.Logger:
         if not os.path.isdir(logs_dir):
@@ -95,34 +90,16 @@ class __Base__:
         _logs.addHandler(hdlr)
         return _logs
 
-    def load_controller_module_dir(self, module_dir, controller_name: str, prefix: str = None) -> List[object]:
+    def load_controller_module_dir(self, module_dir, prefix: str = None) -> List[object]:
 
         # import pyx_re_quicky_routers
         module_path = os.path.join(module_dir, "__init__.py")
         _, _, files = list(os.walk(module_dir))[0]
         for _file_ in files:
-            if os.path.splitext(_file_)[1]==".py":
-                full_file_path = os.path.join(module_dir,_file_)
+            if os.path.splitext(_file_)[1] == ".py":
+                full_file_path = os.path.join(module_dir, _file_)
                 if os.path.isfile(full_file_path):
-                    import importlib.util
-                    import sys
-                    spec = importlib.util.spec_from_file_location(f"controllers.{controller_name}", full_file_path)
-                    _mdl_ = importlib.util.module_from_spec(spec)
-                    # sys.modules[f"controllers.{controller_name}"] = _mdl_
-                    spec.loader.exec_module(_mdl_)
-                    for k, v in _mdl_.__dict__.items():
-                        if isinstance(v, pyx_re_quicky_routers.__hanlder__):
-                            _path = "/" + v.path
-                            if prefix is not None and prefix != "":
-                                _path = "/" + prefix + _path
-                            if self.host_dir is not None:
-                                _path = self.host_dir + _path
-
-                            if v.return_type is not None:
-                                getattr(self.app, v.method)(_path, response_model=v.return_type)(v.handler)
-                            else:
-                                getattr(self.app, v.method)(_path)(v.handler)
-
+                    self.load_conttroler_from_file(full_file_path,prefix)
     def set_on_auth(self, fn):
         setattr(self.oauth2_type, "__call__", fn)
 
@@ -133,17 +110,40 @@ class __Base__:
             jwt_secret_key=self.jwt_secret_key
         )
 
+    def load_conttroler_from_file(self,full_file_path,prefix):
+        if not os.path.isfile(full_file_path):
+            return
+        if os.path.splitext(full_file_path).__len__()!=2 and os.path.splitext(full_file_path)[1]!=".py":
+            return
 
+        import importlib.util
+        import sys
+        spec = importlib.util.spec_from_file_location(full_file_path, full_file_path)
+        _mdl_ = importlib.util.module_from_spec(spec)
+        # sys.modules[f"controllers.{controller_name}"] = _mdl_
+        spec.loader.exec_module(_mdl_)
+        for k, v in _mdl_.__dict__.items():
+            if isinstance(v, pyx_re_quicky_routers.__hanlder__):
+                _path = "/" + v.path
+                if prefix is not None and prefix != "":
+                    _path = "/" + prefix + _path
+                if self.host_dir is not None:
+                    _path = self.host_dir + _path
+
+                if v.return_type is not None:
+                    getattr(self.app, v.method)(_path, response_model=v.return_type)(v.handler)
+                else:
+                    getattr(self.app, v.method)(_path)(v.handler)
+
+
+__cache_apps__ = {}
+
+__instance__ = None
 class WebApp(__Base__):
-    def __new__(cls, *args, **kwargs):
-        global __instance__
-        if __instance__:
-            return __instance__
-        else:
-            ret = __Base__()
-            return cls.__init__(ret, *args, **kwargs)
+
 
     def __init__(self,
+                 app:FastAPI,
                  working_dir: str,
                  bind: str = "0.0.0.0:8011",
                  host_url: str = "http://localhost:8011",
@@ -157,13 +157,16 @@ class WebApp(__Base__):
                  jwt_algorithm: str = None,
                  jwt_secret_key: str = None
                  ):
-        global wellknown_app
+        global __cache_apps__
+
         self.url_get_token = url_get_token
         self.jwt_algorithm = jwt_algorithm
         self.jwt_secret_key = jwt_secret_key
         self.template_dir = template_dir
         self.dev_mode = dev_mode
         self.api_host_dir = api_host_dir
+
+
         self.working_dir = working_dir
         self.static_dir = static_dir
         if self.static_dir is not None and self.static_dir[0:2] == "./":
@@ -189,21 +192,20 @@ class WebApp(__Base__):
         if remain != "":
             self.host_dir = remain
 
-        wellknown_app = FastAPI()
-        self.app = wellknown_app
+        self.app = app
+
         if self.static_dir is not None:
             from fastapi.staticfiles import StaticFiles
             if self.host_dir is not None and self.host_dir != "":
-                wellknown_app.mount(self.host_dir + "/static", StaticFiles(directory=self.static_dir), name="static")
+                self.app.mount(self.host_dir + "/static", StaticFiles(directory=self.static_dir), name="static")
             else:
-                wellknown_app.mount("/static", StaticFiles(directory=self.static_dir),
-                                    name="static")
+                self.app.mount("/static", StaticFiles(directory=self.static_dir),
+                               name="static")
         if self.template_dir is not None and self.template_dir[0:2] == "./":
             self.template_dir = os.path.join(self.working_dir, self.template_dir[2:])
         if self.template_dir is not None:
             self.templates = Jinja2Templates(directory=self.template_dir)
 
-        __instance__ = self
         self.controller_dirs = []
         for x in controller_dirs:
             if x[0:2] == "./":
@@ -214,15 +216,12 @@ class WebApp(__Base__):
                 self.controller_dirs += [x]
         for x in self.controller_dirs:
             self.load_controller_from_dir(x)
-        if self.host_dir is not None and self.host_dir!="":
-            self.url_get_token = self.host_dir+"/"+self.url_get_token
+        if self.host_dir is not None and self.host_dir != "":
+            self.url_get_token = self.host_dir + "/" + self.url_get_token
 
         self.oauth2_type = OAuth2PasswordBearerAndCookie
 
-        return __instance__
 
-
-from fastapi import Request
 
 cy_request = fastapi.Request
 
@@ -250,3 +249,19 @@ class OAuth2PasswordBearerAndCookie(OAuth2PasswordBearer):
         )
         self.jwt_secret_key = jwt_secret_key
         self.jwt_algorithm = jwt_algorithm
+def add_controller(web_app,prefix_path: str, controller_dir):
+    web_app.load_controller_from_dir(prefix_path, controller_dir)
+def start_with_uvicorn(path:str):
+        import uvicorn
+
+
+        uvicorn.run(
+            path,
+            host="0.0.0.0",
+            port=8012,
+            log_level="info",
+            workers=8,
+            lifespan='on',
+            reload=True
+
+        )

@@ -22,13 +22,15 @@ else:
         from . import pyx_mime_types
 
 sys.path.append(
-            os.path.join(pathlib.Path(__file__).parent.__str__())
-        )
+    os.path.join(pathlib.Path(__file__).parent.__str__())
+)
 from typing import List
-fastapi_app= None
-__app__= None
-oauth2= None
-def create_app(working_dir: str,
+
+fastapi_app = None
+__app__ = None
+
+def create_app(app:FastAPI,
+               working_dir:str,
                bind: str = "0.0.0.0:8011",
                host_url: str = "http://localhost:8011",
                logs_dir: str = "./logs",
@@ -46,8 +48,10 @@ def create_app(working_dir: str,
 
     else:
         from . import pyx_re_quicky
+    global  __app__
     # from pyx_re_quicky import WebApp
     __app__ = pyx_re_quicky.WebApp(
+        app=app,
         working_dir=working_dir,
         bind=bind,
         host_url=host_url,
@@ -61,17 +65,21 @@ def create_app(working_dir: str,
         url_get_token=url_get_token
 
     )
-    global oauth2
-    oauth2= __app__.oauth2
-    global fastapi_app
-    fastapi_app = __app__.app
+
     return __app__
 
 
-def add_controller(prefix_path:str,controller_dir):
-    global __app__
-    __app__.load_controller_from_dir(prefix_path,controller_dir)
-    print(__app__)
+def add_controller(web_app, prefix_path: str, controller_dir):
+    global __is_build__
+    if not __is_build__:
+        import pyx_re_quicky
+
+    else:
+        from . import pyx_re_quicky
+    getattr(pyx_re_quicky,"add_controller")(web_app,prefix_path, controller_dir)
+
+
+
 
 def init_SPA(web_app):
     url = "/"
@@ -111,42 +119,20 @@ def init_SPA(web_app):
 
         return web_app.templates.TemplateResponse("index.html", {"request": data})
 
+
 def get_current_app():
     global __app__
     return __app__.app
-def uvicon_start():
-    global __app__
-    init_SPA(__app__)
-    if __app__.dev_mode:
-
-        class fakemodule(object):
-
-            @staticmethod
-            def method(a, b):
-                return a + b
-        sys.modules["__runner__"]=fakemodule
-        setattr(sys.modules["__runner__"],"current_app",__app__.app)
-        mdl_name = __app__.start_with_uvicorn.__func__.__module__
-        app_name = "wellknown_app"
-        uvicorn.run(
-            sys.modules[__app__.start_with_uvicorn.__func__.__module__].wellknown_app,
-
-            host=__app__.bind_ip,
-            port=__app__.bind_port,
-            workers=1,
-            ws='websockets',
-            ws_max_size=16777216 * 1024,
-            backlog=1000,
-            interface='asgi3',
-            timeout_keep_alive=True,
-            lifespan='on',
 
 
-            reload=True,
+def uvicon_start(web_app):
+    global __is_build__
+    if not __is_build__:
+        import pyx_re_quicky
 
-        )
     else:
-        __app__.start_with_uvicorn()
+        from . import pyx_re_quicky
+    getattr(pyx_re_quicky, "start_with_uvicorn")(web_app)
 
 
 def get(path: str):
@@ -166,9 +152,8 @@ def post(path: str):
         return getattr(pyx_re_quicky_routers, "web_handler")(path, method="post")
     else:
         from . import pyx_re_quicky_routers
-        return pyx_re_quicky_routers.web_handler(path=path,method="post")
+        return pyx_re_quicky_routers.web_handler(path=path, method="post")
     # import pyx_re_quicky_routers
-
 
 
 def form_post(path: str):
@@ -193,6 +178,8 @@ def check_is_need_pydantic(cls: type) -> bool:
 def auth():
     global __app__
     return __app__.get_auth()
+
+
 def on_auth(fn):
     global __app__
     __app__.set_on_auth(fn)

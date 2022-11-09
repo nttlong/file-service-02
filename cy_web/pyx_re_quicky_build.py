@@ -24,6 +24,6 @@ setup(
 #     zip_safe=True,
 # )
 """
-cd cy_web/source
+cd cy_web
 python pyx_re_quicky_build.py build_ext --inplace
 """

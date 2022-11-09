@@ -1,14 +1,12 @@
+
 import pathlib
-import os
 import sys
 import fastapi
-import kink
-import pydantic
 
-
+sys.path.append(pathlib.Path(__file__).parent.__str__())
 sys.path.append(pathlib.Path(__file__).parent.parent.__str__())
 
-import cy_kit
+
 
 import jwt
 import jose
@@ -68,30 +66,32 @@ async def on_auth(self, request:fastapi.Request):
                     headers={"WWW-Authenticate": "Bearer"},
                 )
             return token
-@cy_kit.container()
-class WebContaner:
-    config = cy_kit.yaml_config("/home/vmadmin/python/v6/file-service-02/config.yml")
+
 
 import cy_web
-app = None
+
+app= fastapi.FastAPI()
+# if __name__ == "__main__":
+web_app = cy_web.create_app(
+    app=app,
+    working_dir= pathlib.Path(__file__).parent.__str__() ,
+    host_url="http://172.16.13.72:8012",
+    bind="0.0.0.0:8012",
+    dev_mode=True,
+    static_dir="./../app_manager/static",
+    template_dir= "./../app_manager/html",
+    jwt_secret_key="d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",
+    jwt_algorithm="HS256",
+    url_get_token="api/accounts/token"
+
+)
 def get_app():
-    global app
-    return app
-if __name__ =="__main__":
-    web_app = cy_web.create_app(
-        working_dir=pathlib.Path(__file__).parent.__str__(),
-        host_url="http://172.16.13.72:8012",
-        bind="0.0.0.0:8012",
-        # dev_mode=True,
-        static_dir="./../app_manager/static",
-        template_dir= "./../app_manager/html",
-        jwt_secret_key="d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",
-        jwt_algorithm="HS256",
-        url_get_token="api/accounts/token"
+    global web_app
+    return web_app.app
 
-    )
+cy_web.on_auth(on_auth)
+cy_web.add_controller(web_app,"api", "./controllers")
+cy_web.add_controller(web_app,"", "./pages")
 
-    app = web_app.app
-    cy_web.on_auth(on_auth)
-    cy_web.add_controller("api","./controllers")
-    cy_web.uvicon_start()
+if __name__ == "__main__":
+    cy_web.uvicon_start("apps.server:app")

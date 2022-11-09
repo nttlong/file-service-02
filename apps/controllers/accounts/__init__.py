@@ -15,6 +15,7 @@ def accounts_get_token(
         items = username.split('@')
         app_name = items[-1]
         username = username[0:-app_name.__len__() - 1]
+    print("XXX dasdas")
     # db_name = container.db_context.get_db_name(app_name)
 
 
