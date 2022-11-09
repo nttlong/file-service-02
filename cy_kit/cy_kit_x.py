@@ -1,6 +1,5 @@
 import os.path
 import threading
-import kink
 import yaml
 import sys
 from copy import deepcopy
@@ -53,8 +52,9 @@ def single(cls, *args, **kwargs):
     if __cache_depen__.get(key) is None:
         # __lock_depen__.acquire()
         try:
-            ret = kink.inject(cls)
-            v = ret(**ret.__init__.__annotations__)
+            # ret = kink.inject(cls)
+            # v = ret(**ret.__init__.__annotations__)
+            v = cls(**cls.__init__.__annotations__)
             __cache_depen__[key] = v
         except Exception as e:
             raise e
@@ -64,8 +64,7 @@ def single(cls, *args, **kwargs):
 
 
 def instance(cls, *args, **kwargs):
-    ret = kink.inject(cls)
-    v = ret(**ret.__init__.__annotations__)
+    v = cls(**cls.__init__.__annotations__)
     return v
 
 
