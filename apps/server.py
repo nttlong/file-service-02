@@ -79,19 +79,17 @@ web_app = cy_web.create_app(
     bind="0.0.0.0:8012",
     dev_mode=True,
     static_dir="./../app_manager/static",
-    template_dir= "./../app_manager/html",
+    template_dir= "./../templates",
     jwt_secret_key="d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",
     jwt_algorithm="HS256",
     url_get_token="api/accounts/token"
 
 )
-def get_app():
-    global web_app
-    return web_app.app
+
 
 cy_web.on_auth(on_auth)
 cy_web.add_controller(web_app,"api", "./controllers")
 cy_web.add_controller(web_app,"", "./pages")
 
 if __name__ == "__main__":
-    cy_web.uvicon_start("apps.server:app")
+    cy_web.uvicon_start("apps.server:app",web_app)

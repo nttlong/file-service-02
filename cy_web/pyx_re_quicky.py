@@ -251,17 +251,28 @@ class OAuth2PasswordBearerAndCookie(OAuth2PasswordBearer):
         self.jwt_algorithm = jwt_algorithm
 def add_controller(web_app,prefix_path: str, controller_dir):
     web_app.load_controller_from_dir(prefix_path, controller_dir)
-def start_with_uvicorn(path:str):
+def start_with_uvicorn(path:str,web_app:WebApp):
         import uvicorn
 
+        if web_app.dev_mode:
+            uvicorn.run(
+                path,
+                host=web_app.bind_ip,
+                port=web_app.host_port,
+                log_level="info",
+                workers=8,
+                lifespan='on',
+                reload=web_app.dev_mode,
+                reload_dirs=web_app.working_dir
 
-        uvicorn.run(
-            path,
-            host="0.0.0.0",
-            port=8012,
-            log_level="info",
-            workers=8,
-            lifespan='on',
-            reload=True
+            )
+        else:
+            uvicorn.run(
+                path,
+                host=web_app.bind_ip,
+                port=web_app.host_port,
+                log_level="info",
+                workers=8,
+                lifespan='on'
 
-        )
+            )

@@ -33,6 +33,9 @@
     window.api_url = "{{request.full_app_url}}api";
     window.full_app_url = "{{request.full_app_url}}";
     window.host_dir = "{{request.host_dir}}";
+    if(window.host_dir ==""){
+        window.host_dir =undefined
+    }
 </script>
 <script type="module" defer>
 

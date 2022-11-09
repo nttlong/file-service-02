@@ -125,14 +125,14 @@ def get_current_app():
     return __app__.app
 
 
-def uvicon_start(web_app):
+def uvicon_start(path_to_app_module:str,web_app):
     global __is_build__
     if not __is_build__:
         import pyx_re_quicky
 
     else:
         from . import pyx_re_quicky
-    getattr(pyx_re_quicky, "start_with_uvicorn")(web_app)
+    getattr(pyx_re_quicky, "start_with_uvicorn")(path_to_app_module,web_app)
 
 
 def get(path: str):
