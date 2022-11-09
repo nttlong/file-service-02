@@ -115,11 +115,4 @@ def search(client: Elasticsearch, index: str, filter):
         return client.search(index=index, doc_type="_doc", body=filter.get_expr())
 
 
-p = BaseDoc()
-
-filter = (p.data_item.FileName == "calendar Grid 2.png") | (p.data_item.FileName == "100mb.pdf")
-items = search(client, index="lv-codx_hps-file-test",filter=p.upload_id == "ab67fabb-bade-4499-8e73-5a38211c4da7")
-
-# items = search(client, index="lv-codx_hps-file-test",filter={"query": {"term": {"data_item._id": "ab67fabb-bade-4499-8e73-5a38211c4da7"}}})
-print(p.User.Username == "ab56ecf1-b76b-45cc-ad02-4fd0aafcc2ea")
-print(get_all_index(client))
+docs = BaseDoc()
