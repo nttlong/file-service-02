@@ -1,13 +1,12 @@
-FROM --platform=linux/amd64 python:3.8-slim
-RUN  apt-get update --fix-missing
+FROM python:3.8-slim
 RUN apt-get install -y gcc
 RUN  apt-get update
 RUN apt-get -y install libreoffice
-RUN apt-get update  --fix-missing
+RUN apt-get update
 RUN apt-get -y install ghostscript
-RUN apt-get update  --fix-missing
+RUN apt-get update
 RUN apt-get install -y tesseract-ocr
-RUN apt-get update  --fix-missing
+RUN apt-get update
 RUN apt-get install tesseract-ocr-vie
 RUN apt-get install -y libopencv-dev python3-opencv
 RUN apt update
@@ -17,7 +16,7 @@ RUN apt-get install psmisc -y
 WORKDIR /app
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
-COPY requirements.txt ./
+COPY ./../requirements.txt ./
 RUN pip3 install -r requirements.txt
 
 COPY . /app

@@ -276,3 +276,10 @@ def start_with_uvicorn(path:str,web_app:WebApp):
                 lifespan='on'
 
             )
+
+def inject(cls):
+    def call(instance,request:fastapi.Request):
+        setattr(instance,"request",request)
+        return instance
+    setattr(cls,"__call__",cls)
+    return fastapi.Depends(cls)

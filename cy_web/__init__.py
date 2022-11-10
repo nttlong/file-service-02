@@ -5,7 +5,8 @@ import fastapi.templating
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, Response
-
+from typing import TypeVar
+T=TypeVar("~T")
 """
 api_version_2/cy_web/source/build/lib.linux-x86_64-3.8/pyx_re_quicky.cpython-38-x86_64-linux-gnu.so
 """
@@ -183,3 +184,11 @@ def auth():
 def on_auth(fn):
     global __app__
     __app__.set_on_auth(fn)
+def inject(cls:T)->T:
+    global __is_build__
+    if not __is_build__:
+        import pyx_re_quicky
+
+    else:
+        from . import pyx_re_quicky
+    return getattr(pyx_re_quicky, "inject")(cls)
