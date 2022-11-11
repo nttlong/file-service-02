@@ -4,13 +4,13 @@
 version: '3.7'
 
 services:
-  build-mage:
-    image: lv-file
-    build:
-      context: ./..
-      dockerfile: ./composer/files-dockerfile
+#  build-mage:
+#    image: lv-file
+#    build:
+#      context: ./..
+#      dockerfile: ./composer/files-dockerfile
   web:
-    image: lv-file
+    image: nttlong/lv-file:rc.0.1.1
     container_name: lv-file-web
     hostname: web
     volumes:
@@ -48,6 +48,7 @@ services:
       - file_server_root_url=http://${HOST_IP}:${API_PORT}
       - file_server_api_url=http://${HOST_IP}:${API_PORT}/api
       - file_server_es_url=http://${ES_URL},
+#      - jinja_templates_dir=./app/templates
 #  thumb-video:
 #    image: lv-file
 #    container_name: thumb-video

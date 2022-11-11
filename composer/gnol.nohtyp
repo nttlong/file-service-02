@@ -1,0 +1,22 @@
+FROM nttlong/gnol:ttn
+RUN apt update
+RUN apt-get upgrade -y
+RUN apt-get install -y make
+
+
+RUN  apt-get install python3-pip -y
+RUN python3 -m pip install --upgrade pip
+RUN pip install cython
+COPY ./../cy_docs ./app
+RUN python3 /app/cy_docs/cy_docs_build.py  build_ext --inplace
+COPY ./../cy_kit ./
+RUN python3 /cy_kit/cy_kit_x_build.py  build_ext --inplace
+COPY ./../cy_web ./
+RUN python3 /cy_web/pyx_imme_types_build.py  build_ext --inplace
+RUN python3 /cy_web/pyx_re_quicky_routers_build.py  build_ext --inplace
+RUN python3 /cy_web/pyx_re_quicky_build.py  build_ext --inplace
+
+#COPY ./../requirements.txt ./
+#RUN pip install -r requirements.txt
+#docker buildx create --platform linux/amd64,linux/arm64/v8 --use
+#docker buildx   build -t nttlong/gnol.nohtyp:ttn  --platform=linux/amd64,linux/arm64/v8  ./.. -f gnol.nohtyp  --push=true --output type=registry

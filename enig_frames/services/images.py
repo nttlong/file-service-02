@@ -8,8 +8,6 @@ import enig_frames.services.file_system_utils
 import enig_frames.loggers
 import img2pdf
 import ocrmypdf
-from _avif import ffi, lib
-from avif import Decoder
 import pillow_avif
 class ImageServices(enig_frames.services.base_media_service.BaseMediaService):
     def __init__(self,

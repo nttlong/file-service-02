@@ -10,6 +10,11 @@ if sys.platform == "linux":
             "build", "lib.linux-x86_64-3.8", "cy_kit"
         )
     )
+    __working_dir__ =pathlib.Path(__file__).parent.__str__()
+    root_dir, dirs, _ = list(os.walk(os.path.join(__working_dir__, "build")))[0]
+    for x in dirs:
+        sys.path.append(os.path.join(root_dir, x, "cy_kit"))
+
 else:
     raise Exception(f"not support for {sys.platform}")
 if __is_release__:

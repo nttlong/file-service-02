@@ -6,16 +6,16 @@ import ReCompact.dbm
 import enig_frames.config
 import enig_frames.db_context
 
-
+field= ReCompact.dbm.field
 @ReCompact.dbm.table(
     table_name="sys_app_logs",
     index=["CreateDate", "Exception", "AppName"]
 )
 class SysAppLogs:
-    Content = str)
-    CreateDate = datetime.datetime)
-    Exception = str)
-    AppName = str)
+    Content = field(str)
+    CreateDate = field(datetime.datetime)
+    Exception = field(str)
+    AppName = field(str)
 
 
 SysAppLogsDoc = SysAppLogs()

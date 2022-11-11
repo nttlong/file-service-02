@@ -14,3 +14,4 @@ setup(
 cd cy_docs
 python cy_docs_build.py build_ext --inplace
 """
+#python3 /home/vmadmin/python/v6/file-service-02/cy_docs/cy_docs_build.py build_ext --inplace

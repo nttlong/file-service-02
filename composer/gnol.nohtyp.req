@@ -1,0 +1,8 @@
+FROM nttlong/gnol.nohtyp:ttn
+RUN apt update
+RUN apt install cmake -y
+
+COPY ./../requirements.txt ./
+RUN pip install -r requirements.txt
+#docker buildx create --platform linux/amd64,linux/arm64/v8 --use
+#docker buildx   build -t nttlong/gnol.nohtyp.req:ttn  --platform=linux/amd64,linux/arm64/v8  ./.. -f gnol.nohtyp.req  --push=true --output type=registry

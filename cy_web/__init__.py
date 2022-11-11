@@ -15,9 +15,13 @@ if sys.platform != "linux":
     raise Exception(f"The module is not available for {sys.platform}")
 else:
     if not __is_build__:
-        sys.path.append(
-            os.path.join(pathlib.Path(__file__).parent.__str__(), "build", "lib.linux-x86_64-3.8", "cy_web")
-        )
+        __working_dir__ = pathlib.Path(__file__).parent.__str__()
+        root_dir, dirs, _ = list(os.walk(os.path.join(__working_dir__, "build")))[0]
+        for x in dirs:
+            sys.path.append(os.path.join(root_dir, x, "cy_web"))
+        # sys.path.append(
+        #     os.path.join(pathlib.Path(__file__).parent.__str__(), "build", "lib.linux-x86_64-3.8", "cy_web")
+        # )
         import pyx_mime_types
     else:
         from . import pyx_mime_types
