@@ -3,10 +3,13 @@ FROM  nttlong/gnol.nohtyp.req:ttn
 WORKDIR /app
 
 COPY . /app
-
+RUN python3 /app/cy_docs/setup.py  build_ext --inplace
+RUN python3 /app/cy_web/pyx_mime_types/setup.py  build_ext --inplace
+RUN python3 /app/cy_web/re_quicky_routers/setup.py  build_ext --inplace
+RUN python3 /app/cy_web/pyx_re_quicky/setup.py  build_ext --inplace
 
 
 
 #docker buildx build    . -f composer/files-dockerfile --platform=linux/amd64,linux/arm64
 #docker buildx create --platform linux/amd64,linux/arm64,linux/arm --use
-# docker buildx   build -t nttlong/lv-file:rc.0.0.34  --platform=linux/amd64,linux/arm64  ./.. -f composer/files-dockerfile  --push=true --output type=registry
+# docker buildx   build -t nttlong/lv-file:rc.0.0.34  --platform=linux/amd64,linux/arm64  ./.. -f files-dockerfile  --push=true --output type=registry

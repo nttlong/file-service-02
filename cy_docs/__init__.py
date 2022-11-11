@@ -8,15 +8,10 @@ __working_dir__ = pathlib.Path(__file__).parent.__str__()
 if sys.platform != "linux":
     raise Exception(f"The module is not available for {sys.platform}")
 
-__cy_docs_path__ = os.path.join(
-    __working_dir__,
-    "build", "lib.linux-x86_64-3.8", "cy_docs"
-)
-root_dir,dirs,_ = list(os.walk(os.path.join(__working_dir__,"build")))[0]
-for x in dirs:
-    sys.path.append(os.path.join(root_dir,x,"cy_docs"))
 
-sys.path.append(__cy_docs_path__)
+
+
+sys.path.append(__working_dir__)
 if not __release_mode__:
     from . import cy_docs_x
 else:

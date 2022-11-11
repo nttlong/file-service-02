@@ -4,16 +4,10 @@ import sys
 from typing import TypeVar
 __is_release__ = True
 if sys.platform == "linux":
-    sys.path.append(
-        os.path.join(
-            pathlib.Path(__file__).parent.__str__(),
-            "build", "lib.linux-x86_64-3.8", "cy_kit"
-        )
-    )
+
     __working_dir__ =pathlib.Path(__file__).parent.__str__()
-    root_dir, dirs, _ = list(os.walk(os.path.join(__working_dir__, "build")))[0]
-    for x in dirs:
-        sys.path.append(os.path.join(root_dir, x, "cy_kit"))
+    sys.path.append(__working_dir__)
+
 
 else:
     raise Exception(f"not support for {sys.platform}")

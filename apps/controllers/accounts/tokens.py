@@ -7,10 +7,9 @@ import apps.services.accounts
 @cy_web.form_post("accounts/token")
 def accounts_get_token(
         username:str,
-        password:str,
-        account_service= cy_web.inject(cy_kit.single(apps.services.accounts.AccountsService))
+        password:str
 ):
-    print(account_service)
+
     if '/' in username:
         items = username.split('/')
         app_name = items[0]

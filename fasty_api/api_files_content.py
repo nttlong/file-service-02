@@ -140,7 +140,7 @@ async def get_content_of_files(app_name: str, directory: str, request: Request,
 
                     ret_url = urllib.parse.quote(request.url._url, safe='')
                     return RedirectResponse(url=url_login + f"?ret={ret_url}", status_code=status.HTTP_303_SEE_OTHER)
-        main_file_id = file_info.get(Files.MainFileId.__name__)
+
 
 
         fsg = await cntx.get_file_by_id(file_info[Files.MainFileId.__name__])
@@ -158,4 +158,5 @@ async def get_content_of_files(app_name: str, directory: str, request: Request,
         res.headers.append("Cache-Control","max-age=86400")
         return res
     except Exception as e:
+        enig_frames.containers.Container.db_log.debug(app_name,e)
         raise e
