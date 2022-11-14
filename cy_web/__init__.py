@@ -1,192 +1,107 @@
 import pathlib
-import sys
-import os
-import fastapi.templating
-import uvicorn
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, Response
-from typing import TypeVar
-T=TypeVar("~T")
-"""
-api_version_2/cy_web/source/build/lib.linux-x86_64-3.8/pyx_re_quicky.cpython-38-x86_64-linux-gnu.so
-"""
-__is_build__ = False
-if sys.platform != "linux":
-    raise Exception(f"The module is not available for {sys.platform}")
-else:
-    if not __is_build__:
-
-        import pyx_mime_types
-    else:
-        from . import pyx_mime_types
-
-sys.path.append(
-    os.path.join(pathlib.Path(__file__).parent.__str__())
-)
+import typing
 from typing import List
+import sys
 
-fastapi_app = None
-__app__ = None
+import fastapi
 
-def create_app(app:FastAPI,
-               working_dir:str,
-               bind: str = "0.0.0.0:8011",
-               host_url: str = "http://localhost:8011",
-               logs_dir: str = "./logs",
-               controller_dirs: List[str] = [],
-               static_dir=None,
-               dev_mode: bool = False,
-               template_dir: str = None,
-               url_get_token: str = "api/accounts/token",
-               jwt_secret_key: str = None,
-               jwt_algorithm: str = None):
-    global __app__
-    global __is_build__
-    if not __is_build__:
-        import pyx_re_quicky
+sys.path.append(pathlib.Path(__file__).parent.__str__())
+# sys.path.append(r"/home/vmadmin/python/v6/file-service-02/build/lib.linux-x86_64-3.8/cy_web")
+# from cy_web import cy_web_x
+import cy_web_x
 
-    else:
-        from . import pyx_re_quicky
-    global  __app__
-    # from pyx_re_quicky import WebApp
-    __app__ = pyx_re_quicky.WebApp(
-        app=app,
+
+def create_web_app(
+        working_dir: str,
+        host_url: str,
+        static_dir: str,
+        template_dir: str,
+        logs_dir: str = "./logs",
+        bind: str = "0.0.0.0:80",
+        url_get_token: str = "api/accounts/token",
+        jwt_algorithm: str = "HS256",
+        jwt_secret_key: str = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",
+        dev_mode: bool = False
+):
+    ret = cy_web_x.WebApp(
+
         working_dir=working_dir,
-        bind=bind,
         host_url=host_url,
-        logs_dir=logs_dir,
-        controller_dirs=controller_dirs,
-        dev_mode=dev_mode,
         static_dir=static_dir,
         template_dir=template_dir,
-        jwt_secret_key=jwt_secret_key,
+        logs_dir=logs_dir,
+        dev_mode=dev_mode,
+        url_get_token=url_get_token,
         jwt_algorithm=jwt_algorithm,
-        url_get_token=url_get_token
+        jwt_secret_key=jwt_secret_key,
+        bind=bind
 
     )
-
-    return __app__
-
-
-def add_controller(web_app, prefix_path: str, controller_dir):
-    global __is_build__
-    if not __is_build__:
-        import pyx_re_quicky
-
-    else:
-        from . import pyx_re_quicky
-    getattr(pyx_re_quicky,"add_controller")(web_app,prefix_path, controller_dir)
+    return ret
 
 
+def hanlder(method: str, path: str):
+    return cy_web_x.web_handler(
+        method=method,
+        path=path
+    )
 
 
-def init_SPA(web_app):
-    url = "/"
-    if web_app.host_dir is not None and web_app.host_dir != "":
-        url = web_app.host_dir
-
-    @web_app.app.get(url, response_class=HTMLResponse)
-    def home_page():
-        data = dict(
-            host_url=web_app.host_url,
-            full_app_url=web_app.host_url + "/",
-            host_dir=web_app.host_dir,
-            host_api_url=web_app.host_api_url
-        )
-
-        return web_app.templates.TemplateResponse("index.html", {"request": data})
-
-    def get_dir(directory):
-        return directory
-
-    @web_app.app.get(url + "/{directory:path}", response_class=HTMLResponse)
-    async def page_single(directory: str = fastapi.Depends(get_dir)):
-
-        directory = directory.split('?')[0]
-        check_dir_path = os.path.join(web_app.static_dir, "views", directory.replace('/', os.sep))
-
-        if not os.path.exists(check_dir_path):
-            return Response(status_code=401)
-
-        # host_services = enig.create_instance(enig_frames.services.hosts.Hosts)
-        data = dict(
-            host_url=web_app.host_url,
-            full_app_url=web_app.host_url + "/",
-            host_dir=web_app.host_dir,
-            host_api_url=web_app.host_api_url
-        )
-
-        return web_app.templates.TemplateResponse("index.html", {"request": data})
+def load_controller_from_dir(prefix, path):
+    return cy_web_x.load_controller_from_dir(
+        prefix,
+        path
+    )
 
 
-def get_current_app():
-    global __app__
-    return __app__.app
+def start_with_uvicorn():
+    cy_web_x.start_with_uvicorn()
 
 
-def uvicon_start(path_to_app_module:str,web_app):
-    global __is_build__
-    if not __is_build__:
-        import pyx_re_quicky
-
-    else:
-        from . import pyx_re_quicky
-    getattr(pyx_re_quicky, "start_with_uvicorn")(path_to_app_module,web_app)
+def middleware():
+    return cy_web_x.middleware()
 
 
-def get(path: str):
-    global __is_build__
-    if not __is_build__:
-        import pyx_re_quicky_routers
-    else:
-        from . import pyx_re_quicky_routers
-    # import pyx_re_quicky_routers
-    return getattr(pyx_re_quicky_routers, "web_handler")(path, method="get")
 
 
-def post(path: str):
-    global __is_build__
-    if not __is_build__:
-        import pyx_re_quicky_routers
-        return getattr(pyx_re_quicky_routers, "web_handler")(path, method="post")
-    else:
-        from . import pyx_re_quicky_routers
-        return pyx_re_quicky_routers.web_handler(path=path, method="post")
-    # import pyx_re_quicky_routers
 
 
-def form_post(path: str):
-    global __is_build__
-    if not __is_build__:
-        import pyx_re_quicky_routers
-    else:
-        from . import pyx_re_quicky_routers
-    # import pyx_re_quicky_routers
-    return getattr(pyx_re_quicky_routers, "web_handler")(path, method="form")
 
 
-def check_is_need_pydantic(cls: type) -> bool:
-    global __is_build__
-    if not __is_build__:
-        import pyx_re_quicky_routers
-    else:
-        from . import pyx_re_quicky_routers
-    return getattr(pyx_re_quicky_routers, "check_is_need_pydantic")(type)
+def add_cors(origins: List[str]):
+    return cy_web_x.add_cors(origins)
 
 
-def auth():
-    global __app__
-    return __app__.get_auth()
+def get_host_url():
+    return cy_web_x.get_host_url()
 
 
-def on_auth(fn):
-    global __app__
-    __app__.set_on_auth(fn)
-def inject(cls:T)->T:
-    global __is_build__
-    if not __is_build__:
-        import pyx_re_quicky
+def get_host_dir():
+    return cy_web_x.get_host_dir()
 
-    else:
-        from . import pyx_re_quicky
-    return getattr(pyx_re_quicky, "inject")(cls)
+
+def render_template(rel_path_to_template, render_data):
+    return cy_web_x.render_template(rel_path_to_template, render_data)
+
+
+def get_static_dir() -> str:
+    return cy_web_x.get_static_dir()
+
+
+from typing import Optional, Dict
+
+
+
+def validate_token_in_request(self, request:fastapi.Request):
+    print("")
+fx=validate_token_in_request
+
+def get_fastapi_app() -> fastapi.FastAPI:
+    return cy_web_x.get_fastapi_app()
+
+
+def get_token_url():
+    return cy_web_x.get_token_url()
+import fastapi.security
+def auth_type(auth_type:typing.Union[fastapi.security.OAuth2PasswordBearer,fastapi.security.OAuth2AuthorizationCodeBearer]):
+    return cy_web_x.auth_type(auth_type)
