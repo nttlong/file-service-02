@@ -14,7 +14,8 @@ cy_web.create_web_app(
 )
 cy_web.add_cors(["*"])
 
-cy_web.load_controller_from_dir("","./pages")
+
 cy_web.load_controller_from_dir("api","./controllers")
+cy_web.load_controller_from_dir("","./pages")
 if __name__ == "__main__":
     cy_web.start_with_uvicorn()

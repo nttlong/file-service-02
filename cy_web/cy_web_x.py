@@ -559,7 +559,7 @@ class RequestHandler:
                     method = "form"
 
                 pos += 1
-            tmp_lst += [fastapi.Depends()]
+
             handler.__defaults__ = tuple(tmp_lst)
 
             __old_dfs__ = list(handler.__defaults__)
