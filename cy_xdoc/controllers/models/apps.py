@@ -40,6 +40,6 @@ class AppInfoRegister(AppInfo):
     Password:typing.Optional[str]
 @cy_web.model()
 class AppInfoRegisterResult:
-    Data:AppInfo
-    Error:ErrorResult
+    Data:typing.Optional[AppInfo]
+    Error:typing.Optional[ErrorResult]
 

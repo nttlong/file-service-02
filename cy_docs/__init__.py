@@ -40,3 +40,6 @@ For any expression
 
 def context(client, cls):
     return cy_docs_x.context(client,cls)
+
+
+DocumentObject=cy_docs_x.DocumentObject

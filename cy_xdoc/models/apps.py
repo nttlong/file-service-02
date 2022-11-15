@@ -23,6 +23,9 @@ class App:
     ReturnUrlAfterSignIn:str
     Description:str
     Email:str
+    Username:str
+    Password:str
+    SecretKey:str
     """
     Email dùng để liên lạc với application khi cần. Ví dụ dùng trong trường ho75ptruy tìm lại mật khẩu của user root trên app
     """
