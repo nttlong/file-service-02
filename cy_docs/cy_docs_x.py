@@ -84,9 +84,64 @@ def get_mongodb_text(data):
         finally:
             return data
 
+__hash_check_dict__ ={}
+__hash_check_dict_lock__ =threading.Lock()
+
+__camel_cache__ ={}
+__camel_lock__ = threading.Lock()
+
+def to_camel(name:str)->str:
+    if name.lower()=="id":
+        return "_id"
+    if __camel_cache__.get(name):
+        return __camel_cache__[name]
+    with __camel_lock__:
+        ret= ""
+        pos =0
+        for c in name:
+            if c.isupper():
+                if pos==0:
+                    ret+=f"{c.lower()}"
+                else:
+                    ret += f"_{c.lower()}"
+            else:
+                ret+=c
+            pos+=1
+        __camel_cache__[name] = ret
+    return __camel_cache__[name]
+def camel_dict(data:dict)->dict:
+    ret ={}
+    for k,v in data.items():
+        if k[0:2]=="__" and k[:-2]=="__":
+            continue
+        if hasattr(v,"__annotations__")  and isinstance(v.__annotations__,dict):
+            d=camel_dict(v.__annotations__)
+            d["__name__"]=k
+            if hasattr(v,"__module__"):
+                d["__module__"] = v.__module__
+            if hasattr(v,"__name__"):
+                d["__module__"] = v.__name__
+            ret[to_camel(k)] = d
+        elif not isinstance(v,dict):
+            ret[to_camel(k)]=k
+        else:
+            ret[to_camel(k)] = camel_dict(v)
+    return ret
+
+def convention_get(hash_key:str,name:str):
+    if name.lower()=="id":
+        return "_id"
+    global __hash_check_dict__
+    if __hash_check_dict__.get(hash_key) is None:
+        return None
+    data = __hash_check_dict__[hash_key]
+    return data.get(to_camel(name))
 
 class __BaseField__:
-    def __init__(self, init_value: Union[str, dict], oprator: str = None):
+    def __init__(self, init_value: Union[str, dict,type], oprator: str = None):
+        if hasattr(init_value,"__annotations__") and isinstance(init_value.__annotations__,dict):
+            self.__set_check__(init_value)
+            return
         self.__field_name__ = None
         self.__data__ = None
         self.__oprator__ = oprator
@@ -96,8 +151,36 @@ class __BaseField__:
             self.__data__ = init_value
         else:
             raise Exception("init_value must be str or ditc")
+        self.__check_map__module__ = None
+        self.__check_map__name__ = None
+        self.__check_constraint__ = {}
+    def __set_check__(self,cls):
+        global __hash_check_dict__
+
+        if isinstance(cls,dict):
+            self.__check_map__module__ = cls["__module__"]
+            self.__check_map__name__ = cls["__name__"]
+            hash_key = f"{self.__check_map__module__}/{self.__check_map__name__}"
+            if not __hash_check_dict__.get(hash_key):
+                with __hash_check_dict_lock__:
+                    __hash_check_dict__[hash_key] = camel_dict(cls)
+        elif hasattr(cls,"__module__"):
+            self.__check_map__module__ =cls.__module__
+            self.__check_map__name__ = cls.__name__
+            hash_key = f"{self.__check_map__module__}/{self.__check_map__name__}"
+            if not __hash_check_dict__.get(hash_key):
+                with __hash_check_dict_lock__:
+                    __hash_check_dict__[hash_key]= camel_dict(cls.__annotations__)
+
 
     def __getattr__(self, item):
+        if item[0:2]!="__" and item[:-2]!="__" and  self.__check_map__name__ is not None:
+            hash_key = f"{self.__check_map__module__}/{self.__check_map__name__}"
+            check_name = convention_get(hash_key,item)
+            if check_name is None:
+                raise AttributeError(f"f{item} was not found in  {self.__check_map__module__}.{self.__check_map__name__}")
+            else:
+                return self.__dict__.get(check_name)
         return self.__dict__.get(item)
 
     def to_mongo_db(self) -> Union[str, dict]:
@@ -144,9 +227,25 @@ class Field(__BaseField__):
         return self
 
     def __getattr__(self, item):
+        if item[0:2] != "__" and item[-2:] != "__" and self.__check_map__name__ is not None:
+            check_name =convention_get(f"{self.__check_map__module__}/{self.__check_map__name__}",item)
+            if check_name is None:
+                raise AttributeError(f"{item} was not found in {self.__check_map__module__}.{self.__check_map__name__}")
+            if isinstance(check_name,dict):
+                ret=Field(check_name["__name__"])
+                ret.__set_check__(check_name)
+                if self.__field_name__ is not None:
+                    ret.__field_name__=f"{self.__field_name__}.{ret.__field_name__}"
+                return ret
+            if self.__field_name__ is None:
+                return Field(check_name)
+            else:
+                return Field(f"{self.__field_name__}.{check_name}")
         if isinstance(item, str):
             if item[0:2] == "__" and item[-2:] == "__":
                 return __BaseField__.__getattr__(self, item)
+            elif self.__field_name__ is None:
+                return Field(item)
             else:
                 return Field(f"{self.__field_name__}.{item}")
         else:
@@ -625,6 +724,13 @@ class DocumentObject(dict):
 
 class ExprBuilder:
     def __getattr__(self, item):
+
+        return Field(item)
+    def __getitem__(self, item):
+        if hasattr(item,"__annotations__") and isinstance(item.__annotations__,dict):
+            ret = Field(item)
+            ret.__set_check__(item)
+            return ret
         return Field(item)
 
 

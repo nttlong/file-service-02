@@ -12,10 +12,8 @@ if sys.platform != "linux":
 
 
 sys.path.append(__working_dir__)
-if not __release_mode__:
-    from . import cy_docs_x
-else:
-    import cy_docs_x
+from . import cy_docs_x
+
 from typing import TypeVar, Generic, List
 
 T = TypeVar('T')

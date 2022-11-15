@@ -1,9 +1,13 @@
-import pydantic
-class DocumentObjectBase(pydantic.BaseModel,dict):
+import cy_docs
+class Users:
+    first_name:str
+    LastName:str
 
-    def __init__(self, *args, **kwargs):
-        dict.__init__(self, *args, **kwargs)
-        pydantic.BaseModel.dict(self,*args, **kwargs)
 
-cx= DocumentObjectBase()
-print(c)
+class MyInfo:
+    MyCode:str
+    User:Users
+
+fx=cy_docs.cy_docs_x.Field(MyInfo)
+v=fx.user
+print(v)
