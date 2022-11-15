@@ -1,3 +1,4 @@
+import typing
 class AppInfo:
     """
     Infomation of application, an application is one-one mapping to tanent
@@ -7,7 +8,7 @@ class AppInfo:
     The name of application
     """
     Name:str
-    Description:str
-    Domain:str
-    LoginUrl:str
-    ReturnUrlAfterSignIn:str
+    Description: typing.Optional[str]
+    Domain: typing.Optional[str]
+    LoginUrl:typing.Optional[str]
+    ReturnUrlAfterSignIn:typing.Optional[str]

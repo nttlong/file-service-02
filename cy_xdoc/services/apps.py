@@ -8,6 +8,11 @@ class AppServices(Base):
         ret=self.db(app_name).doc(App).aggregate().project(
             docs._id>>docs.AppId,
             docs.Name,
-            docs.Description
+            docs.Description,
+            docs.Domain,
+            docs.LoginUrl,
+            docs.ReturnUrlAfterSignIn
+
+
         )
         return ret

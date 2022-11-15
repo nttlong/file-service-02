@@ -31,7 +31,7 @@ class Base:
 
     def db_name(self, app_name: str):
         if app_name == 'admin':
-            return config.default_admin_db
+            return config.admin_db_name
         else:
             return app_name
 

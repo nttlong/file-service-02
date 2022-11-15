@@ -1,6 +1,9 @@
-import sys
-sys.path.append("/home/vmadmin/python/v6/file-service-02/libs")
-sys.path.append("/home/vmadmin/python/v6/file-service-02/libs/avif.libs")
-sys.path.append("/home/vmadmin/python/v6/file-service-02/libs/avif.libs/libavif-a49840c3.so.9.0.0")
-import avif
-print(avif)
+import pydantic
+class DocumentObjectBase(pydantic.BaseModel,dict):
+
+    def __init__(self, *args, **kwargs):
+        dict.__init__(self, *args, **kwargs)
+        pydantic.BaseModel.dict(self,*args, **kwargs)
+
+cx= DocumentObjectBase()
+print(c)

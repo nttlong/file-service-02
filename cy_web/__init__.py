@@ -7,8 +7,8 @@ import fastapi
 
 sys.path.append(pathlib.Path(__file__).parent.__str__())
 # sys.path.append(r"/home/vmadmin/python/v6/file-service-02/build/lib.linux-x86_64-3.8/cy_web")
-from cy_web import cy_web_x
-# import cy_web_x
+# from cy_web import cy_web_x
+import cy_web_x
 
 
 def create_web_app(

@@ -403,7 +403,23 @@ mimetypes.guess_type = __new__fn__
 """
 all re definre hear
 """
-
+def is_package(path_to_dir:str):
+    if not os.path.isdir(path_to_dir):
+        return False
+    return os.path.isfile(os.path.join(path_to_dir,"__init__.py"))
+def get_root_package_dir(from_path:str):
+    ret=""
+    from_path=os.path.abspath(from_path)
+    if os.path.isfile(from_path):
+        from_path=pathlib.Path(from_path).parent.__str__()
+    while is_package(from_path):
+        parent=pathlib.Path(from_path).parent.__str__()
+        name = from_path[parent.__len__():]
+        ret=name+ret
+        from_path = parent
+    ret=ret.replace(os.sep,'/').replace('/','.')
+    ret=ret[1:]
+    return ret,from_path
 from fastapi.middleware.cors import CORSMiddleware
 
 import logging
@@ -420,8 +436,7 @@ import fastapi
 import pydantic
 import sys
 
-__wrap_pydantic_cache__ = {}
-__wrap_pydantic_lock__ = threading.Lock()
+
 
 
 def get_cls(cls):
@@ -434,9 +449,16 @@ def get_cls(cls):
             if issubclass(ret, pydantic.BaseModel):
                 return ret
 
-
+def get_mdl(cls):
+        if sys.modules.get(cls.__module__):
+            return sys.modules[cls.__module__]
+        else:
+            for k, v in sys.modules.items():
+                if hasattr(v, "__file__"):
+                    if v.__file__ == cls.__module__:
+                        return v
 def __wrap_pydantic__(pre, cls, is_lock=True):
-
+    cls_module = get_mdl(cls)
     global __wrap_pydantic_cache__
     global __wrap_pydantic_lock__
     if cls.__module__ == typing.__name__ and cls.__origin__ == list:
@@ -445,11 +467,8 @@ def __wrap_pydantic__(pre, cls, is_lock=True):
             ret += [__wrap_pydantic__("", x)]
         cls.__args__ = tuple(ret)
         return cls
-    if __wrap_pydantic_cache__.get(f"{cls.__module__}/{cls.__name__}") and is_lock:
-        return __wrap_pydantic_cache__.get(f"{cls.__module__}/{cls.__name__}")
 
-    if hasattr(cls, "__origin__"):
-        print(cls)
+
     if hasattr(cls, "__annotations__"):
         ls = list(cls.__dict__.items())
         for k, v in ls:
@@ -490,20 +509,13 @@ def __wrap_pydantic__(pre, cls, is_lock=True):
 
     ret_cls = type(f"{cls.__name__}", (cls, pydantic.BaseModel,), dict(cls.__dict__))
 
-    def get_mdl(cls):
-        if sys.modules.get(cls.__module__):
-            return sys.modules[cls.__module__]
-        else:
-            for k, v in sys.modules.items():
-                if hasattr(v, "__file__"):
-                    if v.__file__ == cls.__module__:
-                        return v
 
-    cls_module = get_mdl(cls)
+
+
     setattr(cls_module, cls.__name__, ret_cls)
     ret_cls.__name__ = cls.__name__
-    __wrap_pydantic_cache__[f"{cls.__module__}/{cls.__name__}"] = ret_cls
-    return __wrap_pydantic_cache__.get(f"{cls.__module__}/{cls.__name__}")
+    cls=ret_cls
+    return cls
 
 
 def check_is_need_pydantic(cls):
@@ -559,7 +571,7 @@ class RequestHandler:
                     method = "form"
 
                 pos += 1
-
+            tmp_lst += [fastapi.Depends()]
             handler.__defaults__ = tuple(tmp_lst)
 
             __old_dfs__ = list(handler.__defaults__)
@@ -717,6 +729,7 @@ class BaseWebApp:
 
 
     def load_controller_from_file(self, full_file_path, prefix):
+
         if not os.path.isfile(full_file_path):
             return
         if os.path.splitext(full_file_path).__len__() != 2 and os.path.splitext(full_file_path)[1] != ".py":
@@ -844,6 +857,10 @@ class WebApp(BaseWebApp):
         self.api_host_dir = api_host_dir
 
         self.working_dir = working_dir
+        root_package, root_package_dir = get_root_package_dir(self.working_dir)
+        self.root_package_dir=root_package_dir
+        self.root_package=root_package
+
         self.static_dir = static_dir
         if self.static_dir is not None and self.static_dir[0:2] == "./":
             self.static_dir = os.path.join(self.working_dir, self.static_dir[2:])
@@ -1140,3 +1157,7 @@ def auth_type(a_type: type):
 
 
     return wrapper
+def model():
+    def warpper(cls):
+        return __wrap_pydantic__("",cls,False)
+    return warpper
