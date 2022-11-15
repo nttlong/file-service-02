@@ -913,7 +913,7 @@ class DBDocument:
                         raise Exception(
                             f"Please set value for {_fx.__field_name__}. Example: {_fx.__field_name__}<<my_value")
                     data = {
-                        _fx.__field_name__: fx.__value__
+                        _fx.__field_name__: _fx.__value__
                     }
                     for k, v in kwargs:
                         data[k] = v
@@ -936,10 +936,46 @@ class DBDocument:
                 ret = await coll.insert_one(data)
                 return ret
 
-        print(__file__)
-        print(args)
-        print(kwargs)
-        print(__file__)
+
+    def insert_one(self, *args, **kwargs):
+        if isinstance(args, tuple):
+            if args.__len__() == 1:
+                if isinstance(args[0], dict):
+                    for k, v in kwargs:
+                        args[0][k] = v
+                    if args[0].get("_id") is None:
+                        args[0] = bson.ObjectId()
+                    ret =self.collection.insert_one(args[0])
+                    return ret
+                elif isinstance(args[0], Field):
+                    _fx: Field = args[0]
+                    if not _fx.__has_set_value__:
+                        raise Exception(
+                            f"Please set value for {_fx.__field_name__}. Example: {_fx.__field_name__}<<my_value")
+                    data = {
+                        _fx.__field_name__: _fx.__value__
+                    }
+                    for k, v in kwargs:
+                        data[k] = v
+                    if args[0].get("_id") is None:
+                        args[0] = bson.ObjectId()
+                    ret = self.collection.insert_one(data)
+                    return ret
+            else:
+                data = {}
+                for x in args:
+                    if isinstance(x, Field):
+                        if not x.__has_set_value__:
+                            raise Exception(
+                                f"Please set value for {x.__field_name__}. Exmaple {x.__field_name__}<<my_value")
+                        data[x.__field_name__] = x.__value__
+                    elif isinstance(x, dict):
+                        data = {**data, **x}
+                if data.get("_id") is None:
+                    data["_id"] = bson.ObjectId()
+                ret = self.collection.insert_one(data)
+                return ret
+
 
     def count(self, filter):
         if isinstance(filter, dict):
@@ -1328,3 +1364,13 @@ def document_define(name: str, indexes: List[str], unique_keys: List[str]):
         return cls
 
     return wrapper
+
+
+def context(client, cls):
+    ret= Document(
+        collection_name=cls.__document_name__,
+        indexes=cls.__document_indexes__,
+        unique_keys=cls.__document_unique_keys__,
+        client=client
+    )
+    return ret

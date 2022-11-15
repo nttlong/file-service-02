@@ -12,11 +12,9 @@ class DbContext:
         self.client = client
         self.db_name = db_name
     def doc(self,cls:T):
-        return cy_docs.get_doc(
+        return cy_docs.context(
             client=self.client,
-            collection_name= cls.__document_name__,
-            indexes= cls.__document_indexes__,
-            unique_keys= cls.__document_unique_keys__
+            cls=cls
 
         )[self.db_name]
 

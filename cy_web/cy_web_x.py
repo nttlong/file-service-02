@@ -1161,7 +1161,7 @@ def auth_type(a_type: type):
         setattr(instance,"jwt_secret_key",web_application.jwt_secret_key)
         setattr(instance, "jwt_algorithm", web_application.jwt_algorithm)
         def on_auth_user(request,username,password):
-            instance.validate_account(request,username,password)
+            return instance.validate_account(request,username,password)
         web_application.on_auth_user=on_auth_user
         return instance
 
