@@ -171,7 +171,7 @@ def load_config_from_dict(data: dict, logger: logging.Logger):
             )
         except Exception as e:
             logger.exception(e)
-            print("Error: Can not load configuration")
+            print("ErrorResult: Can not load configuration")
             print(e)
         finally:
             __lock__.release()

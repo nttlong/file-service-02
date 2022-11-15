@@ -25,10 +25,14 @@ def expr(cls: T) -> T:
     :param cls:
     :return:
     """
-    return getattr(cy_docs_x,"fields")
+    return getattr(cy_docs_x,"fields")[cls]
 def get_doc(collection_name: str, client: pymongo.mongo_client.MongoClient, indexes: List[str] = [],
             unique_keys: List[str] = []):
 
     return getattr(cy_docs_x,"Document")(collection_name, client,indexes=indexes,unique_keys=unique_keys)
 def define(name:str,indexes:List[str],uniques:List[str]):
     return getattr(cy_docs_x,"document_define")(name,indexes,uniques)
+fields=cy_docs_x.fields
+"""
+For any expression
+"""

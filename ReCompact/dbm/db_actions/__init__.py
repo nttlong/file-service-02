@@ -110,7 +110,7 @@ class Error(Exception):
         self.inner_exception=None
         self.error_type =None
         """
-        Error Type (Loại lỗi)
+        ErrorResult Type (Loại lỗi)
         see: ReCompact.dbm.db_actions.ErrorType
         """
         self.db_constraint= None

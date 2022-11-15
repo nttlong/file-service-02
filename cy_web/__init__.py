@@ -105,3 +105,5 @@ def get_token_url():
 import fastapi.security
 def auth_type(auth_type:typing.Union[fastapi.security.OAuth2PasswordBearer,fastapi.security.OAuth2AuthorizationCodeBearer]):
     return cy_web_x.auth_type(auth_type)
+def model():
+    return cy_web_x.model()

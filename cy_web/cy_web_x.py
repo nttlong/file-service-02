@@ -546,6 +546,7 @@ class RequestHandler:
         self.path = path
         __old_dfs__ = []
         self.return_type = None
+        tmp_lst=[]
         if handler.__defaults__ is not None:
             pos = 0
             tmp_lst = list(handler.__defaults__)
@@ -565,10 +566,20 @@ class RequestHandler:
             __old_dfs__ = list(handler.__defaults__)
         __annotations__: dict = handler.__annotations__
         __defaults__ = []
+        tmp_lst=[]
         for k, v in __annotations__.items():
+            if hasattr(v,"__module__") and v.__module__=="typing" and hasattr(v,"__origin__") and v.__origin__==list and hasattr(v,"__args__") and isinstance(v.__args__,tuple):
+                arg_type= v.__args__[0]
+                if inspect.isclass(arg_type) and issubclass(arg_type, fastapi.UploadFile):
+                    method = "form"
+                    tmp_lst += [fastapi.File()]
             if inspect.isclass(v) and issubclass(v, fastapi.UploadFile):
                 method = "form"
-                break
+                tmp_lst+= [fastapi.File()]
+
+        if method=="form":
+            handler.__defaults__= tuple(tmp_lst+list(handler.__defaults__))
+
         for k, v in __annotations__.items():
 
             if method != "form":
@@ -581,28 +592,41 @@ class RequestHandler:
 
                     else:
                         self.return_type = handler.__annotations__[k]
+                        __old_dfs__+=[fastapi.Body(embed=True)]
+                elif (not(hasattr(v,"__module__") and v.__module__ == "typing")) and v not in [str,int,bool,datetime,float] and  issubclass(v,pydantic.BaseModel) and k != "return":
+                     __defaults__ += [fastapi.Body(embed=True)]
 
             else:
+                print(k,v)
                 if k == "return":
                     if check_is_need_pydantic(v):
                         handler.__annotations__[k] = __wrap_pydantic__("", v)
+                elif "{" + k + "}" in self.path:
+                    continue
+                elif k != "return" and v in[str,int,float,bool,datetime]:
+                    __defaults__ += [fastapi.Form(...)]
+                    __annotations__[k]=Union[v, None]
+                elif v == fastapi.UploadFile or v == fastapi.Request or \
+                        (hasattr(v, "__origin__") and v.__origin__ == typing.List[fastapi.UploadFile].__origin__
+                         and hasattr(v, "__args__") and v.__args__[0] == fastapi.UploadFile):
+                    continue
+                # if not "{" + k + "}" in self.path:
+                #     import typing
 
-                if not "{" + k + "}" in self.path:
-                    import typing
-                    if v == fastapi.UploadFile or v == fastapi.Request or \
-                            (hasattr(v, "__origin__") and v.__origin__ == typing.List[fastapi.UploadFile].__origin__
-                             and hasattr(v, "__args__") and v.__args__[0] == fastapi.UploadFile):
-                        continue
-                    elif k != "return" and not v in [str, datetime, bool, float, int]:
-                        continue
-                    elif k != "return":
-                        __defaults__ += [fastapi.Form()]
+                    # elif k != "return" :
+                    #     continue
+                elif k != "return":
+                    __defaults__ += [fastapi.Form(...)]
                         # __wrap_pydantic__(handler.__name__, v)
 
-        __defaults__ += __old_dfs__
+
         # def new_handler(*args,**kwargs):
         #     handler(*args,**kwargs)
-        handler.__defaults__ = tuple(__defaults__)
+        if method !="form":
+            __defaults__ += __old_dfs__
+            handler.__defaults__ = tuple(__defaults__)
+        else:
+            handler.__defaults__ = tuple(__defaults__+list(handler.__defaults__))
         self.handler = handler
         if method == "form": method = "post"
         self.method = method
@@ -1140,7 +1164,29 @@ def auth_type(a_type: type):
 
 
     return wrapper
+import pydantic.fields
 def model():
     def warpper(cls):
+        for x in cls.__bases__:
+            if hasattr(x,"__annotations__"):
+                for k,v in x.__annotations__.items():
+                    cls.__annotations__[k]=v
+        for k,v in cls.__annotations__.items():
+            if isinstance(v,tuple):
+                v_t = v[0]
+                v_d =""
+                v_r=False
+                for x in v:
+                    if isinstance(x,type):
+                        v_t=x
+                    if isinstance(x,str):
+                        v_d=x
+                    if isinstance(x,bool):
+                        v_r=x
+                cls.__annotations__[k]=v_t
+                setattr(cls,k,pydantic.Field(
+                    description=v_d,
+                ))
+
         return __wrap_pydantic__("",cls,False)
     return warpper

@@ -27,7 +27,7 @@ class Base:
         self.client = MongoClient(**config.db.to_dict())
 
     def expr(self, cls: T) -> T:
-        return cy_docs.expr(T)
+        return cy_docs.expr(cls)
 
     def db_name(self, app_name: str):
         if app_name == 'admin':

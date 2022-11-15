@@ -517,7 +517,7 @@
 2022-06-02 14:55:09,277:INFO : quicky.config : web start with:
 2022-06-02 14:55:09,277:INFO : quicky.config : {'debug': True, 'host': '172.16.9.78', 'port': 5012}
 2022-06-02 14:55:09,278:INFO : quicky.config : ------------------------------------------------------
-2022-06-02 14:55:17,026:DEBUG : quicky.config : <quicky.object_contraints.Error object at 0x00000065478538C8>
+2022-06-02 14:55:17,026:DEBUG : quicky.config : <quicky.object_contraints.ErrorResult object at 0x00000065478538C8>
 2022-06-02 14:57:04,459:INFO : quicky.config : ------------------------------------------------------
 2022-06-02 14:57:04,459:INFO : quicky.config : web start with:
 2022-06-02 14:57:04,459:INFO : quicky.config : {'debug': True, 'host': '172.16.9.78', 'port': 5012}
@@ -534,8 +534,8 @@
 2022-06-02 15:00:23,559:INFO : quicky.config : web start with:
 2022-06-02 15:00:23,559:INFO : quicky.config : {'debug': True, 'host': '172.16.9.78', 'port': 5012}
 2022-06-02 15:00:23,559:INFO : quicky.config : ------------------------------------------------------
-2022-06-02 15:00:30,546:DEBUG : quicky.config : <quicky.object_contraints.Error object at 0x000000D1C3D05A88>
-2022-06-02 15:01:30,587:DEBUG : quicky.config : <quicky.object_contraints.Error object at 0x000000D1C3F89248>
+2022-06-02 15:00:30,546:DEBUG : quicky.config : <quicky.object_contraints.ErrorResult object at 0x000000D1C3D05A88>
+2022-06-02 15:01:30,587:DEBUG : quicky.config : <quicky.object_contraints.ErrorResult object at 0x000000D1C3F89248>
 2022-06-02 15:02:36,496:INFO : quicky.config : ------------------------------------------------------
 2022-06-02 15:02:36,497:INFO : quicky.config : web start with:
 2022-06-02 15:02:36,497:INFO : quicky.config : {'debug': True, 'host': '172.16.9.78', 'port': 5012}

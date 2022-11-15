@@ -5,7 +5,7 @@ import bson
 from ReCompact import document
 @document(
     "Sys_Kafka_Track",
-    indexes=["Topic","Error","CreatedOn"]
+    indexes=["Topic","ErrorResult","CreatedOn"]
 )
 class Sys_Kafka_Track:
     _id = (bson.ObjectId)
