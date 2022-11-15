@@ -578,7 +578,10 @@ class RequestHandler:
                 tmp_lst+= [fastapi.File()]
 
         if method=="form":
-            handler.__defaults__= tuple(tmp_lst+list(handler.__defaults__))
+            if handler.__defaults__ is not None:
+                handler.__defaults__= tuple(tmp_lst+list(handler.__defaults__))
+            else:
+                handler.__defaults__ = tuple(tmp_lst)
 
         for k, v in __annotations__.items():
 
