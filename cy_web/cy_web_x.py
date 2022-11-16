@@ -1,3 +1,4 @@
+import gc
 import mimetypes
 import pathlib
 import time
@@ -1248,6 +1249,7 @@ def __get_range_header__(range_header: str, file_size: int):
 def __send_bytes_range_requests__(
         file_obj, start: int, end: int, chunk_size: int = 10_000
 ):
+
     file_obj.seek(start)
     data = [1]
     pos = file_obj.tell()
@@ -1256,6 +1258,8 @@ def __send_bytes_range_requests__(
         data = file_obj.read(read_size)
 
         yield data
+    gc.collect()
+    file_obj.close()
 async def __send_bytes_range_requests_async__(
         file_obj, start: int, end: int, chunk_size: int = 10_000
 ):
@@ -1316,5 +1320,6 @@ async def streaming_async(fsg,request,content_type,streaming_buffering=1024 *  8
         status_code=status_code,
         media_type=content_type
     )
+    fsg.close()
 
     return res

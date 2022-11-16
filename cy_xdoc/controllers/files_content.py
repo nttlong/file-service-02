@@ -14,7 +14,7 @@ import fasty.mongo_fs_http_streaming
 async def get_content_of_files(app_name: str, directory: str,request:fastapi.Request):
     file_service = cy_kit.single(cy_xdoc.services.files.FileServices)
     upload_id= directory.split('/')[0]
-    fs = await file_service.get_main_file_of_upload_async(
+    fs = file_service.get_main_file_of_upload(
         app_name=app_name,
         upload_id=upload_id
     )
