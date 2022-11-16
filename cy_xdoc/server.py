@@ -8,8 +8,8 @@ cy_web.create_web_app(
     working_dir=pathlib.Path(__file__).parent.__str__(),
     static_dir="./../app_manager/static",
     template_dir="./../app_manager/html",
-    host_url="http://172.16.13.72:5011",
-    bind="0.0.0.0:5011",
+    host_url="http://172.16.13.72:8013",
+    bind="0.0.0.0:8013",
     dev_mode= True
 )
 cy_web.add_cors(["*"])

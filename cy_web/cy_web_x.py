@@ -945,11 +945,15 @@ class WebApp(BaseWebApp):
                 host=self.bind_ip,
                 port=self.host_port,
                 log_level="info",
-                workers=1,
                 lifespan='on',
+                ws_max_size=16777216 * 1024,
                 # reload=self.dev_mode,
-                reload_dirs=self.working_dir
-
+                reload_dirs=self.working_dir,
+                workers=1,
+                ws='websockets',
+                backlog=1000,
+                # interface='WSGI',
+                timeout_keep_alive=True
             )
         else:
             uvicorn.run(
@@ -957,8 +961,15 @@ class WebApp(BaseWebApp):
                 host=self.bind_ip,
                 port=self.host_port,
                 log_level="info",
-                workers=8,
-                lifespan='on'
+                lifespan='on',
+                ws_max_size=16777216 * 1024,
+                # reload=self.dev_mode,
+                reload_dirs=self.working_dir,
+                workers=1,
+                ws='websockets',
+                backlog=1000,
+                # interface='WSGI',
+                timeout_keep_alive=True
 
             )
 
