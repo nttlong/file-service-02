@@ -13,4 +13,4 @@ setup(
     ext_modules=cythonize(file_path),
     zip_safe=True,
 )
-#python3 cy_web/setup.py build_ext --inplace
+#python cy_web/setup.py build_ext --inplace

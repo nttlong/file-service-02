@@ -23,7 +23,9 @@ Special:
 
 import threading
 
+import motor
 import pydantic
+from motor.motor_asyncio import AsyncIOMotorGridFSBucket
 
 
 def get_version() -> str:
@@ -801,6 +803,12 @@ class DBDocument:
                 return None
             else:
                 return DocumentObject(ret_item)
+        elif type(other) in [int, str, bool, float, datetime.datetime]:
+            ret_item = self.collection.find_one({"_id": other})
+            if ret_item is None:
+                return None
+            else:
+                return DocumentObject(ret_item)
         else:
             raise Exception("Param in Find one must be cy_docs.Field or dict")
 
@@ -848,7 +856,7 @@ class DBDocument:
             _filter = filter.to_mongo_db_expr()
 
         ret = list(self.collection.find(_filter))
-        if ret.__len__() ==0:
+        if ret.__len__() == 0:
             return None
         return DocumentObject(ret[0])
 
@@ -936,7 +944,6 @@ class DBDocument:
                 ret = await coll.insert_one(data)
                 return ret
 
-
     def insert_one(self, *args, **kwargs):
         if isinstance(args, tuple):
             if args.__len__() == 1:
@@ -945,7 +952,7 @@ class DBDocument:
                         args[0][k] = v
                     if args[0].get("_id") is None:
                         args[0] = bson.ObjectId()
-                    ret =self.collection.insert_one(args[0])
+                    ret = self.collection.insert_one(args[0])
                     return ret
                 elif isinstance(args[0], Field):
                     _fx: Field = args[0]
@@ -975,7 +982,6 @@ class DBDocument:
                     data["_id"] = bson.ObjectId()
                 ret = self.collection.insert_one(data)
                 return ret
-
 
     def count(self, filter):
         if isinstance(filter, dict):
@@ -1174,10 +1180,11 @@ class AggregateDocument:
     def to_json_convertable(self):
         for x in self:
             yield to_json_convertable(x)
+
     def first_item(self):
         items = list(self)
-        if items.__len__()==0:
-            return  None
+        if items.__len__() == 0:
+            return None
         else:
             return DocumentObject(items[0])
 
@@ -1367,10 +1374,41 @@ def document_define(name: str, indexes: List[str], unique_keys: List[str]):
 
 
 def context(client, cls):
-    ret= Document(
+    ret = Document(
         collection_name=cls.__document_name__,
         indexes=cls.__document_indexes__,
         unique_keys=cls.__document_unique_keys__,
         client=client
     )
+    return ret
+
+import gridfs
+def get_file(client, db_name: str, file_id):
+    gfs= gridfs.GridFSBucket(client.get_database( db_name))
+
+    if isinstance(file_id,str):
+        file_id = bson.ObjectId(file_id)
+    ret = gfs.open_download_stream(file_id)
+
+    # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
+    return ret
+async def get_file_async(client, db_name: str, file_id):
+    from motor.motor_asyncio import AsyncIOMotorClient
+    async_client = AsyncIOMotorClient()
+    async_client.delegate = client
+    gfs= AsyncIOMotorGridFSBucket(async_client.get_database(db_name))
+
+    if isinstance(file_id,str):
+        file_id = bson.ObjectId(file_id)
+    ret = await gfs.open_download_stream(file_id)
+    # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
+    return ret
+async def find_file_async(client, db_name: str, rel_file_path:str):
+    from motor.motor_asyncio import AsyncIOMotorClient
+    async_client = AsyncIOMotorClient()
+    async_client.delegate = client
+    gfs= AsyncIOMotorGridFSBucket(async_client.get_database(db_name))
+    ret= await  gfs.find({"rel_file_path":rel_file_path})
+
+    # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
     return ret

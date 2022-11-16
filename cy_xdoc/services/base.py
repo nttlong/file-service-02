@@ -35,3 +35,7 @@ class Base:
 
     def db(self, app_name: str):
         return DbContext(self.db_name(app_name),self.client)
+    async def get_file_async(self,app_name:str,file_id):
+        return await cy_docs.get_file_async(self.client,self.db_name(app_name),file_id)
+    def get_file(self,app_name:str,file_id):
+        return cy_docs.get_file(self.client,self.db_name(app_name),file_id)

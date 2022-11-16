@@ -1,5 +1,6 @@
 import mimetypes
 import pathlib
+import time
 
 mime_data = {}
 mime_data[".323"] = "text/h323"
@@ -543,6 +544,13 @@ def check_is_need_pydantic(cls):
 class RequestHandler:
 
     def __init__(self, method, path, handler):
+        if method=="get":
+            self.path=path
+            self.method=method
+            self.handler=handler
+            self.return_type = None
+            return
+
         self.path = path
         __old_dfs__ = []
         self.return_type = None
@@ -591,16 +599,18 @@ class RequestHandler:
                 if check_is_need_pydantic(v):
                     handler.__annotations__[k] = __wrap_pydantic__("", v)
                     if k != "return":
-                        __defaults__ += [fastapi.Body(title=k)]
+                        __defaults__ += [fastapi.Body(title=k,embed=True)]
 
                     else:
                         self.return_type = handler.__annotations__[k]
-                        __old_dfs__+=[fastapi.Body(embed=True)]
+                        __defaults__+=[fastapi.Body(embed=True)]
                 elif (not(hasattr(v,"__module__") and v.__module__ == "typing")) and v not in [str,int,bool,datetime,float] and  issubclass(v,pydantic.BaseModel) and k != "return":
                      __defaults__ += [fastapi.Body(embed=True)]
+                elif v in [str,int,bool,datetime,float] and k!="return" and f"{k}" not in path :
+                    __defaults__ += [fastapi.Body(embed=True)]
 
             else:
-                print(k,v)
+
                 if k == "return":
                     if check_is_need_pydantic(v):
                         handler.__annotations__[k] = __wrap_pydantic__("", v)
@@ -935,9 +945,9 @@ class WebApp(BaseWebApp):
                 host=self.bind_ip,
                 port=self.host_port,
                 log_level="info",
-                workers=8,
+                workers=1,
                 lifespan='on',
-                reload=self.dev_mode,
+                # reload=self.dev_mode,
                 reload_dirs=self.working_dir
 
             )
@@ -1168,12 +1178,15 @@ def auth_type(a_type: type):
 
     return wrapper
 import pydantic.fields
-def model():
+def model(all_field_are_optional:bool=False):
     def warpper(cls):
         for x in cls.__bases__:
             if hasattr(x,"__annotations__"):
                 for k,v in x.__annotations__.items():
-                    cls.__annotations__[k]=v
+                    if all_field_are_optional:
+                        cls.__annotations__[k] =typing.Optional[v]
+                    else:
+                        cls.__annotations__[k]=v
         for k,v in cls.__annotations__.items():
             if isinstance(v,tuple):
                 v_t = v[0]
@@ -1187,9 +1200,110 @@ def model():
                     if isinstance(x,bool):
                         v_r=x
                 cls.__annotations__[k]=v_t
+
+
                 setattr(cls,k,pydantic.Field(
                     description=v_d,
                 ))
+            else:
+                if all_field_are_optional:
+                    cls.__annotations__[k] = typing.Optional[v]
+
 
         return __wrap_pydantic__("",cls,False)
     return warpper
+
+from fastapi import HTTPException, Request, status
+from fastapi.responses import StreamingResponse
+import mimetypes
+def __get_range_header__(range_header: str, file_size: int):
+    def _invalid_range():
+        return HTTPException(
+            status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE,
+            detail=f"Invalid request range (Range:{range_header!r})",
+        )
+
+    try:
+        h = range_header.replace("bytes=", "").split("-")
+        start = int(h[0]) if h[0] != "" else 0
+        end = int(h[1]) if h[1] != "" else file_size - 1
+    except ValueError:
+        raise _invalid_range()
+
+    if start > end or start < 0 or end > file_size - 1:
+        raise _invalid_range()
+    return start, end
+
+def __send_bytes_range_requests__(
+        file_obj, start: int, end: int, chunk_size: int = 10_000
+):
+    file_obj.seek(start)
+    data = [1]
+    pos = file_obj.tell()
+    while len(data) > 0:
+        read_size = min(chunk_size, end + 1 - pos)
+        data = file_obj.read(read_size)
+
+        yield data
+async def __send_bytes_range_requests_async__(
+        file_obj, start: int, end: int, chunk_size: int = 10_000
+):
+    """Send a file in chunks using Range Requests specification RFC7233
+
+    `start` and `end` parameters are inclusive due to specification
+    """
+    file_obj.seek(start)
+    data = [1]
+    pos = file_obj.tell()
+    while len(data) > 0:
+        read_size = min(chunk_size, end + 1 - pos)
+        data = await file_obj.read(read_size)
+
+        yield data
+
+
+
+async def streaming_async(fsg,request,content_type,streaming_buffering=1024 *  8*4):
+    """
+    Streaming content
+    :param fsg: mongodb gridOut
+    :param request: client request
+    :param content_type: mime_type
+    :param streaming_buffering: support 4k
+    :return:
+    """
+    file_size = fsg.length
+    range_header = request.headers.get("range")
+    headers = {
+        "content-type": content_type,
+        "accept-ranges": "bytes",
+        "content-encoding": "identity",
+        "content-length": str(file_size),
+        "access-control-expose-headers": (
+            "content-type, accept-ranges, content-length, "
+            "content-range, content-encoding"
+        ),
+    }
+    start = 0
+    end = file_size - 1
+    status_code = 200
+
+
+    if range_header is not None:
+        start, end = __get_range_header__(range_header, file_size)
+        size = end - start + 1
+        headers["content-length"] = str(size)
+        headers["content-range"] = f"bytes {start}-{end}/{file_size}"
+        status_code = status.HTTP_206_PARTIAL_CONTENT
+    if hasattr(fsg,"delegate"):
+        content = __send_bytes_range_requests_async__(fsg,start,end, streaming_buffering)
+    else:
+        content = __send_bytes_range_requests__(fsg, start, end, streaming_buffering)
+    res = StreamingResponse(
+        content=content,
+        headers=headers,
+        status_code=status_code,
+        media_type=content_type
+    )
+
+    return res
