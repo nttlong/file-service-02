@@ -57,10 +57,10 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo,token = fa
         file_size= Data.FileSize,
         client_file_name= Data.FileName,
         is_public= Data.IsPublic,
-        thumbs_support= Data.ThumbConstraints
-
+        thumbs_support= Data.ThumbConstraints,
+        web_host_root_url= cy_web.get_host_url()
     )
-    return ret.to_pydantic()
+    return RegisterUploadInfoResult(Data = ret.to_pydantic())
 
 
 

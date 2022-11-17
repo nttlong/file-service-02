@@ -7,8 +7,7 @@ from cy_xdoc.models.apps import App
 
 
 class AppServices(Base):
-    def __init__(self):
-        Base.__init__(self)
+
 
     def get_list(self, app_name: str):
         docs = self.expr(App)

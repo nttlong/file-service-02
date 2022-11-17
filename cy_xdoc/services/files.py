@@ -10,8 +10,7 @@ from cy_xdoc.models.files import DocUploadRegister
 
 
 class FileServices(Base):
-    def __init__(self):
-        Base.__init__(self)
+
 
     def get_list(self, app_name, root_url, page_index: int, page_size: int, field_search: str = None,
                  value_search: str = None):
@@ -143,5 +142,14 @@ class FileServices(Base):
             SizeInHumanReadable = humanize.filesize.naturalsize(file_size),
             UrlOfServerPath = f"{web_host_root_url}/api/{app_name}/file/register/{id}/{pathlib.Path(client_file_name).stem.lower()}",
             RelUrlThumb = f"api/{app_name}/thumb/{id}/{pathlib.Path(client_file_name).stem.lower()}.webp",
-            FileSize = file_size
+            FileSize = file_size,
+            UrlThumb = f"{web_host_root_url}/api/{app_name}/thumb/{id}/{pathlib.Path(client_file_name).stem.lower()}.webp",
+            OriginalFileName = client_file_name
         )
+
+    def get_upload_register(self, app_name:str, UploadId:str):
+        return self.db(app_name).doc(DocUploadRegister) @ UploadId
+
+
+
+
