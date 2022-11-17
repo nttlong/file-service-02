@@ -934,7 +934,7 @@ class WebApp(BaseWebApp):
 
         self.app.post("/" + self.url_get_token)(login_for_access_token)
 
-    def unvicorn_start(self, start_path):
+    def unvicorn_start(self, start_path,worker=4):
         global web_application
         # for k,v in self.web_app_module.__dict__.items():
         #     if v==self:
@@ -950,7 +950,7 @@ class WebApp(BaseWebApp):
                 ws_max_size=16777216 * 1024,
                 # reload=self.dev_mode,
                 reload_dirs=self.working_dir,
-                workers=1,
+                workers=worker,
                 ws='websockets',
                 backlog=1000,
                 # interface='WSGI',
@@ -966,7 +966,7 @@ class WebApp(BaseWebApp):
                 ws_max_size=16777216 * 1024,
                 # reload=self.dev_mode,
                 reload_dirs=self.working_dir,
-                workers=1,
+                workers=worker,
                 ws='websockets',
                 backlog=1000,
                 # interface='WSGI',
@@ -993,11 +993,12 @@ def add_controller(web_app, prefix_path: str, controller_dir):
     web_app.load_controller_from_dir(prefix_path, controller_dir)
 
 
-def start_with_uvicorn():
+def start_with_uvicorn(worker=4):
     global web_application
     if isinstance(web_application, WebApp):
         web_application.unvicorn_start(
-            f"{WebApp.__module__}"
+            f"{WebApp.__module__}",
+            worker
         )
     # run_path=path.replace(os.sep,"/").replace('/','.')
     # web_app.unvicorn_start(run_path)
@@ -1141,7 +1142,7 @@ def validate_token_in_request(self, request):
                               algorithms=[self.jwt_algorithm],
                               options={"verify_signature": False},
                               )
-        username = ret_data.get("username")
+        username = ret_data.get("username",ret_data.get("sub"))
         application = ret_data.get("application")
         setattr(request, "username", username)
         setattr(request, "application", application)

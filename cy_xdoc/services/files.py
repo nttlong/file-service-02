@@ -41,22 +41,22 @@ class FileServices(Base):
                 x["AvailableThumbs"] = _a_thumbs
             yield x
 
-    def get_main_file_of_upload(self,app_name, upload_id):
+    def get_main_file_of_upload(self, app_name, upload_id):
         upload = self.db(app_name).doc(DocUploadRegister) @ upload_id
         if not upload:
             return
         file_id = upload.MainFileId
-        fs= self.get_file(app_name,file_id)
+        fs = self.get_file(app_name, file_id)
         return fs
-    async def get_main_file_of_upload_async(self,app_name, upload_id):
+
+    async def get_main_file_of_upload_async(self, app_name, upload_id):
         upload = self.db(app_name).doc(DocUploadRegister) @ upload_id
         if not upload:
             return
-
 
         file_id = upload.MainFileId
         if file_id is not None:
-            fs= await self.get_file_async(app_name,file_id)
+            fs = await self.get_file_async(app_name, file_id)
 
         return fs
 

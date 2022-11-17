@@ -92,4 +92,4 @@ cy_web.add_controller(web_app,"api", "./controllers")
 cy_web.add_controller(web_app,"", "./pages")
 
 if __name__ == "__main__":
-    cy_web.uvicon_start("apps.server:app",web_app)
+    cy_web.uvicon_start("apps.server:app",web_app,worker=8)

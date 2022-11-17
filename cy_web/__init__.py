@@ -54,8 +54,8 @@ def load_controller_from_dir(prefix, path):
     )
 
 
-def start_with_uvicorn():
-    cy_web_x.start_with_uvicorn()
+def start_with_uvicorn(worker=4):
+    cy_web_x.start_with_uvicorn(worker)
 
 
 def middleware():
