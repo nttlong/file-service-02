@@ -72,8 +72,18 @@ def single(cls, *args, **kwargs):
 
 
 def instance(cls, *args, **kwargs):
-    v = cls(**cls.__init__.__annotations__)
+    if cls.__init__.__defaults__ is not None:
+        args = {}
+        for k, v in cls.__init__.__annotations__.items():
+            for x in cls.__init__.__defaults__:
+                if type(x) == v:
+                    args[k] = x
+        v = cls(**args)
+    else:
+        v = cls()
     return v
+
+
 
 
 class VALUE_DICT:
