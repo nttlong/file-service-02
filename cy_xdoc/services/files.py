@@ -1,6 +1,9 @@
 import datetime
+import mimetypes
+import os.path
+import pathlib
 import uuid
-
+import humanize
 import cy_docs
 from cy_xdoc.services.base import Base
 from cy_xdoc.models.files import DocUploadRegister
@@ -25,19 +28,19 @@ class FileServices(Base):
             doc.FullFileName,
             doc.MimeType,
             cy_docs.fields.FileSize >> doc.SizeInBytes,
-            cy_docs.fields.UploadID>>doc.Id  ,
-            cy_docs.fields.CreatedOn>>doc.RegisterOn  ,
+            cy_docs.fields.UploadID >> doc.Id,
+            cy_docs.fields.CreatedOn >> doc.RegisterOn,
             doc.FileNameOnly,
             cy_docs.fields.UrlOfServerPath >> cy_docs.concat(root_url, f"/api/{app_name}/file/", doc.FullFileName),
-            cy_docs.fields.RelUrlOfServerPath>>cy_docs.concat(f"api/{app_name}/file/", doc.FullFileName) ,
-            cy_docs.fields.ThumbUrl>>cy_docs.concat(root_url, f"/api/{app_name}/thumb/", doc.FullFileName, ".webp") ,
+            cy_docs.fields.RelUrlOfServerPath >> cy_docs.concat(f"api/{app_name}/file/", doc.FullFileName),
+            cy_docs.fields.ThumbUrl >> cy_docs.concat(root_url, f"/api/{app_name}/thumb/", doc.FullFileName, ".webp"),
             doc.AvailableThumbs,
             doc.HasThumb,
             doc.OCRFileId,
-            cy_docs.fields.Media>>(
-                cy_docs.fields.Width>>doc.VideoResolutionWidth,
+            cy_docs.fields.Media >> (
+                cy_docs.fields.Width >> doc.VideoResolutionWidth,
                 cy_docs.fields.Height >> doc.VideoResolutionHeight,
-                cy_docs.fields.Duration>>doc.VideoDuration,
+                cy_docs.fields.Duration >> doc.VideoDuration,
                 cy_docs.fields.FPS >> doc.VideoFPS
             )
 
@@ -64,7 +67,6 @@ class FileServices(Base):
         if not upload:
             return
 
-
         if upload.MainFileId is not None:
             fs = await self.get_file_async(app_name, upload.MainFileId)
             return fs
@@ -74,10 +76,72 @@ class FileServices(Base):
     def find_file_async(self, app_name, relative_file_path):
         pass
 
-
     def get_main_main_thumb_file(self, app_name, upload_id):
         upload = self.db(app_name).doc(DocUploadRegister) @ upload_id
         if upload is None:
             return None
-        ret = self.get_file(app_name,upload.ThumbFileId)
+        ret = self.get_file(app_name, upload.ThumbFileId)
         return ret
+
+    def add_new_upload_info(self,
+                            app_name,
+                            client_file_name: str,
+                            is_public: bool,
+                            file_size: int,
+                            chunk_size: int,
+                            thumbs_support: str,
+                            web_host_root_url:str):
+
+        doc = self.expr(DocUploadRegister)
+        id = str(uuid.uuid4())
+        mime_type, _ = mimetypes.guess_type(client_file_name)
+        num_of_chunks, tail = divmod(file_size, chunk_size)
+        if tail > 0:
+            num_of_chunks += 1
+        ret = self.db(app_name).doc(DocUploadRegister).insert_one(
+            doc.id << id,
+            doc.FileName << client_file_name,
+            doc.FileNameOnly << pathlib.Path(client_file_name).stem,
+            doc.FileNameLower << client_file_name.lower(),
+            doc.FileExt << os.path.splitext(client_file_name)[1].split('.')[1],
+            doc.FullFileName << f"{id}/{client_file_name}",
+            doc.FullFileNameLower << f"{id}/{client_file_name}".lower(),
+            doc.FullFileNameWithoutExtenstion << f"{id}/{pathlib.Path(client_file_name).stem}",
+            doc.FullFileNameWithoutExtenstionLower << f"{id}/{pathlib.Path(client_file_name).stem}".lower(),
+            doc.ServerFileName << f"{id}.{os.path.splitext(client_file_name)[1].split('.')[1]}",
+            doc.AvailableThumbSize << thumbs_support,
+
+            doc.ChunkSizeInKB << chunk_size / 1024,
+            doc.ChunkSizeInBytes << chunk_size,
+            doc.NumOfChunks << num_of_chunks,
+            doc.NumOfChunksCompleted << 0,
+            doc.SizeInHumanReadable << humanize.filesize.naturalsize(file_size),
+            doc.SizeUploaded << 0,
+            doc.ProcessHistories << [],
+            doc.MimeType << mime_type,
+            doc.IsPublic << is_public,
+            doc.Status << 0,
+            doc.RegisterOn << datetime.datetime.utcnow(),
+            doc.RegisterOnDays << datetime.datetime.utcnow().day,
+            doc.RegisterOnMonths << datetime.datetime.utcnow().month,
+            doc.RegisterOnYears << datetime.datetime.utcnow().year,
+            doc.RegisterOnHours << datetime.datetime.utcnow().hour,
+            doc.RegisterOnMinutes << datetime.datetime.utcnow().minute,
+            doc.RegisterOnSeconds << datetime.datetime.utcnow().second,
+            doc.RegisteredBy << app_name,
+            doc.HasThumb << False,
+            doc.LastModifiedOn << datetime.datetime.utcnow(),
+            doc.SizeInBytes << file_size
+        )
+        return cy_docs.DocumentObject(
+            NumOfChunks=num_of_chunks,
+            ChunkSizeInBytes = chunk_size,
+            UploadId = id,
+            ServerFilePath = f"{id}{os.path.splitext(client_file_name)[1]}",
+            MimeType =mime_type,
+            RelUrlOfServerPath = f"api/{app_name}/file/register/{id}/{pathlib.Path(client_file_name).stem.lower()}",
+            SizeInHumanReadable = humanize.filesize.naturalsize(file_size),
+            UrlOfServerPath = f"{web_host_root_url}/api/{app_name}/file/register/{id}/{pathlib.Path(client_file_name).stem.lower()}",
+            RelUrlThumb = f"api/{app_name}/thumb/{id}/{pathlib.Path(client_file_name).stem.lower()}.webp",
+            FileSize = file_size
+        )
