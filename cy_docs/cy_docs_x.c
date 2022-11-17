@@ -1298,9 +1298,9 @@ struct __pyx_obj_7cy_docs_9cy_docs_x___pyx_scope_struct_11_document_define {
 };
 
 
-/* "cy_docs/cy_docs_x.py":1421
- *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
- *     return ret
+/* "cy_docs/cy_docs_x.py":1449
+ *     )
+ *     return fs
  * async def get_file_async(client, db_name: str, file_id):             # <<<<<<<<<<<<<<
  *     from motor.motor_asyncio import AsyncIOMotorClient
  *     async_client = AsyncIOMotorClient()
@@ -1322,7 +1322,7 @@ struct __pyx_obj_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async {
 };
 
 
-/* "cy_docs/cy_docs_x.py":1432
+/* "cy_docs/cy_docs_x.py":1460
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  *     return ret
  * async def find_file_async(client, db_name: str, rel_file_path:str):             # <<<<<<<<<<<<<<
@@ -2446,6 +2446,8 @@ typedef struct {
   PyObject *__pyx_n_s_check_map__module;
   PyObject *__pyx_n_s_check_map__name;
   PyObject *__pyx_n_s_check_name;
+  PyObject *__pyx_n_s_chunkSize;
+  PyObject *__pyx_n_s_chunk_size;
   PyObject *__pyx_n_s_client;
   PyObject *__pyx_n_s_cline_in_traceback;
   PyObject *__pyx_n_s_close;
@@ -2460,6 +2462,7 @@ typedef struct {
   PyObject *__pyx_n_s_count;
   PyObject *__pyx_n_s_count_async;
   PyObject *__pyx_n_s_count_documents;
+  PyObject *__pyx_n_s_create_file;
   PyObject *__pyx_n_s_create_index;
   PyObject *__pyx_n_s_cy_docs_cy_docs_x;
   PyObject *__pyx_kp_s_cy_docs_cy_docs_x_py;
@@ -2468,6 +2471,7 @@ typedef struct {
   PyObject *__pyx_n_s_data_2;
   PyObject *__pyx_n_s_database;
   PyObject *__pyx_n_s_datetime;
+  PyObject *__pyx_n_s_db;
   PyObject *__pyx_kp_u_db_getCollection;
   PyObject *__pyx_n_s_db_name;
   PyObject *__pyx_n_s_delegate;
@@ -2502,6 +2506,9 @@ typedef struct {
   PyObject *__pyx_n_s_field_name;
   PyObject *__pyx_n_s_fields;
   PyObject *__pyx_n_s_file_id;
+  PyObject *__pyx_n_s_file_name;
+  PyObject *__pyx_n_s_file_size;
+  PyObject *__pyx_n_s_filename;
   PyObject *__pyx_n_s_filter;
   PyObject *__pyx_n_s_filter_2;
   PyObject *__pyx_n_s_find;
@@ -2515,6 +2522,8 @@ typedef struct {
   PyObject *__pyx_kp_s_floor;
   PyObject *__pyx_n_s_floordiv;
   PyObject *__pyx_n_s_fn;
+  PyObject *__pyx_n_s_fs;
+  PyObject *__pyx_kp_s_fs_files;
   PyObject *__pyx_n_s_fx;
   PyObject *__pyx_n_s_fx_2;
   PyObject *__pyx_n_s_ge;
@@ -2524,6 +2533,7 @@ typedef struct {
   PyObject *__pyx_n_s_get_doc;
   PyObject *__pyx_n_s_get_file;
   PyObject *__pyx_n_s_get_file_async;
+  PyObject *__pyx_n_s_get_file_by_name;
   PyObject *__pyx_n_s_get_mongodb_text;
   PyObject *__pyx_n_s_get_version;
   PyObject *__pyx_n_s_getattr;
@@ -2600,6 +2610,7 @@ typedef struct {
   PyObject *__pyx_kp_s_ne_2;
   PyObject *__pyx_n_s_ne_3;
   PyObject *__pyx_n_s_new;
+  PyObject *__pyx_n_s_new_file;
   PyObject *__pyx_kp_s_not;
   PyObject *__pyx_n_s_not_exists;
   PyObject *__pyx_n_s_obj;
@@ -2676,6 +2687,7 @@ typedef struct {
   PyObject *__pyx_n_s_update;
   PyObject *__pyx_n_s_update_async;
   PyObject *__pyx_n_s_update_many;
+  PyObject *__pyx_n_s_update_one;
   PyObject *__pyx_n_s_updater;
   PyObject *__pyx_n_s_uuid;
   PyObject *__pyx_n_s_v;
@@ -2797,7 +2809,9 @@ typedef struct {
   PyObject *__pyx_tuple__196;
   PyObject *__pyx_tuple__198;
   PyObject *__pyx_tuple__200;
-  PyObject *__pyx_tuple__201;
+  PyObject *__pyx_tuple__202;
+  PyObject *__pyx_tuple__204;
+  PyObject *__pyx_tuple__205;
   PyObject *__pyx_codeobj__17;
   PyObject *__pyx_codeobj__20;
   PyObject *__pyx_codeobj__21;
@@ -2883,6 +2897,8 @@ typedef struct {
   PyObject *__pyx_codeobj__195;
   PyObject *__pyx_codeobj__197;
   PyObject *__pyx_codeobj__199;
+  PyObject *__pyx_codeobj__201;
+  PyObject *__pyx_codeobj__203;
 } __pyx_mstate;
 
 #ifdef __cplusplus
@@ -3101,6 +3117,8 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_check_map__module);
   Py_CLEAR(clear_module_state->__pyx_n_s_check_map__name);
   Py_CLEAR(clear_module_state->__pyx_n_s_check_name);
+  Py_CLEAR(clear_module_state->__pyx_n_s_chunkSize);
+  Py_CLEAR(clear_module_state->__pyx_n_s_chunk_size);
   Py_CLEAR(clear_module_state->__pyx_n_s_client);
   Py_CLEAR(clear_module_state->__pyx_n_s_cline_in_traceback);
   Py_CLEAR(clear_module_state->__pyx_n_s_close);
@@ -3115,6 +3133,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_count);
   Py_CLEAR(clear_module_state->__pyx_n_s_count_async);
   Py_CLEAR(clear_module_state->__pyx_n_s_count_documents);
+  Py_CLEAR(clear_module_state->__pyx_n_s_create_file);
   Py_CLEAR(clear_module_state->__pyx_n_s_create_index);
   Py_CLEAR(clear_module_state->__pyx_n_s_cy_docs_cy_docs_x);
   Py_CLEAR(clear_module_state->__pyx_kp_s_cy_docs_cy_docs_x_py);
@@ -3123,6 +3142,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_data_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_database);
   Py_CLEAR(clear_module_state->__pyx_n_s_datetime);
+  Py_CLEAR(clear_module_state->__pyx_n_s_db);
   Py_CLEAR(clear_module_state->__pyx_kp_u_db_getCollection);
   Py_CLEAR(clear_module_state->__pyx_n_s_db_name);
   Py_CLEAR(clear_module_state->__pyx_n_s_delegate);
@@ -3157,6 +3177,9 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_field_name);
   Py_CLEAR(clear_module_state->__pyx_n_s_fields);
   Py_CLEAR(clear_module_state->__pyx_n_s_file_id);
+  Py_CLEAR(clear_module_state->__pyx_n_s_file_name);
+  Py_CLEAR(clear_module_state->__pyx_n_s_file_size);
+  Py_CLEAR(clear_module_state->__pyx_n_s_filename);
   Py_CLEAR(clear_module_state->__pyx_n_s_filter);
   Py_CLEAR(clear_module_state->__pyx_n_s_filter_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_find);
@@ -3170,6 +3193,8 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_kp_s_floor);
   Py_CLEAR(clear_module_state->__pyx_n_s_floordiv);
   Py_CLEAR(clear_module_state->__pyx_n_s_fn);
+  Py_CLEAR(clear_module_state->__pyx_n_s_fs);
+  Py_CLEAR(clear_module_state->__pyx_kp_s_fs_files);
   Py_CLEAR(clear_module_state->__pyx_n_s_fx);
   Py_CLEAR(clear_module_state->__pyx_n_s_fx_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_ge);
@@ -3179,6 +3204,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_get_doc);
   Py_CLEAR(clear_module_state->__pyx_n_s_get_file);
   Py_CLEAR(clear_module_state->__pyx_n_s_get_file_async);
+  Py_CLEAR(clear_module_state->__pyx_n_s_get_file_by_name);
   Py_CLEAR(clear_module_state->__pyx_n_s_get_mongodb_text);
   Py_CLEAR(clear_module_state->__pyx_n_s_get_version);
   Py_CLEAR(clear_module_state->__pyx_n_s_getattr);
@@ -3255,6 +3281,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_kp_s_ne_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_ne_3);
   Py_CLEAR(clear_module_state->__pyx_n_s_new);
+  Py_CLEAR(clear_module_state->__pyx_n_s_new_file);
   Py_CLEAR(clear_module_state->__pyx_kp_s_not);
   Py_CLEAR(clear_module_state->__pyx_n_s_not_exists);
   Py_CLEAR(clear_module_state->__pyx_n_s_obj);
@@ -3331,6 +3358,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_update);
   Py_CLEAR(clear_module_state->__pyx_n_s_update_async);
   Py_CLEAR(clear_module_state->__pyx_n_s_update_many);
+  Py_CLEAR(clear_module_state->__pyx_n_s_update_one);
   Py_CLEAR(clear_module_state->__pyx_n_s_updater);
   Py_CLEAR(clear_module_state->__pyx_n_s_uuid);
   Py_CLEAR(clear_module_state->__pyx_n_s_v);
@@ -3452,7 +3480,9 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_tuple__196);
   Py_CLEAR(clear_module_state->__pyx_tuple__198);
   Py_CLEAR(clear_module_state->__pyx_tuple__200);
-  Py_CLEAR(clear_module_state->__pyx_tuple__201);
+  Py_CLEAR(clear_module_state->__pyx_tuple__202);
+  Py_CLEAR(clear_module_state->__pyx_tuple__204);
+  Py_CLEAR(clear_module_state->__pyx_tuple__205);
   Py_CLEAR(clear_module_state->__pyx_codeobj__17);
   Py_CLEAR(clear_module_state->__pyx_codeobj__20);
   Py_CLEAR(clear_module_state->__pyx_codeobj__21);
@@ -3538,6 +3568,8 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_codeobj__195);
   Py_CLEAR(clear_module_state->__pyx_codeobj__197);
   Py_CLEAR(clear_module_state->__pyx_codeobj__199);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__201);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__203);
   return 0;
 }
 #endif
@@ -3743,6 +3775,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_check_map__module);
   Py_VISIT(traverse_module_state->__pyx_n_s_check_map__name);
   Py_VISIT(traverse_module_state->__pyx_n_s_check_name);
+  Py_VISIT(traverse_module_state->__pyx_n_s_chunkSize);
+  Py_VISIT(traverse_module_state->__pyx_n_s_chunk_size);
   Py_VISIT(traverse_module_state->__pyx_n_s_client);
   Py_VISIT(traverse_module_state->__pyx_n_s_cline_in_traceback);
   Py_VISIT(traverse_module_state->__pyx_n_s_close);
@@ -3757,6 +3791,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_count);
   Py_VISIT(traverse_module_state->__pyx_n_s_count_async);
   Py_VISIT(traverse_module_state->__pyx_n_s_count_documents);
+  Py_VISIT(traverse_module_state->__pyx_n_s_create_file);
   Py_VISIT(traverse_module_state->__pyx_n_s_create_index);
   Py_VISIT(traverse_module_state->__pyx_n_s_cy_docs_cy_docs_x);
   Py_VISIT(traverse_module_state->__pyx_kp_s_cy_docs_cy_docs_x_py);
@@ -3765,6 +3800,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_data_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_database);
   Py_VISIT(traverse_module_state->__pyx_n_s_datetime);
+  Py_VISIT(traverse_module_state->__pyx_n_s_db);
   Py_VISIT(traverse_module_state->__pyx_kp_u_db_getCollection);
   Py_VISIT(traverse_module_state->__pyx_n_s_db_name);
   Py_VISIT(traverse_module_state->__pyx_n_s_delegate);
@@ -3799,6 +3835,9 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_field_name);
   Py_VISIT(traverse_module_state->__pyx_n_s_fields);
   Py_VISIT(traverse_module_state->__pyx_n_s_file_id);
+  Py_VISIT(traverse_module_state->__pyx_n_s_file_name);
+  Py_VISIT(traverse_module_state->__pyx_n_s_file_size);
+  Py_VISIT(traverse_module_state->__pyx_n_s_filename);
   Py_VISIT(traverse_module_state->__pyx_n_s_filter);
   Py_VISIT(traverse_module_state->__pyx_n_s_filter_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_find);
@@ -3812,6 +3851,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_kp_s_floor);
   Py_VISIT(traverse_module_state->__pyx_n_s_floordiv);
   Py_VISIT(traverse_module_state->__pyx_n_s_fn);
+  Py_VISIT(traverse_module_state->__pyx_n_s_fs);
+  Py_VISIT(traverse_module_state->__pyx_kp_s_fs_files);
   Py_VISIT(traverse_module_state->__pyx_n_s_fx);
   Py_VISIT(traverse_module_state->__pyx_n_s_fx_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_ge);
@@ -3821,6 +3862,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_get_doc);
   Py_VISIT(traverse_module_state->__pyx_n_s_get_file);
   Py_VISIT(traverse_module_state->__pyx_n_s_get_file_async);
+  Py_VISIT(traverse_module_state->__pyx_n_s_get_file_by_name);
   Py_VISIT(traverse_module_state->__pyx_n_s_get_mongodb_text);
   Py_VISIT(traverse_module_state->__pyx_n_s_get_version);
   Py_VISIT(traverse_module_state->__pyx_n_s_getattr);
@@ -3897,6 +3939,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_kp_s_ne_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_ne_3);
   Py_VISIT(traverse_module_state->__pyx_n_s_new);
+  Py_VISIT(traverse_module_state->__pyx_n_s_new_file);
   Py_VISIT(traverse_module_state->__pyx_kp_s_not);
   Py_VISIT(traverse_module_state->__pyx_n_s_not_exists);
   Py_VISIT(traverse_module_state->__pyx_n_s_obj);
@@ -3973,6 +4016,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_update);
   Py_VISIT(traverse_module_state->__pyx_n_s_update_async);
   Py_VISIT(traverse_module_state->__pyx_n_s_update_many);
+  Py_VISIT(traverse_module_state->__pyx_n_s_update_one);
   Py_VISIT(traverse_module_state->__pyx_n_s_updater);
   Py_VISIT(traverse_module_state->__pyx_n_s_uuid);
   Py_VISIT(traverse_module_state->__pyx_n_s_v);
@@ -4094,7 +4138,9 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_tuple__196);
   Py_VISIT(traverse_module_state->__pyx_tuple__198);
   Py_VISIT(traverse_module_state->__pyx_tuple__200);
-  Py_VISIT(traverse_module_state->__pyx_tuple__201);
+  Py_VISIT(traverse_module_state->__pyx_tuple__202);
+  Py_VISIT(traverse_module_state->__pyx_tuple__204);
+  Py_VISIT(traverse_module_state->__pyx_tuple__205);
   Py_VISIT(traverse_module_state->__pyx_codeobj__17);
   Py_VISIT(traverse_module_state->__pyx_codeobj__20);
   Py_VISIT(traverse_module_state->__pyx_codeobj__21);
@@ -4180,6 +4226,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_codeobj__195);
   Py_VISIT(traverse_module_state->__pyx_codeobj__197);
   Py_VISIT(traverse_module_state->__pyx_codeobj__199);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__201);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__203);
   return 0;
 }
 #endif
@@ -4385,6 +4433,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_check_map__module __pyx_mstate_global->__pyx_n_s_check_map__module
 #define __pyx_n_s_check_map__name __pyx_mstate_global->__pyx_n_s_check_map__name
 #define __pyx_n_s_check_name __pyx_mstate_global->__pyx_n_s_check_name
+#define __pyx_n_s_chunkSize __pyx_mstate_global->__pyx_n_s_chunkSize
+#define __pyx_n_s_chunk_size __pyx_mstate_global->__pyx_n_s_chunk_size
 #define __pyx_n_s_client __pyx_mstate_global->__pyx_n_s_client
 #define __pyx_n_s_cline_in_traceback __pyx_mstate_global->__pyx_n_s_cline_in_traceback
 #define __pyx_n_s_close __pyx_mstate_global->__pyx_n_s_close
@@ -4399,6 +4449,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_count __pyx_mstate_global->__pyx_n_s_count
 #define __pyx_n_s_count_async __pyx_mstate_global->__pyx_n_s_count_async
 #define __pyx_n_s_count_documents __pyx_mstate_global->__pyx_n_s_count_documents
+#define __pyx_n_s_create_file __pyx_mstate_global->__pyx_n_s_create_file
 #define __pyx_n_s_create_index __pyx_mstate_global->__pyx_n_s_create_index
 #define __pyx_n_s_cy_docs_cy_docs_x __pyx_mstate_global->__pyx_n_s_cy_docs_cy_docs_x
 #define __pyx_kp_s_cy_docs_cy_docs_x_py __pyx_mstate_global->__pyx_kp_s_cy_docs_cy_docs_x_py
@@ -4407,6 +4458,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_data_2 __pyx_mstate_global->__pyx_n_s_data_2
 #define __pyx_n_s_database __pyx_mstate_global->__pyx_n_s_database
 #define __pyx_n_s_datetime __pyx_mstate_global->__pyx_n_s_datetime
+#define __pyx_n_s_db __pyx_mstate_global->__pyx_n_s_db
 #define __pyx_kp_u_db_getCollection __pyx_mstate_global->__pyx_kp_u_db_getCollection
 #define __pyx_n_s_db_name __pyx_mstate_global->__pyx_n_s_db_name
 #define __pyx_n_s_delegate __pyx_mstate_global->__pyx_n_s_delegate
@@ -4441,6 +4493,9 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_field_name __pyx_mstate_global->__pyx_n_s_field_name
 #define __pyx_n_s_fields __pyx_mstate_global->__pyx_n_s_fields
 #define __pyx_n_s_file_id __pyx_mstate_global->__pyx_n_s_file_id
+#define __pyx_n_s_file_name __pyx_mstate_global->__pyx_n_s_file_name
+#define __pyx_n_s_file_size __pyx_mstate_global->__pyx_n_s_file_size
+#define __pyx_n_s_filename __pyx_mstate_global->__pyx_n_s_filename
 #define __pyx_n_s_filter __pyx_mstate_global->__pyx_n_s_filter
 #define __pyx_n_s_filter_2 __pyx_mstate_global->__pyx_n_s_filter_2
 #define __pyx_n_s_find __pyx_mstate_global->__pyx_n_s_find
@@ -4454,6 +4509,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_kp_s_floor __pyx_mstate_global->__pyx_kp_s_floor
 #define __pyx_n_s_floordiv __pyx_mstate_global->__pyx_n_s_floordiv
 #define __pyx_n_s_fn __pyx_mstate_global->__pyx_n_s_fn
+#define __pyx_n_s_fs __pyx_mstate_global->__pyx_n_s_fs
+#define __pyx_kp_s_fs_files __pyx_mstate_global->__pyx_kp_s_fs_files
 #define __pyx_n_s_fx __pyx_mstate_global->__pyx_n_s_fx
 #define __pyx_n_s_fx_2 __pyx_mstate_global->__pyx_n_s_fx_2
 #define __pyx_n_s_ge __pyx_mstate_global->__pyx_n_s_ge
@@ -4463,6 +4520,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_get_doc __pyx_mstate_global->__pyx_n_s_get_doc
 #define __pyx_n_s_get_file __pyx_mstate_global->__pyx_n_s_get_file
 #define __pyx_n_s_get_file_async __pyx_mstate_global->__pyx_n_s_get_file_async
+#define __pyx_n_s_get_file_by_name __pyx_mstate_global->__pyx_n_s_get_file_by_name
 #define __pyx_n_s_get_mongodb_text __pyx_mstate_global->__pyx_n_s_get_mongodb_text
 #define __pyx_n_s_get_version __pyx_mstate_global->__pyx_n_s_get_version
 #define __pyx_n_s_getattr __pyx_mstate_global->__pyx_n_s_getattr
@@ -4539,6 +4597,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_kp_s_ne_2 __pyx_mstate_global->__pyx_kp_s_ne_2
 #define __pyx_n_s_ne_3 __pyx_mstate_global->__pyx_n_s_ne_3
 #define __pyx_n_s_new __pyx_mstate_global->__pyx_n_s_new
+#define __pyx_n_s_new_file __pyx_mstate_global->__pyx_n_s_new_file
 #define __pyx_kp_s_not __pyx_mstate_global->__pyx_kp_s_not
 #define __pyx_n_s_not_exists __pyx_mstate_global->__pyx_n_s_not_exists
 #define __pyx_n_s_obj __pyx_mstate_global->__pyx_n_s_obj
@@ -4615,6 +4674,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_update __pyx_mstate_global->__pyx_n_s_update
 #define __pyx_n_s_update_async __pyx_mstate_global->__pyx_n_s_update_async
 #define __pyx_n_s_update_many __pyx_mstate_global->__pyx_n_s_update_many
+#define __pyx_n_s_update_one __pyx_mstate_global->__pyx_n_s_update_one
 #define __pyx_n_s_updater __pyx_mstate_global->__pyx_n_s_updater
 #define __pyx_n_s_uuid __pyx_mstate_global->__pyx_n_s_uuid
 #define __pyx_n_s_v __pyx_mstate_global->__pyx_n_s_v
@@ -4736,7 +4796,9 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_tuple__196 __pyx_mstate_global->__pyx_tuple__196
 #define __pyx_tuple__198 __pyx_mstate_global->__pyx_tuple__198
 #define __pyx_tuple__200 __pyx_mstate_global->__pyx_tuple__200
-#define __pyx_tuple__201 __pyx_mstate_global->__pyx_tuple__201
+#define __pyx_tuple__202 __pyx_mstate_global->__pyx_tuple__202
+#define __pyx_tuple__204 __pyx_mstate_global->__pyx_tuple__204
+#define __pyx_tuple__205 __pyx_mstate_global->__pyx_tuple__205
 #define __pyx_codeobj__17 __pyx_mstate_global->__pyx_codeobj__17
 #define __pyx_codeobj__20 __pyx_mstate_global->__pyx_codeobj__20
 #define __pyx_codeobj__21 __pyx_mstate_global->__pyx_codeobj__21
@@ -4822,6 +4884,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_codeobj__195 __pyx_mstate_global->__pyx_codeobj__195
 #define __pyx_codeobj__197 __pyx_mstate_global->__pyx_codeobj__197
 #define __pyx_codeobj__199 __pyx_mstate_global->__pyx_codeobj__199
+#define __pyx_codeobj__201 __pyx_mstate_global->__pyx_codeobj__201
+#define __pyx_codeobj__203 __pyx_mstate_global->__pyx_codeobj__203
 #endif
 
 /* Module declarations from "cy_docs.cy_docs_x" */
@@ -4866,8 +4930,10 @@ static const char __pyx_k__2[] = "";
 static const char __pyx_k__3[] = "_";
 static const char __pyx_k__6[] = "__";
 static const char __pyx_k__9[] = "/";
+static const char __pyx_k_db[] = "db";
 static const char __pyx_k_eq[] = "$eq";
 static const char __pyx_k_fn[] = "fn";
+static const char __pyx_k_fs[] = "fs";
 static const char __pyx_k_fx[] = "fx";
 static const char __pyx_k_ge[] = "__ge__";
 static const char __pyx_k_gt[] = "$gt";
@@ -5048,14 +5114,17 @@ static const char __pyx_k_datetime[] = "datetime";
 static const char __pyx_k_delegate[] = "delegate";
 static const char __pyx_k_document[] = "document";
 static const char __pyx_k_exists_2[] = "exists";
+static const char __pyx_k_filename[] = "filename";
 static const char __pyx_k_filter_2[] = "_filter";
 static const char __pyx_k_find_one[] = "find_one";
 static const char __pyx_k_floordiv[] = "__floordiv__";
+static const char __pyx_k_fs_files[] = "fs.files";
 static const char __pyx_k_get_file[] = "get_file";
 static const char __pyx_k_hash_key[] = "hash_key";
 static const char __pyx_k_instance[] = "_instance";
 static const char __pyx_k_multiply[] = "$multiply";
 static const char __pyx_k_my_value[] = "<<my_value";
+static const char __pyx_k_new_file[] = "new_file";
 static const char __pyx_k_pipeline[] = "pipeline";
 static const char __pyx_k_pydantic[] = "pydantic";
 static const char __pyx_k_qualname[] = "__qualname__";
@@ -5069,6 +5138,9 @@ static const char __pyx_k_DbContext[] = "DbContext";
 static const char __pyx_k_Example_2[] = ". Example: ";
 static const char __pyx_k_Field_asc[] = "Field.asc";
 static const char __pyx_k_aggregate[] = "').aggregate([\n";
+static const char __pyx_k_chunkSize[] = "chunkSize";
+static const char __pyx_k_file_name[] = "file_name";
+static const char __pyx_k_file_size[] = "file_size";
 static const char __pyx_k_init_data[] = "init_data";
 static const char __pyx_k_isoformat[] = "isoformat";
 static const char __pyx_k_metaclass[] = "__metaclass__";
@@ -5092,6 +5164,7 @@ static const char __pyx_k_background[] = "background";
 static const char __pyx_k_camel_dict[] = "camel_dict";
 static const char __pyx_k_camel_lock[] = "__camel_lock__";
 static const char __pyx_k_check_name[] = "check_name";
+static const char __pyx_k_chunk_size[] = "chunk_size";
 static const char __pyx_k_collection[] = "collection";
 static const char __pyx_k_field_name[] = "__field_name__";
 static const char __pyx_k_find_async[] = "find_async";
@@ -5099,6 +5172,7 @@ static const char __pyx_k_first_item[] = "first_item";
 static const char __pyx_k_init_value[] = "init_value";
 static const char __pyx_k_insert_one[] = "insert_one";
 static const char __pyx_k_not_exists[] = "not_exists";
+static const char __pyx_k_update_one[] = "update_one";
 static const char __pyx_k_ExprBuilder[] = "ExprBuilder";
 static const char __pyx_k_Field___add[] = "Field.__add__";
 static const char __pyx_k_Field___and[] = "Field.__and__";
@@ -5111,6 +5185,7 @@ static const char __pyx_k_annotations[] = "__annotations__";
 static const char __pyx_k_cache_index[] = "__cache_index__";
 static const char __pyx_k_camel_cache[] = "__camel_cache__";
 static const char __pyx_k_count_async[] = "count_async";
+static const char __pyx_k_create_file[] = "create_file";
 static const char __pyx_k_delete_many[] = "delete_many";
 static const char __pyx_k_get_version[] = "get_version";
 static const char __pyx_k_insert_dict[] = "insert_dict";
@@ -5167,6 +5242,7 @@ static const char __pyx_k_Funcs_not_exists[] = "Funcs.not_exists";
 static const char __pyx_k_check_constraint[] = "__check_constraint__";
 static const char __pyx_k_db_getCollection[] = "db.getCollection('";
 static const char __pyx_k_document_indexes[] = "__document_indexes__";
+static const char __pyx_k_get_file_by_name[] = "get_file_by_name";
 static const char __pyx_k_get_mongodb_text[] = "get_mongodb_text";
 static const char __pyx_k_insert_one_async[] = "insert_one_async";
 static const char __pyx_k_to_mongo_db_expr[] = "to_mongo_db_expr";
@@ -5408,6 +5484,8 @@ static PyObject *__pyx_n_s_check_constraint;
 static PyObject *__pyx_n_s_check_map__module;
 static PyObject *__pyx_n_s_check_map__name;
 static PyObject *__pyx_n_s_check_name;
+static PyObject *__pyx_n_s_chunkSize;
+static PyObject *__pyx_n_s_chunk_size;
 static PyObject *__pyx_n_s_client;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_close;
@@ -5422,6 +5500,7 @@ static PyObject *__pyx_n_s_convention_get;
 static PyObject *__pyx_n_s_count;
 static PyObject *__pyx_n_s_count_async;
 static PyObject *__pyx_n_s_count_documents;
+static PyObject *__pyx_n_s_create_file;
 static PyObject *__pyx_n_s_create_index;
 static PyObject *__pyx_n_s_cy_docs_cy_docs_x;
 static PyObject *__pyx_kp_s_cy_docs_cy_docs_x_py;
@@ -5430,6 +5509,7 @@ static PyObject *__pyx_n_s_data;
 static PyObject *__pyx_n_s_data_2;
 static PyObject *__pyx_n_s_database;
 static PyObject *__pyx_n_s_datetime;
+static PyObject *__pyx_n_s_db;
 static PyObject *__pyx_kp_u_db_getCollection;
 static PyObject *__pyx_n_s_db_name;
 static PyObject *__pyx_n_s_delegate;
@@ -5464,6 +5544,9 @@ static PyObject *__pyx_n_s_field;
 static PyObject *__pyx_n_s_field_name;
 static PyObject *__pyx_n_s_fields;
 static PyObject *__pyx_n_s_file_id;
+static PyObject *__pyx_n_s_file_name;
+static PyObject *__pyx_n_s_file_size;
+static PyObject *__pyx_n_s_filename;
 static PyObject *__pyx_n_s_filter;
 static PyObject *__pyx_n_s_filter_2;
 static PyObject *__pyx_n_s_find;
@@ -5477,6 +5560,8 @@ static PyObject *__pyx_n_s_flags;
 static PyObject *__pyx_kp_s_floor;
 static PyObject *__pyx_n_s_floordiv;
 static PyObject *__pyx_n_s_fn;
+static PyObject *__pyx_n_s_fs;
+static PyObject *__pyx_kp_s_fs_files;
 static PyObject *__pyx_n_s_fx;
 static PyObject *__pyx_n_s_fx_2;
 static PyObject *__pyx_n_s_ge;
@@ -5486,6 +5571,7 @@ static PyObject *__pyx_n_s_get_database;
 static PyObject *__pyx_n_s_get_doc;
 static PyObject *__pyx_n_s_get_file;
 static PyObject *__pyx_n_s_get_file_async;
+static PyObject *__pyx_n_s_get_file_by_name;
 static PyObject *__pyx_n_s_get_mongodb_text;
 static PyObject *__pyx_n_s_get_version;
 static PyObject *__pyx_n_s_getattr;
@@ -5562,6 +5648,7 @@ static PyObject *__pyx_kp_s_ne;
 static PyObject *__pyx_kp_s_ne_2;
 static PyObject *__pyx_n_s_ne_3;
 static PyObject *__pyx_n_s_new;
+static PyObject *__pyx_n_s_new_file;
 static PyObject *__pyx_kp_s_not;
 static PyObject *__pyx_n_s_not_exists;
 static PyObject *__pyx_n_s_obj;
@@ -5638,6 +5725,7 @@ static PyObject *__pyx_n_s_unique_keys;
 static PyObject *__pyx_n_s_update;
 static PyObject *__pyx_n_s_update_async;
 static PyObject *__pyx_n_s_update_many;
+static PyObject *__pyx_n_s_update_one;
 static PyObject *__pyx_n_s_updater;
 static PyObject *__pyx_n_s_uuid;
 static PyObject *__pyx_n_s_v;
@@ -5718,10 +5806,10 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_17AggregateDocument_12__repr__(CYT
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_17AggregateDocument_14__iter__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_17AggregateDocument_17to_json_convertable(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_17AggregateDocument_20first_item(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_26__defaults__(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_30__defaults__(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_8Document___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_collection_name, PyObject *__pyx_v_client, PyObject *__pyx_v_indexes, PyObject *__pyx_v_unique_keys); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_8Document_2__getitem__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_item); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_28__defaults__(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_32__defaults__(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_12get_doc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_collection_name, PyObject *__pyx_v_client, PyObject *__pyx_v_indexes, PyObject *__pyx_v_unique_keys); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_5Funcs_concat(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_args); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_5Funcs_2exists(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_field); /* proto */
@@ -5734,8 +5822,10 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_15document_define_wrapper(PyObject
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_14document_define(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_name, PyObject *__pyx_v_indexes, PyObject *__pyx_v_unique_keys); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_16context(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_cls); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_18get_file(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_file_id); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_20get_file_async(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_file_id); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23find_file_async(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_rel_file_path); /* proto */
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_20get_file_by_name(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_filename); /* proto */
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_22create_file(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_file_name, PyObject *__pyx_v_file_size, PyObject *__pyx_v_chunk_size); /* proto */
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_24get_file_async(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_file_id); /* proto */
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_27find_file_async(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_rel_file_path); /* proto */
 static PyObject *__pyx_tp_new_7cy_docs_9cy_docs_x___pyx_scope_struct____rshift__(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_7cy_docs_9cy_docs_x___pyx_scope_struct_1_delete_async(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_7cy_docs_9cy_docs_x___pyx_scope_struct_2_find_one_async(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -5869,7 +5959,9 @@ static PyObject *__pyx_tuple__194;
 static PyObject *__pyx_tuple__196;
 static PyObject *__pyx_tuple__198;
 static PyObject *__pyx_tuple__200;
-static PyObject *__pyx_tuple__201;
+static PyObject *__pyx_tuple__202;
+static PyObject *__pyx_tuple__204;
+static PyObject *__pyx_tuple__205;
 static PyObject *__pyx_codeobj__17;
 static PyObject *__pyx_codeobj__20;
 static PyObject *__pyx_codeobj__21;
@@ -5955,6 +6047,8 @@ static PyObject *__pyx_codeobj__193;
 static PyObject *__pyx_codeobj__195;
 static PyObject *__pyx_codeobj__197;
 static PyObject *__pyx_codeobj__199;
+static PyObject *__pyx_codeobj__201;
+static PyObject *__pyx_codeobj__203;
 #endif
 /* Late includes */
 
@@ -34438,7 +34532,7 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_17AggregateDocument_20first_item(C
  *         self.collection_name = collection_name
  */
 
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_26__defaults__(CYTHON_UNUSED PyObject *__pyx_self) {
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_30__defaults__(CYTHON_UNUSED PyObject *__pyx_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -36160,7 +36254,7 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_8Document_2__getitem__(CYTHON_UNUS
  *     return Document(collection_name, client, indexes=indexes, unique_keys=unique_keys)
  */
 
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_28__defaults__(CYTHON_UNUSED PyObject *__pyx_self) {
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_32__defaults__(CYTHON_UNUSED PyObject *__pyx_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -39059,8 +39153,8 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_18get_file(CYTHON_UNUSED PyObject 
  * 
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  *     return ret             # <<<<<<<<<<<<<<
- * async def get_file_async(client, db_name: str, file_id):
- *     from motor.motor_asyncio import AsyncIOMotorClient
+ * def get_file_by_name(client, db_name: str, filename):
+ *     gfs= gridfs.GridFSBucket(client.get_database( db_name))
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_ret);
@@ -39092,26 +39186,778 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_18get_file(CYTHON_UNUSED PyObject 
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
-static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
 
 /* "cy_docs/cy_docs_x.py":1421
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  *     return ret
- * async def get_file_async(client, db_name: str, file_id):             # <<<<<<<<<<<<<<
- *     from motor.motor_asyncio import AsyncIOMotorClient
- *     async_client = AsyncIOMotorClient()
+ * def get_file_by_name(client, db_name: str, filename):             # <<<<<<<<<<<<<<
+ *     gfs= gridfs.GridFSBucket(client.get_database( db_name))
+ *     items = list(gfs.find({"filename":filename}))
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_21get_file_async(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_21get_file_by_name(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_21get_file_async = {"get_file_async", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cy_docs_9cy_docs_x_21get_file_async, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_21get_file_async(PyObject *__pyx_self, 
+static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_21get_file_by_name = {"get_file_by_name", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cy_docs_9cy_docs_x_21get_file_by_name, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_21get_file_by_name(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyObject *__pyx_v_client = 0;
+  PyObject *__pyx_v_db_name = 0;
+  PyObject *__pyx_v_filename = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED const Py_ssize_t __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_file_by_name (wrapper)", 0);
+  {
+    #if CYTHON_COMPILING_IN_LIMITED_API
+    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_client,&__pyx_n_s_db_name,&__pyx_n_s_filename,0};
+    #else
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_client,&__pyx_n_s_db_name,&__pyx_n_s_filename,0};
+    #endif
+    PyObject* values[3] = {0,0,0};
+    if (__pyx_kwds) {
+      Py_ssize_t kw_args;
+      switch (__pyx_nargs) {
+        case  3: values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
+      switch (__pyx_nargs) {
+        case  0:
+        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_client)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1421, __pyx_L3_error)
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_db_name)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1421, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("get_file_by_name", 1, 3, 3, 1); __PYX_ERR(0, 1421, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_filename)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1421, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("get_file_by_name", 1, 3, 3, 2); __PYX_ERR(0, 1421, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        const Py_ssize_t kwd_pos_args = __pyx_nargs;
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "get_file_by_name") < 0)) __PYX_ERR(0, 1421, __pyx_L3_error)
+      }
+    } else if (unlikely(__pyx_nargs != 3)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
+      values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
+      values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
+    }
+    __pyx_v_client = values[0];
+    __pyx_v_db_name = ((PyObject*)values[1]);
+    __pyx_v_filename = values[2];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("get_file_by_name", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 1421, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cy_docs.cy_docs_x.get_file_by_name", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_db_name), (&PyString_Type), 1, "db_name", 1))) __PYX_ERR(0, 1421, __pyx_L1_error)
+  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_20get_file_by_name(__pyx_self, __pyx_v_client, __pyx_v_db_name, __pyx_v_filename);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_20get_file_by_name(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_filename) {
+  PyObject *__pyx_v_gfs = NULL;
+  PyObject *__pyx_v_items = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  int __pyx_t_6;
+  int __pyx_t_7;
+  int __pyx_t_8;
+  int __pyx_t_9;
+  __Pyx_RefNannySetupContext("get_file_by_name", 0);
+
+  /* "cy_docs/cy_docs_x.py":1422
+ *     return ret
+ * def get_file_by_name(client, db_name: str, filename):
+ *     gfs= gridfs.GridFSBucket(client.get_database( db_name))             # <<<<<<<<<<<<<<
+ *     items = list(gfs.find({"filename":filename}))
+ *     if items.__len__()>0:
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_gridfs); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1422, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_GridFSBucket); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1422, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_client, __pyx_n_s_get_database); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1422, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_5 = NULL;
+  __pyx_t_6 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
+    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
+    if (likely(__pyx_t_5)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_4, function);
+      __pyx_t_6 = 1;
+    }
+  }
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_v_db_name};
+    __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_6, 1+__pyx_t_6);
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1422, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  }
+  __pyx_t_4 = NULL;
+  __pyx_t_7 = 0;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_4)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+      __pyx_t_7 = 1;
+    }
+  }
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_t_2};
+    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_7, 1+__pyx_t_7);
+    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1422, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  }
+  __pyx_v_gfs = __pyx_t_1;
+  __pyx_t_1 = 0;
+
+  /* "cy_docs/cy_docs_x.py":1423
+ * def get_file_by_name(client, db_name: str, filename):
+ *     gfs= gridfs.GridFSBucket(client.get_database( db_name))
+ *     items = list(gfs.find({"filename":filename}))             # <<<<<<<<<<<<<<
+ *     if items.__len__()>0:
+ *         return items[0]
+ */
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_gfs, __pyx_n_s_find); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1423, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1423, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_filename, __pyx_v_filename) < 0) __PYX_ERR(0, 1423, __pyx_L1_error)
+  __pyx_t_4 = NULL;
+  __pyx_t_8 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_4)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+      __pyx_t_8 = 1;
+    }
+  }
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_t_2};
+    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
+    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1423, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  }
+  __pyx_t_3 = __Pyx_PySequence_ListKeepNew(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1423, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_items = ((PyObject*)__pyx_t_3);
+  __pyx_t_3 = 0;
+
+  /* "cy_docs/cy_docs_x.py":1424
+ *     gfs= gridfs.GridFSBucket(client.get_database( db_name))
+ *     items = list(gfs.find({"filename":filename}))
+ *     if items.__len__()>0:             # <<<<<<<<<<<<<<
+ *         return items[0]
+ * 
+ */
+  __pyx_t_3 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyList_Type___len, __pyx_v_items); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1424, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_1 = PyObject_RichCompare(__pyx_t_3, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1424, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 1424, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (__pyx_t_9) {
+
+    /* "cy_docs/cy_docs_x.py":1425
+ *     items = list(gfs.find({"filename":filename}))
+ *     if items.__len__()>0:
+ *         return items[0]             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+    __Pyx_XDECREF(__pyx_r);
+    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_items, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1425, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_r = __pyx_t_1;
+    __pyx_t_1 = 0;
+    goto __pyx_L0;
+
+    /* "cy_docs/cy_docs_x.py":1424
+ *     gfs= gridfs.GridFSBucket(client.get_database( db_name))
+ *     items = list(gfs.find({"filename":filename}))
+ *     if items.__len__()>0:             # <<<<<<<<<<<<<<
+ *         return items[0]
+ * 
+ */
+  }
+
+  /* "cy_docs/cy_docs_x.py":1421
+ *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
+ *     return ret
+ * def get_file_by_name(client, db_name: str, filename):             # <<<<<<<<<<<<<<
+ *     gfs= gridfs.GridFSBucket(client.get_database( db_name))
+ *     items = list(gfs.find({"filename":filename}))
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_AddTraceback("cy_docs.cy_docs_x.get_file_by_name", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_gfs);
+  __Pyx_XDECREF(__pyx_v_items);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "cy_docs/cy_docs_x.py":1429
+ * 
+ * 
+ * def create_file(client, db_name: str,file_name:str,file_size:int,chunk_size:int):             # <<<<<<<<<<<<<<
+ *     db= client.get_database(db_name)
+ *     gfs = gridfs.GridFSBucket(client.get_database(db_name))
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23create_file(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_23create_file = {"create_file", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cy_docs_9cy_docs_x_23create_file, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23create_file(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyObject *__pyx_v_client = 0;
+  PyObject *__pyx_v_db_name = 0;
+  PyObject *__pyx_v_file_name = 0;
+  PyObject *__pyx_v_file_size = 0;
+  PyObject *__pyx_v_chunk_size = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED const Py_ssize_t __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("create_file (wrapper)", 0);
+  {
+    #if CYTHON_COMPILING_IN_LIMITED_API
+    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_client,&__pyx_n_s_db_name,&__pyx_n_s_file_name,&__pyx_n_s_file_size,&__pyx_n_s_chunk_size,0};
+    #else
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_client,&__pyx_n_s_db_name,&__pyx_n_s_file_name,&__pyx_n_s_file_size,&__pyx_n_s_chunk_size,0};
+    #endif
+    PyObject* values[5] = {0,0,0,0,0};
+    if (__pyx_kwds) {
+      Py_ssize_t kw_args;
+      switch (__pyx_nargs) {
+        case  5: values[4] = __Pyx_Arg_FASTCALL(__pyx_args, 4);
+        CYTHON_FALLTHROUGH;
+        case  4: values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
+      switch (__pyx_nargs) {
+        case  0:
+        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_client)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1429, __pyx_L3_error)
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_db_name)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1429, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("create_file", 1, 5, 5, 1); __PYX_ERR(0, 1429, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_file_name)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1429, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("create_file", 1, 5, 5, 2); __PYX_ERR(0, 1429, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (likely((values[3] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_file_size)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1429, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("create_file", 1, 5, 5, 3); __PYX_ERR(0, 1429, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  4:
+        if (likely((values[4] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_chunk_size)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1429, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("create_file", 1, 5, 5, 4); __PYX_ERR(0, 1429, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        const Py_ssize_t kwd_pos_args = __pyx_nargs;
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "create_file") < 0)) __PYX_ERR(0, 1429, __pyx_L3_error)
+      }
+    } else if (unlikely(__pyx_nargs != 5)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
+      values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
+      values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
+      values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);
+      values[4] = __Pyx_Arg_FASTCALL(__pyx_args, 4);
+    }
+    __pyx_v_client = values[0];
+    __pyx_v_db_name = ((PyObject*)values[1]);
+    __pyx_v_file_name = ((PyObject*)values[2]);
+    __pyx_v_file_size = values[3];
+    __pyx_v_chunk_size = values[4];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("create_file", 1, 5, 5, __pyx_nargs); __PYX_ERR(0, 1429, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cy_docs.cy_docs_x.create_file", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_db_name), (&PyString_Type), 1, "db_name", 1))) __PYX_ERR(0, 1429, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_file_name), (&PyString_Type), 1, "file_name", 1))) __PYX_ERR(0, 1429, __pyx_L1_error)
+  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_22create_file(__pyx_self, __pyx_v_client, __pyx_v_db_name, __pyx_v_file_name, __pyx_v_file_size, __pyx_v_chunk_size);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_22create_file(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_file_name, PyObject *__pyx_v_file_size, PyObject *__pyx_v_chunk_size) {
+  PyObject *__pyx_v_db = NULL;
+  PyObject *__pyx_v_gfs = NULL;
+  PyObject *__pyx_v_fs = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_4;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  int __pyx_t_7;
+  int __pyx_t_8;
+  int __pyx_t_9;
+  int __pyx_t_10;
+  int __pyx_t_11;
+  int __pyx_t_12;
+  __Pyx_RefNannySetupContext("create_file", 0);
+
+  /* "cy_docs/cy_docs_x.py":1430
+ * 
+ * def create_file(client, db_name: str,file_name:str,file_size:int,chunk_size:int):
+ *     db= client.get_database(db_name)             # <<<<<<<<<<<<<<
+ *     gfs = gridfs.GridFSBucket(client.get_database(db_name))
+ * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_client, __pyx_n_s_get_database); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1430, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  __pyx_t_4 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+      __pyx_t_4 = 1;
+    }
+  }
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_v_db_name};
+    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_4, 1+__pyx_t_4);
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1430, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  }
+  __pyx_v_db = __pyx_t_1;
+  __pyx_t_1 = 0;
+
+  /* "cy_docs/cy_docs_x.py":1431
+ * def create_file(client, db_name: str,file_name:str,file_size:int,chunk_size:int):
+ *     db= client.get_database(db_name)
+ *     gfs = gridfs.GridFSBucket(client.get_database(db_name))             # <<<<<<<<<<<<<<
+ * 
+ *     fs = gfs.new_file()
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_gridfs); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1431, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_GridFSBucket); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1431, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_client, __pyx_n_s_get_database); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1431, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = NULL;
+  __pyx_t_7 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
+    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
+    if (likely(__pyx_t_6)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+      __Pyx_INCREF(__pyx_t_6);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_5, function);
+      __pyx_t_7 = 1;
+    }
+  }
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_v_db_name};
+    __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_7, 1+__pyx_t_7);
+    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1431, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  }
+  __pyx_t_5 = NULL;
+  __pyx_t_8 = 0;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_5)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+      __pyx_t_8 = 1;
+    }
+  }
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_t_2};
+    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1431, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  }
+  __pyx_v_gfs = __pyx_t_1;
+  __pyx_t_1 = 0;
+
+  /* "cy_docs/cy_docs_x.py":1433
+ *     gfs = gridfs.GridFSBucket(client.get_database(db_name))
+ * 
+ *     fs = gfs.new_file()             # <<<<<<<<<<<<<<
+ *     fs.name = file_name
+ *     fs.filename = file_name
+ */
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_gfs, __pyx_n_s_new_file); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1433, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = NULL;
+  __pyx_t_9 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_2)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_2);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+      __pyx_t_9 = 1;
+    }
+  }
+  {
+    PyObject *__pyx_callargs[1] = {__pyx_t_2, };
+    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_9, 0+__pyx_t_9);
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1433, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  }
+  __pyx_v_fs = __pyx_t_1;
+  __pyx_t_1 = 0;
+
+  /* "cy_docs/cy_docs_x.py":1434
+ * 
+ *     fs = gfs.new_file()
+ *     fs.name = file_name             # <<<<<<<<<<<<<<
+ *     fs.filename = file_name
+ *     fs.close()
+ */
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_fs, __pyx_n_s_name_2, __pyx_v_file_name) < 0) __PYX_ERR(0, 1434, __pyx_L1_error)
+
+  /* "cy_docs/cy_docs_x.py":1435
+ *     fs = gfs.new_file()
+ *     fs.name = file_name
+ *     fs.filename = file_name             # <<<<<<<<<<<<<<
+ *     fs.close()
+ *     db.get_collection("fs.files").update_one(
+ */
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_fs, __pyx_n_s_filename, __pyx_v_file_name) < 0) __PYX_ERR(0, 1435, __pyx_L1_error)
+
+  /* "cy_docs/cy_docs_x.py":1436
+ *     fs.name = file_name
+ *     fs.filename = file_name
+ *     fs.close()             # <<<<<<<<<<<<<<
+ *     db.get_collection("fs.files").update_one(
+ *         {
+ */
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_close); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1436, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = NULL;
+  __pyx_t_10 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_2)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_2);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+      __pyx_t_10 = 1;
+    }
+  }
+  {
+    PyObject *__pyx_callargs[1] = {__pyx_t_2, };
+    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_10, 0+__pyx_t_10);
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1436, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "cy_docs/cy_docs_x.py":1437
+ *     fs.filename = file_name
+ *     fs.close()
+ *     db.get_collection("fs.files").update_one(             # <<<<<<<<<<<<<<
+ *         {
+ *             "_id": fs._id
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_db, __pyx_n_s_get_collection); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1437, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = NULL;
+  __pyx_t_11 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_5)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+      __pyx_t_11 = 1;
+    }
+  }
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_kp_s_fs_files};
+    __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_11, 1+__pyx_t_11);
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1437, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  }
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_update_one); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1437, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "cy_docs/cy_docs_x.py":1439
+ *     db.get_collection("fs.files").update_one(
+ *         {
+ *             "_id": fs._id             # <<<<<<<<<<<<<<
+ *         },
+ *         {
+ */
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1439, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_id_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1439, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_id_2, __pyx_t_5) < 0) __PYX_ERR(0, 1439, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+  /* "cy_docs/cy_docs_x.py":1442
+ *         },
+ *         {
+ *             "$set": {             # <<<<<<<<<<<<<<
+ *                 "chunkSize": chunk_size,
+ *                 "length": file_size
+ */
+  __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1442, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+
+  /* "cy_docs/cy_docs_x.py":1443
+ *         {
+ *             "$set": {
+ *                 "chunkSize": chunk_size,             # <<<<<<<<<<<<<<
+ *                 "length": file_size
+ *             }
+ */
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1443, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_chunkSize, __pyx_v_chunk_size) < 0) __PYX_ERR(0, 1443, __pyx_L1_error)
+
+  /* "cy_docs/cy_docs_x.py":1444
+ *             "$set": {
+ *                 "chunkSize": chunk_size,
+ *                 "length": file_size             # <<<<<<<<<<<<<<
+ *             }
+ *         }
+ */
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_length, __pyx_v_file_size) < 0) __PYX_ERR(0, 1443, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_5, __pyx_kp_s_set, __pyx_t_6) < 0) __PYX_ERR(0, 1442, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = NULL;
+  __pyx_t_12 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_6)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_6);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+      __pyx_t_12 = 1;
+    }
+  }
+  {
+    PyObject *__pyx_callargs[3] = {__pyx_t_6, __pyx_t_3, __pyx_t_5};
+    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_12, 2+__pyx_t_12);
+    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1437, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "cy_docs/cy_docs_x.py":1448
+ *         }
+ *     )
+ *     return fs             # <<<<<<<<<<<<<<
+ * async def get_file_async(client, db_name: str, file_id):
+ *     from motor.motor_asyncio import AsyncIOMotorClient
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_fs);
+  __pyx_r = __pyx_v_fs;
+  goto __pyx_L0;
+
+  /* "cy_docs/cy_docs_x.py":1429
+ * 
+ * 
+ * def create_file(client, db_name: str,file_name:str,file_size:int,chunk_size:int):             # <<<<<<<<<<<<<<
+ *     db= client.get_database(db_name)
+ *     gfs = gridfs.GridFSBucket(client.get_database(db_name))
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_AddTraceback("cy_docs.cy_docs_x.create_file", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_db);
+  __Pyx_XDECREF(__pyx_v_gfs);
+  __Pyx_XDECREF(__pyx_v_fs);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_26generator11(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
+
+/* "cy_docs/cy_docs_x.py":1449
+ *     )
+ *     return fs
+ * async def get_file_async(client, db_name: str, file_id):             # <<<<<<<<<<<<<<
+ *     from motor.motor_asyncio import AsyncIOMotorClient
+ *     async_client = AsyncIOMotorClient()
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_25get_file_async(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_25get_file_async = {"get_file_async", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cy_docs_9cy_docs_x_25get_file_async, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_25get_file_async(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -39151,26 +39997,26 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       switch (__pyx_nargs) {
         case  0:
         if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_client)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1421, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1449, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
         if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_db_name)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1421, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1449, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("get_file_async", 1, 3, 3, 1); __PYX_ERR(0, 1421, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_file_async", 1, 3, 3, 1); __PYX_ERR(0, 1449, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_file_id)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1421, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1449, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("get_file_async", 1, 3, 3, 2); __PYX_ERR(0, 1421, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_file_async", 1, 3, 3, 2); __PYX_ERR(0, 1449, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "get_file_async") < 0)) __PYX_ERR(0, 1421, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "get_file_async") < 0)) __PYX_ERR(0, 1449, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 3)) {
       goto __pyx_L5_argtuple_error;
@@ -39185,14 +40031,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get_file_async", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 1421, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get_file_async", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 1449, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("cy_docs.cy_docs_x.get_file_async", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_db_name), (&PyString_Type), 1, "db_name", 1))) __PYX_ERR(0, 1421, __pyx_L1_error)
-  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_20get_file_async(__pyx_self, __pyx_v_client, __pyx_v_db_name, __pyx_v_file_id);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_db_name), (&PyString_Type), 1, "db_name", 1))) __PYX_ERR(0, 1449, __pyx_L1_error)
+  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_24get_file_async(__pyx_self, __pyx_v_client, __pyx_v_db_name, __pyx_v_file_id);
 
   /* function exit code */
   goto __pyx_L0;
@@ -39203,7 +40049,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_20get_file_async(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_file_id) {
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_24get_file_async(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_file_id) {
   struct __pyx_obj_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async *__pyx_cur_scope;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -39212,7 +40058,7 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_20get_file_async(CYTHON_UNUSED PyO
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 1421, __pyx_L1_error)
+    __PYX_ERR(0, 1449, __pyx_L1_error)
   } else {
     __Pyx_GOTREF((PyObject *)__pyx_cur_scope);
   }
@@ -39226,7 +40072,7 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_20get_file_async(CYTHON_UNUSED PyO
   __Pyx_INCREF(__pyx_cur_scope->__pyx_v_file_id);
   __Pyx_GIVEREF(__pyx_cur_scope->__pyx_v_file_id);
   {
-    __pyx_CoroutineObject *gen = __Pyx_Coroutine_New((__pyx_coroutine_body_t) __pyx_gb_7cy_docs_9cy_docs_x_22generator11, __pyx_codeobj__39, (PyObject *) __pyx_cur_scope, __pyx_n_s_get_file_async, __pyx_n_s_get_file_async, __pyx_n_s_cy_docs_cy_docs_x); if (unlikely(!gen)) __PYX_ERR(0, 1421, __pyx_L1_error)
+    __pyx_CoroutineObject *gen = __Pyx_Coroutine_New((__pyx_coroutine_body_t) __pyx_gb_7cy_docs_9cy_docs_x_26generator11, __pyx_codeobj__39, (PyObject *) __pyx_cur_scope, __pyx_n_s_get_file_async, __pyx_n_s_get_file_async, __pyx_n_s_cy_docs_cy_docs_x); if (unlikely(!gen)) __PYX_ERR(0, 1449, __pyx_L1_error)
     __Pyx_DECREF(__pyx_cur_scope);
     __Pyx_RefNannyFinishContext();
     return (PyObject *) gen;
@@ -39242,7 +40088,7 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_20get_file_async(CYTHON_UNUSED PyO
   return __pyx_r;
 }
 
-static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value) /* generator body */
+static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_26generator11(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value) /* generator body */
 {
   struct __pyx_obj_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async *__pyx_cur_scope = ((struct __pyx_obj_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async *)__pyx_generator->closure);
   PyObject *__pyx_r = NULL;
@@ -39268,24 +40114,24 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
     return NULL;
   }
   __pyx_L3_first_run:;
-  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 1421, __pyx_L1_error)
+  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 1449, __pyx_L1_error)
 
-  /* "cy_docs/cy_docs_x.py":1422
- *     return ret
+  /* "cy_docs/cy_docs_x.py":1450
+ *     return fs
  * async def get_file_async(client, db_name: str, file_id):
  *     from motor.motor_asyncio import AsyncIOMotorClient             # <<<<<<<<<<<<<<
  *     async_client = AsyncIOMotorClient()
  *     async_client.delegate = client
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1422, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1450, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_AsyncIOMotorClient);
   __Pyx_GIVEREF(__pyx_n_s_AsyncIOMotorClient);
   PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_AsyncIOMotorClient);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_motor_motor_asyncio, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1422, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_motor_motor_asyncio, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1450, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_AsyncIOMotorClient); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1422, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_AsyncIOMotorClient); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1450, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
@@ -39293,7 +40139,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cy_docs/cy_docs_x.py":1423
+  /* "cy_docs/cy_docs_x.py":1451
  * async def get_file_async(client, db_name: str, file_id):
  *     from motor.motor_asyncio import AsyncIOMotorClient
  *     async_client = AsyncIOMotorClient()             # <<<<<<<<<<<<<<
@@ -39317,7 +40163,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
     PyObject *__pyx_callargs[1] = {__pyx_t_3, };
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_1, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1423, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1451, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
@@ -39325,25 +40171,25 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
   __pyx_cur_scope->__pyx_v_async_client = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "cy_docs/cy_docs_x.py":1424
+  /* "cy_docs/cy_docs_x.py":1452
  *     from motor.motor_asyncio import AsyncIOMotorClient
  *     async_client = AsyncIOMotorClient()
  *     async_client.delegate = client             # <<<<<<<<<<<<<<
  *     gfs= AsyncIOMotorGridFSBucket(async_client.get_database(db_name))
  * 
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_async_client, __pyx_n_s_delegate, __pyx_cur_scope->__pyx_v_client) < 0) __PYX_ERR(0, 1424, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_async_client, __pyx_n_s_delegate, __pyx_cur_scope->__pyx_v_client) < 0) __PYX_ERR(0, 1452, __pyx_L1_error)
 
-  /* "cy_docs/cy_docs_x.py":1425
+  /* "cy_docs/cy_docs_x.py":1453
  *     async_client = AsyncIOMotorClient()
  *     async_client.delegate = client
  *     gfs= AsyncIOMotorGridFSBucket(async_client.get_database(db_name))             # <<<<<<<<<<<<<<
  * 
  *     if isinstance(file_id,str):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_AsyncIOMotorGridFSBucket); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1425, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_AsyncIOMotorGridFSBucket); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1453, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_async_client, __pyx_n_s_get_database); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1425, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_async_client, __pyx_n_s_get_database); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1453, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_6 = NULL;
   __pyx_t_7 = 0;
@@ -39361,7 +40207,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
     PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_cur_scope->__pyx_v_db_name};
     __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_7, 1+__pyx_t_7);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1425, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1453, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
@@ -39382,7 +40228,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_1, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1425, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1453, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
@@ -39390,7 +40236,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
   __pyx_cur_scope->__pyx_v_gfs = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "cy_docs/cy_docs_x.py":1427
+  /* "cy_docs/cy_docs_x.py":1455
  *     gfs= AsyncIOMotorGridFSBucket(async_client.get_database(db_name))
  * 
  *     if isinstance(file_id,str):             # <<<<<<<<<<<<<<
@@ -39401,16 +40247,16 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
   __pyx_t_10 = (__pyx_t_9 != 0);
   if (__pyx_t_10) {
 
-    /* "cy_docs/cy_docs_x.py":1428
+    /* "cy_docs/cy_docs_x.py":1456
  * 
  *     if isinstance(file_id,str):
  *         file_id = bson.ObjectId(file_id)             # <<<<<<<<<<<<<<
  *     ret = await gfs.open_download_stream(file_id)
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_bson); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1428, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_bson); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1456, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_ObjectId); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1428, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_ObjectId); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1456, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_1 = NULL;
@@ -39429,7 +40275,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
       PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_cur_scope->__pyx_v_file_id};
       __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_11, 1+__pyx_t_11);
       __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1428, __pyx_L1_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1456, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
@@ -39438,7 +40284,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
     __Pyx_GIVEREF(__pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "cy_docs/cy_docs_x.py":1427
+    /* "cy_docs/cy_docs_x.py":1455
  *     gfs= AsyncIOMotorGridFSBucket(async_client.get_database(db_name))
  * 
  *     if isinstance(file_id,str):             # <<<<<<<<<<<<<<
@@ -39447,14 +40293,14 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
  */
   }
 
-  /* "cy_docs/cy_docs_x.py":1429
+  /* "cy_docs/cy_docs_x.py":1457
  *     if isinstance(file_id,str):
  *         file_id = bson.ObjectId(file_id)
  *     ret = await gfs.open_download_stream(file_id)             # <<<<<<<<<<<<<<
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  *     return ret
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_gfs, __pyx_n_s_open_download_stream); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1429, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_gfs, __pyx_n_s_open_download_stream); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1457, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_1 = NULL;
   __pyx_t_12 = 0;
@@ -39472,7 +40318,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
     PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_cur_scope->__pyx_v_file_id};
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_12, 1+__pyx_t_12);
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1429, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1457, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
@@ -39497,18 +40343,18 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
     __pyx_t_8 = __pyx_cur_scope->__pyx_t_2;
     __pyx_t_11 = __pyx_cur_scope->__pyx_t_3;
     __pyx_t_12 = __pyx_cur_scope->__pyx_t_4;
-    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 1429, __pyx_L1_error)
+    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 1457, __pyx_L1_error)
     __pyx_t_2 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_2);
   } else {
     __pyx_t_2 = NULL;
-    if (__Pyx_PyGen_FetchStopIterationValue(&__pyx_t_2) < 0) __PYX_ERR(0, 1429, __pyx_L1_error)
+    if (__Pyx_PyGen_FetchStopIterationValue(&__pyx_t_2) < 0) __PYX_ERR(0, 1457, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
   }
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_cur_scope->__pyx_v_ret = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "cy_docs/cy_docs_x.py":1431
+  /* "cy_docs/cy_docs_x.py":1459
  *     ret = await gfs.open_download_stream(file_id)
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  *     return ret             # <<<<<<<<<<<<<<
@@ -39520,9 +40366,9 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
   goto __pyx_L0;
   CYTHON_MAYBE_UNUSED_VAR(__pyx_cur_scope);
 
-  /* "cy_docs/cy_docs_x.py":1421
- *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
- *     return ret
+  /* "cy_docs/cy_docs_x.py":1449
+ *     )
+ *     return fs
  * async def get_file_async(client, db_name: str, file_id):             # <<<<<<<<<<<<<<
  *     from motor.motor_asyncio import AsyncIOMotorClient
  *     async_client = AsyncIOMotorClient()
@@ -39547,9 +40393,9 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_22generator11(__pyx_CoroutineObjec
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
-static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
+static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_29generator12(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
 
-/* "cy_docs/cy_docs_x.py":1432
+/* "cy_docs/cy_docs_x.py":1460
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  *     return ret
  * async def find_file_async(client, db_name: str, rel_file_path:str):             # <<<<<<<<<<<<<<
@@ -39558,15 +40404,15 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObjec
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_24find_file_async(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_28find_file_async(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_24find_file_async = {"find_file_async", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cy_docs_9cy_docs_x_24find_file_async, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_24find_file_async(PyObject *__pyx_self, 
+static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_28find_file_async = {"find_file_async", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cy_docs_9cy_docs_x_28find_file_async, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_28find_file_async(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -39606,26 +40452,26 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       switch (__pyx_nargs) {
         case  0:
         if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_client)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1432, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1460, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
         if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_db_name)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1432, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1460, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("find_file_async", 1, 3, 3, 1); __PYX_ERR(0, 1432, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("find_file_async", 1, 3, 3, 1); __PYX_ERR(0, 1460, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_rel_file_path)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1432, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1460, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("find_file_async", 1, 3, 3, 2); __PYX_ERR(0, 1432, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("find_file_async", 1, 3, 3, 2); __PYX_ERR(0, 1460, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "find_file_async") < 0)) __PYX_ERR(0, 1432, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "find_file_async") < 0)) __PYX_ERR(0, 1460, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 3)) {
       goto __pyx_L5_argtuple_error;
@@ -39640,15 +40486,15 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("find_file_async", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 1432, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("find_file_async", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 1460, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("cy_docs.cy_docs_x.find_file_async", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_db_name), (&PyString_Type), 1, "db_name", 1))) __PYX_ERR(0, 1432, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_rel_file_path), (&PyString_Type), 1, "rel_file_path", 1))) __PYX_ERR(0, 1432, __pyx_L1_error)
-  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_23find_file_async(__pyx_self, __pyx_v_client, __pyx_v_db_name, __pyx_v_rel_file_path);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_db_name), (&PyString_Type), 1, "db_name", 1))) __PYX_ERR(0, 1460, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_rel_file_path), (&PyString_Type), 1, "rel_file_path", 1))) __PYX_ERR(0, 1460, __pyx_L1_error)
+  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_27find_file_async(__pyx_self, __pyx_v_client, __pyx_v_db_name, __pyx_v_rel_file_path);
 
   /* function exit code */
   goto __pyx_L0;
@@ -39659,7 +40505,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23find_file_async(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_rel_file_path) {
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_27find_file_async(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_rel_file_path) {
   struct __pyx_obj_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async *__pyx_cur_scope;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -39668,7 +40514,7 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23find_file_async(CYTHON_UNUSED Py
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 1432, __pyx_L1_error)
+    __PYX_ERR(0, 1460, __pyx_L1_error)
   } else {
     __Pyx_GOTREF((PyObject *)__pyx_cur_scope);
   }
@@ -39682,7 +40528,7 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23find_file_async(CYTHON_UNUSED Py
   __Pyx_INCREF(__pyx_cur_scope->__pyx_v_rel_file_path);
   __Pyx_GIVEREF(__pyx_cur_scope->__pyx_v_rel_file_path);
   {
-    __pyx_CoroutineObject *gen = __Pyx_Coroutine_New((__pyx_coroutine_body_t) __pyx_gb_7cy_docs_9cy_docs_x_25generator12, __pyx_codeobj__40, (PyObject *) __pyx_cur_scope, __pyx_n_s_find_file_async, __pyx_n_s_find_file_async, __pyx_n_s_cy_docs_cy_docs_x); if (unlikely(!gen)) __PYX_ERR(0, 1432, __pyx_L1_error)
+    __pyx_CoroutineObject *gen = __Pyx_Coroutine_New((__pyx_coroutine_body_t) __pyx_gb_7cy_docs_9cy_docs_x_29generator12, __pyx_codeobj__40, (PyObject *) __pyx_cur_scope, __pyx_n_s_find_file_async, __pyx_n_s_find_file_async, __pyx_n_s_cy_docs_cy_docs_x); if (unlikely(!gen)) __PYX_ERR(0, 1460, __pyx_L1_error)
     __Pyx_DECREF(__pyx_cur_scope);
     __Pyx_RefNannyFinishContext();
     return (PyObject *) gen;
@@ -39698,7 +40544,7 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23find_file_async(CYTHON_UNUSED Py
   return __pyx_r;
 }
 
-static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value) /* generator body */
+static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_29generator12(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value) /* generator body */
 {
   struct __pyx_obj_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async *__pyx_cur_scope = ((struct __pyx_obj_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async *)__pyx_generator->closure);
   PyObject *__pyx_r = NULL;
@@ -39721,24 +40567,24 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObjec
     return NULL;
   }
   __pyx_L3_first_run:;
-  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 1432, __pyx_L1_error)
+  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 1460, __pyx_L1_error)
 
-  /* "cy_docs/cy_docs_x.py":1433
+  /* "cy_docs/cy_docs_x.py":1461
  *     return ret
  * async def find_file_async(client, db_name: str, rel_file_path:str):
  *     from motor.motor_asyncio import AsyncIOMotorClient             # <<<<<<<<<<<<<<
  *     async_client = AsyncIOMotorClient()
  *     async_client.delegate = client
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1433, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1461, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_AsyncIOMotorClient);
   __Pyx_GIVEREF(__pyx_n_s_AsyncIOMotorClient);
   PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_AsyncIOMotorClient);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_motor_motor_asyncio, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1433, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_motor_motor_asyncio, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1461, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_AsyncIOMotorClient); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1433, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_AsyncIOMotorClient); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1461, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
@@ -39746,7 +40592,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObjec
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cy_docs/cy_docs_x.py":1434
+  /* "cy_docs/cy_docs_x.py":1462
  * async def find_file_async(client, db_name: str, rel_file_path:str):
  *     from motor.motor_asyncio import AsyncIOMotorClient
  *     async_client = AsyncIOMotorClient()             # <<<<<<<<<<<<<<
@@ -39770,7 +40616,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObjec
     PyObject *__pyx_callargs[1] = {__pyx_t_3, };
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_1, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1434, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1462, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
@@ -39778,25 +40624,25 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObjec
   __pyx_cur_scope->__pyx_v_async_client = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "cy_docs/cy_docs_x.py":1435
+  /* "cy_docs/cy_docs_x.py":1463
  *     from motor.motor_asyncio import AsyncIOMotorClient
  *     async_client = AsyncIOMotorClient()
  *     async_client.delegate = client             # <<<<<<<<<<<<<<
  *     gfs= AsyncIOMotorGridFSBucket(async_client.get_database(db_name))
  *     ret= await  gfs.find({"rel_file_path":rel_file_path})
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_async_client, __pyx_n_s_delegate, __pyx_cur_scope->__pyx_v_client) < 0) __PYX_ERR(0, 1435, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_async_client, __pyx_n_s_delegate, __pyx_cur_scope->__pyx_v_client) < 0) __PYX_ERR(0, 1463, __pyx_L1_error)
 
-  /* "cy_docs/cy_docs_x.py":1436
+  /* "cy_docs/cy_docs_x.py":1464
  *     async_client = AsyncIOMotorClient()
  *     async_client.delegate = client
  *     gfs= AsyncIOMotorGridFSBucket(async_client.get_database(db_name))             # <<<<<<<<<<<<<<
  *     ret= await  gfs.find({"rel_file_path":rel_file_path})
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_AsyncIOMotorGridFSBucket); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1436, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_AsyncIOMotorGridFSBucket); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1464, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_async_client, __pyx_n_s_get_database); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1436, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_async_client, __pyx_n_s_get_database); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1464, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_6 = NULL;
   __pyx_t_7 = 0;
@@ -39814,7 +40660,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObjec
     PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_cur_scope->__pyx_v_db_name};
     __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_7, 1+__pyx_t_7);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1436, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1464, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
@@ -39835,7 +40681,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObjec
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_1, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1436, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1464, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
@@ -39843,18 +40689,18 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObjec
   __pyx_cur_scope->__pyx_v_gfs = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "cy_docs/cy_docs_x.py":1437
+  /* "cy_docs/cy_docs_x.py":1465
  *     async_client.delegate = client
  *     gfs= AsyncIOMotorGridFSBucket(async_client.get_database(db_name))
  *     ret= await  gfs.find({"rel_file_path":rel_file_path})             # <<<<<<<<<<<<<<
  * 
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_gfs, __pyx_n_s_find); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1437, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_gfs, __pyx_n_s_find); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1465, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1437, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1465, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_rel_file_path, __pyx_cur_scope->__pyx_v_rel_file_path) < 0) __PYX_ERR(0, 1437, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_rel_file_path, __pyx_cur_scope->__pyx_v_rel_file_path) < 0) __PYX_ERR(0, 1465, __pyx_L1_error)
   __pyx_t_5 = NULL;
   __pyx_t_9 = 0;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
@@ -39872,7 +40718,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObjec
     __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_1, __pyx_callargs+1-__pyx_t_9, 1+__pyx_t_9);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1437, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1465, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
@@ -39895,18 +40741,18 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObjec
     __pyx_t_7 = __pyx_cur_scope->__pyx_t_1;
     __pyx_t_8 = __pyx_cur_scope->__pyx_t_2;
     __pyx_t_9 = __pyx_cur_scope->__pyx_t_3;
-    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 1437, __pyx_L1_error)
+    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 1465, __pyx_L1_error)
     __pyx_t_2 = __pyx_sent_value; __Pyx_INCREF(__pyx_t_2);
   } else {
     __pyx_t_2 = NULL;
-    if (__Pyx_PyGen_FetchStopIterationValue(&__pyx_t_2) < 0) __PYX_ERR(0, 1437, __pyx_L1_error)
+    if (__Pyx_PyGen_FetchStopIterationValue(&__pyx_t_2) < 0) __PYX_ERR(0, 1465, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
   }
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_cur_scope->__pyx_v_ret = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "cy_docs/cy_docs_x.py":1440
+  /* "cy_docs/cy_docs_x.py":1468
  * 
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  *     return ret             # <<<<<<<<<<<<<<
@@ -39916,7 +40762,7 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_25generator12(__pyx_CoroutineObjec
   goto __pyx_L0;
   CYTHON_MAYBE_UNUSED_VAR(__pyx_cur_scope);
 
-  /* "cy_docs/cy_docs_x.py":1432
+  /* "cy_docs/cy_docs_x.py":1460
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  *     return ret
  * async def find_file_async(client, db_name: str, rel_file_path:str):             # <<<<<<<<<<<<<<
@@ -42311,6 +43157,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_check_map__module, sizeof(__pyx_k_check_map__module), 0, 0, 1, 1},
   {0, __pyx_k_check_map__name, sizeof(__pyx_k_check_map__name), 0, 0, 1, 1},
   {0, __pyx_k_check_name, sizeof(__pyx_k_check_name), 0, 0, 1, 1},
+  {0, __pyx_k_chunkSize, sizeof(__pyx_k_chunkSize), 0, 0, 1, 1},
+  {0, __pyx_k_chunk_size, sizeof(__pyx_k_chunk_size), 0, 0, 1, 1},
   {0, __pyx_k_client, sizeof(__pyx_k_client), 0, 0, 1, 1},
   {0, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {0, __pyx_k_close, sizeof(__pyx_k_close), 0, 0, 1, 1},
@@ -42325,6 +43173,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_count, sizeof(__pyx_k_count), 0, 0, 1, 1},
   {0, __pyx_k_count_async, sizeof(__pyx_k_count_async), 0, 0, 1, 1},
   {0, __pyx_k_count_documents, sizeof(__pyx_k_count_documents), 0, 0, 1, 1},
+  {0, __pyx_k_create_file, sizeof(__pyx_k_create_file), 0, 0, 1, 1},
   {0, __pyx_k_create_index, sizeof(__pyx_k_create_index), 0, 0, 1, 1},
   {0, __pyx_k_cy_docs_cy_docs_x, sizeof(__pyx_k_cy_docs_cy_docs_x), 0, 0, 1, 1},
   {0, __pyx_k_cy_docs_cy_docs_x_py, sizeof(__pyx_k_cy_docs_cy_docs_x_py), 0, 0, 1, 0},
@@ -42333,6 +43182,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_data_2, sizeof(__pyx_k_data_2), 0, 0, 1, 1},
   {0, __pyx_k_database, sizeof(__pyx_k_database), 0, 0, 1, 1},
   {0, __pyx_k_datetime, sizeof(__pyx_k_datetime), 0, 0, 1, 1},
+  {0, __pyx_k_db, sizeof(__pyx_k_db), 0, 0, 1, 1},
   {0, __pyx_k_db_getCollection, sizeof(__pyx_k_db_getCollection), 0, 1, 0, 0},
   {0, __pyx_k_db_name, sizeof(__pyx_k_db_name), 0, 0, 1, 1},
   {0, __pyx_k_delegate, sizeof(__pyx_k_delegate), 0, 0, 1, 1},
@@ -42367,6 +43217,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_field_name, sizeof(__pyx_k_field_name), 0, 0, 1, 1},
   {0, __pyx_k_fields, sizeof(__pyx_k_fields), 0, 0, 1, 1},
   {0, __pyx_k_file_id, sizeof(__pyx_k_file_id), 0, 0, 1, 1},
+  {0, __pyx_k_file_name, sizeof(__pyx_k_file_name), 0, 0, 1, 1},
+  {0, __pyx_k_file_size, sizeof(__pyx_k_file_size), 0, 0, 1, 1},
+  {0, __pyx_k_filename, sizeof(__pyx_k_filename), 0, 0, 1, 1},
   {0, __pyx_k_filter, sizeof(__pyx_k_filter), 0, 0, 1, 1},
   {0, __pyx_k_filter_2, sizeof(__pyx_k_filter_2), 0, 0, 1, 1},
   {0, __pyx_k_find, sizeof(__pyx_k_find), 0, 0, 1, 1},
@@ -42380,6 +43233,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_floor, sizeof(__pyx_k_floor), 0, 0, 1, 0},
   {0, __pyx_k_floordiv, sizeof(__pyx_k_floordiv), 0, 0, 1, 1},
   {0, __pyx_k_fn, sizeof(__pyx_k_fn), 0, 0, 1, 1},
+  {0, __pyx_k_fs, sizeof(__pyx_k_fs), 0, 0, 1, 1},
+  {0, __pyx_k_fs_files, sizeof(__pyx_k_fs_files), 0, 0, 1, 0},
   {0, __pyx_k_fx, sizeof(__pyx_k_fx), 0, 0, 1, 1},
   {0, __pyx_k_fx_2, sizeof(__pyx_k_fx_2), 0, 0, 1, 1},
   {0, __pyx_k_ge, sizeof(__pyx_k_ge), 0, 0, 1, 1},
@@ -42389,6 +43244,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_get_doc, sizeof(__pyx_k_get_doc), 0, 0, 1, 1},
   {0, __pyx_k_get_file, sizeof(__pyx_k_get_file), 0, 0, 1, 1},
   {0, __pyx_k_get_file_async, sizeof(__pyx_k_get_file_async), 0, 0, 1, 1},
+  {0, __pyx_k_get_file_by_name, sizeof(__pyx_k_get_file_by_name), 0, 0, 1, 1},
   {0, __pyx_k_get_mongodb_text, sizeof(__pyx_k_get_mongodb_text), 0, 0, 1, 1},
   {0, __pyx_k_get_version, sizeof(__pyx_k_get_version), 0, 0, 1, 1},
   {0, __pyx_k_getattr, sizeof(__pyx_k_getattr), 0, 0, 1, 1},
@@ -42465,6 +43321,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_ne_2, sizeof(__pyx_k_ne_2), 0, 0, 1, 0},
   {0, __pyx_k_ne_3, sizeof(__pyx_k_ne_3), 0, 0, 1, 1},
   {0, __pyx_k_new, sizeof(__pyx_k_new), 0, 0, 1, 1},
+  {0, __pyx_k_new_file, sizeof(__pyx_k_new_file), 0, 0, 1, 1},
   {0, __pyx_k_not, sizeof(__pyx_k_not), 0, 0, 1, 0},
   {0, __pyx_k_not_exists, sizeof(__pyx_k_not_exists), 0, 0, 1, 1},
   {0, __pyx_k_obj, sizeof(__pyx_k_obj), 0, 0, 1, 1},
@@ -42541,6 +43398,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
   {0, __pyx_k_update_async, sizeof(__pyx_k_update_async), 0, 0, 1, 1},
   {0, __pyx_k_update_many, sizeof(__pyx_k_update_many), 0, 0, 1, 1},
+  {0, __pyx_k_update_one, sizeof(__pyx_k_update_one), 0, 0, 1, 1},
   {0, __pyx_k_updater, sizeof(__pyx_k_updater), 0, 0, 1, 1},
   {0, __pyx_k_uuid, sizeof(__pyx_k_uuid), 0, 0, 1, 1},
   {0, __pyx_k_v, sizeof(__pyx_k_v), 0, 0, 1, 1},
@@ -42711,6 +43569,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_check_map__module, __pyx_k_check_map__module, sizeof(__pyx_k_check_map__module), 0, 0, 1, 1},
   {&__pyx_n_s_check_map__name, __pyx_k_check_map__name, sizeof(__pyx_k_check_map__name), 0, 0, 1, 1},
   {&__pyx_n_s_check_name, __pyx_k_check_name, sizeof(__pyx_k_check_name), 0, 0, 1, 1},
+  {&__pyx_n_s_chunkSize, __pyx_k_chunkSize, sizeof(__pyx_k_chunkSize), 0, 0, 1, 1},
+  {&__pyx_n_s_chunk_size, __pyx_k_chunk_size, sizeof(__pyx_k_chunk_size), 0, 0, 1, 1},
   {&__pyx_n_s_client, __pyx_k_client, sizeof(__pyx_k_client), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_close, __pyx_k_close, sizeof(__pyx_k_close), 0, 0, 1, 1},
@@ -42725,6 +43585,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_count, __pyx_k_count, sizeof(__pyx_k_count), 0, 0, 1, 1},
   {&__pyx_n_s_count_async, __pyx_k_count_async, sizeof(__pyx_k_count_async), 0, 0, 1, 1},
   {&__pyx_n_s_count_documents, __pyx_k_count_documents, sizeof(__pyx_k_count_documents), 0, 0, 1, 1},
+  {&__pyx_n_s_create_file, __pyx_k_create_file, sizeof(__pyx_k_create_file), 0, 0, 1, 1},
   {&__pyx_n_s_create_index, __pyx_k_create_index, sizeof(__pyx_k_create_index), 0, 0, 1, 1},
   {&__pyx_n_s_cy_docs_cy_docs_x, __pyx_k_cy_docs_cy_docs_x, sizeof(__pyx_k_cy_docs_cy_docs_x), 0, 0, 1, 1},
   {&__pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_k_cy_docs_cy_docs_x_py, sizeof(__pyx_k_cy_docs_cy_docs_x_py), 0, 0, 1, 0},
@@ -42733,6 +43594,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_data_2, __pyx_k_data_2, sizeof(__pyx_k_data_2), 0, 0, 1, 1},
   {&__pyx_n_s_database, __pyx_k_database, sizeof(__pyx_k_database), 0, 0, 1, 1},
   {&__pyx_n_s_datetime, __pyx_k_datetime, sizeof(__pyx_k_datetime), 0, 0, 1, 1},
+  {&__pyx_n_s_db, __pyx_k_db, sizeof(__pyx_k_db), 0, 0, 1, 1},
   {&__pyx_kp_u_db_getCollection, __pyx_k_db_getCollection, sizeof(__pyx_k_db_getCollection), 0, 1, 0, 0},
   {&__pyx_n_s_db_name, __pyx_k_db_name, sizeof(__pyx_k_db_name), 0, 0, 1, 1},
   {&__pyx_n_s_delegate, __pyx_k_delegate, sizeof(__pyx_k_delegate), 0, 0, 1, 1},
@@ -42767,6 +43629,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_field_name, __pyx_k_field_name, sizeof(__pyx_k_field_name), 0, 0, 1, 1},
   {&__pyx_n_s_fields, __pyx_k_fields, sizeof(__pyx_k_fields), 0, 0, 1, 1},
   {&__pyx_n_s_file_id, __pyx_k_file_id, sizeof(__pyx_k_file_id), 0, 0, 1, 1},
+  {&__pyx_n_s_file_name, __pyx_k_file_name, sizeof(__pyx_k_file_name), 0, 0, 1, 1},
+  {&__pyx_n_s_file_size, __pyx_k_file_size, sizeof(__pyx_k_file_size), 0, 0, 1, 1},
+  {&__pyx_n_s_filename, __pyx_k_filename, sizeof(__pyx_k_filename), 0, 0, 1, 1},
   {&__pyx_n_s_filter, __pyx_k_filter, sizeof(__pyx_k_filter), 0, 0, 1, 1},
   {&__pyx_n_s_filter_2, __pyx_k_filter_2, sizeof(__pyx_k_filter_2), 0, 0, 1, 1},
   {&__pyx_n_s_find, __pyx_k_find, sizeof(__pyx_k_find), 0, 0, 1, 1},
@@ -42780,6 +43645,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_floor, __pyx_k_floor, sizeof(__pyx_k_floor), 0, 0, 1, 0},
   {&__pyx_n_s_floordiv, __pyx_k_floordiv, sizeof(__pyx_k_floordiv), 0, 0, 1, 1},
   {&__pyx_n_s_fn, __pyx_k_fn, sizeof(__pyx_k_fn), 0, 0, 1, 1},
+  {&__pyx_n_s_fs, __pyx_k_fs, sizeof(__pyx_k_fs), 0, 0, 1, 1},
+  {&__pyx_kp_s_fs_files, __pyx_k_fs_files, sizeof(__pyx_k_fs_files), 0, 0, 1, 0},
   {&__pyx_n_s_fx, __pyx_k_fx, sizeof(__pyx_k_fx), 0, 0, 1, 1},
   {&__pyx_n_s_fx_2, __pyx_k_fx_2, sizeof(__pyx_k_fx_2), 0, 0, 1, 1},
   {&__pyx_n_s_ge, __pyx_k_ge, sizeof(__pyx_k_ge), 0, 0, 1, 1},
@@ -42789,6 +43656,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_get_doc, __pyx_k_get_doc, sizeof(__pyx_k_get_doc), 0, 0, 1, 1},
   {&__pyx_n_s_get_file, __pyx_k_get_file, sizeof(__pyx_k_get_file), 0, 0, 1, 1},
   {&__pyx_n_s_get_file_async, __pyx_k_get_file_async, sizeof(__pyx_k_get_file_async), 0, 0, 1, 1},
+  {&__pyx_n_s_get_file_by_name, __pyx_k_get_file_by_name, sizeof(__pyx_k_get_file_by_name), 0, 0, 1, 1},
   {&__pyx_n_s_get_mongodb_text, __pyx_k_get_mongodb_text, sizeof(__pyx_k_get_mongodb_text), 0, 0, 1, 1},
   {&__pyx_n_s_get_version, __pyx_k_get_version, sizeof(__pyx_k_get_version), 0, 0, 1, 1},
   {&__pyx_n_s_getattr, __pyx_k_getattr, sizeof(__pyx_k_getattr), 0, 0, 1, 1},
@@ -42865,6 +43733,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_ne_2, __pyx_k_ne_2, sizeof(__pyx_k_ne_2), 0, 0, 1, 0},
   {&__pyx_n_s_ne_3, __pyx_k_ne_3, sizeof(__pyx_k_ne_3), 0, 0, 1, 1},
   {&__pyx_n_s_new, __pyx_k_new, sizeof(__pyx_k_new), 0, 0, 1, 1},
+  {&__pyx_n_s_new_file, __pyx_k_new_file, sizeof(__pyx_k_new_file), 0, 0, 1, 1},
   {&__pyx_kp_s_not, __pyx_k_not, sizeof(__pyx_k_not), 0, 0, 1, 0},
   {&__pyx_n_s_not_exists, __pyx_k_not_exists, sizeof(__pyx_k_not_exists), 0, 0, 1, 1},
   {&__pyx_n_s_obj, __pyx_k_obj, sizeof(__pyx_k_obj), 0, 0, 1, 1},
@@ -42941,6 +43810,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
   {&__pyx_n_s_update_async, __pyx_k_update_async, sizeof(__pyx_k_update_async), 0, 0, 1, 1},
   {&__pyx_n_s_update_many, __pyx_k_update_many, sizeof(__pyx_k_update_many), 0, 0, 1, 1},
+  {&__pyx_n_s_update_one, __pyx_k_update_one, sizeof(__pyx_k_update_one), 0, 0, 1, 1},
   {&__pyx_n_s_updater, __pyx_k_updater, sizeof(__pyx_k_updater), 0, 0, 1, 1},
   {&__pyx_n_s_uuid, __pyx_k_uuid, sizeof(__pyx_k_uuid), 0, 0, 1, 1},
   {&__pyx_n_s_v, __pyx_k_v, sizeof(__pyx_k_v), 0, 0, 1, 1},
@@ -44139,26 +45009,50 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "cy_docs/cy_docs_x.py":1421
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  *     return ret
+ * def get_file_by_name(client, db_name: str, filename):             # <<<<<<<<<<<<<<
+ *     gfs= gridfs.GridFSBucket(client.get_database( db_name))
+ *     items = list(gfs.find({"filename":filename}))
+ */
+  __pyx_tuple__200 = PyTuple_Pack(5, __pyx_n_s_client, __pyx_n_s_db_name, __pyx_n_s_filename, __pyx_n_s_gfs, __pyx_n_s_items); if (unlikely(!__pyx_tuple__200)) __PYX_ERR(0, 1421, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__200);
+  __Pyx_GIVEREF(__pyx_tuple__200);
+  __pyx_codeobj__201 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__200, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_get_file_by_name, 1421, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__201)) __PYX_ERR(0, 1421, __pyx_L1_error)
+
+  /* "cy_docs/cy_docs_x.py":1429
+ * 
+ * 
+ * def create_file(client, db_name: str,file_name:str,file_size:int,chunk_size:int):             # <<<<<<<<<<<<<<
+ *     db= client.get_database(db_name)
+ *     gfs = gridfs.GridFSBucket(client.get_database(db_name))
+ */
+  __pyx_tuple__202 = PyTuple_Pack(8, __pyx_n_s_client, __pyx_n_s_db_name, __pyx_n_s_file_name, __pyx_n_s_file_size, __pyx_n_s_chunk_size, __pyx_n_s_db, __pyx_n_s_gfs, __pyx_n_s_fs); if (unlikely(!__pyx_tuple__202)) __PYX_ERR(0, 1429, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__202);
+  __Pyx_GIVEREF(__pyx_tuple__202);
+  __pyx_codeobj__203 = (PyObject*)__Pyx_PyCode_New(5, 0, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__202, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_create_file, 1429, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__203)) __PYX_ERR(0, 1429, __pyx_L1_error)
+
+  /* "cy_docs/cy_docs_x.py":1449
+ *     )
+ *     return fs
  * async def get_file_async(client, db_name: str, file_id):             # <<<<<<<<<<<<<<
  *     from motor.motor_asyncio import AsyncIOMotorClient
  *     async_client = AsyncIOMotorClient()
  */
-  __pyx_tuple__200 = PyTuple_Pack(7, __pyx_n_s_client, __pyx_n_s_db_name, __pyx_n_s_file_id, __pyx_n_s_AsyncIOMotorClient, __pyx_n_s_async_client, __pyx_n_s_gfs, __pyx_n_s_ret); if (unlikely(!__pyx_tuple__200)) __PYX_ERR(0, 1421, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__200);
-  __Pyx_GIVEREF(__pyx_tuple__200);
-  __pyx_codeobj__39 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__200, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_get_file_async, 1421, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__39)) __PYX_ERR(0, 1421, __pyx_L1_error)
+  __pyx_tuple__204 = PyTuple_Pack(7, __pyx_n_s_client, __pyx_n_s_db_name, __pyx_n_s_file_id, __pyx_n_s_AsyncIOMotorClient, __pyx_n_s_async_client, __pyx_n_s_gfs, __pyx_n_s_ret); if (unlikely(!__pyx_tuple__204)) __PYX_ERR(0, 1449, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__204);
+  __Pyx_GIVEREF(__pyx_tuple__204);
+  __pyx_codeobj__39 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__204, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_get_file_async, 1449, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__39)) __PYX_ERR(0, 1449, __pyx_L1_error)
 
-  /* "cy_docs/cy_docs_x.py":1432
+  /* "cy_docs/cy_docs_x.py":1460
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  *     return ret
  * async def find_file_async(client, db_name: str, rel_file_path:str):             # <<<<<<<<<<<<<<
  *     from motor.motor_asyncio import AsyncIOMotorClient
  *     async_client = AsyncIOMotorClient()
  */
-  __pyx_tuple__201 = PyTuple_Pack(7, __pyx_n_s_client, __pyx_n_s_db_name, __pyx_n_s_rel_file_path, __pyx_n_s_AsyncIOMotorClient, __pyx_n_s_async_client, __pyx_n_s_gfs, __pyx_n_s_ret); if (unlikely(!__pyx_tuple__201)) __PYX_ERR(0, 1432, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__201);
-  __Pyx_GIVEREF(__pyx_tuple__201);
-  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__201, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_find_file_async, 1432, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 1432, __pyx_L1_error)
+  __pyx_tuple__205 = PyTuple_Pack(7, __pyx_n_s_client, __pyx_n_s_db_name, __pyx_n_s_rel_file_path, __pyx_n_s_AsyncIOMotorClient, __pyx_n_s_async_client, __pyx_n_s_gfs, __pyx_n_s_ret); if (unlikely(!__pyx_tuple__205)) __PYX_ERR(0, 1460, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__205);
+  __Pyx_GIVEREF(__pyx_tuple__205);
+  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__205, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_find_file_async, 1460, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 1460, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -44337,246 +45231,258 @@ static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   if (__Pyx_InitString(__pyx_string_tab[156], &__pyx_n_s_check_map__module) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[157], &__pyx_n_s_check_map__name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[158], &__pyx_n_s_check_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[159], &__pyx_n_s_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[160], &__pyx_n_s_cline_in_traceback) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[161], &__pyx_n_s_close) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[162], &__pyx_n_s_cls) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[163], &__pyx_n_s_coll) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[164], &__pyx_n_s_collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[165], &__pyx_n_s_collection_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[166], &__pyx_kp_s_concat) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[167], &__pyx_n_s_concat_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[168], &__pyx_n_s_context) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[169], &__pyx_n_s_convention_get) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[170], &__pyx_n_s_count) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[171], &__pyx_n_s_count_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[172], &__pyx_n_s_count_documents) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[173], &__pyx_n_s_create_index) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[174], &__pyx_n_s_cy_docs_cy_docs_x) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[175], &__pyx_kp_s_cy_docs_cy_docs_x_py) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[176], &__pyx_n_s_d) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[177], &__pyx_n_s_data) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[178], &__pyx_n_s_data_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[179], &__pyx_n_s_database) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[180], &__pyx_n_s_datetime) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[181], &__pyx_kp_u_db_getCollection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[182], &__pyx_n_s_db_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[183], &__pyx_n_s_delegate) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[184], &__pyx_n_s_delete) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[185], &__pyx_n_s_delete_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[186], &__pyx_n_s_delete_many) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[187], &__pyx_n_s_desc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[188], &__pyx_n_s_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[189], &__pyx_n_s_dict_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[190], &__pyx_kp_s_divide) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[191], &__pyx_n_s_doc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[192], &__pyx_n_s_document) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[193], &__pyx_n_s_document_define) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[194], &__pyx_n_s_document_define_locals_wrapper) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[195], &__pyx_n_s_document_indexes) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[196], &__pyx_n_s_document_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[197], &__pyx_n_s_document_unique_keys) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[198], &__pyx_n_s_dumps) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[199], &__pyx_n_s_e) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[200], &__pyx_n_s_empty) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[201], &__pyx_n_s_enter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[202], &__pyx_kp_s_eq) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[203], &__pyx_n_s_eq_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[204], &__pyx_kp_s_exists) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[205], &__pyx_n_s_exists_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[206], &__pyx_kp_u_exists_require_cy_docs_fields_fi) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[207], &__pyx_n_s_exit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[208], &__pyx_n_s_expr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[209], &__pyx_n_s_expr_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[210], &__pyx_n_u_f) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[211], &__pyx_n_s_field) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[212], &__pyx_n_s_field_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[213], &__pyx_n_s_fields) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[214], &__pyx_n_s_file_id) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[215], &__pyx_n_s_filter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[216], &__pyx_n_s_filter_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[217], &__pyx_n_s_find) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[218], &__pyx_n_s_find_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[219], &__pyx_n_s_find_file_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[220], &__pyx_n_s_find_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[221], &__pyx_n_s_find_one_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[222], &__pyx_n_s_find_to_json_convertable) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[223], &__pyx_n_s_first_item) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[224], &__pyx_n_s_flags) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[225], &__pyx_kp_s_floor) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[226], &__pyx_n_s_floordiv) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[227], &__pyx_n_s_fn) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[228], &__pyx_n_s_fx) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[229], &__pyx_n_s_fx_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[230], &__pyx_n_s_ge) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[231], &__pyx_n_s_get) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[232], &__pyx_n_s_get_collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[233], &__pyx_n_s_get_database) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[234], &__pyx_n_s_get_doc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[235], &__pyx_n_s_get_file) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[236], &__pyx_n_s_get_file_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[237], &__pyx_n_s_get_mongodb_text) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[238], &__pyx_n_s_get_version) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[239], &__pyx_n_s_getattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[240], &__pyx_n_s_getitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[241], &__pyx_n_s_gfs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[242], &__pyx_n_s_gridfs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[243], &__pyx_kp_s_gt) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[244], &__pyx_n_s_gt_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[245], &__pyx_kp_s_gte) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[246], &__pyx_n_s_has_set_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[247], &__pyx_n_s_hash_check_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[248], &__pyx_n_s_hash_check_dict_lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[249], &__pyx_n_s_hash_key) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[250], &__pyx_kp_u_i) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[251], &__pyx_n_s_id) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[252], &__pyx_n_s_id_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[253], &__pyx_n_s_imag) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[254], &__pyx_n_s_import) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[255], &__pyx_n_s_indexes) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[256], &__pyx_n_s_init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[257], &__pyx_n_s_init_data) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[258], &__pyx_n_s_init_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[259], &__pyx_kp_s_init_value_must_be_str_or_ditc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[260], &__pyx_n_s_initializing) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[261], &__pyx_n_s_insert_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[262], &__pyx_n_s_insert_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[263], &__pyx_n_s_insert_one_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[264], &__pyx_n_s_instance) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[265], &__pyx_n_s_int) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[266], &__pyx_n_s_invert) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[267], &__pyx_n_s_is_not_null) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[268], &__pyx_n_s_is_null) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[269], &__pyx_n_s_isoformat) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[270], &__pyx_n_s_isupper) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[271], &__pyx_n_s_item) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[272], &__pyx_n_s_items) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[273], &__pyx_n_s_iter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[274], &__pyx_n_s_json) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[275], &__pyx_n_s_k) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[276], &__pyx_n_s_key) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[277], &__pyx_n_s_kw) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[278], &__pyx_n_s_kwargs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[279], &__pyx_n_s_le) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[280], &__pyx_n_s_len) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[281], &__pyx_n_s_len_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[282], &__pyx_n_s_length) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[283], &__pyx_kp_s_limit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[284], &__pyx_n_s_limit_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[285], &__pyx_n_s_linmit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[286], &__pyx_n_s_lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[287], &__pyx_n_s_lower) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[288], &__pyx_n_s_lshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[289], &__pyx_kp_s_lt) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[290], &__pyx_n_s_lt_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[291], &__pyx_kp_s_lte) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[292], &__pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[293], &__pyx_kp_s_match) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[294], &__pyx_n_s_match_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[295], &__pyx_n_s_matmul) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[296], &__pyx_n_s_metaclass) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[297], &__pyx_kp_s_mod) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[298], &__pyx_n_s_mod_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[299], &__pyx_n_s_module) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[300], &__pyx_n_s_modulo) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[301], &__pyx_n_s_mongo_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[302], &__pyx_n_s_motor) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[303], &__pyx_n_s_motor_motor_asyncio) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[304], &__pyx_n_s_mul) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[305], &__pyx_kp_s_multiply) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[306], &__pyx_kp_u_my_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[307], &__pyx_n_s_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[308], &__pyx_n_s_name_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[309], &__pyx_kp_s_ne) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[310], &__pyx_kp_s_ne_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[311], &__pyx_n_s_ne_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[312], &__pyx_n_s_new) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[313], &__pyx_kp_s_not) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[314], &__pyx_n_s_not_exists) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[315], &__pyx_n_s_obj) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[316], &__pyx_n_s_object) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[317], &__pyx_n_s_op) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[318], &__pyx_n_s_open_download_stream) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[319], &__pyx_n_s_oprator) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[320], &__pyx_n_s_oprator_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[321], &__pyx_kp_s_or) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[322], &__pyx_n_s_or_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[323], &__pyx_n_s_orig) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[324], &__pyx_n_s_other) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[325], &__pyx_n_s_owner) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[326], &__pyx_n_s_pattern) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[327], &__pyx_n_s_pipeline) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[328], &__pyx_n_s_pos) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[329], &__pyx_kp_s_pow) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[330], &__pyx_n_s_pow_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[331], &__pyx_n_s_power) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[332], &__pyx_n_s_prepare) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[333], &__pyx_kp_s_project) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[334], &__pyx_n_s_project_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[335], &__pyx_n_s_pydantic) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[336], &__pyx_kp_s_pydantic_BaseModel) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[337], &__pyx_n_s_pymongo) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[338], &__pyx_kp_s_pymongo_collection_Collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[339], &__pyx_n_s_pymongo_mongo_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[340], &__pyx_kp_s_pymongo_mongo_client_MongoClient) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[341], &__pyx_n_s_qualname) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[342], &__pyx_n_s_re) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[343], &__pyx_n_s_real) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[344], &__pyx_kp_s_regex) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[345], &__pyx_n_s_rel_file_path) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[346], &__pyx_n_s_release) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[347], &__pyx_n_s_repr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[348], &__pyx_n_s_ret) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[349], &__pyx_n_s_ret_item) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[350], &__pyx_n_s_ret_items) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[351], &__pyx_n_s_ret_pipe) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[352], &__pyx_n_s_return) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[353], &__pyx_n_s_rshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[354], &__pyx_n_s_self) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[355], &__pyx_n_s_send) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[356], &__pyx_kp_s_set) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[357], &__pyx_n_s_set_check) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[358], &__pyx_kp_s_skip) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[359], &__pyx_n_s_skip_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[360], &__pyx_n_s_sort) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[361], &__pyx_kp_s_sort_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[362], &__pyx_n_s_sort_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[363], &__pyx_n_s_sparse) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[364], &__pyx_n_s_spec) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[365], &__pyx_n_s_split) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[366], &__pyx_n_s_stage) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[367], &__pyx_n_s_staticmethod) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[368], &__pyx_n_s_str) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[369], &__pyx_n_s_str_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[370], &__pyx_kp_s_sub) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[371], &__pyx_n_s_sub_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[372], &__pyx_n_s_super) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[373], &__pyx_n_s_test) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[374], &__pyx_n_s_threading) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[375], &__pyx_n_s_throw) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[376], &__pyx_n_s_to_camel) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[377], &__pyx_n_s_to_json_convertable) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[378], &__pyx_n_s_to_list) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[379], &__pyx_n_s_to_mongo_db) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[380], &__pyx_n_s_to_mongo_db_expr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[381], &__pyx_n_s_to_pydantic) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[382], &__pyx_n_s_truediv) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[383], &__pyx_n_s_typing) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[384], &__pyx_n_s_unique) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[385], &__pyx_n_s_unique_keys) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[386], &__pyx_n_s_update) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[387], &__pyx_n_s_update_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[388], &__pyx_n_s_update_many) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[389], &__pyx_n_s_updater) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[390], &__pyx_n_s_uuid) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[391], &__pyx_n_s_v) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[392], &__pyx_n_s_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[393], &__pyx_n_s_value_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[394], &__pyx_kp_u_was_not_found_in) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[395], &__pyx_kp_u_was_not_found_in_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[396], &__pyx_n_s_wrapper) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[397], &__pyx_n_s_x) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[398], &__pyx_n_s_y) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[159], &__pyx_n_s_chunkSize) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[160], &__pyx_n_s_chunk_size) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[161], &__pyx_n_s_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[162], &__pyx_n_s_cline_in_traceback) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[163], &__pyx_n_s_close) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[164], &__pyx_n_s_cls) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[165], &__pyx_n_s_coll) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[166], &__pyx_n_s_collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[167], &__pyx_n_s_collection_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[168], &__pyx_kp_s_concat) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[169], &__pyx_n_s_concat_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[170], &__pyx_n_s_context) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[171], &__pyx_n_s_convention_get) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[172], &__pyx_n_s_count) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[173], &__pyx_n_s_count_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[174], &__pyx_n_s_count_documents) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[175], &__pyx_n_s_create_file) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[176], &__pyx_n_s_create_index) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[177], &__pyx_n_s_cy_docs_cy_docs_x) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[178], &__pyx_kp_s_cy_docs_cy_docs_x_py) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[179], &__pyx_n_s_d) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[180], &__pyx_n_s_data) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[181], &__pyx_n_s_data_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[182], &__pyx_n_s_database) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[183], &__pyx_n_s_datetime) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[184], &__pyx_n_s_db) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[185], &__pyx_kp_u_db_getCollection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[186], &__pyx_n_s_db_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[187], &__pyx_n_s_delegate) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[188], &__pyx_n_s_delete) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[189], &__pyx_n_s_delete_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[190], &__pyx_n_s_delete_many) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[191], &__pyx_n_s_desc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[192], &__pyx_n_s_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[193], &__pyx_n_s_dict_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[194], &__pyx_kp_s_divide) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[195], &__pyx_n_s_doc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[196], &__pyx_n_s_document) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[197], &__pyx_n_s_document_define) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[198], &__pyx_n_s_document_define_locals_wrapper) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[199], &__pyx_n_s_document_indexes) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[200], &__pyx_n_s_document_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[201], &__pyx_n_s_document_unique_keys) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[202], &__pyx_n_s_dumps) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[203], &__pyx_n_s_e) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[204], &__pyx_n_s_empty) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[205], &__pyx_n_s_enter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[206], &__pyx_kp_s_eq) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[207], &__pyx_n_s_eq_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[208], &__pyx_kp_s_exists) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[209], &__pyx_n_s_exists_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[210], &__pyx_kp_u_exists_require_cy_docs_fields_fi) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[211], &__pyx_n_s_exit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[212], &__pyx_n_s_expr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[213], &__pyx_n_s_expr_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[214], &__pyx_n_u_f) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[215], &__pyx_n_s_field) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[216], &__pyx_n_s_field_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[217], &__pyx_n_s_fields) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[218], &__pyx_n_s_file_id) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[219], &__pyx_n_s_file_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[220], &__pyx_n_s_file_size) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[221], &__pyx_n_s_filename) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[222], &__pyx_n_s_filter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[223], &__pyx_n_s_filter_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[224], &__pyx_n_s_find) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[225], &__pyx_n_s_find_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[226], &__pyx_n_s_find_file_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[227], &__pyx_n_s_find_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[228], &__pyx_n_s_find_one_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[229], &__pyx_n_s_find_to_json_convertable) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[230], &__pyx_n_s_first_item) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[231], &__pyx_n_s_flags) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[232], &__pyx_kp_s_floor) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[233], &__pyx_n_s_floordiv) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[234], &__pyx_n_s_fn) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[235], &__pyx_n_s_fs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[236], &__pyx_kp_s_fs_files) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[237], &__pyx_n_s_fx) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[238], &__pyx_n_s_fx_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[239], &__pyx_n_s_ge) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[240], &__pyx_n_s_get) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[241], &__pyx_n_s_get_collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[242], &__pyx_n_s_get_database) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[243], &__pyx_n_s_get_doc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[244], &__pyx_n_s_get_file) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[245], &__pyx_n_s_get_file_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[246], &__pyx_n_s_get_file_by_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[247], &__pyx_n_s_get_mongodb_text) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[248], &__pyx_n_s_get_version) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[249], &__pyx_n_s_getattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[250], &__pyx_n_s_getitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[251], &__pyx_n_s_gfs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[252], &__pyx_n_s_gridfs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[253], &__pyx_kp_s_gt) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[254], &__pyx_n_s_gt_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[255], &__pyx_kp_s_gte) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[256], &__pyx_n_s_has_set_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[257], &__pyx_n_s_hash_check_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[258], &__pyx_n_s_hash_check_dict_lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[259], &__pyx_n_s_hash_key) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[260], &__pyx_kp_u_i) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[261], &__pyx_n_s_id) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[262], &__pyx_n_s_id_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[263], &__pyx_n_s_imag) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[264], &__pyx_n_s_import) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[265], &__pyx_n_s_indexes) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[266], &__pyx_n_s_init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[267], &__pyx_n_s_init_data) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[268], &__pyx_n_s_init_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[269], &__pyx_kp_s_init_value_must_be_str_or_ditc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[270], &__pyx_n_s_initializing) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[271], &__pyx_n_s_insert_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[272], &__pyx_n_s_insert_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[273], &__pyx_n_s_insert_one_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[274], &__pyx_n_s_instance) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[275], &__pyx_n_s_int) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[276], &__pyx_n_s_invert) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[277], &__pyx_n_s_is_not_null) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[278], &__pyx_n_s_is_null) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[279], &__pyx_n_s_isoformat) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[280], &__pyx_n_s_isupper) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[281], &__pyx_n_s_item) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[282], &__pyx_n_s_items) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[283], &__pyx_n_s_iter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[284], &__pyx_n_s_json) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[285], &__pyx_n_s_k) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[286], &__pyx_n_s_key) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[287], &__pyx_n_s_kw) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[288], &__pyx_n_s_kwargs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[289], &__pyx_n_s_le) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[290], &__pyx_n_s_len) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[291], &__pyx_n_s_len_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[292], &__pyx_n_s_length) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[293], &__pyx_kp_s_limit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[294], &__pyx_n_s_limit_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[295], &__pyx_n_s_linmit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[296], &__pyx_n_s_lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[297], &__pyx_n_s_lower) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[298], &__pyx_n_s_lshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[299], &__pyx_kp_s_lt) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[300], &__pyx_n_s_lt_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[301], &__pyx_kp_s_lte) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[302], &__pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[303], &__pyx_kp_s_match) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[304], &__pyx_n_s_match_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[305], &__pyx_n_s_matmul) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[306], &__pyx_n_s_metaclass) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[307], &__pyx_kp_s_mod) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[308], &__pyx_n_s_mod_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[309], &__pyx_n_s_module) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[310], &__pyx_n_s_modulo) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[311], &__pyx_n_s_mongo_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[312], &__pyx_n_s_motor) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[313], &__pyx_n_s_motor_motor_asyncio) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[314], &__pyx_n_s_mul) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[315], &__pyx_kp_s_multiply) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[316], &__pyx_kp_u_my_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[317], &__pyx_n_s_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[318], &__pyx_n_s_name_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[319], &__pyx_kp_s_ne) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[320], &__pyx_kp_s_ne_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[321], &__pyx_n_s_ne_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[322], &__pyx_n_s_new) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[323], &__pyx_n_s_new_file) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[324], &__pyx_kp_s_not) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[325], &__pyx_n_s_not_exists) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[326], &__pyx_n_s_obj) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[327], &__pyx_n_s_object) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[328], &__pyx_n_s_op) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[329], &__pyx_n_s_open_download_stream) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[330], &__pyx_n_s_oprator) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[331], &__pyx_n_s_oprator_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[332], &__pyx_kp_s_or) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[333], &__pyx_n_s_or_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[334], &__pyx_n_s_orig) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[335], &__pyx_n_s_other) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[336], &__pyx_n_s_owner) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[337], &__pyx_n_s_pattern) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[338], &__pyx_n_s_pipeline) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[339], &__pyx_n_s_pos) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[340], &__pyx_kp_s_pow) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[341], &__pyx_n_s_pow_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[342], &__pyx_n_s_power) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[343], &__pyx_n_s_prepare) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[344], &__pyx_kp_s_project) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[345], &__pyx_n_s_project_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[346], &__pyx_n_s_pydantic) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[347], &__pyx_kp_s_pydantic_BaseModel) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[348], &__pyx_n_s_pymongo) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[349], &__pyx_kp_s_pymongo_collection_Collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[350], &__pyx_n_s_pymongo_mongo_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[351], &__pyx_kp_s_pymongo_mongo_client_MongoClient) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[352], &__pyx_n_s_qualname) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[353], &__pyx_n_s_re) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[354], &__pyx_n_s_real) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[355], &__pyx_kp_s_regex) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[356], &__pyx_n_s_rel_file_path) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[357], &__pyx_n_s_release) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[358], &__pyx_n_s_repr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[359], &__pyx_n_s_ret) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[360], &__pyx_n_s_ret_item) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[361], &__pyx_n_s_ret_items) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[362], &__pyx_n_s_ret_pipe) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[363], &__pyx_n_s_return) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[364], &__pyx_n_s_rshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[365], &__pyx_n_s_self) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[366], &__pyx_n_s_send) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[367], &__pyx_kp_s_set) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[368], &__pyx_n_s_set_check) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[369], &__pyx_kp_s_skip) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[370], &__pyx_n_s_skip_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[371], &__pyx_n_s_sort) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[372], &__pyx_kp_s_sort_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[373], &__pyx_n_s_sort_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[374], &__pyx_n_s_sparse) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[375], &__pyx_n_s_spec) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[376], &__pyx_n_s_split) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[377], &__pyx_n_s_stage) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[378], &__pyx_n_s_staticmethod) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[379], &__pyx_n_s_str) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[380], &__pyx_n_s_str_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[381], &__pyx_kp_s_sub) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[382], &__pyx_n_s_sub_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[383], &__pyx_n_s_super) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[384], &__pyx_n_s_test) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[385], &__pyx_n_s_threading) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[386], &__pyx_n_s_throw) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[387], &__pyx_n_s_to_camel) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[388], &__pyx_n_s_to_json_convertable) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[389], &__pyx_n_s_to_list) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[390], &__pyx_n_s_to_mongo_db) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[391], &__pyx_n_s_to_mongo_db_expr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[392], &__pyx_n_s_to_pydantic) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[393], &__pyx_n_s_truediv) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[394], &__pyx_n_s_typing) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[395], &__pyx_n_s_unique) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[396], &__pyx_n_s_unique_keys) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[397], &__pyx_n_s_update) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[398], &__pyx_n_s_update_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[399], &__pyx_n_s_update_many) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[400], &__pyx_n_s_update_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[401], &__pyx_n_s_updater) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[402], &__pyx_n_s_uuid) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[403], &__pyx_n_s_v) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[404], &__pyx_n_s_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[405], &__pyx_n_s_value_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[406], &__pyx_kp_u_was_not_found_in) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[407], &__pyx_kp_u_was_not_found_in_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[408], &__pyx_n_s_wrapper) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[409], &__pyx_n_s_x) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[410], &__pyx_n_s_y) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
@@ -44836,9 +45742,9 @@ static int __Pyx_modinit_type_init_code(void) {
   __pyx_ptype_7cy_docs_9cy_docs_x___pyx_scope_struct_11_document_define = &__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_11_document_define;
   #endif
   #if CYTHON_COMPILING_IN_LIMITED_API
-  __pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async = PyType_FromSpec(&__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async_spec); if (unlikely(!__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async)) __PYX_ERR(0, 1421, __pyx_L1_error)
+  __pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async = PyType_FromSpec(&__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async_spec); if (unlikely(!__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async)) __PYX_ERR(0, 1449, __pyx_L1_error)
   #else
-  if (PyType_Ready(&__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async) < 0) __PYX_ERR(0, 1421, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async) < 0) __PYX_ERR(0, 1449, __pyx_L1_error)
   #if PY_MAJOR_VERSION < 3
   __pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async.tp_print = 0;
   #endif
@@ -44852,9 +45758,9 @@ static int __Pyx_modinit_type_init_code(void) {
   __pyx_ptype_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async = &__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_12_get_file_async;
   #endif
   #if CYTHON_COMPILING_IN_LIMITED_API
-  __pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async = PyType_FromSpec(&__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async_spec); if (unlikely(!__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async)) __PYX_ERR(0, 1432, __pyx_L1_error)
+  __pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async = PyType_FromSpec(&__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async_spec); if (unlikely(!__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async)) __PYX_ERR(0, 1460, __pyx_L1_error)
   #else
-  if (PyType_Ready(&__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async) < 0) __PYX_ERR(0, 1432, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async) < 0) __PYX_ERR(0, 1460, __pyx_L1_error)
   #if PY_MAJOR_VERSION < 3
   __pyx_type_7cy_docs_9cy_docs_x___pyx_scope_struct_13_find_file_async.tp_print = 0;
   #endif
@@ -47490,7 +48396,7 @@ if (!__Pyx_RefNanny) {
     __Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_t_1)->__pyx_arg_unique_keys = __pyx_t_4;
     __Pyx_GIVEREF(__pyx_t_4);
     __pyx_t_4 = 0;
-    __Pyx_CyFunction_SetDefaultsGetter(__pyx_t_1, __pyx_pf_7cy_docs_9cy_docs_x_26__defaults__);
+    __Pyx_CyFunction_SetDefaultsGetter(__pyx_t_1, __pyx_pf_7cy_docs_9cy_docs_x_30__defaults__);
     __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     #if CYTHON_COMPILING_IN_LIMITED_API
@@ -47585,7 +48491,7 @@ if (!__Pyx_RefNanny) {
     __Pyx_CyFunction_Defaults(__pyx_defaults1, __pyx_t_1)->__pyx_arg_unique_keys = __pyx_t_3;
     __Pyx_GIVEREF(__pyx_t_3);
     __pyx_t_3 = 0;
-    __Pyx_CyFunction_SetDefaultsGetter(__pyx_t_1, __pyx_pf_7cy_docs_9cy_docs_x_28__defaults__);
+    __Pyx_CyFunction_SetDefaultsGetter(__pyx_t_1, __pyx_pf_7cy_docs_9cy_docs_x_32__defaults__);
     __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_2);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     #if CYTHON_COMPILING_IN_LIMITED_API
@@ -47958,9 +48864,9 @@ if (!__Pyx_RefNanny) {
     /* "cy_docs/cy_docs_x.py":1421
  *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
  *     return ret
- * async def get_file_async(client, db_name: str, file_id):             # <<<<<<<<<<<<<<
- *     from motor.motor_asyncio import AsyncIOMotorClient
- *     async_client = AsyncIOMotorClient()
+ * def get_file_by_name(client, db_name: str, filename):             # <<<<<<<<<<<<<<
+ *     gfs= gridfs.GridFSBucket(client.get_database( db_name))
+ *     items = list(gfs.find({"filename":filename}))
  */
     __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1421, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -47968,49 +48874,110 @@ if (!__Pyx_RefNanny) {
     #if CYTHON_COMPILING_IN_LIMITED_API
     __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1421, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_21get_file_async, 0, __pyx_n_s_get_file_async, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_2, ((PyObject *)__pyx_codeobj__39)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1421, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_21get_file_by_name, 0, __pyx_n_s_get_file_by_name, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_2, ((PyObject *)__pyx_codeobj__201)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1421, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     #else
-    __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_21get_file_async, 0, __pyx_n_s_get_file_async, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__39)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1421, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_21get_file_by_name, 0, __pyx_n_s_get_file_by_name, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__201)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1421, __pyx_L1_error)
     #endif
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_3, __pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     #if CYTHON_COMPILING_IN_LIMITED_API
     __Pyx_INCREF(__pyx_t_3);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_get_file_async, __pyx_t_3) < 0) __PYX_ERR(0, 1421, __pyx_L1_error)
+    if (PyModule_AddObject(__pyx_m, __pyx_k_get_file_by_name, __pyx_t_3) < 0) __PYX_ERR(0, 1421, __pyx_L1_error)
     #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_file_async, __pyx_t_3) < 0) __PYX_ERR(0, 1421, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_file_by_name, __pyx_t_3) < 0) __PYX_ERR(0, 1421, __pyx_L1_error)
     #endif
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "cy_docs/cy_docs_x.py":1432
- *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
- *     return ret
- * async def find_file_async(client, db_name: str, rel_file_path:str):             # <<<<<<<<<<<<<<
- *     from motor.motor_asyncio import AsyncIOMotorClient
- *     async_client = AsyncIOMotorClient()
+    /* "cy_docs/cy_docs_x.py":1429
+ * 
+ * 
+ * def create_file(client, db_name: str,file_name:str,file_size:int,chunk_size:int):             # <<<<<<<<<<<<<<
+ *     db= client.get_database(db_name)
+ *     gfs = gridfs.GridFSBucket(client.get_database(db_name))
  */
-    __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1432, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1429, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_db_name, __pyx_n_s_str_2) < 0) __PYX_ERR(0, 1432, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_rel_file_path, __pyx_n_s_str_2) < 0) __PYX_ERR(0, 1432, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_db_name, __pyx_n_s_str_2) < 0) __PYX_ERR(0, 1429, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_file_name, __pyx_n_s_str_2) < 0) __PYX_ERR(0, 1429, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_file_size, __pyx_n_s_int) < 0) __PYX_ERR(0, 1429, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_chunk_size, __pyx_n_s_int) < 0) __PYX_ERR(0, 1429, __pyx_L1_error)
     #if CYTHON_COMPILING_IN_LIMITED_API
-    __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1432, __pyx_L1_error)
+    __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1429, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_24find_file_async, 0, __pyx_n_s_find_file_async, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_2, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1432, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23create_file, 0, __pyx_n_s_create_file, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_2, ((PyObject *)__pyx_codeobj__203)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1429, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     #else
-    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_24find_file_async, 0, __pyx_n_s_find_file_async, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1432, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23create_file, 0, __pyx_n_s_create_file, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__203)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1429, __pyx_L1_error)
     #endif
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     #if CYTHON_COMPILING_IN_LIMITED_API
     __Pyx_INCREF(__pyx_t_1);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_find_file_async, __pyx_t_1) < 0) __PYX_ERR(0, 1432, __pyx_L1_error)
+    if (PyModule_AddObject(__pyx_m, __pyx_k_create_file, __pyx_t_1) < 0) __PYX_ERR(0, 1429, __pyx_L1_error)
     #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_find_file_async, __pyx_t_1) < 0) __PYX_ERR(0, 1432, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_create_file, __pyx_t_1) < 0) __PYX_ERR(0, 1429, __pyx_L1_error)
+    #endif
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+    /* "cy_docs/cy_docs_x.py":1449
+ *     )
+ *     return fs
+ * async def get_file_async(client, db_name: str, file_id):             # <<<<<<<<<<<<<<
+ *     from motor.motor_asyncio import AsyncIOMotorClient
+ *     async_client = AsyncIOMotorClient()
+ */
+    __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1449, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_db_name, __pyx_n_s_str_2) < 0) __PYX_ERR(0, 1449, __pyx_L1_error)
+    #if CYTHON_COMPILING_IN_LIMITED_API
+    __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1449, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_25get_file_async, 0, __pyx_n_s_get_file_async, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_2, ((PyObject *)__pyx_codeobj__39)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1449, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    #else
+    __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_25get_file_async, 0, __pyx_n_s_get_file_async, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__39)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1449, __pyx_L1_error)
+    #endif
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_3, __pyx_t_1);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    #if CYTHON_COMPILING_IN_LIMITED_API
+    __Pyx_INCREF(__pyx_t_3);
+    if (PyModule_AddObject(__pyx_m, __pyx_k_get_file_async, __pyx_t_3) < 0) __PYX_ERR(0, 1449, __pyx_L1_error)
+    #else
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_file_async, __pyx_t_3) < 0) __PYX_ERR(0, 1449, __pyx_L1_error)
+    #endif
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+    /* "cy_docs/cy_docs_x.py":1460
+ *     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
+ *     return ret
+ * async def find_file_async(client, db_name: str, rel_file_path:str):             # <<<<<<<<<<<<<<
+ *     from motor.motor_asyncio import AsyncIOMotorClient
+ *     async_client = AsyncIOMotorClient()
+ */
+    __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1460, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_db_name, __pyx_n_s_str_2) < 0) __PYX_ERR(0, 1460, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_rel_file_path, __pyx_n_s_str_2) < 0) __PYX_ERR(0, 1460, __pyx_L1_error)
+    #if CYTHON_COMPILING_IN_LIMITED_API
+    __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1460, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_28find_file_async, 0, __pyx_n_s_find_file_async, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_2, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1460, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    #else
+    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_28find_file_async, 0, __pyx_n_s_find_file_async, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1460, __pyx_L1_error)
+    #endif
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_3);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    #if CYTHON_COMPILING_IN_LIMITED_API
+    __Pyx_INCREF(__pyx_t_1);
+    if (PyModule_AddObject(__pyx_m, __pyx_k_find_file_async, __pyx_t_1) < 0) __PYX_ERR(0, 1460, __pyx_L1_error)
+    #else
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_find_file_async, __pyx_t_1) < 0) __PYX_ERR(0, 1460, __pyx_L1_error)
     #endif
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 

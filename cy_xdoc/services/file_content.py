@@ -29,19 +29,20 @@ class FileContentService(Base):
 
     def create(self, app_name:str, rel_file_path:str, chunk_size:int, size:int)->FileContent:
         mfs = cy_docs.create_file(
+            client=self.client,
             db_name=self.db_name(app_name),
             file_name=rel_file_path,
             chunk_size=chunk_size,
             file_size=size
         )
-        return FileContent(mfs._id,db=self.db(app_name))
+        return FileContent(mfs._id,db=self.client.get_database(self.db_name(app_name)))
 
 
     def get_file_by_name(self, app_name, rel_file_path:str):
-        upload_id = rel_file_path.split('/')[0]
+        upload_id = rel_file_path.split('/')[0].split('.')[0]
         upload = self.db(app_name).doc(DocUploadRegister) @ upload_id
         if upload.MainFileId:
-            return FileContent(id =bson.ObjectId(upload.MainFileId),db=self.db(app_name))
+            return FileContent(id =bson.ObjectId(upload.MainFileId),db=self.client.get_database(self.db_name(app_name)))
         return None
 
 

@@ -16,12 +16,14 @@ import typing
 @cy_web.hanlder("post", "{app_name}/files/upload")
 def files_upload(app_name: str, UploadId: str, Index: int, FilePart: UploadFile,
                  token=Depends(Authenticate)) -> UploadFilesChunkInfoResult:
+    content_part = FilePart.file.read()
     file_service = cy_kit.single(FileServices)
     file_content_service = cy_kit.single(FileContentService)
     msg_service = cy_kit.single(MsgService)
     upload_item = file_service.db(app_name).doc(DocUploadRegister) @ UploadId
     if upload_item is None:
         del FilePart
+        del content_part
         return cy_docs.DocumentObject(
             Error=dict(
                 Message="Upload was not found or has been remove",
@@ -43,7 +45,7 @@ def files_upload(app_name: str, UploadId: str, Index: int, FilePart: UploadFile,
             app_name=app_name,
             rel_file_path=server_file_name,
             chunk_size=chunk_size_in_bytes, size=file_size)
-        fs.push(FilePart, Index)
+        fs.push(content_part, Index)
         upload_item.MainFileId = fs.Id
         msg_service.emit(
             app_name=app_name,
@@ -58,11 +60,11 @@ def files_upload(app_name: str, UploadId: str, Index: int, FilePart: UploadFile,
             app_name=app_name,
             rel_file_path=server_file_name
         )
-        fs.push(FilePart, Index)
+        fs.push(content_part, Index)
         # save_to_file(
         #     db_context, num_of_chunks_complete, Index, server_file_name, path_to_broker_share
         # )
-    size_uploaded += len(FilePart)
+    size_uploaded += len(content_part)
     ret = cy_docs.DocumentObject()
     ret.Data = cy_docs.DocumentObject()
     ret.Data.Percent = round((size_uploaded * 100) / file_size, 2)

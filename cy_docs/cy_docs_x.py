@@ -1428,7 +1428,7 @@ def get_file_by_name(client, db_name: str, filename):
 
 def create_file(client, db_name: str,file_name:str,file_size:int,chunk_size:int):
     db= client.get_database(db_name)
-    gfs = gridfs.GridFSBucket(client.get_database(db_name))
+    gfs =gridfs.GridFS(client.get_database(db_name))  #gridfs.GridFSBucket(client.get_database(db_name))
 
     fs = gfs.new_file()
     fs.name = file_name
