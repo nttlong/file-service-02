@@ -1307,8 +1307,7 @@ def __send_bytes_range_requests__(
         data = file_obj.read(read_size)
 
         yield data
-    gc.collect()
-    file_obj.close()
+
 async def __send_bytes_range_requests_async__(
         file_obj, start: int, end: int, chunk_size: int = 10_000
 ):
@@ -1327,7 +1326,7 @@ async def __send_bytes_range_requests_async__(
 
 
 
-async def streaming_async(fsg,request,content_type,streaming_buffering=1024 *  8*4):
+async def streaming_async(fsg,request,content_type,streaming_buffering=1024 *  8*4,segment_size=None):
     """
     Streaming content
     :param fsg: mongodb gridOut
@@ -1337,6 +1336,7 @@ async def streaming_async(fsg,request,content_type,streaming_buffering=1024 *  8
     :return:
     """
     file_size = fsg.length
+
     range_header = request.headers.get("range")
     headers = {
         "content-type": content_type,
@@ -1350,25 +1350,33 @@ async def streaming_async(fsg,request,content_type,streaming_buffering=1024 *  8
     }
     start = 0
     end = file_size - 1
+    if segment_size is not None:
+        end = min(segment_size, file_size)-1
+
     status_code = 200
 
 
     if range_header is not None:
+
         start, end = __get_range_header__(range_header, file_size)
         size = end - start + 1
+
+            # end = start+size-1
+
+
         headers["content-length"] = str(size)
         headers["content-range"] = f"bytes {start}-{end}/{file_size}"
         status_code = status.HTTP_206_PARTIAL_CONTENT
     if hasattr(fsg,"delegate"):
         content = __send_bytes_range_requests_async__(fsg,start,end, streaming_buffering)
     else:
-        content = __send_bytes_range_requests__(fsg, start, end, streaming_buffering)
+        content =  __send_bytes_range_requests__(fsg, start, end, streaming_buffering)
     res = StreamingResponse(
         content=content,
         headers=headers,
         status_code=status_code,
         media_type=content_type
     )
-    fsg.close()
+
 
     return res

@@ -54,8 +54,9 @@ class FileServices(Base):
         upload = self.db(app_name).doc(DocUploadRegister) @ upload_id
         if not upload:
             return
-        file_id = upload.MainFileId
-        fs = self.get_file(app_name, file_id)
+        if upload.MainFileId is None:
+            return None
+        fs = self.get_file(app_name, upload.MainFileId)
         return fs
 
     async def get_main_file_of_upload_async(self, app_name, upload_id):
@@ -63,11 +64,20 @@ class FileServices(Base):
         if not upload:
             return
 
-        file_id = upload.MainFileId
-        if file_id is not None:
-            fs = await self.get_file_async(app_name, file_id)
 
-        return fs
+        if upload.MainFileId is not None:
+            fs = await self.get_file_async(app_name, upload.MainFileId)
+            return fs
+        else:
+            return None
 
     def find_file_async(self, app_name, relative_file_path):
         pass
+
+
+    def get_main_main_thumb_file(self, app_name, upload_id):
+        upload = self.db(app_name).doc(DocUploadRegister) @ upload_id
+        if upload is None:
+            return None
+        ret = self.get_file(app_name,upload.ThumbFileId)
+        return ret
