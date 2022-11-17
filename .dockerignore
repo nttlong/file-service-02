@@ -39,3 +39,4 @@
 /apps/logs/
 /cy_web/kubectl
 /cy_xdoc/logs/
+/cy_xdoc/cache/

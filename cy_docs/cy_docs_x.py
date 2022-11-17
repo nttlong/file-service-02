@@ -643,18 +643,44 @@ class Field(__BaseField__):
 
     # Alias
     def __rshift__(self, other):
-        init_data = self.__field_name__
-        if self.__field_name__ is None:
-            init_data = self.__data__
-        if isinstance(other, Field):
+        # init_data = self.__field_name__
+        init_data = other
 
-            ret = Field(init_data)
-            ret.__alias__ = other.__field_name__
+        if isinstance(other, Field):
+            _expr =other.to_mongo_db_expr()
+
+            if isinstance(_expr,dict):
+                expr = {}
+                for k, v in _expr.items():
+                    if k[0:1]!="$":
+                        expr[f"${k}"] = v
+                    else:
+                        expr[k] = v
+
+                ret = Field(expr)
+            else:
+                ret = Field(other.__field_name__)
+            ret.__alias__ = self.__field_name__
+
             return ret
-        elif isinstance(other, str):
-            ret = Field(init_data)
-            ret.__alias__ = other
+        elif type(other) in [int,str,float,bool,datetime.datetime]:
+            ret = Field("")
+            ret.__field_name__= other
+            ret.__alias__ = self.__field_name__
             return ret
+        elif isinstance(other,tuple):
+            init_data ={}
+            for x in other:
+
+                if isinstance(x,Field):
+                    init_data[x.__alias__] = x.to_mongo_db_expr()
+
+                else:
+                    init_data[f"${x.__field_name__}"] = 1
+            ret = Field(init_data)
+            ret.__alias__ = self.__field_name__
+            return ret
+
         else:
             raise Exception(f"Thous can not alias mongodb expression with {type(other)}")
         return self
@@ -1165,9 +1191,9 @@ class AggregateDocument:
         ret_pipe = ""
         for x in self.pipeline:
             b = to_json_convertable(x)
-            ret_pipe += json.dumps(b) + ","
+            ret_pipe += json.dumps(b) + ",\n"
         ret_pipe = ret_pipe[:-1]
-        ret = f"db.getCollection('{self.owner.collection.name}').aggregate({ret_pipe})"
+        ret = f"db.getCollection('{self.owner.collection.name}').aggregate([\n{ret_pipe}\n])"
         return ret
 
     def __iter__(self):

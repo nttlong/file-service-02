@@ -13,7 +13,7 @@ class AppServices(Base):
     def get_list(self, app_name: str):
         docs = self.expr(App)
         ret = self.db(app_name).doc(App).aggregate().project(
-            docs._id >> cy_docs.fields.AppId,
+            cy_docs.fields.AppId >> docs._id ,
             docs.name,
             docs.description,
             docs.domain,
@@ -29,7 +29,7 @@ class AppServices(Base):
     def get_item(self, app_name, app_get):
         docs = self.expr(App)
         return self.db(app_name).doc(App).aggregate().project(
-            docs._id >> cy_docs.fields.AppId,
+            cy_docs.fields.AppId >> docs.Id ,
             docs.name,
             docs.description,
             docs.domain,

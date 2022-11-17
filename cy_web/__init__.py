@@ -21,7 +21,9 @@ def create_web_app(
         url_get_token: str = "api/accounts/token",
         jwt_algorithm: str = "HS256",
         jwt_secret_key: str = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",
-        dev_mode: bool = False
+        dev_mode: bool = False,
+        cache_folder:str="./cache",
+        worker:int=2,
 ):
     ret = cy_web_x.WebApp(
 
@@ -34,7 +36,8 @@ def create_web_app(
         url_get_token=url_get_token,
         jwt_algorithm=jwt_algorithm,
         jwt_secret_key=jwt_secret_key,
-        bind=bind
+        bind=bind,
+        cache_folder=cache_folder
 
     )
     return ret
@@ -107,3 +110,8 @@ def auth_type(auth_type:typing.Union[fastapi.security.OAuth2PasswordBearer,fasta
     return cy_web_x.auth_type(auth_type)
 def model(all_field_are_optional:bool=False):
     return cy_web_x.model(all_field_are_optional)
+
+def cache_content(dir:str,file_name:str,data:bytes):
+    return cy_web_x.cache_content(dir,file_name=file_name,content=data)
+def cache_content_check(dir, file_path):
+    return cy_web_x.cache_content_check(dir, file_path)

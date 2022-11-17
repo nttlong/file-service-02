@@ -24,14 +24,23 @@ class FileServices(Base):
             doc.IsPublic,
             doc.FullFileName,
             doc.MimeType,
-            doc.SizeInBytes >> cy_docs.fields.FileSize,
-            doc.Id >> cy_docs.fields.UploadID,
-            doc.RegisterOn >> cy_docs.fields.CreatedOn,
+            cy_docs.fields.FileSize >> doc.SizeInBytes,
+            cy_docs.fields.UploadID>>doc.Id  ,
+            cy_docs.fields.CreatedOn>>doc.RegisterOn  ,
             doc.FileNameOnly,
-            cy_docs.concat(root_url, f"/api/{app_name}/file/", doc.FullFileName) >> cy_docs.fields.UrlOfServerPath,
-            cy_docs.concat(f"api/{app_name}/file/", doc.FullFileName) >> cy_docs.fields.RelUrlOfServerPath,
-            cy_docs.concat(root_url, f"/api/{app_name}/thumb/", doc.FullFileName, ".webp") >> cy_docs.fields.ThumbUrl,
-            doc.AvailableThumbs
+            cy_docs.fields.UrlOfServerPath >> cy_docs.concat(root_url, f"/api/{app_name}/file/", doc.FullFileName),
+            cy_docs.fields.RelUrlOfServerPath>>cy_docs.concat(f"api/{app_name}/file/", doc.FullFileName) ,
+            cy_docs.fields.ThumbUrl>>cy_docs.concat(root_url, f"/api/{app_name}/thumb/", doc.FullFileName, ".webp") ,
+            doc.AvailableThumbs,
+            doc.HasThumb,
+            doc.OCRFileId,
+            cy_docs.fields.Media>>(
+                cy_docs.fields.Width>>doc.VideoResolutionWidth,
+                cy_docs.fields.Height >> doc.VideoResolutionHeight,
+                cy_docs.fields.Duration>>doc.VideoDuration,
+                cy_docs.fields.FPS >> doc.VideoFPS
+            )
+
         )
         for x in items:
             _a_thumbs = []

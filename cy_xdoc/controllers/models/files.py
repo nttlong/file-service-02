@@ -34,3 +34,5 @@ class FileUploadRegisterInfo:
     http://172.16.1.210:8011/api/lv-test/thumb/0048135e-50e5-4f56-8c89-b2f8fe83b06b/story.js.webp
     """
     AvailableThumbs:typing.List[str]
+    Media: typing.Optional[dict]
+    HasThumb:bool

@@ -866,7 +866,8 @@ class WebApp(BaseWebApp):
                  template_dir: str = None,
                  url_get_token: str = "api/accounts/token",
                  jwt_algorithm: str = "HS256",
-                 jwt_secret_key: str = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+                 jwt_secret_key: str = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",
+                 cache_folder:str="./cache"
                  ):
         global __cache_apps__
         global __cache_apps_lock__
@@ -881,7 +882,13 @@ class WebApp(BaseWebApp):
         self.dev_mode = dev_mode
         self.api_host_dir = api_host_dir
 
+
         self.working_dir = working_dir
+        if cache_folder[0:2]=="./":
+            cache_folder =os.path.join(self.working_dir, cache_folder[2:])
+            if not os.path.isdir(cache_folder):
+                os.makedirs(cache_folder,exist_ok=True)
+        self.cache_folder=cache_folder
         self.static_dir = static_dir
         if self.static_dir is not None and self.static_dir[0:2] == "./":
             self.static_dir = os.path.join(self.working_dir, self.static_dir[2:])
@@ -1146,7 +1153,7 @@ def validate_token_in_request(self, request):
         application = ret_data.get("application")
         setattr(request, "username", username)
         setattr(request, "application", application)
-        if self.validate(request,ret_data.get("username"), ret_data.get("application")):
+        if self.validate(request,username, application):
             return dict(token=token, username=username, application=application)
         else:
             raise HTTPException(
@@ -1225,6 +1232,47 @@ def model(all_field_are_optional:bool=False):
 
         return __wrap_pydantic__("",cls,False)
     return warpper
+def get_cache_folder_path()->str:
+    global web_application
+    if isinstance(web_application,WebApp):
+        return web_application.cache_folder
+__cache_content_dict__ ={}
+__cache_content_dict_lock__ =  threading.Lock()
+def cache_content(relative_folder:str,file_name,content:bytes)->str:
+    global web_application
+    global __cache_content_dict__
+    if isinstance(web_application, WebApp):
+        key =f"{relative_folder}/{file_name}".lower()
+
+        if not __cache_content_dict__.get(key):
+            with __cache_content_dict_lock__:
+                file_cache = os.path.join(web_application.cache_folder, relative_folder.replace('/', os.sep))
+                if not os.path.isdir(file_cache):
+                    os.makedirs(file_cache, exist_ok=True)
+                file_cache=os.path.join(file_cache,file_name)
+                if not os.path.isfile(file_cache):
+                    with open(file_cache,"wb") as f:
+                        f.write(content)
+
+                __cache_content_dict__[key]=file_cache
+
+    return __cache_content_dict__[key]
+
+def cache_content_check(relative_folder:str,file_name):
+    global web_application
+    global __cache_content_dict__
+    if isinstance(web_application, WebApp):
+        key = f"{relative_folder}/{file_name}".lower()
+
+        if not __cache_content_dict__.get(key):
+            file_cache = os.path.join(web_application.cache_folder, relative_folder.replace('/', os.sep))
+            if not os.path.isdir(file_cache):
+                os.makedirs(file_cache, exist_ok=True)
+            file_cache = os.path.join(file_cache, file_name)
+            if not os.path.isfile(file_cache):
+                return None
+            __cache_content_dict__[key] = file_cache
+    return __cache_content_dict__[key]
 
 from fastapi import HTTPException, Request, status
 from fastapi.responses import StreamingResponse
