@@ -1418,6 +1418,34 @@ def get_file(client, db_name: str, file_id):
 
     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
     return ret
+def get_file_by_name(client, db_name: str, filename):
+    gfs= gridfs.GridFSBucket(client.get_database( db_name))
+    items = list(gfs.find({"filename":filename}))
+    if items.__len__()>0:
+        return items[0]
+
+
+
+def create_file(client, db_name: str,file_name:str,file_size:int,chunk_size:int):
+    db= client.get_database(db_name)
+    gfs = gridfs.GridFSBucket(client.get_database(db_name))
+
+    fs = gfs.new_file()
+    fs.name = file_name
+    fs.filename = file_name
+    fs.close()
+    db.get_collection("fs.files").update_one(
+        {
+            "_id": fs._id
+        },
+        {
+            "$set": {
+                "chunkSize": chunk_size,
+                "length": file_size
+            }
+        }
+    )
+    return fs
 async def get_file_async(client, db_name: str, file_id):
     from motor.motor_asyncio import AsyncIOMotorClient
     async_client = AsyncIOMotorClient()

@@ -54,3 +54,15 @@ def get_file(client:pymongo.MongoClient, db_name:str, file_id):
 
 async def get_file_async(client, db_name, file_id):
     return await cy_docs_x.get_file_async(client,db_name,file_id)
+
+
+def create_file(client:pymongo.MongoClient,db_name, file_name, chunk_size, file_size):
+    return cy_docs_x.create_file(
+        client=client,
+        file_size=file_size,
+        chunk_size=chunk_size,
+        file_name=file_name,
+        db_name=db_name
+    )
+
+
