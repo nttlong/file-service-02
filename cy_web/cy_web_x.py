@@ -1335,7 +1335,7 @@ async def streaming_async(fsg,request,content_type,streaming_buffering=1024 *  8
     :param streaming_buffering: support 4k
     :return:
     """
-    file_size = fsg.length
+    file_size = fsg.get_size()
 
     range_header = request.headers.get("range")
     headers = {

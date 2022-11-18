@@ -1,7 +1,27 @@
 import bson
 
+
 class FileStorageObject:
-    pass
+    @classmethod
+    def get_size(cls) -> int:
+        pass
+
+    @classmethod
+    def seek(cls, position:int):
+        pass
+
+    @classmethod
+    def tell(cls)->int:
+        pass
+
+    @classmethod
+    def read(cls, size:int)->bytes:
+        pass
+
+
+FileStorageObject.read(size=10)
+
+
 # class FileStorageObject:
 #     def __init__(self, id, db):
 #         self.id = id
@@ -35,7 +55,7 @@ class FileStorageService:
         """
         pass
 
-    def get_file_by_name(self, app_name:str, rel_file_path: str)->FileStorageObject:
+    def get_file_by_name(self, app_name: str, rel_file_path: str) -> FileStorageObject:
         """
         Get file by relative path
         :param app_name:
@@ -45,12 +65,5 @@ class FileStorageService:
         pass
 
     @classmethod
-    def get_file_by_id(cls, app_name:str, id:str)->FileStorageObject:
+    def get_file_by_id(cls, app_name: str, id: str) -> FileStorageObject:
         pass
-
-
-
-
-
-
-
