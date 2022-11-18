@@ -5,7 +5,7 @@ from cy_xdoc.services.base import Base
 from cy_xdoc.models.files import DocUploadRegister,FsFile,FsChunks
 from gridfs import GridIn
 import bson
-class FileContent:
+class FileStorage:
     def __init__(self,id,db):
         self.id=id
         self.db=db
@@ -23,11 +23,12 @@ class FileContent:
             "data": content
         })
         del content
+from cy_xdoc.services.file_system_object import FileSystemService
+FileSystemService.create()
+FileSystemService.test()
+class MongoDbFileService(Base):
 
-
-class FileContentService(Base):
-
-    def create(self, app_name:str, rel_file_path:str, chunk_size:int, size:int)->FileContent:
+    def create(self, app_name:str, rel_file_path:str, chunk_size:int, size:int)->FileStorage:
         mfs = cy_docs.create_file(
             client=self.client,
             db_name=self.db_name(app_name),
@@ -35,14 +36,14 @@ class FileContentService(Base):
             chunk_size=chunk_size,
             file_size=size
         )
-        return FileContent(mfs._id,db=self.client.get_database(self.db_name(app_name)))
+        return FileStorage(mfs._id, db=self.client.get_database(self.db_name(app_name)))
 
 
     def get_file_by_name(self, app_name, rel_file_path:str):
         upload_id = rel_file_path.split('/')[0].split('.')[0]
         upload = self.db(app_name).doc(DocUploadRegister) @ upload_id
         if upload.MainFileId:
-            return FileContent(id =bson.ObjectId(upload.MainFileId),db=self.client.get_database(self.db_name(app_name)))
+            return FileStorage(id =bson.ObjectId(upload.MainFileId), db=self.client.get_database(self.db_name(app_name)))
         return None
 
 

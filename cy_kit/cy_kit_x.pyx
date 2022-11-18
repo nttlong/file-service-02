@@ -54,13 +54,16 @@ def single(cls, *args, **kwargs):
         try:
             # ret = kink.inject(cls)
             # v = ret(**ret.__init__.__annotations__)
-            if cls.__init__.__defaults__ is not None:
-                args = {}
-                for k,v in cls.__init__.__annotations__.items():
-                    for x in cls.__init__.__defaults__:
-                        if type(x)==v:
-                            args[k]=x
-                v = cls(**args)
+            if hasattr(cls.__init__, "__defaults__"):
+                if cls.__init__.__defaults__ is not None:
+                    args = {}
+                    for k, v in cls.__init__.__annotations__.items():
+                        for x in cls.__init__.__defaults__:
+                            if type(x) == v:
+                                args[k] = x
+                    v = cls(**args)
+                else:
+                    v = cls()
             else:
                 v = cls()
             __cache_depen__[key] = v
@@ -82,8 +85,6 @@ def instance(cls, *args, **kwargs):
     else:
         v = cls()
     return v
-
-
 
 
 class VALUE_DICT:
@@ -111,12 +112,12 @@ class VALUE_DICT:
                 ret_list += {self.__parse__(x)}
             return ret_list
         return ret
+
     def to_dict(self):
         return self.__data__
 
 
-
-def yaml_config(full_path_to_yaml_file: str,apply_sys_args:bool=True):
+def yaml_config(full_path_to_yaml_file: str, apply_sys_args: bool = True):
     if not os.path.isfile(full_path_to_yaml_file):
         raise Exception(f"{full_path_to_yaml_file} was not found")
     if __cache_yam_dict__.get(full_path_to_yaml_file) is None:
@@ -126,7 +127,7 @@ def yaml_config(full_path_to_yaml_file: str,apply_sys_args:bool=True):
             with open(full_path_to_yaml_file, 'r') as stream:
                 __config__ = yaml.safe_load(stream)
                 if apply_sys_args:
-                    __config__= combine_agruments(__config__)
+                    __config__ = combine_agruments(__config__)
                 __cache_yam_dict__[full_path_to_yaml_file] = VALUE_DICT(__config__)
         finally:
             __cache_yam_dict_lock__.release()
@@ -171,3 +172,83 @@ def combine_agruments(data):
                 ret = __dict_of_dicts_merge__(ret, c)
     ret = __dict_of_dicts_merge__(data, ret)
     return ret
+
+
+__provider_cache__ = dict()
+
+
+def provider(interface: type, implement: type):
+    global __provider_cache__
+    import inspect
+    if not inspect.isclass(implement):
+        raise Exception(f"implement must be class")
+    key = f"{interface.__module__}/{interface.__name__}/{implement.__module__}/{implement.__name__}"
+    if __provider_cache__.get(key):
+        return __provider_cache__[key]
+
+    def get_module(cls):
+        return cls.__module__, cls.__name__
+
+    interface_methods = {}
+    for x in interface.__bases__:
+        for k, v in x.__dict__.items():
+            if k[0:2] != "__" and k[:-2] != "__":
+                handler = v
+                if not inspect.isclass(handler) and callable(handler):
+                    if isinstance(v, classmethod):
+                        handler = v.__func__
+                    interface_methods[k] = handler
+    for k, v in interface.__dict__.items():
+        if k[0:2] != "__" and k[:-2] != "__":
+            handler = v
+            if isinstance(v, classmethod):
+                handler = v.__func__
+            if not inspect.isclass(handler) and callable(handler):
+                interface_methods[k] = handler
+    implement_methods = {}
+
+    for k, v in implement.__dict__.items():
+        if k[0:2] != "__" and k[:-2] != "__":
+            handler = v
+            if isinstance(v, classmethod):
+                handler = v.__func__
+            if not inspect.isclass(handler) and callable(handler):
+                implement_methods[k] = v
+    interface_method_name_set = set(interface_methods.keys())
+    implement_methods_name_set = set(implement_methods.keys())
+    miss_name = interface_method_name_set.difference(implement_methods_name_set)
+    if miss_name.__len__() > 0:
+        importers = {}
+        msg = ""
+        for x in miss_name:
+            fnc_declare = ""
+            handler = interface_methods[x]
+            for a in handler.__code__.co_varnames:
+                m = handler.__annotations__.get(a)
+                if m:
+                    u, v = get_module(m)
+                    if u != int.__module__:
+                        importers[u] = v
+                    fnc_declare += f"{a}:{m.__name__},"
+                else:
+                    fnc_declare += f"{a},"
+            if fnc_declare != "":
+                fnc_declare = fnc_declare[:-1]
+
+            full_fnc_decalre = f"def {x}({fnc_declare})"
+            if handler.__annotations__.get("return"):
+                u, v = get_module(handler.__annotations__.get("return"))
+                if u != int.__module__:
+                    importers[u] = v
+                full_fnc_decalre += f"->{handler.__annotations__.get('return').__name__}:"
+            else:
+                full_fnc_decalre += ":"
+
+            msg += f"\n{full_fnc_decalre}\n" \
+                   f"\traise NotImplemented"
+        for k, v in importers.items():
+            msg = f"\nfrom {k} import {v}\n{msg}"
+        description = f"Please open file:\n{inspect.getfile(implement)}\n goto \n{implement.__name__} \nthen insert bellow code\n:"
+        raise Exception(f"{description}{msg}")
+    __provider_cache__[key] = single(implement)
+    return __provider_cache__[key]

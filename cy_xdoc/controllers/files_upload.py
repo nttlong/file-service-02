@@ -7,7 +7,7 @@ from fastapi import File, Depends, UploadFile
 from cy_xdoc.controllers.models.file_upload import UploadFilesChunkInfoResult
 import cy_kit
 from cy_xdoc.services.files import FileServices
-from cy_xdoc.services.file_content import FileContentService
+from cy_xdoc.services.file_storage import FileContentService
 from cy_xdoc.services.msg import MsgService
 from cy_xdoc.models.files import DocUploadRegister
 import typing
