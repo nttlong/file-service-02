@@ -1,20 +1,22 @@
 import fastapi
 import cy_kit
+import cy_xdoc.services.file_storage
+import cy_xdoc.services.file_storage_mongodb
+
 from cy_xdoc.services.apps import AppServices
 from cy_xdoc.services.accounts import AccountService
-from cy_xdoc.services.files import FileServices
-@cy_kit.container()
+
+
+import cy_xdoc.services.file_storage_disk
+import cy_xdoc.services.files
+
+cy_kit.config_provider(
+    from_class=cy_xdoc.services.file_storage.FileStorageService,
+    implement_class=cy_xdoc.services.file_storage_mongodb.FileStorageService
+)
 class libs:
     class Services:
-        app = cy_kit.single(AppServices)
-        account = cy_kit.single(AccountService)
-class Container:
-    def __call__(self, request: fastapi.Request):
-        return libs
-def container() -> libs:
-    return fastapi.Depends(Container())
-def inject() -> libs:
-    return fastapi.Depends(Container())
-class all:
-    class services:
-        files:FileServices=cy_kit.single(FileServices)
+        file_storage: cy_xdoc.services.file_storage_mongodb.FileStorageService = cy_kit.provider(
+            cy_xdoc.services.file_storage.FileStorageService,
+        )
+        files: cy_xdoc.services.files.FileServices = cy_kit.single(cy_xdoc.services.files.FileServices)

@@ -1,10 +1,10 @@
 import cy_web
 from fastapi import Request,Depends,status
-from cy_xdoc import inject
+from cy_xdoc import libs
 from fastapi_jwt_auth import AuthJWT
 from fastapi.responses import RedirectResponse
 @cy_web.hanlder(method="get",path="sso/signin/{SSOID}")
-async def do_sign_in(SSOID: str, request: Request,injector=inject()):
+async def do_sign_in(SSOID: str, request: Request):
     """
     Đăng nhập vào dịch vụ bằng SSOID.
     Khi 1 web site remote muốn truy cập vào dịch vụ bằng trình duyệt,
@@ -19,7 +19,7 @@ async def do_sign_in(SSOID: str, request: Request,injector=inject()):
     :return:
     """
     # accounts_services= enig.depen(enig_frames.services.accounts.Accounts)
-    sso_info = injector.Services.account.get_sso_login(
+    sso_info = libs.Services.account.get_sso_login(
 
         id=SSOID
     ) # await container.Services.accounts.get_sso_login_asycn(SSOID=SSOID)

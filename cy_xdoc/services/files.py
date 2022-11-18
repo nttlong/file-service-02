@@ -5,12 +5,15 @@ import pathlib
 import uuid
 import humanize
 import cy_docs
+import cy_kit
 from cy_xdoc.services.base import Base
 from cy_xdoc.models.files import DocUploadRegister
+import cy_xdoc.services.file_storage
 
 
 class FileServices(Base):
-
+    def __init__(self, file_storage_service=cy_kit.provider(cy_xdoc.services.file_storage.FileStorageService)):
+        self.file_storage_service = file_storage_service
 
     def get_list(self, app_name, root_url, page_index: int, page_size: int, field_search: str = None,
                  value_search: str = None):
@@ -79,7 +82,8 @@ class FileServices(Base):
         upload = self.db(app_name).doc(DocUploadRegister) @ upload_id
         if upload is None:
             return None
-        ret = self.get_file(app_name, upload.ThumbFileId)
+        ret = self.file_storage_service.instance.get_file_by_id(app_name=app_name,id=upload.ThumbFileId)
+            # self.get_file(app_name, upload.ThumbFileId)
         return ret
 
     def add_new_upload_info(self,
@@ -89,7 +93,7 @@ class FileServices(Base):
                             file_size: int,
                             chunk_size: int,
                             thumbs_support: str,
-                            web_host_root_url:str):
+                            web_host_root_url: str):
 
         doc = self.expr(DocUploadRegister)
         id = str(uuid.uuid4())
@@ -134,22 +138,18 @@ class FileServices(Base):
         )
         return cy_docs.DocumentObject(
             NumOfChunks=num_of_chunks,
-            ChunkSizeInBytes = chunk_size,
-            UploadId = id,
-            ServerFilePath = f"{id}{os.path.splitext(client_file_name)[1]}",
-            MimeType =mime_type,
-            RelUrlOfServerPath = f"api/{app_name}/file/register/{id}/{pathlib.Path(client_file_name).stem.lower()}",
-            SizeInHumanReadable = humanize.filesize.naturalsize(file_size),
-            UrlOfServerPath = f"{web_host_root_url}/api/{app_name}/file/register/{id}/{pathlib.Path(client_file_name).stem.lower()}",
-            RelUrlThumb = f"api/{app_name}/thumb/{id}/{pathlib.Path(client_file_name).stem.lower()}.webp",
-            FileSize = file_size,
-            UrlThumb = f"{web_host_root_url}/api/{app_name}/thumb/{id}/{pathlib.Path(client_file_name).stem.lower()}.webp",
-            OriginalFileName = client_file_name
+            ChunkSizeInBytes=chunk_size,
+            UploadId=id,
+            ServerFilePath=f"{id}{os.path.splitext(client_file_name)[1]}",
+            MimeType=mime_type,
+            RelUrlOfServerPath=f"api/{app_name}/file/register/{id}/{pathlib.Path(client_file_name).stem.lower()}",
+            SizeInHumanReadable=humanize.filesize.naturalsize(file_size),
+            UrlOfServerPath=f"{web_host_root_url}/api/{app_name}/file/register/{id}/{pathlib.Path(client_file_name).stem.lower()}",
+            RelUrlThumb=f"api/{app_name}/thumb/{id}/{pathlib.Path(client_file_name).stem.lower()}.webp",
+            FileSize=file_size,
+            UrlThumb=f"{web_host_root_url}/api/{app_name}/thumb/{id}/{pathlib.Path(client_file_name).stem.lower()}.webp",
+            OriginalFileName=client_file_name
         )
 
-    def get_upload_register(self, app_name:str, UploadId:str):
+    def get_upload_register(self, app_name: str, UploadId: str):
         return self.db(app_name).doc(DocUploadRegister) @ UploadId
-
-
-
-

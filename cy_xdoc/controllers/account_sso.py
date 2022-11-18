@@ -2,12 +2,12 @@ import cy_web
 from cy_xdoc.auths import Authenticate
 from fastapi import Depends
 import uuid
-from cy_xdoc import container
+from cy_xdoc import libs
 import api_models.documents as docs
 from  fastapi import Request, Response
 
 @cy_web.hanlder(method="post",path= "get_sso_token")
-async def get_sso_token(request:Request, libs=container(), token: str = Depends(Authenticate)):
+async def get_sso_token(request:Request,  token: str = Depends(Authenticate)):
     """
     <h2>Lấy SSO Token</h2>.<br>
     Bên cạnh việc cung cấp các Restfull API, hệ thống này cũng cung cấp các dịch vụ như xem file,
