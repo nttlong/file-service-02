@@ -28,6 +28,8 @@ import pydantic
 from motor.motor_asyncio import AsyncIOMotorGridFSBucket
 
 
+
+
 def get_version() -> str:
     return "0.0.1"
 
@@ -692,7 +694,10 @@ class Field(__BaseField__):
         ret = Field(init_data)
         ret.__sort__ = 1
         return ret
-
+    def like(self,value:str):
+        import re
+        ret= self == re.compile(value,re.IGNORECASE)
+        return ret
     def desc(self):
         init_data = self.__field_name__
         if self.__field_name__ is None:

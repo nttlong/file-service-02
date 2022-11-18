@@ -21,8 +21,15 @@ class FileServices(Base):
 
     def get_list(self, app_name, root_url, page_index: int, page_size: int, field_search: str = None,
                  value_search: str = None):
+
         doc = self.expr(DocUploadRegister)
-        items = self.db(app_name).doc(DocUploadRegister).aggregate().sort(
+        arrg = self.db(app_name).doc(DocUploadRegister).aggregate()
+        if value_search is not None and value_search!="":
+            if field_search is None or field_search=="":
+                field_search="FileName"
+            import re
+            arrg=arrg.match(getattr(doc,field_search).like(value_search))
+        items = arrg.sort(
             doc.RegisterOn.desc(),
             doc.Status.desc()
         ).skip(page_size * page_index).limit(page_size).project(
