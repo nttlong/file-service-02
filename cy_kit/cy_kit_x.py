@@ -4,6 +4,8 @@ import yaml
 import sys
 from copy import deepcopy
 
+from scipy.integrate._ivp.bdf import change_D
+
 
 def container(*args, **kwargs):
     fx = args
@@ -46,15 +48,30 @@ __cache_yam_dict__ = {}
 __cache_yam_dict_lock__ = threading.Lock()
 
 
-def single(cls, *args, **kwargs):
+def __change_init__(cls: type):
+    __old_init__ = cls.__init__
 
+    def new_init(obj, *args, **kwargs):
+        base = cls.__bases__[0]
+        if base != object:
+            base.__init__(obj, *args, **kwargs)
+        __old_init__(obj, *args, **kwargs)
+
+    setattr(cls, "__init__", new_init)
+
+
+def single(cls, *args, **kwargs):
     key = f"{cls.__module__}/{cls.__name__}"
     ret = None
     if __cache_depen__.get(key) is None:
         # __lock_depen__.acquire()
         try:
-            # ret = kink.inject(cls)
-            # v = ret(**ret.__init__.__annotations__)
+
+            n = len(cls.__bases__)
+            v = cls.__bases__[0]()
+            for i in range(n - 1, 0):
+                v = cls.__base__[0].__init__(v)
+            __change_init__(cls)
             if hasattr(cls.__init__, "__defaults__"):
                 if cls.__init__.__defaults__ is not None:
                     args = {}
@@ -62,7 +79,7 @@ def single(cls, *args, **kwargs):
                         for x in cls.__init__.__defaults__:
                             if type(x) == v:
                                 args[k] = x
-                    v = cls(**args)
+                    v= cls(**args)
                 else:
                     v = cls()
             else:
@@ -253,27 +270,35 @@ def check_implement(interface: type, implement: type):
         description = f"Please open file:\n{inspect.getfile(implement)}\n goto \n{implement.__name__} \nthen insert bellow code\n:"
         raise Exception(f"{description}{msg}")
 
-def must_implement(interface:type):
+
+def must_implement(interface: type):
     def warpper(cls):
-        check_implement(interface,cls)
+        check_implement(interface, cls)
         return cls
+
     return warpper
 
-__config_provider_cache__ ={}
-__config_provider_cache_lock__ =threading.Lock()
-def config_provider(from_class:type, implement_class:type):
+
+__config_provider_cache__ = {}
+__config_provider_cache_lock__ = threading.Lock()
+
+
+def config_provider(from_class: type, implement_class: type):
     global __config_provider_cache__
     global __config_provider_cache_lock__
-    if from_class==implement_class:
+    if from_class == implement_class:
         raise Exception(f"invalid config provider")
     key = f"{from_class.__module__}/{from_class.__name__}"
     if __config_provider_cache__.get(key) is not None:
         return
     with __config_provider_cache_lock__:
-        check_implement(from_class,implement_class)
-        __config_provider_cache__[key]=implement_class
+        check_implement(from_class, implement_class)
+        __config_provider_cache__[key] = implement_class
+
 
 import inspect
+
+
 def provider(cls):
     global __config_provider_cache__
     key = f"{cls.__module__}/{cls.__name__}"
@@ -281,4 +306,3 @@ def provider(cls):
         raise Exception(f"Thous must call config_provider for {cls.__module__}.{cls.__name__} before call provider")
     ret_cls = __config_provider_cache__[key]
     return single(ret_cls)
-

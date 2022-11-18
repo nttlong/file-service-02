@@ -13,7 +13,7 @@ import cy_xdoc.services.file_storage
 
 class FileServices(Base):
     def __init__(self, file_storage_service=cy_kit.provider(cy_xdoc.services.file_storage.FileStorageService)):
-        Base.__init__(self)
+
         self.file_storage_service = file_storage_service
 
     def get_list(self, app_name, root_url, page_index: int, page_size: int, field_search: str = None,

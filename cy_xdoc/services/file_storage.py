@@ -15,7 +15,7 @@ class FileStorageObject:
         pass
 
     @classmethod
-    def read(cls, size:int)->bytes:
+    def read(cls, size:int=None)->bytes:
         pass
 
 
