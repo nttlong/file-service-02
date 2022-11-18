@@ -12,7 +12,7 @@ import cy_xdoc.services.files
 
 cy_kit.config_provider(
     from_class=cy_xdoc.services.file_storage.FileStorageService,
-    implement_class=cy_xdoc.services.file_storage_mongodb.FileStorageService
+    implement_class=cy_xdoc.services.file_storage_mongodb.MongoDbFileService
 )
 class libs:
     class Services:

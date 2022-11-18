@@ -32,9 +32,12 @@ from typing import Generic
 class Provider(Generic[T]):
     def __init__(self,cls:type):
         self.cls=cls
+        self.__ins__ =None
     @property
     def instance(self)->T:
-        return cy_kit_x.provider(self.cls)
+        if self.__ins__  is None:
+            self.__ins__ = cy_kit_x.provider(self.cls)
+        return self.__ins__
 
 
 

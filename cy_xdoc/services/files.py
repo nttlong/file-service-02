@@ -13,6 +13,7 @@ import cy_xdoc.services.file_storage
 
 class FileServices(Base):
     def __init__(self, file_storage_service=cy_kit.provider(cy_xdoc.services.file_storage.FileStorageService)):
+        Base.__init__(self)
         self.file_storage_service = file_storage_service
 
     def get_list(self, app_name, root_url, page_index: int, page_size: int, field_search: str = None,
@@ -61,7 +62,11 @@ class FileServices(Base):
             return
         if upload.MainFileId is None:
             return None
-        fs = self.get_file(app_name, upload.MainFileId)
+        fs = self.file_storage_service.instance.get_file_by_id(
+            app_name=app_name,
+            id= str(upload.MainFileId)
+        )
+        # self.get_file(app_name, upload.MainFileId)
         return fs
 
     async def get_main_file_of_upload_async(self, app_name, upload_id):

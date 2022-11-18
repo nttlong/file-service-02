@@ -19,6 +19,8 @@ class MongoDbFileService(Base):
     def get_file_by_name(self, app_name, rel_file_path: str) -> MongoDbFileStorage:
         raise NotImplemented
 
+    def get_file_by_id(self, app_name: str, id: str) -> FileStorageObject:
+        raise NotImplemented
     # def create(self, app_name:str, rel_file_path:str, chunk_size:int, size:int)->FileStorage:
     #     mfs = cy_docs.create_file(
     #         client=self.client,

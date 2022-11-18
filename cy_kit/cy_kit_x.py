@@ -264,7 +264,9 @@ __config_provider_cache_lock__ =threading.Lock()
 def config_provider(from_class:type, implement_class:type):
     global __config_provider_cache__
     global __config_provider_cache_lock__
-    key = f"{implement_class.__module__}/{implement_class.__name__}"
+    if from_class==implement_class:
+        raise Exception(f"invalid config provider")
+    key = f"{from_class.__module__}/{from_class.__name__}"
     if __config_provider_cache__.get(key) is not None:
         return
     with __config_provider_cache_lock__:
@@ -273,6 +275,10 @@ def config_provider(from_class:type, implement_class:type):
 
 import inspect
 def provider(cls):
-    setattr(cls,"__runtime_provider__",True)
-    return single(cls)
+    global __config_provider_cache__
+    key = f"{cls.__module__}/{cls.__name__}"
+    if __config_provider_cache__.get(key) is None:
+        raise Exception(f"Thous must call config_provider for {cls.__module__}.{cls.__name__} before call provider")
+    ret_cls = __config_provider_cache__[key]
+    return single(ret_cls)
 

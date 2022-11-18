@@ -9,7 +9,7 @@ import cy_xdoc
 import cy_xdoc.services.files
 import cy_xdoc.auths
 import fasty.mongo_fs_http_streaming
-
+import cy_xdoc.services.file_storage
 
 @cy_web.hanlder(method="get", path="{app_name}/file/{directory:path}")
 async def get_content_of_files(app_name: str, directory: str, request: fastapi.Request,
@@ -21,8 +21,10 @@ async def get_content_of_files(app_name: str, directory: str, request: fastapi.R
             return fastapi.responses.FileResponse(path=file_cache)
 
     file_service = cy_kit.single(cy_xdoc.services.files.FileServices)
+    file_storage = cy_kit.provider(cy_xdoc.services.file_storage.FileStorageService)
     upload_id = directory.split('/')[0]
-    fs = await file_service.get_main_file_of_upload_async(
+
+    fs = file_service.get_main_file_of_upload(
         app_name=app_name,
         upload_id=upload_id
     )
