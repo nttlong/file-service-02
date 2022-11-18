@@ -58,7 +58,7 @@ def files_upload(app_name: str, UploadId: str, Index: int, FilePart: UploadFile,
 
 
     else:
-        fs = file_storage_service.get_file_by_name(
+        fs = file_storage_service.instance.get_file_by_name(
             app_name=app_name,
             rel_file_path=server_file_name
         )

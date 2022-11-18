@@ -647,12 +647,12 @@ class Field(__BaseField__):
         init_data = other
 
         if isinstance(other, Field):
-            _expr =other.to_mongo_db_expr()
+            _expr = other.to_mongo_db_expr()
 
-            if isinstance(_expr,dict):
+            if isinstance(_expr, dict):
                 expr = {}
                 for k, v in _expr.items():
-                    if k[0:1]!="$":
+                    if k[0:1] != "$":
                         expr[f"${k}"] = v
                     else:
                         expr[k] = v
@@ -663,16 +663,16 @@ class Field(__BaseField__):
             ret.__alias__ = self.__field_name__
 
             return ret
-        elif type(other) in [int,str,float,bool,datetime.datetime]:
+        elif type(other) in [int, str, float, bool, datetime.datetime]:
             ret = Field("")
-            ret.__field_name__= other
+            ret.__field_name__ = other
             ret.__alias__ = self.__field_name__
             return ret
-        elif isinstance(other,tuple):
-            init_data ={}
+        elif isinstance(other, tuple):
+            init_data = {}
             for x in other:
 
-                if isinstance(x,Field):
+                if isinstance(x, Field):
                     init_data[x.__alias__] = x.to_mongo_db_expr()
 
                 else:
@@ -749,11 +749,13 @@ class DocumentObject(dict):
 
     def __getattr__(self, item):
         return self.get(item)
+
     def __setattr__(self, key, value):
-        if isinstance(value,dict):
-            self[key]= DocumentObject(value)
+        if isinstance(value, dict):
+            self[key] = DocumentObject(value)
         else:
             self[key] = value
+
     def to_pydantic(self) -> pydantic.BaseModel:
         ret = pydantic.BaseModel()
         for k, v in self.to_json_convertable().items():
@@ -1412,27 +1414,31 @@ def context(client, cls):
     )
     return ret
 
-import gridfs
-def get_file(client, db_name: str, file_id):
-    gfs= gridfs.GridFSBucket(client.get_database( db_name))
 
-    if isinstance(file_id,str):
+import gridfs
+
+
+def get_file(client, db_name: str, file_id):
+    gfs = gridfs.GridFSBucket(client.get_database(db_name))
+
+    if isinstance(file_id, str):
         file_id = bson.ObjectId(file_id)
     ret = gfs.open_download_stream(file_id)
 
     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
     return ret
+
+
 def get_file_by_name(client, db_name: str, filename):
-    gfs= gridfs.GridFSBucket(client.get_database( db_name))
-    items = list(gfs.find({"filename":filename}))
-    if items.__len__()>0:
+    gfs = gridfs.GridFSBucket(client.get_database(db_name))
+    items = list(gfs.find({"filename": filename}))
+    if items.__len__() > 0:
         return items[0]
 
 
-
-def create_file(client, db_name: str,file_name:str,file_size:int,chunk_size:int):
-    db= client.get_database(db_name)
-    gfs =gridfs.GridFS(client.get_database(db_name))  #gridfs.GridFSBucket(client.get_database(db_name))
+def create_file(client, db_name: str, file_name: str, file_size: int, chunk_size: int):
+    db = client.get_database(db_name)
+    gfs = gridfs.GridFS(client.get_database(db_name))  # gridfs.GridFSBucket(client.get_database(db_name))
 
     fs = gfs.new_file()
     fs.name = file_name
@@ -1450,23 +1456,27 @@ def create_file(client, db_name: str,file_name:str,file_size:int,chunk_size:int)
         }
     )
     return fs
+
+
 async def get_file_async(client, db_name: str, file_id):
     from motor.motor_asyncio import AsyncIOMotorClient
     async_client = AsyncIOMotorClient()
     async_client.delegate = client
-    gfs= AsyncIOMotorGridFSBucket(async_client.get_database(db_name))
+    gfs = AsyncIOMotorGridFSBucket(async_client.get_database(db_name))
 
-    if isinstance(file_id,str):
+    if isinstance(file_id, str):
         file_id = bson.ObjectId(file_id)
     ret = await gfs.open_download_stream(file_id)
     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
     return ret
-async def find_file_async(client, db_name: str, rel_file_path:str):
+
+
+async def find_file_async(client, db_name: str, rel_file_path: str):
     from motor.motor_asyncio import AsyncIOMotorClient
     async_client = AsyncIOMotorClient()
     async_client.delegate = client
-    gfs= AsyncIOMotorGridFSBucket(async_client.get_database(db_name))
-    ret= await  gfs.find({"rel_file_path":rel_file_path})
+    gfs = AsyncIOMotorGridFSBucket(async_client.get_database(db_name))
+    ret = await  gfs.find({"rel_file_path": rel_file_path})
 
     # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
     return ret

@@ -49,6 +49,8 @@ __cache_yam_dict_lock__ = threading.Lock()
 
 
 def __change_init__(cls: type):
+    if cls ==object:
+        return
     __old_init__ = cls.__init__
 
     def new_init(obj, *args, **kwargs):
@@ -64,13 +66,13 @@ def single(cls, *args, **kwargs):
     key = f"{cls.__module__}/{cls.__name__}"
     ret = None
     if __cache_depen__.get(key) is None:
+        print(cls)
         # __lock_depen__.acquire()
         try:
 
             n = len(cls.__bases__)
-            v = cls.__bases__[0]()
             for i in range(n - 1, 0):
-                v = cls.__base__[0].__init__(v)
+                v =  cls.__base__[i].__init__(v)
             __change_init__(cls)
             if hasattr(cls.__init__, "__defaults__"):
                 if cls.__init__.__defaults__ is not None:
