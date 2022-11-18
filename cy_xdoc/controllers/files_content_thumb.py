@@ -17,7 +17,7 @@ async def get_thumb_of_files(app_name: str, directory: str, request: Request):
     cache_thumb_path = cy_web.cache_content_check( thumb_dir_cache,directory.lower().replace("/","_"))
     if cache_thumb_path:
         return FileResponse(cache_thumb_path)
-    file_service = cy_kit.single(FileServices)
+
     upload_id = directory.split('/')[0]
     fs = libs.Services.files.get_main_main_thumb_file(app_name,upload_id)
     if fs is None:

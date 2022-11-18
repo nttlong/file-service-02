@@ -59,7 +59,13 @@ class MongoDbFileService(Base):
         return MongoDbFileStorage(fs)
 
     def get_file_by_name(self, app_name, rel_file_path: str) -> MongoDbFileStorage:
-        raise NotImplemented
+        fs =gridfs.GridFS(self.client.get_database(self.db_name(app_name))).find_one(
+            {
+                "rel_file_path":rel_file_path
+            }
+        )
+        ret = MongoDbFileStorage(fs)
+        return ret
 
     def get_file_by_id(self, app_name: str, id: str) -> MongoDbFileStorage:
         fs = cy_docs.get_file(self.client, self.db_name(app_name), bson.ObjectId(id))

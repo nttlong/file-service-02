@@ -2,7 +2,6 @@
 import pathlib
 import sys
 sys.path.append(pathlib.Path(__file__).parent.parent.__str__())
-import fastapi
 import cy_web
 
 cy_web.create_web_app(

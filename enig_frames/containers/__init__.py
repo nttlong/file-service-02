@@ -9,7 +9,7 @@ import enig_frames.services.files
 import enig_frames.services.file_system
 import enig_frames.config
 import enig_frames.db_context
-import enig_fast_api.application
+
 import enig_frames.loggers
 import enig_frames.services.file_system_utils
 import enig_frames.services.search_engine
@@ -45,7 +45,7 @@ class Container(enig.Singleton):
     clean_up_service=enig.depen(enig_frames.services.gc_collect.GCCollec)
     config = enig.depen(enig_frames.config.Configuration)
     db_context = enig.depen(enig_frames.db_context.DbContext)
-    web_application = enig.depen(enig_fast_api.application.WebApp)
+    # web_application = enig.depen(enig_fast_api.application.WebApp)
     loggers = enig.depen(enig_frames.loggers.Loggers)
     file_system_utils_service = enig.depen(enig_frames.services.file_system_utils.FileSystemUtils)
     db_log = enig.depen(enig_frames.db_logs.DbLogs)
