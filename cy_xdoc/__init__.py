@@ -9,10 +9,15 @@ from cy_xdoc.services.accounts import AccountService
 
 import cy_xdoc.services.file_storage_disk
 import cy_xdoc.services.files
-
+import cy_xdoc.services.msg
+import cy_xdoc.services.msg_mongodb
 cy_kit.config_provider(
     from_class=cy_xdoc.services.file_storage.FileStorageService,
     implement_class=cy_xdoc.services.file_storage_mongodb.MongoDbFileService
+)
+cy_kit.config_provider(
+    from_class= cy_xdoc.services.msg.MessageService,
+    implement_class= cy_xdoc.services.msg_mongodb.MessageServiceMongodb
 )
 class libs:
     class Services:

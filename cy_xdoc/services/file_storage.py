@@ -1,3 +1,5 @@
+import typing
+
 import bson
 
 
@@ -18,8 +20,15 @@ class FileStorageObject:
     def read(cls, size:int=None)->bytes:
         pass
 
+    @classmethod
+    def push(cls,content:bytes, chun_index:int):
+        pass
 
-FileStorageObject.read(size=10)
+    @classmethod
+    def get_id(cls)->str:
+        pass
+
+
 
 
 # class FileStorageObject:
@@ -32,14 +41,7 @@ FileStorageObject.read(size=10)
 #         return self.id
 #
 #     def push(self, content: bytes, index: int):
-#         fs_chunks = self.db.get_collection("fs.chunks")
-#         fs_chunks.insert_one({
-#             "_id": bson.objectid.ObjectId(),
-#             "files_id": self.Id,
-#             "n": index,
-#             "data": content
-#         })
-#         del content
+
 
 
 class FileStorageService:
@@ -66,4 +68,16 @@ class FileStorageService:
 
     @classmethod
     def get_file_by_id(cls, app_name: str, id: str) -> FileStorageObject:
+        pass
+
+    @classmethod
+    def create(cls, app_name: str, rel_file_path: str, chunk_size: int, size: int):
+        pass
+
+    @classmethod
+    def delete_files(cls, app_name:str, files:typing.List[str], run_in_thread:bool):
+        pass
+
+    @classmethod
+    def delete_files_by_id(cls, app_name:str, ids:typing.List[str], run_in_thread:bool):
         pass

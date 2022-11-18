@@ -1,3 +1,4 @@
+import bson
 import humanize
 
 import cy_docs
@@ -7,8 +8,8 @@ from fastapi import File, Depends, UploadFile
 from cy_xdoc.controllers.models.file_upload import UploadFilesChunkInfoResult
 import cy_kit
 from cy_xdoc.services.files import FileServices
-from cy_xdoc.services.file_storage import FileStorageObject
-from cy_xdoc.services.msg import MsgService
+from cy_xdoc.services.file_storage import FileStorageObject,FileStorageService
+from cy_xdoc.services.msg import MessageService
 from cy_xdoc.models.files import DocUploadRegister
 import typing
 
@@ -18,8 +19,9 @@ def files_upload(app_name: str, UploadId: str, Index: int, FilePart: UploadFile,
                  token=Depends(Authenticate)) -> UploadFilesChunkInfoResult:
     content_part = FilePart.file.read()
     file_service = cy_kit.single(FileServices)
-    file_content_service = cy_kit.single(FileContentService)
-    msg_service = cy_kit.single(MsgService)
+    file_storage_service = cy_kit.provider(FileStorageService)
+    msg_service = cy_kit.provider(MessageService)
+
     upload_item = file_service.db(app_name).doc(DocUploadRegister) @ UploadId
     if upload_item is None:
         del FilePart
@@ -41,13 +43,13 @@ def files_upload(app_name: str, UploadId: str, Index: int, FilePart: UploadFile,
     chunk_size_in_bytes = upload_item.ChunkSizeInBytes or 0
     server_file_name = upload_item.ServerFileName
     if num_of_chunks_complete == 0:
-        fs = file_content_service.create(
+        fs = file_storage_service.instance.create(
             app_name=app_name,
             rel_file_path=server_file_name,
             chunk_size=chunk_size_in_bytes, size=file_size)
         fs.push(content_part, Index)
-        upload_item.MainFileId = fs.Id
-        msg_service.emit(
+        upload_item.MainFileId = fs.get_id()
+        msg_service.instance.emit(
             app_name=app_name,
             message_type="files.upload",
             data=upload_item
@@ -56,14 +58,12 @@ def files_upload(app_name: str, UploadId: str, Index: int, FilePart: UploadFile,
 
 
     else:
-        fs = file_content_service.get_file_by_name(
+        fs = file_storage_service.get_file_by_name(
             app_name=app_name,
             rel_file_path=server_file_name
         )
         fs.push(content_part, Index)
-        # save_to_file(
-        #     db_context, num_of_chunks_complete, Index, server_file_name, path_to_broker_share
-        # )
+
     size_uploaded += len(content_part)
     ret = cy_docs.DocumentObject()
     ret.Data = cy_docs.DocumentObject()
@@ -81,7 +81,7 @@ def files_upload(app_name: str, UploadId: str, Index: int, FilePart: UploadFile,
         expr.SizeUploaded << size_uploaded,
         expr.NumOfChunksCompleted <<num_of_chunks_complete,
         expr.Status <<status,
-        expr.MainFileId << fs.Id
+        expr.MainFileId << bson.ObjectId(fs.get_id())
     )
 
 

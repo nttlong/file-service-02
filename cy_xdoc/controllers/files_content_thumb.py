@@ -24,7 +24,7 @@ async def get_thumb_of_files(app_name: str, directory: str, request: Request):
         return Response(
             status_code=401
         )
-    content = fs.read()
+    content = fs.read(fs.get_size())
     fs.seek(0)
     cy_web.cache_content(thumb_dir_cache, directory.replace('/', '_'), content)
     del content

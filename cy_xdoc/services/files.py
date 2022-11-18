@@ -9,12 +9,15 @@ import cy_kit
 from cy_xdoc.services.base import Base
 from cy_xdoc.models.files import DocUploadRegister
 import cy_xdoc.services.file_storage
-
+import cy_xdoc.services.search_engine
 
 class FileServices(Base):
-    def __init__(self, file_storage_service=cy_kit.provider(cy_xdoc.services.file_storage.FileStorageService)):
+    def __init__(self,
+                 file_storage_service=cy_kit.provider(cy_xdoc.services.file_storage.FileStorageService),
+                 search_engine = cy_kit.single(cy_xdoc.services.search_engine.SearchEngine)):
 
         self.file_storage_service = file_storage_service
+        self.search_engine = search_engine
 
     def get_list(self, app_name, root_url, page_index: int, page_size: int, field_search: str = None,
                  value_search: str = None):
@@ -23,6 +26,7 @@ class FileServices(Base):
             doc.RegisterOn.desc(),
             doc.Status.desc()
         ).skip(page_size * page_index).limit(page_size).project(
+            cy_docs.fields.UploadId>>doc.id,
             doc.FileName,
             doc.Status,
             doc.SizeInHumanReadable,
@@ -47,6 +51,7 @@ class FileServices(Base):
                 cy_docs.fields.FPS >> doc.VideoFPS
             )
 
+
         )
         for x in items:
             _a_thumbs = []
@@ -54,6 +59,8 @@ class FileServices(Base):
                 for url in x.AvailableThumbs:
                     _a_thumbs += [f"api/{app_name}/thumbs/{url}"]
                 x["AvailableThumbs"] = _a_thumbs
+            if x.OCRFileId:
+                x["OcrContentUrl"]=f"{root_url}/api/{app_name}/file-ocr/{x.FileNameOnly.lower()}.pdf"
             yield x
 
     def get_main_file_of_upload(self, app_name, upload_id):
@@ -158,3 +165,23 @@ class FileServices(Base):
 
     def get_upload_register(self, app_name: str, UploadId: str):
         return self.db(app_name).doc(DocUploadRegister) @ UploadId
+
+
+    def remove_upload(self, app_name, upload_id):
+        upload = self.db(app_name).doc(DocUploadRegister) @ upload_id
+        delete_file_list = upload.AvailableThumbs or []
+        delete_file_list_by_id =[]
+        if upload.MainFileId is not None: delete_file_list_by_id = [str(upload.MainFileId)]
+        if upload.OCRFileId is not None: delete_file_list_by_id+=[str(upload.OCRFileId)]
+        if upload.ThumbFileId is not None: delete_file_list_by_id += [str(upload.ThumbFileId)]
+        self.file_storage_service.instance.delete_files(app_name=app_name,files = delete_file_list,run_in_thread=True)
+        self.file_storage_service.instance.delete_files_by_id(app_name=app_name,ids =delete_file_list_by_id, run_in_thread=True)
+        self.search_engine.delete_doc(app_name,upload_id)
+        ret = self.db(app_name).doc(DocUploadRegister).delete(cy_docs.fields._id==upload_id)
+        return
+
+
+
+
+
+        pass

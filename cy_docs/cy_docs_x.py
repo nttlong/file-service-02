@@ -749,7 +749,11 @@ class DocumentObject(dict):
 
     def __getattr__(self, item):
         return self.get(item)
-
+    def __setattr__(self, key, value):
+        if isinstance(value,dict):
+            self[key]= DocumentObject(value)
+        else:
+            self[key] = value
     def to_pydantic(self) -> pydantic.BaseModel:
         ret = pydantic.BaseModel()
         for k, v in self.to_json_convertable().items():

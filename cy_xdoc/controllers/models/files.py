@@ -6,6 +6,7 @@ import cy_web
 
 @cy_web.model(all_field_are_optional=True)
 class FileUploadRegisterInfo:
+    UploadId:str
     FileName:str
     Status:int
     SizeInHumanReadable:str
@@ -36,3 +37,5 @@ class FileUploadRegisterInfo:
     AvailableThumbs:typing.List[str]
     Media: typing.Optional[dict]
     HasThumb:bool
+    OcrContentUrl:str
+    OCRFileId:str

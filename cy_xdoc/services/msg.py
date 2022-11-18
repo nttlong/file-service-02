@@ -1,9 +1,5 @@
-import cy_kit
-from cy_xdoc.services.base import Base, DbClient
-
-
-class MsgService(Base):
-
-
-    def emit(self, app_name, message_type, data):
+class MessageService:
+    @classmethod
+    def emit(cls, app_name:str, message_type:str, data:dict):
         pass
+

@@ -1,4 +1,8 @@
+import threading
+import typing
 import uuid
+
+import gridfs
 
 import cy_docs
 import cy_kit
@@ -28,11 +32,31 @@ class MongoDbFileStorage:
     def read(self, size: int) -> bytes:
         return self.fs.read(size)
 
+    def get_id(self) -> str:
+        return str(self.fs._id)
+
+    def push(self, content: bytes, chunk_index: int):
+        fs_chunks = self.fs._coll.database.get_collection("fs.chunks")
+        fs_chunks.insert_one({
+            "_id": bson.objectid.ObjectId(),
+            "files_id": self.fs._id,
+            "n": chunk_index,
+            "data": content
+        })
+        del content
+
 
 @cy_kit.must_imlement(FileStorageService)
 class MongoDbFileService(Base):
-    def create(cls, app_name: str, rel_file_path: str, chunk_size: int, size: int) -> MongoDbFileStorage:
-        raise NotImplemented
+    def create(self, app_name: str, rel_file_path: str, chunk_size: int, size: int) -> MongoDbFileStorage:
+        fs = cy_docs.create_file(
+            client=self.client,
+            db_name=self.db_name(app_name),
+            file_name=rel_file_path,
+            chunk_size=chunk_size,
+            file_size=size
+        )
+        return MongoDbFileStorage(fs)
 
     def get_file_by_name(self, app_name, rel_file_path: str) -> MongoDbFileStorage:
         raise NotImplemented
@@ -42,20 +66,25 @@ class MongoDbFileService(Base):
 
         ret = MongoDbFileStorage(fs)
         return ret
-    # def create(self, app_name:str, rel_file_path:str, chunk_size:int, size:int)->FileStorage:
-    #     mfs = cy_docs.create_file(
-    #         client=self.client,
-    #         db_name=self.db_name(app_name),
-    #         file_name=rel_file_path,
-    #         chunk_size=chunk_size,
-    #         file_size=size
-    #     )
-    #     return FileStorage(mfs._id, db=self.client.get_database(self.db_name(app_name)))
-    #
-    #
-    # def get_file_by_name(self, app_name, rel_file_path:str):
-    #     upload_id = rel_file_path.split('/')[0].split('.')[0]
-    #     upload = self.db(app_name).doc(DocUploadRegister) @ upload_id
-    #     if upload.MainFileId:
-    #         return FileStorage(id =bson.ObjectId(upload.MainFileId), db=self.client.get_database(self.db_name(app_name)))
-    #     return None
+
+    def delete_files_by_id(self, app_name:str, ids:typing.List[str], run_in_thread:bool):
+        def run():
+            fs = gridfs.GridFS(self.client.get_database(self.db_name(app_name)))
+            for x in ids:
+                fs.delete(bson.ObjectId(x))
+        if run_in_thread:
+            threading.Thread(target=run,args=()).start()
+        else:
+            run()
+
+    def delete_files(self, app_name, files:typing.List[str], run_in_thread:bool):
+        def run():
+            fs = gridfs.GridFS(self.client.get_database(self.db_name(app_name)))
+            for x in files:
+                f =fs.find_one({"rel_file_path":x})
+                if f:
+                    fs.delete(f._id)
+        if run_in_thread:
+            threading.Thread(target=run, args=()).start()
+        else:
+            run()

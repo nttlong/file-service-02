@@ -955,7 +955,7 @@ class WebApp(BaseWebApp):
                 log_level="info",
                 lifespan='on',
                 ws_max_size=16777216 * 1024,
-                # reload=self.dev_mode,
+                reload=self.dev_mode,
                 reload_dirs=self.working_dir,
                 workers=worker,
                 ws='websockets',
