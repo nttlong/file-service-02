@@ -15,7 +15,7 @@ class AppServices:
         docs = self.db_context.db(app_name).doc(App)
         ret = docs.context.aggregate().project(
             cy_docs.fields.AppId >> docs.fields._id ,
-            docs.fields.__name__,
+            docs.fields.name,
             docs.fields.description,
             docs.fields.domain,
             docs.fields.login_url,
@@ -31,7 +31,7 @@ class AppServices:
         docs = self.db_context.db(app_name).doc(App)
         return docs.context.aggregate().project(
             cy_docs.fields.AppId >> docs.fields.Id ,
-            docs.fields.__name__,
+            docs.fields.Name,
             docs.fields.description,
             docs.fields.domain,
             docs.fields.login_url,

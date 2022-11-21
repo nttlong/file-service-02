@@ -255,8 +255,12 @@ class SearchResult(dict):
         return self.get('took') or 0
 
 
-def search(client: Elasticsearch, index: str, filter, excludes: typing.List[DocumentFields] = [], skip: int = 0,
-           limit: int = 50):
+def search(client: Elasticsearch,
+           index: str, filter,
+           excludes: typing.List[DocumentFields] = [],
+           skip: int = 0,
+           limit: int = 50,
+           highligh:DocumentFields=None):
     if isinstance(filter, dict):
         body = dict(query=filter)
 
@@ -268,6 +272,24 @@ def search(client: Elasticsearch, index: str, filter, excludes: typing.List[Docu
         body["_source"] = {
             "excludes": [x.__name__ for x in excludes]
         }
+    """
+    __highlight = {
+                "pre_tags": ["<em>"],
+                "post_tags": ["</em>"],
+                "fields": {
+                    "content": {}
+                }
+            }
+    """
+    if highligh:
+        __highlight = {
+            "pre_tags": ["<em>"],
+            "post_tags": ["</em>"],
+            "fields": {
+                highligh.__name__: {}
+            }
+        }
+        body["highligh"]=__highlight
     ret = client.search(index=index, doc_type="_doc", body=body)
     return SearchResult(ret)
 
