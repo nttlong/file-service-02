@@ -21,7 +21,7 @@ async def get_thumb_of_files(app_name: str, directory: str,request:Request):
 
     fs = file_storage_service.get_file_by_name(
         app_name=app_name,
-        rel_file_path=directory
+        rel_file_path=f"thumbs/{directory}"
     )
     if fs is None:
         return Response(
