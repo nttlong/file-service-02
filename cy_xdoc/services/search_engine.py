@@ -1,5 +1,7 @@
 class SearchEngine:
-    @classmethod
-    def delete_doc(cls, app_name, upload_id):
-        print("Not impletement")
-        pass
+
+    def delete_doc(self, app_name, upload_id):
+        raise NotImplemented
+
+    def mark_delete(self, app_name, id, mark_delete_value):
+        raise NotImplemented

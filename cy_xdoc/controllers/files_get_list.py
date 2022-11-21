@@ -8,7 +8,12 @@ import cy_web
 import cy_xdoc
 from cy_xdoc.controllers.models.files import FileUploadRegisterInfo
 @cy_web.hanlder(method="post",path="{app_name}/files")
-def get_list_of_files(app_name:str,FieldSearch:str,ValueSearch:str,PageSize:int,PageIndex:int,token=fastapi.Depends(cy_xdoc.auths.Authenticate))->typing.List[FileUploadRegisterInfo]:
+def get_list_of_files(
+        app_name:str,
+        FieldSearch:typing.Optional[str],
+        ValueSearch:typing.Optional[str],
+        PageSize:int,PageIndex:int,
+        token=fastapi.Depends(cy_xdoc.auths.Authenticate))->typing.List[FileUploadRegisterInfo]:
     from cy_xdoc.services.files import FileServices
     file_service = cy_kit.single(FileServices)
     items = file_service.get_list(

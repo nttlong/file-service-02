@@ -5,7 +5,7 @@ from fastapi import Request,Response
 from fastapi.responses import FileResponse
 from cy_xdoc.services.files import FileServices
 import mimetypes
-from cy_xdoc import libs
+import cy_xdoc
 @cy_web.hanlder("get","{app_name}/thumb/{directory:path}")
 async def get_thumb_of_files(app_name: str, directory: str, request: Request):
     """
@@ -19,7 +19,7 @@ async def get_thumb_of_files(app_name: str, directory: str, request: Request):
         return FileResponse(cache_thumb_path)
 
     upload_id = directory.split('/')[0]
-    fs = libs.Services.files.get_main_main_thumb_file(app_name,upload_id)
+    fs = cy_xdoc.container.service_file.get_main_main_thumb_file(app_name,upload_id)
     if fs is None:
         return Response(
             status_code=401

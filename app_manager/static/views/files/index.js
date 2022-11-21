@@ -83,5 +83,8 @@ var filesView = await View(import.meta, class FilesView extends BaseScope {
         });
 
     }
+    async doShowDetail(item){
+        redirect("file-info?id=" + item.UploadId+"&app="+this.currentAppName)
+    }
 });
 export default filesView;

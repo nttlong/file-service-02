@@ -470,7 +470,7 @@ def __wrap_pydantic__(pre, cls, is_lock=True):
                         if get_cls(fv) is None:
                             re_modify = __wrap_pydantic__(cls.__name__, fv, False)
                             # setattr(sys.modules[fv.__module__],fv.__name__,re_modify)
-                            # setattr(sys.modules[cls.__module__], fv.__name__, re_modify)
+                            # setattr(sys.modules[__cls__.__module__], fv.__name__, re_modify)
 
                             temp += [re_modify]
                         else:
@@ -520,11 +520,11 @@ def check_is_need_pydantic(cls):
         return ret
     if cls.__module__ == typing.__name__ and cls.__origin__ == list and hasattr(cls, "__args__"):
         return check_is_need_pydantic(cls.__args__)
-    if cls == fastapi.Request or issubclass(cls, fastapi.Request):
+    if inspect.isclass(cls) and (cls == fastapi.Request or issubclass(cls, fastapi.Request)):
         return False
     if not inspect.isclass(cls) and callable(cls):
         return False
-    if hasattr(cls, "__origin__") and cls.__origin__ == typing.List.__origin__ and hasattr(cls,
+    if hasattr(cls, "__origin__") and cls.__origin__ == List.__origin__ and hasattr(cls,
                                                                                            "__args__") and isinstance(
         cls.__args__, tuple):
         ret = []
@@ -595,7 +595,19 @@ class RequestHandler:
         for k, v in __annotations__.items():
 
             if method != "form":
-                if v == fastapi.Request:
+
+
+                if hasattr(v,"__module__") and v.__module__ =="typing" and v.__str__().startswith("typing.Union[") and v.__str__().endswith("NoneType]"):
+                    __defaults__ += [fastapi.Body(
+                        default=None,
+                        embed=True,
+                        title=k
+                    )]
+
+                    # handler.__annotations__[k]=v.__args__[0]
+
+
+                elif v == fastapi.Request:
                     continue
                 if check_is_need_pydantic(v):
                     handler.__annotations__[k] = __wrap_pydantic__("", v)
@@ -621,7 +633,7 @@ class RequestHandler:
                     __defaults__ += [fastapi.Form(...)]
                     __annotations__[k]=Union[v, None]
                 elif v == fastapi.UploadFile or v == fastapi.Request or \
-                        (hasattr(v, "__origin__") and v.__origin__ == typing.List[fastapi.UploadFile].__origin__
+                        (hasattr(v, "__origin__") and v.__origin__ == List[fastapi.UploadFile].__origin__
                          and hasattr(v, "__args__") and v.__args__[0] == fastapi.UploadFile):
                     continue
                 # if not "{" + k + "}" in self.path:
@@ -875,6 +887,8 @@ class WebApp(BaseWebApp):
         web_application = self
         self.request_handlers = dict()
         self.app = fastapi.FastAPI()
+        if sys.platform=="win32":
+            self.app.middleware("http")(windows_fxi_javascript_resource)
         self.url_get_token = url_get_token
         self.jwt_algorithm = jwt_algorithm
         self.jwt_secret_key = jwt_secret_key
@@ -999,14 +1013,23 @@ def web_handler(path: str, method: str, response_model=None):
 def add_controller(web_app, prefix_path: str, controller_dir):
     web_app.load_controller_from_dir(prefix_path, controller_dir)
 
+async def windows_fxi_javascript_resource(request: Request, call_next):
+    res = await call_next(request)
+    if request.url.path.endswith('.js') and '/static/' in request.url.path:
+        t, _ = mimetypes.guess_type(request.url.path)
+        res.headers['content-type'] = t
 
+    return res
 def start_with_uvicorn(worker=4):
     global web_application
     if isinstance(web_application, WebApp):
+
         web_application.unvicorn_start(
             f"{WebApp.__module__}",
             worker
         )
+        print("web run on:")
+        print(web_application.host_url)
     # run_path=path.replace(os.sep,"/").replace('/','.')
     # web_app.unvicorn_start(run_path)
 
@@ -1161,6 +1184,12 @@ def validate_token_in_request(self, request):
                 detail="Not authenticated",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+    except jose.exceptions.JWTError:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     except jose.exceptions.ExpiredSignatureError as e:
         raise HTTPException(
             status_code=401,
@@ -1204,7 +1233,7 @@ def model(all_field_are_optional:bool=False):
             if hasattr(x,"__annotations__"):
                 for k,v in x.__annotations__.items():
                     if all_field_are_optional:
-                        cls.__annotations__[k] =typing.Optional[v]
+                        cls.__annotations__[k] =Optional[v]
                     else:
                         cls.__annotations__[k]=v
         for k,v in cls.__annotations__.items():
@@ -1227,7 +1256,7 @@ def model(all_field_are_optional:bool=False):
                 ))
             else:
                 if all_field_are_optional:
-                    cls.__annotations__[k] = typing.Optional[v]
+                    cls.__annotations__[k] = Optional[v]
 
 
         return __wrap_pydantic__("",cls,False)
@@ -1330,7 +1359,7 @@ async def streaming_async(fsg,request,content_type,streaming_buffering=1024 *  8
     """
     Streaming content
     :param fsg: mongodb gridOut
-    :param request: client request
+    :param request: __client__ request
     :param content_type: mime_type
     :param streaming_buffering: support 4k
     :return:

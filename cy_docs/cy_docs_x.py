@@ -5,10 +5,10 @@ cy_docs is library for mongodb document manipulating such as:
 
 find, find_one, find_async, find_one_async
 Example:
-    client = pymongo.mongo_client.MongoClient(host=..,port=..,..)
+    __client__ = pymongo.mongo_client.MongoClient(host=..,port=..,..)
     my_doc = cy_docs.get_doc(
         "my-docs",
-         client
+         __client__
         )
     ret =my_doc['my-db'].insert_one(cy_docs.fields.code<<'001',cy_docs.fields.age<<32)
     print (ret)
@@ -798,7 +798,7 @@ class DBDocument:
                         insert_dict[x.__field_name__] = x.__value__
                 else:
                     raise Exception("All element in left shift document must be cy_docs.Field. Example:"
-                                    "my_doc = cy_docs.get_doc('my-coll-name',client)"
+                                    "my_doc = cy_docs.get_doc('my-coll-name',__client__)"
                                     "test_docs['my-db-name']<<( cy_docs.fields.Code <<'001', cy_docs.fields.Name << 'Name'")
             if insert_dict.get("_id") is None:
                 insert_dict["_id"] = bson.ObjectId()
@@ -807,7 +807,7 @@ class DBDocument:
             return ret
         else:
             raise Exception("All element in left shift document must be cy_docs.Field. Example:"
-                            "my_doc = cy_docs.get_doc('my-coll-name',client)"
+                            "my_doc = cy_docs.get_doc('my-coll-name',__client__)"
                             "test_docs['my-db-name']<<( cy_docs.fields.Code <<'001', cy_docs.fields.Name << 'Name'")
 
     def __rshift__(self, other):
@@ -818,7 +818,7 @@ class DBDocument:
             ret = self.collection.find(other.to_mongo_db_expr())
         else:
             raise Exception("All element in right shift document must be cy_docs.Field. Example:"
-                            "my_doc = cy_docs.get_doc('my-coll-name',client)"
+                            "my_doc = cy_docs.get_doc('my-coll-name',__client__)"
                             "test_docs['my-db-name']>>( cy_docs.fields.MyNumber>1000")
 
         for x in ret:
@@ -1290,6 +1290,7 @@ class Document:
         return DBDocument(coll)
 
 
+
 def get_doc(collection_name: str, client: pymongo.mongo_client.MongoClient, indexes: List[str] = [],
             unique_keys: List[str] = []) -> Document:
     return Document(collection_name, client, indexes=indexes, unique_keys=unique_keys)
@@ -1430,7 +1431,7 @@ def get_file(client, db_name: str, file_id):
         file_id = bson.ObjectId(file_id)
     ret = gfs.open_download_stream(file_id)
 
-    # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
+    # ret = gridfs.GridFS(__client__.get_database(__db_name__)).get(file_id)
     return ret
 
 
@@ -1443,7 +1444,7 @@ def get_file_by_name(client, db_name: str, filename):
 
 def create_file(client, db_name: str, file_name: str, file_size: int, chunk_size: int):
     db = client.get_database(db_name)
-    gfs = gridfs.GridFS(client.get_database(db_name))  # gridfs.GridFSBucket(client.get_database(db_name))
+    gfs = gridfs.GridFS(client.get_database(db_name))  # gridfs.GridFSBucket(__client__.get_database(__db_name__))
 
     fs = gfs.new_file()
     fs.name = file_name
@@ -1472,7 +1473,7 @@ async def get_file_async(client, db_name: str, file_id):
     if isinstance(file_id, str):
         file_id = bson.ObjectId(file_id)
     ret = await gfs.open_download_stream(file_id)
-    # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
+    # ret = gridfs.GridFS(__client__.get_database(__db_name__)).get(file_id)
     return ret
 
 
@@ -1483,5 +1484,5 @@ async def find_file_async(client, db_name: str, rel_file_path: str):
     gfs = AsyncIOMotorGridFSBucket(async_client.get_database(db_name))
     ret = await  gfs.find({"rel_file_path": rel_file_path})
 
-    # ret = gridfs.GridFS(client.get_database(db_name)).get(file_id)
+    # ret = gridfs.GridFS(__client__.get_database(__db_name__)).get(file_id)
     return ret

@@ -12,14 +12,14 @@ async def get_thumb_of_files(app_name: str, directory: str,request:Request):
     :param app_name:
     :return:
     """
-    file_storage_service = cy_kit.provider(cy_xdoc.services.file_storage.FileStorageService)
+    file_storage_service = cy_kit.singleton(cy_xdoc.services.file_storage.FileStorageService)
     thumb_dir_cache = os.path.join(app_name, "custom_thumbs")
     cache_thumb_path = cy_web.cache_content_check(thumb_dir_cache, directory.lower().replace("/", "_"))
     if cache_thumb_path:
         return FileResponse(cache_thumb_path)
 
 
-    fs = file_storage_service.instance.get_file_by_name(
+    fs = file_storage_service.get_file_by_name(
         app_name=app_name,
         rel_file_path=directory
     )

@@ -9,5 +9,6 @@ setup(
     name='cy_docs',
     ext_modules=cythonize(file),
     zip_safe=True,
+    packages=["cy_docs"]
 )
 #python cy_docs/setup.py build_ext --inplace

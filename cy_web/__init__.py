@@ -5,6 +5,8 @@ import sys
 
 import fastapi
 
+import cy_web
+
 sys.path.append(pathlib.Path(__file__).parent.__str__())
 # sys.path.append(r"/home/vmadmin/python/v6/file-service-02/build/lib.linux-x86_64-3.8/cy_web")
 # from cy_web import cy_web_x
@@ -13,7 +15,7 @@ import cy_web_x
 
 def create_web_app(
         working_dir: str,
-        host_url: str,
+
         static_dir: str,
         template_dir: str,
         logs_dir: str = "./logs",
@@ -23,8 +25,13 @@ def create_web_app(
         jwt_secret_key: str = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",
         dev_mode: bool = False,
         cache_folder:str="./cache",
-        worker:int=2,
+        host_url: str=None,
 ):
+    import socket
+    hostname = socket.gethostname()
+    IPAddr = socket.gethostbyname(hostname)
+    if host_url is None:
+        host_url = f"http://{IPAddr}:{bind.split(':')[1]}"
     ret = cy_web_x.WebApp(
 
         working_dir=working_dir,
@@ -58,6 +65,7 @@ def load_controller_from_dir(prefix, path):
 
 
 def start_with_uvicorn(worker=4):
+    print(cy_web.get_host_url())
     cy_web_x.start_with_uvicorn(worker)
 
 

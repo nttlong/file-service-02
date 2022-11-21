@@ -1,9 +1,10 @@
+import cy_kit
 import cy_web
+import cy_xdoc.services.accounts
+import cy_xdoc.services.apps
 from cy_xdoc.auths import Authenticate
 from fastapi import Depends
 import uuid
-from cy_xdoc import libs
-import api_models.documents as docs
 from  fastapi import Request, Response
 
 @cy_web.hanlder(method="post",path= "get_sso_token")
@@ -67,11 +68,12 @@ async def get_sso_token(request:Request,  token: str = Depends(Authenticate)):
         return Response(status_code=401)
 
     ret_url=cy_web.get_host_url()
-
+    account_service = cy_kit.inject(cy_xdoc.services.accounts.AccountService)
+    app_service = cy_kit.inject(cy_xdoc.services.apps.AppServices)
     if app_name!='admin':
-        app_item = libs.Services.app.get_item('admin',app_name)
+        app_item = app_service.get_item('admin',app_name)
         ret_url = app_item.get("ReturnUrlAfterSignIn",cy_web.get_host_url())
-    ret= libs.Services.account.create_sso_id(
+    ret= account_service.create_sso_id(
         app_name='admin',
         token=token['token'],
         return_url=ret_url

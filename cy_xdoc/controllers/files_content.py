@@ -8,7 +8,6 @@ import cy_web
 import cy_xdoc
 import cy_xdoc.services.files
 import cy_xdoc.auths
-import fasty.mongo_fs_http_streaming
 import cy_xdoc.services.file_storage
 
 @cy_web.hanlder(method="get", path="{app_name}/file/{directory:path}")

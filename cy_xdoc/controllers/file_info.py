@@ -44,9 +44,9 @@ def get_info(app_name: str, UploadId: str, token=Depends(cy_xdoc.auths.Authentic
     :param app_name:
     :return:
     """
-    file_service = cy_kit.single(cy_xdoc.services.files.FileServices)
-    documents = file_service.db(app_name).doc(cy_xdoc.models.files.DocUploadRegister)
-    upload_info = documents @ UploadId
+    file_service:cy_xdoc.services.files.FileServices = cy_kit.single(cy_xdoc.services.files.FileServices)
+    doc_context = file_service.db_connect.db(app_name).doc(cy_xdoc.models.files.DocUploadRegister)
+    upload_info = doc_context.context @ UploadId
     if upload_info is None:
         return None
     upload_info.UploadId = upload_info._id

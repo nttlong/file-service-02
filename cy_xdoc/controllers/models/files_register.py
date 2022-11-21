@@ -29,11 +29,11 @@ class RegisterUploadInfo:
 class RegisterUploadResult:
     NumOfChunks:int
     """
-    Số phân đoạn: Rất quan trọng dùng để hỗ trợ client upload 
+    Số phân đoạn: Rất quan trọng dùng để hỗ trợ __client__ upload 
     """
     ChunkSizeInBytes: int
     """
-    Kích thước phân đoạn: Rất quan trọng dùng để hỗ trợ client upload
+    Kích thước phân đoạn: Rất quan trọng dùng để hỗ trợ __client__ upload
     """
     UploadId: str
     """

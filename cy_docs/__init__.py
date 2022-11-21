@@ -5,14 +5,12 @@ import ctypes
 import sys
 __release_mode__ = True
 __working_dir__ = pathlib.Path(__file__).parent.__str__()
-if sys.platform != "linux":
-    raise Exception(f"The module is not available for {sys.platform}")
 
 
 
 
 sys.path.append(__working_dir__)
-from . import cy_docs_x
+import cy_docs_x
 
 from typing import TypeVar, Generic, List
 
@@ -21,7 +19,7 @@ T = TypeVar('T')
 
 def expr(cls: T) -> T:
     """
-    Create mongodb build expression base on cls
+    Create mongodb build expression base on __cls__
     :param cls:
     :return:
     """

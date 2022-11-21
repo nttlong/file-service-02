@@ -4,15 +4,14 @@ from setuptools import setup
 from Cython.Build import cythonize
 import os
 build_dir = pathlib.Path(__file__).parent.__str__()
-file_cyx_es=os.path.join(build_dir, f"cyx_es.py")
+
+file_path=os.path.join(build_dir, f"cy_es_x.py")
+
 
 setup(
-    name='pyx_re_quicky_routers_x',
-    ext_modules=cythonize(file_cyx_es),
+    name='cy_es_x',
+    ext_modules=cythonize(file_path),
     zip_safe=True,
+    packages=["cy_es_x"]
 )
-
-"""
-cd cy_es
-python cy_es/setup.py build_ext --inplace
-"""
+#python cy_es/setup.py build_ext --inplace

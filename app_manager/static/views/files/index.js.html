@@ -71,9 +71,10 @@
 
             <div>
                 <div class="btn-group">
+                    <input type="button" class="btn btn-primary btn-sm" value="{{$res('New')}}" ng-click="doOpenUploadWindow().then()" style="margin-right:10px" />
                     <input type="button" class="btn btn-primary btn-sm" value="{{$res('New compress')}}" ng-click="doOpenUploadZipWindow().then()" />
-                    <input type="button" class="btn btn-primary btn-sm" value="{{$res('New')}}" ng-click="doOpenUploadWindow().then()" />
                 </div>
+
 
             </div>
         </div>
@@ -139,8 +140,11 @@
                             <div style="grid-column: 1/-1">
                                 <div class="layout-rows">
                                     <div class="dock full"></div>
+                                    <div>
+                                        <button class="btn btn-link btn-sm" ng-click="doShowDetail(p).then()">{{$res('Detail')}} </button>
+                                    </div>
                                     <div style="position:relative;right:4px;bottom:4px">
-                                        <button class="btn btn-primary btn-sm" ng-click="doDelete(p).then()">{{$res('Delete')}}</button>
+                                        <button class="btn btn-danger btn-sm" ng-click="doDelete(p).then()">{{$res('Delete')}}</button>
                                     </div>
                                 </div>
 

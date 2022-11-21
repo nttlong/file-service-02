@@ -2,40 +2,42 @@ import datetime
 import uuid
 
 import cy_docs
-from cy_xdoc.services.base import Base
+import cy_kit
+from cy_xdoc.services.base import Base,DbConnect
 from cy_xdoc.models.apps import App
 
 
-class AppServices(Base):
+class AppServices:
 
-
+    def __init__(self,db=cy_kit.inject(DbConnect)):
+        self.db_context:DbConnect=db
     def get_list(self, app_name: str):
-        docs = self.expr(App)
-        ret = self.db(app_name).doc(App).aggregate().project(
-            cy_docs.fields.AppId >> docs._id ,
-            docs.name,
-            docs.description,
-            docs.domain,
-            docs.login_url,
-            docs.return_url_afterSignIn
+        docs = self.db_context.db(app_name).doc(App)
+        ret = docs.context.aggregate().project(
+            cy_docs.fields.AppId >> docs.fields._id ,
+            docs.fields.name,
+            docs.fields.description,
+            docs.fields.domain,
+            docs.fields.login_url,
+            docs.fields.return_url_afterSignIn
 
         ).sort(
-            docs.Name.asc(),
-            docs.RegisteredOn.desc()
+            docs.fields.Name.asc(),
+            docs.fields.RegisteredOn.desc()
         )
         return ret
 
     def get_item(self, app_name, app_get):
-        docs = self.expr(App)
-        return self.db(app_name).doc(App).aggregate().project(
-            cy_docs.fields.AppId >> docs.Id ,
-            docs.name,
-            docs.description,
-            docs.domain,
-            docs.login_url,
-            docs.return_url_afterSignIn
+        docs = self.db_context.db(app_name).doc(App)
+        return docs.context.aggregate().project(
+            cy_docs.fields.AppId >> docs.fields.Id ,
+            docs.fields.name,
+            docs.fields.description,
+            docs.fields.domain,
+            docs.fields.login_url,
+            docs.fields.return_url_afterSignIn
 
-        ).match(docs.Name == app_get).first_item()
+        ).match(docs.fields.Name == app_get).first_item()
 
     def create(self,
                Name: str,
@@ -73,3 +75,16 @@ class AppServices(Base):
             RegisteredOn= datetime.datetime.utcnow()
         )
         return ret
+
+    def create_default_app(self,domain:str,login_url:str,return_url_after_sign_in:str):
+        document=self.db_context.db('admin').doc(App)
+        default_amdin_db = self.db_context.admin_db_name
+        application = document.context @ (document.fields.Name==default_amdin_db)
+        if application is None:
+            document.context.insert_one(
+                document.fields.Name<<default_amdin_db,
+                document.fields.Domain<<domain,
+                document.fields.RegisteredOn<<datetime.datetime.utcnow(),
+                document.fields.LoginUrl<<login_url,
+                document.fields.ReturnUrlAfterSignIn<<return_url_after_sign_in
+            )

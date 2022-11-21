@@ -1,6 +1,5 @@
 import datetime
 import bson
-import ReCompact
 import cy_docs
 @cy_docs.define(
     name="SYS_SingleSignOn",
