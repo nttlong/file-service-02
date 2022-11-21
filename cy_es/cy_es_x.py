@@ -18,6 +18,8 @@ class BaseDoc:
         # self.is_equal = False
 
     def __getattr__(self, item):
+        if item.lower()=="id":
+            item="_id"
         if self.name is not None:
             return BaseDoc(f"{self.name}.{item}")
         return BaseDoc(item)
@@ -35,14 +37,15 @@ class BaseDoc:
     def __or__(self, other):
         ret = BaseDoc()
         if isinstance(other, BaseDoc):
-            left = self.es_expr
-            if left.get("term"):
-                left["match"]= left["term"]
-                del left["term"]
-            rigt = other.es_expr
-            if rigt.get("term"):
-                rigt["match"] = rigt["term"]
-                del rigt["term"]
+            if self.is_bool:
+                left ={"bool": self.es_expr}
+            else:
+                left = self.es_expr
+            if other.is_bool:
+                rigt ={"bool": other.es_expr}
+            else:
+                rigt = other.es_expr
+
             ret.es_expr = {
                 "should": [
                     left,rigt
@@ -55,17 +58,19 @@ class BaseDoc:
     def __and__(self, other):
         ret = BaseDoc()
         if isinstance(other, BaseDoc):
-            left = self.es_expr
-            if left.get("match"):
-                left["term"] = left["match"]
-                del left["match"]
-
-            rigt = other.es_expr
-            if rigt.get("match"):
-                rigt["term"] = rigt["match"]
-                del rigt["match"]
+            if self.is_bool:
+                left = {"bool":self.es_expr}
+            else:
+                left = self.es_expr
+            if other.is_bool:
+                rigt ={"bool": other.es_expr}
+            else:
+                rigt = other.es_expr
+            # if rigt.get("match"):
+            #     rigt["term"] = rigt["match"]
+            #     del rigt["match"]
             ret.es_expr = {
-                "should": [
+                "must": [
                     left, rigt
                 ]
             }
@@ -82,7 +87,7 @@ class BaseDoc:
 
     def __repr__(self):
         if isinstance(self.es_expr, dict):
-            return json.dumps(self.get_expr())
+            return json.dumps(self.get_expr(),indent=1)
         return self.name
 
     def get_expr(self):
