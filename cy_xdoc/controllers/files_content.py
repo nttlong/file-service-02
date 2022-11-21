@@ -19,8 +19,7 @@ async def get_content_of_files(app_name: str, directory: str, request: fastapi.R
         if file_cache:
             return fastapi.responses.FileResponse(path=file_cache)
 
-    file_service = cy_kit.single(cy_xdoc.services.files.FileServices)
-    file_storage = cy_kit.provider(cy_xdoc.services.file_storage.FileStorageService)
+    file_service = cy_kit.singleton(cy_xdoc.services.files.FileServices)
     upload_id = directory.split('/')[0]
 
     fs = file_service.get_main_file_of_upload(

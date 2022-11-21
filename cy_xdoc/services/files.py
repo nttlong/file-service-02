@@ -69,7 +69,7 @@ class FileServices:
                     _a_thumbs += [f"api/{app_name}/thumbs/{url}"]
                 x["AvailableThumbs"] = _a_thumbs
             if x.OCRFileId:
-                x["OcrContentUrl"]=f"{root_url}/api/{app_name}/file-ocr/{x.FileNameOnly.lower()}.pdf"
+                x["OcrContentUrl"]=f"{root_url}/api/{app_name}/file-ocr/{x.UploadID}/{x.FileNameOnly.lower()}.pdf"
             yield x
 
     def get_main_file_of_upload(self, app_name, upload_id):
