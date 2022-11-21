@@ -5,7 +5,7 @@ import cy_web
 import cy_xdoc.auths
 from typing import Optional
 @cy_web.hanlder("post","{app_name}/search")
-async def file_search(app_name: str, content: str,
+def file_search(app_name: str, content: str,
                       page_size: Optional[int],
                       page_index: Optional[int],
                       highlight: Optional[bool],
@@ -33,24 +33,24 @@ async def file_search(app_name: str, content: str,
     )
 
     ret_items = []
-    url = container.Services.host.root_api_url
-    for x in search_result["items"]:
-        upload_doc_item = x.get('data_item')
+    url = cy_web.get_host_url()+"/api"
+    for x in search_result.items:
+        upload_doc_item = x._source.data_item
         if upload_doc_item:
-            upload_doc_item['UploadId'] = upload_doc_item["_id"]
-            upload_doc_item['Highlight'] = x.get('highlight', [])
+            # upload_doc_item.UploadId = upload_doc_item._id
+            upload_doc_item.Highlight = x.highlight
             upload_doc_item[
-                "UrlOfServerPath"] = url + f"/{app_name}/file/{upload_doc_item[Docs.Files.FullFileName.__name__]}"
+                "UrlOfServerPath"] = url + f"/{app_name}/file/{upload_doc_item.FullFileName}"
             upload_doc_item["AppName"] = app_name
             upload_doc_item[
-                "RelUrlOfServerPath"] = f"/{app_name}/file/{upload_doc_item[Docs.Files.FullFileName.__name__]}"
+                "RelUrlOfServerPath"] = f"/{app_name}/file/{upload_doc_item.FullFileName}"
             upload_doc_item[
-                "ThumbUrl"] = url + f"/{app_name}/thumb/{upload_doc_item['_id']}/{upload_doc_item[Docs.Files.FileName.__name__]}.png"
+                "ThumbUrl"] = url + f"/{app_name}/thumb/{upload_doc_item['_id']}/{upload_doc_item.FileName}.png"
             ret_items += [upload_doc_item]
 
     return dict(
-        total_items=search_result["total_items"],
-        max_score=search_result["max_score"],
+        total_items=search_result.hits.total,
+        max_score=search_result.hits.max_score,
         items=ret_items,
-        text_search=search_result["text_search"]
+        text_search=content
     )

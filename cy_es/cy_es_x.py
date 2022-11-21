@@ -253,14 +253,19 @@ class SearchResult(dict):
     @property
     def took(self) -> int:
         return self.get('took') or 0
+    @property
+    def items(self):
+        for x in self.hits.hits:
+            yield ESDocumentObject(x)
 
 
 def search(client: Elasticsearch,
-           index: str, filter,
+           index: str,
+           filter,
            excludes: typing.List[DocumentFields] = [],
            skip: int = 0,
            limit: int = 50,
-           highligh:DocumentFields=None):
+           highlight : DocumentFields = None)->SearchResult:
     if isinstance(filter, dict):
         body = dict(query=filter)
 
@@ -281,15 +286,15 @@ def search(client: Elasticsearch,
                 }
             }
     """
-    if highligh:
+    if highlight:
         __highlight = {
             "pre_tags": ["<em>"],
             "post_tags": ["</em>"],
             "fields": {
-                highligh.__name__: {}
+                highlight.__name__: {}
             }
         }
-        body["highligh"]=__highlight
+        body["highlight"]=__highlight
     ret = client.search(index=index, doc_type="_doc", body=body)
     return SearchResult(ret)
 
@@ -322,13 +327,19 @@ class ESDocumentObject(dict):
             return dict.get(self, key)
 
     def __getattr__(self, item):
-        return self.get(item)
+        ret_val = self.get(item)
+        if isinstance(ret_val,dict):
+            return ESDocumentObject(**self.get(item))
+        else:
+            return ret_val
+
 
     def __setattr__(self, key, value):
         if isinstance(value, dict):
-            self[key] = ESDocumentObject(value)
+            dict.update(self,{key:ESDocumentObject(value)})
+
         else:
-            self[key] = value
+            dict.update(self,{key:value})
 
     def to_pydantic(self) -> pydantic.BaseModel:
         return pydantic.BaseModel(self)
