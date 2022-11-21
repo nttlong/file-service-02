@@ -17,14 +17,14 @@ T = TypeVar('T')
 #     def get(self, __key):
 #         from enigma_docs import __under_fields__
 #         if isinstance(__key,__under_fields__.__DynamicField__):
-#             items = __key.name.split('.')
+#             items = __key.__name__.split('.')
 #             ret=None
 #             for x in items:
 #                 ret=self.get(x,None)
 #                 if ret is None:
 #                     return ret
 #                 elif
-#             return self.get(__key.name)
+#             return self.get(__key.__name__)
 def __modify_class___getattr__(cls):
     if hasattr(cls, "__has_modifier__"):
         return cls

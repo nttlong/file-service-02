@@ -179,10 +179,10 @@ class DocUploadRegister:
     Sau đó chỉ việc thay đổi phần mở rộng và phần tiền tố
     Ví dụ file gốc là test.docx
     FullFileName server là 123-323-189fd/test.docx
-    Khi đó url vào file gốc là <Host-api>/<app-name>/file/123-323-189fd/test.docx
-    Khi đó url vào file thumb là <Host-api>/<app-name>/thumb/123-323-189fd/test.png
-    Khi đó url vào file orc là <Host-api>/<app-name>/file-ocr/123-323-189fd/test.pdf
-    Khi đó url vào file pdf là <Host-api>/<app-name>/file-pdf/123-323-189fd/test.pdf
+    Khi đó url vào file gốc là <Host-api>/<app-__name__>/file/123-323-189fd/test.docx
+    Khi đó url vào file thumb là <Host-api>/<app-__name__>/thumb/123-323-189fd/test.png
+    Khi đó url vào file orc là <Host-api>/<app-__name__>/file-ocr/123-323-189fd/test.pdf
+    Khi đó url vào file pdf là <Host-api>/<app-__name__>/file-pdf/123-323-189fd/test.pdf
     Vì vậy các API tiếp nhận request sẽ lấy phần 123-323-189fd/test để truy tìm file fs 
     trong Mongodb để write xuống thiết bị yêu cầu đúng nôi dung mà nó đang chứa đưng
     Để truy tìm file FS trong MongoDb một cách nhanh chóng hệ thống sẽ dự vào FullFileNameWithoutExtenstion

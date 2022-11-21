@@ -8,7 +8,7 @@ class AppInfo:
     """
     AppId:typing.Optional[str]
     """
-    The name of application
+    The __name__ of application
     """
     Name:str
     Description: typing.Optional[str]
@@ -25,7 +25,7 @@ class AppInfoRegister(AppInfo):
     #     """
     # AppId: str
     # """
-    # The name of application
+    # The __name__ of application
     # """
     # Name: str
     # Description: typing.Optional[str]

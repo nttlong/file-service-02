@@ -26,16 +26,16 @@ spec:
 #            - /app/bk_services/ocr_image.py
 #
 #          image: nttlong/lv-file:b2
-#          name: file-services-ocr-image
+#          __name__: file-services-ocr-image
 #          imagePullPolicy: Always
 #
 #          resources: { }
 #          volumeMounts:
-#            - name: tmp-upload
+#            - __name__: tmp-upload
 #              mountPath: /app/tmp
-#            - name: fs-docs
+#            - __name__: fs-docs
 #              mountPath: /app/fs-docs
-#            - name: bk-logs
+#            - __name__: bk-logs
 #              mountPath: /app/logs
         # Pdf
         - args:

@@ -47,10 +47,10 @@ spec:
         name: mongo
         imagePullPolicy: "Always"
         # env:
-        #      -  name: "MONGO_INITDB_ROOT_USERNAME"
+        #      -  __name__: "MONGO_INITDB_ROOT_USERNAME"
         #         value: "HL7GetwayUser1"
 
-        #      - name: "MONGO_INITDB_ROOT_PASSWORD"
+        #      - __name__: "MONGO_INITDB_ROOT_PASSWORD"
         #        value: "HL7GetwaySureEHRLacViet$abcdxyzHL7GetwayLisAnd#RisUser#11234506789User1HL7Getway"
         ports:
           - containerPort: 27017
@@ -58,7 +58,7 @@ spec:
           - name: mongodbs-pv
             mountPath: /data/db
 #       volumes:
-#         - name: mongodbs-pv
+#         - __name__: mongodbs-pv
 #           hostPath: # hostPath volume
 #             path: /run/desktop/mnt/host/c/users/public/temp/mongodb # folder of woker node
       volumes:

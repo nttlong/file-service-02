@@ -19,7 +19,7 @@ class Config:
         from fastapi.logger import logger
         self.logger = logging.getLogger("app")
         self.logger.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s:%(levelname)s : %(name)s : %(message)s')
+        formatter = logging.Formatter('%(asctime)s:%(levelname)s : %(__name__)s : %(message)s')
         print(f"Api log file '{self.full_path_to_log}'")
         file_handler = logging.FileHandler(self.full_path_to_log)
         file_handler.setFormatter(formatter)

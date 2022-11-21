@@ -78,22 +78,22 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
     if isinstance(fx,ReCompact.dbm.DbObjects.expressions.MemberExpression):
         left = to_mongodb_expr(fx.object, params, forSelect)
         if prefix!=None:
-            if fx.property.name:
+            if fx.property.__name__:
                 if type(left) in str:
-                    return prefix + left + "." + fx.property.name
+                    return prefix + left + "." + fx.property.__name__
                 else:
-                    return prefix + left.name + "." + fx.property.name
+                    return prefix + left.name + "." + fx.property.__name__
             else:
-                return prefix + left.name + "." + fx.property.raw
+                return prefix + left.__name__ + "." + fx.property.raw
         else:
-            if fx.property.name:
+            if fx.property.__name__:
                 if type(left) == str:
-                    return left + "." + fx.property.name
-                return left.name + "." + fx.property.name
+                    return left + "." + fx.property.__name__
+                return left.__name__ + "." + fx.property.__name__
             else:
                 if type(left) == str:
                     return left + "." + fx.property.raw
-                return left.name + "." + fx.property.raw
+                return left.__name__ + "." + fx.property.raw
 
     if isinstance(fx,ReCompact.dbm.DbObjects.expressions.BinaryExpression):
         right = to_mongodb_expr(fx.right, params, True, False, prefix)
@@ -146,23 +146,23 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
             }
 
     if isinstance(fx,ReCompact.dbm.DbObjects.expressions.CallExpression):
-        if fx.callee.name=="exists":
+        if fx.callee.__name__== "exists":
             return {
                 to_mongodb_expr(fx.arguments[0],params,True,forNot):{
                     "$exists":not forNot
                 }
             }
-        if avgFuncs.find(";"+fx.callee.name+";")>-1:
+        if avgFuncs.find(";" + fx.callee.__name__ + ";")>-1:
             return {
-                "$" + fx.callee.name:to_mongodb_expr(fx.arguments[0],True,False,"$")
+                "$" + fx.callee.__name__:to_mongodb_expr(fx.arguments[0], True, False, "$")
             }
-        if fx.callee.name=="$get_params":
+        if fx.callee.__name__== "$get_params":
             return params[fx.arguments[0].value]
-        if fx.callee.name=="expr":
+        if fx.callee.__name__== "expr":
             return {
                 "$expr":to_mongodb_expr(fx.arguments[0],params,True,forNot,"$")
             }
-        if fx.callee.name=="expr":
+        if fx.callee.__name__== "expr":
             left=to_mongodb_expr(fx.arguments[0],params,True,forNot)
             right=to_mongodb_expr(fx.arguments[1],params,True,forNot)
             if fx.arguments.__len__()==2:
@@ -187,7 +187,7 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
                     }
                 }
             return ret
-        if fx.callee.name=="switch":
+        if fx.callee.__name__== "switch":
             ret={
                 "$switch":{
                     "branches":[],
@@ -197,14 +197,14 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
             for i in range(0,fx.arguments.__len__()-1,1):
                 ret["$switch"]["branches"].append(to_mongodb_expr(fx.arguments[i],params,True,forNot,"$"))
             return ret
-        if fx.callee.name=="case":
+        if fx.callee.__name__== "case":
             if fx.arguments.__len__()<2:
                 raise Exception("'case' must have 2 params: the first is logical and second for true case")
             return {
                 "case":to_mongodb_expr(fx.arguments[0],params,True,forNot,"$"),
                 "then":to_mongodb_expr(fx.arguments[1],params,True,forNot,"$")
             }
-        if fx.callee.name in ["if","iif"]:
+        if fx.callee.__name__ in ["if", "iif"]:
             return {
                 "$cond":{
                     "if":to_mongodb_expr(fx.arguments[0],params,True,forNot,"$"),
@@ -212,16 +212,16 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
                     "else":to_mongodb_expr(fx.arguments[2],params,True,forNot)
                 }
             }
-        if fx.callee.name=="in" and not forSelect:
+        if fx.callee.__name__== "in" and not forSelect:
             field=to_mongodb_expr(fx.arguments[0],params,True,forNot)
             if type(field) not in [str,unicode]:
-                raise Exception("match or where with $in must be begin with field name, not object")
+                raise Exception("match or where with $in must be begin with field __name__, not object")
             return {
                 field:{
                     "$in":to_mongodb_expr(fx.arguments[1],params,True,forNot,"$")
                 }
             }
-        if fx.callee.name=="dateToString":
+        if fx.callee.__name__== "dateToString":
             paramIndexs = ['date','format', 'timezone']
             ret={
                 "$dateToString":{}
@@ -231,7 +231,7 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
                     paramIndexs[i]:to_mongodb_expr(fx.arguments[i],params,True,forNot,"$")
                 })
             return ret
-        if fx.callee.name=="dateFromString":
+        if fx.callee.__name__== "dateFromString":
             paramIndexs = ['dateString', 'format', 'timezone', 'onNull', 'onError']
             ret={
                 "$dateFromString":{}
@@ -241,7 +241,7 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
                     paramIndexs[i]: to_mongodb_expr(fx.arguments[i], params, True, forNot, "$")
                 })
             return ret
-        if fx.callee.name=="dateToParts":
+        if fx.callee.__name__== "dateToParts":
             paramIndexs=['date','timezone','iso8601']
             ret={
                 "$dateToParts":{}
@@ -251,17 +251,17 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
                     paramIndexs[i]: to_mongodb_expr(fx.arguments[i], params, True, forNot, "$")
                 })
             return ret;
-        if fx.callee.name in ["hour","minute","dayOfMonth","dayOfYear",'second']:
+        if fx.callee.__name__ in ["hour", "minute", "dayOfMonth", "dayOfYear", 'second']:
             paramIndexs=["date","timezone"]
             ret={
-                "$"+fx.callee.name:{}
+                "$"+fx.callee.__name__:{}
             }
             for i in range(0, fx.arguments.__len__(), 1):
-                ret["$"+fx.callee.name].update({
+                ret["$" + fx.callee.__name__].update({
                     paramIndexs[i]: to_mongodb_expr(fx.arguments[i], params, True, forNot, "$")
                 })
             return ret
-        if fx.callee.name=="dateFromParts":
+        if fx.callee.__name__== "dateFromParts":
             paramIndexs = ["year", "month", "day", "hour", "minute", "second", "millisecond", "timezone"]
             ret = {"$dateFromParts":{}}
             for i in range(0, fx.arguments.__len__(), 1):
@@ -269,33 +269,33 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
                     paramIndexs[i]: to_mongodb_expr(fx.arguments[i], params, True, forNot, "$")
                 })
             return ret
-        if fx.callee.name in ["rtrim","ltrim"]:
+        if fx.callee.__name__ in ["rtrim", "ltrim"]:
             paramIndexs = ["input", "chars"]
-            ret={"$"+fx.callee.name:{}}
+            ret={"$"+fx.callee.__name__:{}}
             for i in range(0, fx.arguments.__len__(), 1):
-                ret["$"+fx.callee.name].update({
+                ret["$" + fx.callee.__name__].update({
                     paramIndexs[i]: to_mongodb_expr(fx.arguments[i], params, True, forNot, "$")
                 })
             return ret
-        if fx.callee.name=="ceil":
+        if fx.callee.__name__== "ceil":
             return {
                 "$ceil":to_mongodb_expr(fx.arguments[0], params, True, forNot, "$")
             }
-        if fx.callee.name in ["arrayToObject",'reverseArray']:
+        if fx.callee.__name__ in ["arrayToObject", 'reverseArray']:
             return {
-                "$" + fx.callee.name:to_mongodb_expr(fx.arguments[0],params,True,forNot,"$")
+                "$" + fx.callee.__name__:to_mongodb_expr(fx.arguments[0], params, True, forNot, "$")
             }
-        if fx.callee.name=="reduce":
+        if fx.callee.__name__== "reduce":
             paramIndexs = ["input", "initialValue", "in"]
             ret={
-                "$" + fx.callee.name:{}
+                "$" + fx.callee.__name__:{}
             }
             for i in range(0, fx.arguments.__len__(), 1):
-                ret["$"+fx.callee.name].update({
+                ret["$" + fx.callee.__name__].update({
                     paramIndexs[i]: to_mongodb_expr(fx.arguments[i], params, True, forNot, "$")
                 })
             return ret
-        if fx.callee.name=="convert":
+        if fx.callee.__name__== "convert":
             paramIndexs = ['input', 'to', 'onNull', 'onError']
             ret={"$convert":{}}
             for i in range(0, fx.arguments.__len__(), 1):
@@ -303,7 +303,7 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
                     paramIndexs[i]: to_mongodb_expr(fx.arguments[i], params, True, forNot, "$")
                 })
             return ret
-        if fx.callee.name=='filter':
+        if fx.callee.__name__== 'filter':
             ret = {}
             paramIndexs = ['input', 'as', 'cond']
             prefix = ["$", None, "$"]
@@ -312,7 +312,7 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
                     paramIndexs[i]: to_mongodb_expr(fx.arguments[i], params, True, forNot, prefix[i])
                 })
             return ret
-        if fx.callee.name=="type":
+        if fx.callee.__name__== "type":
             if fx.arguments.__len__()==2:
                 field = to_mongodb_expr(fx.arguments[0], params, True, forNot, "$")
                 val = to_mongodb_expr(fx.arguments[1], params, True, forNot, "$")
@@ -334,11 +334,11 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
                 return {
                     "$type":to_mongodb_expr(fx.arguments[0], params, True, forNot, "$")
                 }
-        if fx.callee.name=="size":
+        if fx.callee.__name__== "size":
             return {
                 "$size":to_mongodb_expr(fx.arguments[0],params,True,forNot,"$")
             }
-        if fx.callee.name=="mergeObjects":
+        if fx.callee.__name__== "mergeObjects":
             if fx.arguments.__len__()==1:
                 return {
                     "$mergeObjects": to_mongodb_expr(fx.arguments[0], params, True, forNot, "$")
@@ -350,8 +350,8 @@ def to_mongodb_expr(fx,params,forSelect=False,forNot=False,prefix=None):
                 for arg in fx.arguments:
                     ret["$mergeObjects"].append(to_mongodb_expr(arg,params,True,forNot,"$"))
                 return ret
-        ret={"$"+fx.callee.name:[]}
+        ret={"$"+fx.callee.__name__:[]}
 
         for arg in fx.arguments:
-            ret["$"+fx.callee.name].append(to_mongodb_expr(arg,params,True,forNot,"$"))
+            ret["$" + fx.callee.__name__].append(to_mongodb_expr(arg, params, True, forNot, "$"))
         return ret

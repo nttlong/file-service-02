@@ -276,7 +276,7 @@ async def __get_collection__(db, collection_name, keys, index):
     coll = getattr(db, collection_name)
     global __cache_index_creator__
     global __lock__
-    key = f"{db.name}/{collection_name}".lower()
+    key = f"{db.__name__}/{collection_name}".lower()
 
     if not __cache_index_creator__.get(key, None):
         __lock__.acquire()
@@ -360,7 +360,7 @@ def __get_collection_sync__(db, collection_name, keys, index):
     coll = getattr(db, collection_name)
     global __cache_index_creator__
     global __lock__
-    key = f"{db.name}/{collection_name}".lower()
+    key = f"{db.__name__}/{collection_name}".lower()
 
     if not __cache_index_creator__.get(key, None):
         __lock__.acquire()

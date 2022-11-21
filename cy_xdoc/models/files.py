@@ -3,6 +3,8 @@ import typing
 import cy_docs
 import datetime
 import bson
+
+
 @cy_docs.define(
     name="DocUploadRegister",
     uniques=["ServerFileName", "FullFileName", "FullFileNameLower"],
@@ -38,58 +40,58 @@ class DocUploadRegister:
     Cấu trúc của thông tin Upload.
 
     """
-    FileNameOnly:str
+    FileNameOnly: str
     """
     Tên file không có phần Extent đã được lowercase\n
     Để bảo đảm tốc độ hệ thống ghi nhận luôn thông tin này khi upload mà không cần tính lại\n
     """
-    FileName:str
+    FileName: str
     """
     Tên file gốc, là tên file lúc người dùng hoặc 1 ứng dụng nào đó Upload
     """
-    FileNameLower:str
+    FileNameLower: str
     """
     Tên file gốc dạng lowe case để bảo đảm tốc độ truy cập
     """
-    RegisterOn:datetime.datetime
+    RegisterOn: datetime.datetime
     """
     Thời điểm bắt đầu Upload.
     Lưu ý: Việc Upload 1 File có thể kéo dài trong vài phút
     """
-    RegisterOnDays:int
+    RegisterOnDays: int
     """
     Ngày tạo\n
     Ví dụ RegisterOn là 22/8/1732 thì RegisterOnDays là 22 \n
     Để bảo đảm tốc độ khi cần truy vấn thông tin hệ thống sẽ tính luôn ngày của ngày tạo
 
     """
-    RegisterOnMonths:int
+    RegisterOnMonths: int
     """
         Tháng của agày tạo\n
         Ví dụ RegisterOn là 22/8/1732 thì RegisterOnMonths là 8 \n
         Để bảo đảm tốc độ khi cần truy vấn thông tin hệ thống sẽ tính luôn ngày của ngày tạo
 
         """
-    RegisterOnYears:int
-    RegisterOnHours:int
-    RegisterOnMinutes:int
-    RegisterOnSeconds:int
-    LastModifiedOn:datetime
+    RegisterOnYears: int
+    RegisterOnHours: int
+    RegisterOnMinutes: int
+    RegisterOnSeconds: int
+    LastModifiedOn: datetime
     """
     Thời điểm thông tin bị điều chỉnh
     """
-    Status:int
+    Status: int
     """
     Tình trạng của File: 0- Chưa xong, cần phải Resume Upload hoặc có thể xóa bò
                          1- Nội dung chính đã hoàn chỉnh
     """
-    SizeInBytes:int
+    SizeInBytes: int
     """
     Độ lớn của file tính bằng Bytes \n
     Lưu ý trong Python 3 kiểu int có thể lưu lại 1 con số lớn
     Vì vậy kích thước file có thể lưu được là  858,993,459,2 GB
     """
-    ChunkSizeInKB:int
+    ChunkSizeInKB: int
     """
     Việc Upload 1 file lớn chỉ trong 1 lần là điều không thể:
         Quá trình Upload sẽ cắt file thành những đoạn nhỏ rồi Upload. \n
@@ -100,19 +102,19 @@ class DocUploadRegister:
 
 
     """
-    ChunkSizeInBytes:int
-    NumOfChunks:int
-    FileExt:str
-    SizeInHumanReadable:str
-    PercentageOfUploaded:float
-    ServerFileName:str
-    RegisteredBy:str
-    IsPublic:bool
+    ChunkSizeInBytes: int
+    NumOfChunks: int
+    FileExt: str
+    SizeInHumanReadable: str
+    PercentageOfUploaded: float
+    ServerFileName: str
+    RegisteredBy: str
+    IsPublic: bool
     """
     Một số nội dung Upload có thể cần phải công khai \n
     Trường hợp này đặt IsPublic là True 
     """
-    FullFileName:str
+    FullFileName: str
     """
     Là đường dẫn đầy đủ của File sau khi lưu hoàn tất trên server.
     Đường dẫn đầy đủ tính như sau:
@@ -130,12 +132,12 @@ class DocUploadRegister:
 
 
     """
-    FullFileNameLower:str
+    FullFileNameLower: str
     """
     Đường dẫn dạng lower , tắng tốc khi truy cập
     """
 
-    FullFileNameWithoutExtenstion:str
+    FullFileNameWithoutExtenstion: str
     """
     Là FullFileName nhưng lược bỏ phần mở rộng\n
     Tại sao lại có điều này?
@@ -150,76 +152,76 @@ class DocUploadRegister:
     Sau đó chỉ việc thay đổi phần mở rộng và phần tiền tố
     Ví dụ file gốc là test.docx
     FullFileName server là 123-323-189fd/test.docx
-    Khi đó url vào file gốc là <Host-api>/<app-name>/file/123-323-189fd/test.docx
-    Khi đó url vào file thumb là <Host-api>/<app-name>/thumb/123-323-189fd/test.png
-    Khi đó url vào file orc là <Host-api>/<app-name>/file-ocr/123-323-189fd/test.pdf
-    Khi đó url vào file pdf là <Host-api>/<app-name>/file-pdf/123-323-189fd/test.pdf
+    Khi đó url vào file gốc là <Host-api>/<app-__name__>/file/123-323-189fd/test.docx
+    Khi đó url vào file thumb là <Host-api>/<app-__name__>/thumb/123-323-189fd/test.png
+    Khi đó url vào file orc là <Host-api>/<app-__name__>/file-ocr/123-323-189fd/test.pdf
+    Khi đó url vào file pdf là <Host-api>/<app-__name__>/file-pdf/123-323-189fd/test.pdf
     Vì vậy các API tiếp nhận request sẽ lấy phần 123-323-189fd/test để truy tìm file fs 
     trong Mongodb để write xuống thiết bị yêu cầu đúng nôi dung mà nó đang chứa đưng
     Để truy tìm file FS trong MongoDb một cách nhanh chóng hệ thống sẽ dự vào FullFileNameWithoutExtenstion
     dạng lower case đểm tìm
 
     """
-    FullFileNameWithoutExtenstionLower:str
+    FullFileNameWithoutExtenstionLower: str
     """
     Là FullFileNameWithoutExtenstion  dạng lower case
     """
-    ThumbWidth:int
+    ThumbWidth: int
     """
     Độ rộng của ảnh Thumb tính bằng Pixel \n
     Thông tin này chỉ có khi tiến trình tạo ảnh Thumb hoàn tất.
     Hầu hết các nôi dung Upload có ảnh Thumb. Một số trường hợp không có ảnh Thumb giá trị này sẽ là null
     """
-    ThumbHeight:int
+    ThumbHeight: int
     """
         Độ rộng của ảnh Thumb tính bằng Pixel \n
         Thông tin này chỉ có khi tiến trình tạo ảnh Thumb hoàn tất.
         Hầu hết các nôi dung Upload có ảnh Thumb. Một số trường hợp không có ảnh Thumb giá trị này sẽ là null
     """
-    MimeType:str
+    MimeType: str
     """
     Xem link: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
     """
-    SizeUploaded:int
+    SizeUploaded: int
     """
     Dung lượng đã upload tính bằng bytes
     """
-    NumOfChunksCompleted:int
+    NumOfChunksCompleted: int
     """
     Số chunk đã hoàn tất.
     Thông tin này rất quan trọng,
     Nếu sau này có nhu cầu Resume Upload (Tức là upload tiếp các nội dung chưa xong)
     Resume Upload phía Client sẽ dựa vào thông tin này để đọc file và Upload tiếp
     """
-    MainFileId:bson.ObjectId
-    ThumbFileId:bson.ObjectId
+    MainFileId: bson.ObjectId
+    ThumbFileId: bson.ObjectId
     """
     Id ảnh Thumb của file này.
     Mỗi một file trên server nếu có ảnh Thumb, ảnh thumb sẽ lưu trong GridFS với một Id.
     Giá trị của Id trong GridFS được gán vào ThumbFileId
     """
-    ThumbId:str  # depreciate after jun 2022
-    HasThumb:bson
+    ThumbId: str  # depreciate after jun 2022
+    HasThumb: bool
     """
     Thông tin này có được sau khi tiến trình phân tích và xác định ảnh thumb chạy xong.
 
     """
-    OriginalFileId :bson.ObjectId
+    OriginalFileId: bson.ObjectId
     """
     Trường hợp xử lý OCR thành công \n
     Thông tin này sẽ lưu lại file gốc, trong khi đó file gốc sẽ được cập nhật lại bằng nôi dung file mới
     đã được OCR
     """
-    OCRFileId:bson.ObjectId
-    VideoDuration:int
+    OCRFileId: bson.ObjectId
+    VideoDuration: int
     """
     Thời lượng tính bằng giây
     """
-    VideoFPS :int
+    VideoFPS: int
     """
     Số khung hình trên giây, thông tin này rất quan trọng trong việc tối ưu streaming nội dung video
     """
-    VideoResolutionWidth:int
+    VideoResolutionWidth: int
     """
     Độ phân giài ngang: \n
     Đây là thông tin cực kỳ quan trọng trong quá trìn streaming \n
@@ -228,26 +230,26 @@ class DocUploadRegister:
     4*1024*3= 4096(pixels) x (1 byte RED+ 1 byte GREEN + 1 byte BLUE)
     Tuy nhiên để tính được chính xác cần phải cân nhắc đến yếu tố Bit Rate
     """
-    VideoResolutionHeight:int  # Độ phân giải dọc
-    ProcessHistories:typing.List[dict]
+    VideoResolutionHeight: int  # Độ phân giải dọc
+    ProcessHistories: typing.List[dict]
     """
     Lịch sử các quá trình xử lý
     """
-    PdfFileId:bson.ObjectId
+    PdfFileId: bson.ObjectId
     """
     Field này là file id trỏ đến file pdf, là file pdf sinh ra bằng cách dùng
     libreoffice convert ra pdf 
     """
-    MarkDelete:bool
+    MarkDelete: bool
     """
     Mark delete
     """
-    AvailableThumbSize:str
+    AvailableThumbSize: str
     """
     Thumbnail constraint generator: After material successfully uploaded. The system will generate a default thumbnail in size of 700pxx700px. However if thy desire more thumbnails with various  sizes such as: 200x200,450x450,... Thy just set 200,450,.. Example: for 200x200, 350x350 and 1920x1920 just set 200,350,1920
     """
-    AvailableThumbs:typing.List[str]
-    IsProcessed:bson
+    AvailableThumbs: typing.List[str]
+    IsProcessed: bool
 
 
 @cy_docs.define(
@@ -256,10 +258,9 @@ class DocUploadRegister:
     indexes=["filename"]
 )
 class FsFile:
-    rel_file_path:str
-    filename:str
-    contentType:str
-
+    rel_file_path: str
+    filename: str
+    contentType: str
 
 
 @cy_docs.define(
@@ -267,9 +268,10 @@ class FsFile:
     indexes=["files_id", "n", "files_id,n"]
 )
 class FsChunks:
-    files_id:bson.ObjectId
-    n:int
-    data:bytes
+    files_id: bson.ObjectId
+    n: int
+    data: bytes
+
 
 @cy_docs.define(
     name="Sys_messages",
@@ -279,12 +281,12 @@ class SysMessage:
     """
     Message
     """
-    MsgId:str
-    AppName:str
-    MsgType:str
-    Data:str
-    CreatedOn:datetime.datetime
-    IsFinish:bool
-    IsLock:bool
-    InstancesLock:dict
-    RunInsLock:str
+    MsgId: str
+    AppName: str
+    MsgType: str
+    Data: str
+    CreatedOn: datetime.datetime
+    IsFinish: bool
+    IsLock: bool
+    InstancesLock: dict
+    RunInsLock: str

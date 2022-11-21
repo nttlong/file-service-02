@@ -7,7 +7,7 @@ from .dbm import field
 def document(name:str=None,indexes:list=[],keys:list=[]):
     """
     Caset thees class into Mongodb Documtens
-    :param name: Collection name
+    :param name: Collection __name__
     :param indexes: index fields
     :param keys: unique index
     :return:
@@ -73,7 +73,7 @@ def document(name:str=None,indexes:list=[],keys:list=[]):
                     f.data_type = dict
                     setattr(cls, k, f)
             # key_word_args = dict(
-            #     table_name = name,
+            #     table_name = __name__,
             #     indexes=indexes,
             #     keys = keys
             # )
@@ -86,4 +86,4 @@ def document(name:str=None,indexes:list=[],keys:list=[]):
         return ret_cls
 
     return wrapper
-    # return table(table_name=name,indexes=indexes,keys=keys)
+    # return table(table_name=__name__,indexes=indexes,keys=keys)

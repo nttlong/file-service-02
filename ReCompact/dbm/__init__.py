@@ -139,7 +139,7 @@ class field():
     @property
     def n(self):
         """
-        Get name of field
+        Get __name__ of field
         :return:
         """
         return self.__name__

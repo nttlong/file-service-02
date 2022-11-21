@@ -7333,7 +7333,7 @@ file-signature:
       - John Hancock
       - contract
       - document
-      - name
+      - __name__
   styles:
     - solid
   unicode: f573
@@ -16596,7 +16596,7 @@ signature:
     terms:
       - John Hancock
       - cursive
-      - name
+      - __name__
       - writing
   styles:
     - solid

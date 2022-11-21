@@ -92,7 +92,7 @@ for x in Factory.doc_upload_register.documents(db_name,Factory.doc_upload_regist
         Factory.doc_upload_register.update_one(
             db_name,Factory.doc_upload_register.fields._id==x[Factory.doc_upload_register.fields._id],
             {
-                Factory.doc_upload_register.fields.HasIndexSearch.name: True
+                Factory.doc_upload_register.fields.HasIndexSearch.__name__: True
             }
         )
 

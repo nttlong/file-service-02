@@ -76,7 +76,7 @@ def get_logger(
     full_path_to_log =os.path.join(full_path_to_log_dir,module_name+".txt")
     ret = logging.getLogger(module_name)
     ret.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s:%(levelname)s : %(name)s : %(message)s')
+    formatter = logging.Formatter('%(asctime)s:%(levelname)s : %(__name__)s : %(message)s')
     file_handler = logging.FileHandler(full_path_to_log)
     file_handler.setFormatter(formatter)
 

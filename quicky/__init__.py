@@ -27,10 +27,10 @@
 #
 #
 # class QuickyApp(flask.app.Flask):
-#     def __init__(self, name, app_config: configuration.Config):
+#     def __init__(self, __name__, app_config: configuration.Config):
 #         from flask_simple_captcha import CAPTCHA
 #         super().__init__(
-#             name,
+#             __name__,
 #             static_folder=app_config.full_static_dir,
 #             static_url_path=app_config.static_url,
 #             template_folder=app_config.full_template_path

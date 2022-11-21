@@ -32,7 +32,7 @@ class Loggers(enig.Singleton):
             # log.setLevel(level=logging.INFO)
 
             # create formatter and add it to the handlers
-            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            formatter = logging.Formatter('%(asctime)s - %(__name__)s - %(levelname)s - %(message)s')
             full_log_dir = os.path.join(logger_dir, logger_name)
             if not os.path.isdir(full_log_dir):
                 os.makedirs(full_log_dir)

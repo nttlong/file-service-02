@@ -83,7 +83,7 @@ def gobbleNumericLiteral(rec):
             raise Exception('Expected exponent {0} at {1}'.format (number + exprI(rec.index),rec.index))
         rec.index=_index
     chCode = exprICode(rec)
-    #Check to make sure this isn't a variable name that start with a number (123abc)
+    #Check to make sure this isn't a variable __name__ that start with a number (123abc)
     if isIdentifierStart(chCode):
         raise Exception("Variable names cannot start with a number {0} at {1}".format(number + exprI(rec),rec.index))
     elif chCode == char_codes.PERIOD_CODE:
@@ -216,7 +216,7 @@ gobbleIdentifier = function() {
 							 } else {
 								 return {
 									 type: IDENTIFIER,
-									 name: identifier
+									 __name__: identifier
 								 };
 							 }
 						 }

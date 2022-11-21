@@ -3,7 +3,7 @@ How to use:
     1- Thee must create new Bootstrap with broker server in initial parameters, then assign to one variable.
     The variable can be use across thy application. If thy call Bootstrap again with the same broker server
     Thee will get old instance
-    2- In order create a new topic just call <boostrap server variable>.producers.<topic name>.send(<dict data>)
+    2- In order create a new topic just call <boostrap server variable>.producers.<topic __name__>.send(<dict data>)
 
     Example:
         my_brokers= new Bootstrap(["server 1:port1"],...)

@@ -33,6 +33,6 @@ class FileContentExtractorService(enig.Singleton):
         # import psutil
         # import signal
         # for x in psutil.process_iter():
-        #     if x.status() == 'sleeping' and x.name() == 'java':
+        #     if x.status() == 'sleeping' and x.__name__() == 'java':
         #         os.kill(x.pid, signal.SIGKILL)
         return ret['content'], ret['metadata']

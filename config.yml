@@ -40,7 +40,7 @@ db_:
 # Default administrator database
 admin_db_name_25: media-server
 # Below setting tell the system that must create new administrator database in mongodb
-# Admin db name is the name of administrator database
+# Admin db __name__ is the __name__ of administrator database
 # What is inside administrator database?
 # Administrator database maintain some mongodb collections. Accord to manage tanent
 admin_db_name: lv-docs

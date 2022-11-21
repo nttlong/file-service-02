@@ -211,7 +211,7 @@ class Field(__BaseField__):
     def __init__(self, init_value: Union[str, dict], oprator: str = None):
         """
         Init a base field
-        :param name:
+        :param __name__:
         """
         __BaseField__.__init__(self, init_value, oprator)
         self.__value__ = None
@@ -798,8 +798,8 @@ class DBDocument:
                         insert_dict[x.__field_name__] = x.__value__
                 else:
                     raise Exception("All element in left shift document must be cy_docs.Field. Example:"
-                                    "my_doc = cy_docs.get_doc('my-coll-name',__client__)"
-                                    "test_docs['my-db-name']<<( cy_docs.fields.Code <<'001', cy_docs.fields.Name << 'Name'")
+                                    "my_doc = cy_docs.get_doc('my-coll-__name__',__client__)"
+                                    "test_docs['my-db-__name__']<<( cy_docs.fields.Code <<'001', cy_docs.fields.Name << 'Name'")
             if insert_dict.get("_id") is None:
                 insert_dict["_id"] = bson.ObjectId()
             ret = self.collection.insert_one(insert_dict)
@@ -807,8 +807,8 @@ class DBDocument:
             return ret
         else:
             raise Exception("All element in left shift document must be cy_docs.Field. Example:"
-                            "my_doc = cy_docs.get_doc('my-coll-name',__client__)"
-                            "test_docs['my-db-name']<<( cy_docs.fields.Code <<'001', cy_docs.fields.Name << 'Name'")
+                            "my_doc = cy_docs.get_doc('my-coll-__name__',__client__)"
+                            "test_docs['my-db-__name__']<<( cy_docs.fields.Code <<'001', cy_docs.fields.Name << 'Name'")
 
     def __rshift__(self, other):
 
@@ -818,8 +818,8 @@ class DBDocument:
             ret = self.collection.find(other.to_mongo_db_expr())
         else:
             raise Exception("All element in right shift document must be cy_docs.Field. Example:"
-                            "my_doc = cy_docs.get_doc('my-coll-name',__client__)"
-                            "test_docs['my-db-name']>>( cy_docs.fields.MyNumber>1000")
+                            "my_doc = cy_docs.get_doc('my-coll-__name__',__client__)"
+                            "test_docs['my-db-__name__']>>( cy_docs.fields.MyNumber>1000")
 
         for x in ret:
             if x is None:
@@ -1328,7 +1328,7 @@ class Funcs:
                 }
             })
         else:
-            raise Exception(f"exists require cy_docs.fields.<field-name> or str")
+            raise Exception(f"exists require cy_docs.fields.<field-__name__> or str")
 
     @staticmethod
     def is_null(field):
@@ -1341,7 +1341,7 @@ class Funcs:
                 field: None
             })
         else:
-            raise Exception(f"exists require cy_docs.fields.<field-name> or str")
+            raise Exception(f"exists require cy_docs.fields.<field-__name__> or str")
 
     @staticmethod
     def is_not_null(field):
@@ -1354,7 +1354,7 @@ class Funcs:
                 field: {"$ne:": None}
             })
         else:
-            raise Exception(f"exists require cy_docs.fields.<field-name> or str")
+            raise Exception(f"exists require cy_docs.fields.<field-__name__> or str")
 
     @staticmethod
     def not_exists(field):
@@ -1371,7 +1371,7 @@ class Funcs:
                 }
             })
         else:
-            raise Exception(f"exists require cy_docs.fields.<field-name> or str")
+            raise Exception(f"exists require cy_docs.fields.<field-__name__> or str")
 
 
 __DbContext__cache__ = {}
