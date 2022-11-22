@@ -3,20 +3,36 @@ import { BaseScope, View } from "./../../js/ui/BaseScope.js";
 //import { ui_rect_picker } from "../../js/ui/ui_rect_picker.js";
 //import { ui_pdf_desk } from "../../js/ui/ui_pdf_desk.js";
 import api from "../../js/ClientApi/api.js"
-import { dialogConfirm, redirect, urlWatching, getPaths, msgError } from "../../js/ui/core.js"
+import {parseUrlParams, dialogConfirm, redirect, urlWatching, getPaths, msgError } from "../../js/ui/core.js"
 
 var filesView = await View(import.meta, class FilesView extends BaseScope {
-    listOfApp = [1]
+    listOfApp = [undefined]
     currentApp = undefined
     listOfFiles = []
     currentAppName = undefined
     async init() {
+        var queryData = parseUrlParams();
+        var r =await this.$getElement();
+        $(window).resize(()=>{
+                $(r).css({
+                    "max-height":$(document).height()-100
+                })
+            })
+            $(r).css({
+                    "max-height":$(document).height()-100
+                })
+
 
         this.listOfApp = await api.post(`admin/apps`, {
             
         })
         this.currentApp = this.listOfApp[0];
-        this.currentAppName = this.currentApp.Name;
+        if (!queryData["app"]){
+            this.currentAppName = this.currentApp.Name;
+        }
+        else {
+            this.currentAppName =queryData["app"]
+        }
         await this.doLoadAllFiles();
         this.$applyAsync();
         debugger;
@@ -29,6 +45,7 @@ var filesView = await View(import.meta, class FilesView extends BaseScope {
     }
     async doLoadAllFiles() {
         var me = this;
+        redirect("files?&app="+this.currentAppName)
         
         this.listOfFiles = await api.post(`${this.currentAppName}/files`, {
            

@@ -1,14 +1,20 @@
 
 <div class="layout-columns">
+    <h3>{{$res("Info detail")}}</h3></hr>
                 <div class="dock full" style="overflow-y:auto">
                     <table>
                         <tr ng-repeat="(key, value) in data">
-                            <td>
+                            <td valign="top">
                                 <b style="margin-right:20px">{{key}}</b>
                             </td>
-                            <td>:</td>
-                            <td>
+                            <td  valign="top">:</td>
+                            <td ng-if="key!='AvailableThumbs'">
                                 <span>{{value}}</span>
+                            </td>
+                            <td ng-if="key=='AvailableThumbs'">
+                                <p  ng-repeat="r in value">
+                                    <img ng-src="../{{r}}" target="_blank"></img>
+                                </p>
                             </td>
 
 
@@ -16,8 +22,16 @@
 
                     </table>
                 </div>
-<div>
-    <input type="button" class="btn btn-primary pull-right btn-sm" value="{{$res('Copy to ..')}}" ng-click="doCreateApp().then()" />
+
+<div class="layout-rows">
+    <div class="dock full"></div>
+    <div style="padding:4px">
+        <input type="button" class="btn btn-primary pull-right btn-sm" value="{{$res('Create filter tags')}}" ng-click="doCreateApp().then()" />
+    </div>
+    <div style="padding:4px">
+        <input type="button" class="btn btn-primary pull-right btn-sm" value="{{$res('Copy to ..')}}" ng-click="doCreateApp().then()" />
+    </div>
+
 
 </div>
 </div>
