@@ -2,40 +2,46 @@ import datetime
 import mimetypes
 import os.path
 import pathlib
+import typing
 import uuid
+
+import bson
 import humanize
 import cy_docs
 import cy_kit
+import cy_web
 from cy_xdoc.services.base import Base
 from cy_xdoc.models.files import DocUploadRegister
 import cy_xdoc.services.file_storage
 import cy_xdoc.services.search_engine
 
+
 class FileServices:
     def __init__(self,
-                 file_storage_service=cy_kit.inject(cy_xdoc.services.file_storage.FileStorageService),
-                 search_engine = cy_kit.inject(cy_xdoc.services.search_engine.SearchEngine),
-                 db_connect = cy_kit.inject(cy_xdoc.services.base.DbConnect)):
+                 file_storage_service: cy_xdoc.services.file_storage.FileStorageService = cy_kit.inject(
+                     cy_xdoc.services.file_storage.FileStorageService),
+                 search_engine=cy_kit.inject(cy_xdoc.services.search_engine.SearchEngine),
+                 db_connect=cy_kit.inject(cy_xdoc.services.base.DbConnect)):
 
-        self.file_storage_service = file_storage_service
+        self.file_storage_service: cy_xdoc.services.file_storage.FileStorageService = file_storage_service
         self.search_engine = search_engine
-        self.db_connect= db_connect
+        self.db_connect = db_connect
 
     def get_list(self, app_name, root_url, page_index: int, page_size: int, field_search: str = None,
                  value_search: str = None):
 
         doc = self.db_connect.db(app_name).doc(DocUploadRegister)
         arrg = doc.context.aggregate()
-        if value_search is not None and value_search!="":
-            if field_search is None or field_search=="":
-                field_search="FileName"
+        if value_search is not None and value_search != "":
+            if field_search is None or field_search == "":
+                field_search = "FileName"
             import re
-            arrg=arrg.match(getattr(doc.fields,field_search).like(value_search))
+            arrg = arrg.match(getattr(doc.fields, field_search).like(value_search))
         items = arrg.sort(
             doc.fields.RegisterOn.desc(),
             doc.fields.Status.desc()
         ).skip(page_size * page_index).limit(page_size).project(
-            cy_docs.fields.UploadId>>doc.fields.id,
+            cy_docs.fields.UploadId >> doc.fields.id,
             doc.fields.FileName,
             doc.fields.Status,
             doc.fields.SizeInHumanReadable,
@@ -47,9 +53,11 @@ class FileServices:
             cy_docs.fields.UploadID >> doc.fields.Id,
             cy_docs.fields.CreatedOn >> doc.fields.RegisterOn,
             doc.fields.FileNameOnly,
-            cy_docs.fields.UrlOfServerPath >> cy_docs.concat(root_url, f"/api/{app_name}/file/", doc.fields.FullFileName),
+            cy_docs.fields.UrlOfServerPath >> cy_docs.concat(root_url, f"/api/{app_name}/file/",
+                                                             doc.fields.FullFileName),
             cy_docs.fields.RelUrlOfServerPath >> cy_docs.concat(f"api/{app_name}/file/", doc.fields.FullFileName),
-            cy_docs.fields.ThumbUrl >> cy_docs.concat(root_url, f"/api/{app_name}/thumb/", doc.fields.FullFileName, ".webp"),
+            cy_docs.fields.ThumbUrl >> cy_docs.concat(root_url, f"/api/{app_name}/thumb/", doc.fields.FullFileName,
+                                                      ".webp"),
             doc.fields.AvailableThumbs,
             doc.fields.HasThumb,
             doc.fields.OCRFileId,
@@ -60,7 +68,6 @@ class FileServices:
                 cy_docs.fields.FPS >> doc.fields.VideoFPS
             )
 
-
         )
         for x in items:
             _a_thumbs = []
@@ -69,7 +76,7 @@ class FileServices:
                     _a_thumbs += [f"api/{app_name}/thumbs/{url}"]
                 x["AvailableThumbs"] = _a_thumbs
             if x.OCRFileId:
-                x["OcrContentUrl"]=f"{root_url}/api/{app_name}/file-ocr/{x.UploadID}/{x.FileNameOnly.lower()}.pdf"
+                x["OcrContentUrl"] = f"{root_url}/api/{app_name}/file-ocr/{x.UploadID}/{x.FileNameOnly.lower()}.pdf"
             yield x
 
     def get_main_file_of_upload(self, app_name, upload_id):
@@ -80,7 +87,7 @@ class FileServices:
             return None
         fs = self.file_storage_service.get_file_by_id(
             app_name=app_name,
-            id= str(upload.MainFileId)
+            id=str(upload.MainFileId)
         )
         # self.get_file(app_name, upload.MainFileId)
         return fs
@@ -103,8 +110,8 @@ class FileServices:
         upload = self.db_connect.db(app_name).doc(DocUploadRegister).context @ upload_id
         if upload is None:
             return None
-        ret = self.file_storage_service.get_file_by_id(app_name=app_name,id=upload.ThumbFileId)
-            # self.get_file(app_name, upload.ThumbFileId)
+        ret = self.file_storage_service.get_file_by_id(app_name=app_name, id=upload.ThumbFileId)
+        # self.get_file(app_name, upload.ThumbFileId)
         return ret
 
     def add_new_upload_info(self,
@@ -175,23 +182,119 @@ class FileServices:
     def get_upload_register(self, app_name: str, upload_id: str):
         return self.db_connect.db(app_name).doc(DocUploadRegister).context @ upload_id
 
-
     def remove_upload(self, app_name, upload_id):
-        upload = self.db_connect.db(app_name).doc(DocUploadRegister).context  @ upload_id
+        upload = self.db_connect.db(app_name).doc(DocUploadRegister).context @ upload_id
         delete_file_list = upload.AvailableThumbs or []
-        delete_file_list_by_id =[]
+        delete_file_list_by_id = []
         if upload.MainFileId is not None: delete_file_list_by_id = [str(upload.MainFileId)]
-        if upload.OCRFileId is not None: delete_file_list_by_id+=[str(upload.OCRFileId)]
+        if upload.OCRFileId is not None: delete_file_list_by_id += [str(upload.OCRFileId)]
         if upload.ThumbFileId is not None: delete_file_list_by_id += [str(upload.ThumbFileId)]
-        self.file_storage_service.delete_files(app_name=app_name,files = delete_file_list,run_in_thread=True)
-        self.file_storage_service.delete_files_by_id(app_name=app_name,ids =delete_file_list_by_id, run_in_thread=True)
-        self.search_engine.delete_doc(app_name,upload_id)
-        doc= self.db_connect.db(app_name).doc(DocUploadRegister)
-        ret = doc.context.delete(cy_docs.fields._id==upload_id)
+        self.file_storage_service.delete_files(app_name=app_name, files=delete_file_list, run_in_thread=True)
+        self.file_storage_service.delete_files_by_id(app_name=app_name, ids=delete_file_list_by_id, run_in_thread=True)
+        self.search_engine.delete_doc(app_name, upload_id)
+        doc = self.db_connect.db(app_name).doc(DocUploadRegister)
+        ret = doc.context.delete(cy_docs.fields._id == upload_id)
         return
 
-
-
-
-
         pass
+
+    def do_copy(self, app_name, upload_id):
+
+        document_context = self.db_connect.db(app_name).doc(DocUploadRegister)
+        item = document_context.context @ upload_id
+        if item is None:
+            return None
+        rel_file_location = item[document_context.fields.FullFileName]
+        item.id = str(uuid.uuid4())
+        item[document_context.fields.FullFileName] = f"{item.id}/{item[document_context.fields.FileName]}"
+        item[document_context.fields.FullFileNameLower] = item[document_context.fields.FullFileName].lower()
+        item[document_context.fields.Status] = 0
+        item[document_context.fields.PercentageOfUploaded]=100
+        item[document_context.fields.MarkDelete]=False
+        item.ServerFileName = f"{item.id}.{item[document_context.fields.FileExt]}"
+        file_id_to_copy = item[document_context.fields.MainFileId]
+        del item[document_context.fields.MainFileId]
+        to_location = item[document_context.fields.FullFileNameLower].lower()
+        new_fsg = self.file_storage_service.copy_by_id(
+            app_name=app_name,
+            file_id_to_copy=file_id_to_copy,
+            rel_file_path_to=to_location,
+            run_in_thread=True
+        )
+        item[document_context.fields.MainFileId] = bson.ObjectId(new_fsg.get_id())
+        item.RelUrl = f"api/{app_name}/thumb/{item.id}/{item.FileName.lower()}"
+        item.FullUrl = f"{cy_web.get_host_url()}/api/{app_name}/thumb/{item.UploadId}/{item.FileName.lower()}"
+        if item.HasThumb:
+            thumb_file_id = item.ThumbFileId
+            if thumb_file_id is not None:
+                thumb_fsg = self.file_storage_service.copy_by_id(
+                    app_name=app_name,
+                    rel_file_path_to=f"/thumb/{item.id}/{item[document_context.fields.FileName]}.webp".lower(),
+                    file_id_to_copy=thumb_file_id,
+                    run_in_thread=True
+                )
+                item.ThumbFileId = bson.ObjectId(thumb_fsg.get_id())
+                item.RelUrlThumb = f"api/{app_name}/thumb/{item.UploadId}/{item.FileName.lower()}.webp"
+                item.UrlThumb = f"{cy_web.get_host_url()}/{item.RelUrlThumb}"
+        if item.HasOCR:
+            ocr_file_id = item.OCRFileId
+            if ocr_file_id:
+                item.RelUrlOCR = f"api/{app_name}/file-ocr/{item.UploadId}/{item.FileName.lower()}.pdf"
+                item.UrlOCR = f"{cy_web.get_host_url()}/api/{item.RelUrlOCR}"
+                rel_path_to_ocr = f"file-ocr/{item.UploadId}/{item.FileName.lower()}.pdf"
+                ocr_fsg = self.file_storage_service.copy_by_id(
+                    app_name=app_name,
+                    file_id_to_copy=ocr_file_id,
+                    rel_file_path_to=rel_path_to_ocr,
+                    run_in_thread=True
+
+                )
+                item.OCRFileId = bson.ObjectId(ocr_fsg.get_id())
+
+        @cy_kit.thread_makeup()
+        def copy_thumbs(app_name: str, upload_id: str, thumbs_list: typing.List[str]):
+            for x in thumbs_list:
+                rel_path = x[item.id.__len__():]
+                self.file_storage_service.copy(
+                    app_name=app_name,
+                    rel_file_path_to=f"{upload_id}/{rel_path}",
+                    run_in_thread=False,
+                    rel_file_path_from=x
+                )
+
+        copy_thumbs(app_name= app_name,upload_id= upload_id, thumbs_list = item.AvailableThumbs or []).start()
+        self.search_engine.copy(app_name, from_id=upload_id,to_id=item.id,attach_data = item,run_in_thread=True)
+        data_insert = document_context.fields.reduce(item)
+        document_context.context.insert_one(data_insert)
+
+
+        #
+
+        #     if item.get(Files.VideoDuration.__name__) is not None:
+        #         ret.VideoInfo = VideoInfoClass()
+        #         ret.VideoInfo.Width = n_item.get(Files.VideoResolutionWidth.__name__)
+        #         ret.VideoInfo.Height = n_item.get(Files.VideoResolutionHeight.__name__)
+        #         ret.VideoInfo.Duration = n_item.get(Files.VideoDuration.__name__)
+        #     bool_body = {
+        #         "bool": {
+        #             "must":
+        #                 {"prefix": {
+        #                     "path.virtual": f'/{app_name}/{UploadId}'}}
+        #         }
+        #     }
+        #     resp = search_engine.get_client().search(index=fasty.config.search_engine.index, query=bool_body)
+        #     if resp.body.get('hits') and resp.body['hits']['hits'] and resp.body['hits']['hits'].__len__() > 0:
+        #         es_id = resp.body['hits']['hits'][0]['_id']
+        #         body = resp.body['hits']['hits'][0].get('_source')
+        #         body['path']['virtual'] = f'/{app_name}/{ret.UploadId}.{item[Files.FileExt.__name__]}'
+        #         body['MarkDelete'] = False
+        #         search_engine.get_client().index(
+        #             index=fasty.config.search_engine.index,
+        #             id=ret.UploadId,
+        #             body=body)
+        #
+        #     ret_copy.Info = ret
+        # except Exception as e:
+        #     print(e)
+        #
+        # return ret_copy

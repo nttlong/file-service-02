@@ -69,3 +69,7 @@ def singleton(cls:T)->T:
     return cy_kit_x.singleton(cls)
 def scope(cls:T)->T:
     return cy_kit_x.scope(cls)
+
+
+def thread_makeup():
+    return cy_kit_x.thread_makeup()

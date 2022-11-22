@@ -65,7 +65,7 @@ class DocUploadRegister:
     Để bảo đảm tốc độ khi cần truy vấn thông tin hệ thống sẽ tính luôn ngày của ngày tạo
 
     """
-    RegisterOnMonths: int
+    RegisterOnMonths: typing.Optional[int]
     """
         Tháng của agày tạo\n
         Ví dụ RegisterOn là 22/8/1732 thì RegisterOnMonths là 8 \n
@@ -76,7 +76,7 @@ class DocUploadRegister:
     RegisterOnHours: int
     RegisterOnMinutes: int
     RegisterOnSeconds: int
-    LastModifiedOn: datetime
+    LastModifiedOn: datetime.datetime
     """
     Thời điểm thông tin bị điều chỉnh
     """
@@ -108,7 +108,7 @@ class DocUploadRegister:
     SizeInHumanReadable: str
     PercentageOfUploaded: float
     ServerFileName: str
-    RegisteredBy: str
+    RegisteredBy: typing.Optional[str]
     IsPublic: bool
     """
     Một số nội dung Upload có thể cần phải công khai \n
@@ -166,13 +166,13 @@ class DocUploadRegister:
     """
     Là FullFileNameWithoutExtenstion  dạng lower case
     """
-    ThumbWidth: int
+    ThumbWidth: typing.Optional[int]
     """
     Độ rộng của ảnh Thumb tính bằng Pixel \n
     Thông tin này chỉ có khi tiến trình tạo ảnh Thumb hoàn tất.
     Hầu hết các nôi dung Upload có ảnh Thumb. Một số trường hợp không có ảnh Thumb giá trị này sẽ là null
     """
-    ThumbHeight: int
+    ThumbHeight: typing.Optional[int]
     """
         Độ rộng của ảnh Thumb tính bằng Pixel \n
         Thông tin này chỉ có khi tiến trình tạo ảnh Thumb hoàn tất.
@@ -200,28 +200,28 @@ class DocUploadRegister:
     Mỗi một file trên server nếu có ảnh Thumb, ảnh thumb sẽ lưu trong GridFS với một Id.
     Giá trị của Id trong GridFS được gán vào ThumbFileId
     """
-    ThumbId: str  # depreciate after jun 2022
+    ThumbId: typing.Optional[str]  # depreciate after jun 2022
     HasThumb: bool
     """
     Thông tin này có được sau khi tiến trình phân tích và xác định ảnh thumb chạy xong.
 
     """
-    OriginalFileId: bson.ObjectId
+    OriginalFileId: typing.Optional[bson.ObjectId]
     """
     Trường hợp xử lý OCR thành công \n
     Thông tin này sẽ lưu lại file gốc, trong khi đó file gốc sẽ được cập nhật lại bằng nôi dung file mới
     đã được OCR
     """
-    OCRFileId: bson.ObjectId
-    VideoDuration: int
+    OCRFileId: typing.Optional[bson.ObjectId]
+    VideoDuration: typing.Optional[int]
     """
     Thời lượng tính bằng giây
     """
-    VideoFPS: int
+    VideoFPS: typing.Optional[int]
     """
     Số khung hình trên giây, thông tin này rất quan trọng trong việc tối ưu streaming nội dung video
     """
-    VideoResolutionWidth: int
+    VideoResolutionWidth: typing.Optional[int]
     """
     Độ phân giài ngang: \n
     Đây là thông tin cực kỳ quan trọng trong quá trìn streaming \n
@@ -230,12 +230,12 @@ class DocUploadRegister:
     4*1024*3= 4096(pixels) x (1 byte RED+ 1 byte GREEN + 1 byte BLUE)
     Tuy nhiên để tính được chính xác cần phải cân nhắc đến yếu tố Bit Rate
     """
-    VideoResolutionHeight: int  # Độ phân giải dọc
-    ProcessHistories: typing.List[dict]
+    VideoResolutionHeight: typing.Optional[int]  # Độ phân giải dọc
+    ProcessHistories: typing.Optional[typing.List[dict]]
     """
     Lịch sử các quá trình xử lý
     """
-    PdfFileId: bson.ObjectId
+    PdfFileId: typing.Optional[bson.ObjectId]
     """
     Field này là file id trỏ đến file pdf, là file pdf sinh ra bằng cách dùng
     libreoffice convert ra pdf 
@@ -244,12 +244,15 @@ class DocUploadRegister:
     """
     Mark delete
     """
-    AvailableThumbSize: str
+    AvailableThumbSize: typing.Optional[str]
     """
     Thumbnail constraint generator: After material successfully uploaded. The system will generate a default thumbnail in size of 700pxx700px. However if thy desire more thumbnails with various  sizes such as: 200x200,450x450,... Thy just set 200,450,.. Example: for 200x200, 350x350 and 1920x1920 just set 200,350,1920
     """
-    AvailableThumbs: typing.List[str]
-    IsProcessed: bool
+    AvailableThumbs: typing.Optional[typing.List[str]]
+    """
+    List of relative url of thumbs
+    """
+    IsProcessed: typing.Optional[bool]
 
 
 @cy_docs.define(

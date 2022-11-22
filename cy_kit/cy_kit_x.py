@@ -441,3 +441,20 @@ def singleton(cls):
             return getattr(ins,item)
     __lazy_injector__[key] = lazy_cls(cls)
     return __lazy_injector__[key]
+
+def thread_makeup():
+    def wrapper(func):
+        def runner(*args,**kwargs):
+            class cls_run:
+                def __init__(self,fn, *a,**b):
+                    self.th = threading.Thread(target=fn,args=a,kwargs=b)
+                def start(self):
+                    self.th.start()
+                    return self
+                def join(self):
+                    self.th.join()
+                    return self
+            return cls_run(func,*args,**kwargs)
+        return runner
+    return wrapper
+

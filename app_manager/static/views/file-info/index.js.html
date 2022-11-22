@@ -1,6 +1,6 @@
 
-<div class="layout-columns">
-    <h3>{{$res("Info detail")}}</h3></hr>
+<div class="layout-columns" title="{{data.FileName}}">
+
                 <div class="dock full" style="overflow-y:auto">
                     <table>
                         <tr ng-repeat="(key, value) in data">
@@ -26,12 +26,14 @@
 <div class="layout-rows">
     <div class="dock full"></div>
     <div style="padding:4px">
-        <input type="button" class="btn btn-primary pull-right btn-sm" value="{{$res('Create filter tags')}}" ng-click="doCreateApp().then()" />
+        <input type="button" class="btn btn-primary pull-right btn-sm" value="{{$res('Create filter tags')}}" ng-click="doCreateTags().then()" />
     </div>
     <div style="padding:4px">
-        <input type="button" class="btn btn-primary pull-right btn-sm" value="{{$res('Copy to ..')}}" ng-click="doCreateApp().then()" />
+        <input type="button" class="btn btn-primary pull-right btn-sm" value="{{$res('Copy to')}} ..." ng-click="doCopy().then()" />
     </div>
-
+    <div style="padding:4px">
+        <input type="button" class="btn btn-primary pull-right btn-sm" value="{{$res('Close')}}" ng-click="$close()" />
+    </div>
 
 </div>
 </div>

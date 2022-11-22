@@ -23,7 +23,9 @@ def expr(cls: T) -> T:
     :param cls:
     :return:
     """
-    return getattr(cy_docs_x,"fields")[cls]
+    ret = cy_docs_x.fields[cls]
+
+    return ret
 def get_doc(collection_name: str, client: pymongo.mongo_client.MongoClient, indexes: List[str] = [],
             unique_keys: List[str] = []):
 

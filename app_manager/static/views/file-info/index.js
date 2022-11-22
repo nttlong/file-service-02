@@ -7,28 +7,23 @@ import {parseUrlParams, dialogConfirm, redirect, urlWatching, getPaths, msgError
 
 var fileInfoView = await View(import.meta, class FileInfoView extends BaseScope {
       async init() {
-        var queryData = parseUrlParams();
-        this.uploadId  = queryData["id"]
-        this.appName = queryData["app"]
-        await this.loadDetailInfo()
 
-        var r =await this.$getElement();
-        $(window).resize(()=>{
-                $(r).css({
-                    "max-height":$(document).height()-100
-                })
-            })
-            $(r).css({
-                    "max-height":$(document).height()-100
-                })
 
       }
-      async loadDetailInfo(){
-        this.data = await api.post(`${this.appName}/files/info`, {
-            UploadId: this.uploadId
+      async loadDetailInfo(appName, uploadId){
+        this.appName=appName;
+        this.uploadId=uploadId;
+        this.data = await api.post(`${appName}/files/info`, {
+            UploadId: uploadId
         })
 
         this.$applyAsync();
+      }
+      async doCopy(){
+      //{app_name}/files/clone
+        this.ret= await api.post(`${this.appName}/files/clone`, {
+            UploadId:this.uploadId
+        });
       }
 
 

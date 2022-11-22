@@ -14,11 +14,11 @@ var searchView = await View(import.meta, class SearchView extends BaseScope {
         var mainEle = await this.$getElement();
         $(window).resize(()=>{
                 $(mainEle).css({
-                    "max-height":$(document).height()-60
+                    "max-height":$(document).height()-100
                 })
             })
             $(mainEle).css({
-                    "max-height":$(document).height()-60
+                    "max-height":$(document).height()-100
                })
         this.listOfApp = await api.post(`admin/apps`, {
             Token: window.token
@@ -32,7 +32,7 @@ var searchView = await View(import.meta, class SearchView extends BaseScope {
        if(this.highlight){
             this.data = await api.post(`${this.currentAppName}/search`, {
                 content: this.searchContent,
-                page_size:1000,
+                page_size:20,
                 page_index:0,
                 highlight:this.highlight
             });

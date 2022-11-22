@@ -300,8 +300,10 @@ class BaseView {
         this._onResize = asyncCallback;
         return this;
     }
-    async asWindow() {
+    async asWindow(isMaximize) {
+        debugger;
         var win = new ui_window();
+
         var tmpDir = $("<div></div>");
         var config= await this.__render__(tmpDir[0]);
         win.setBody(tmpDir[0]);
@@ -349,6 +351,11 @@ class BaseView {
                 })
             }
         });
+        me.$window= win;
+        me.$close=()=>{
+            win.destroy();
+        }
+        return win;
     }
     async loadView(relUrl) {
         if (relUrl.substring(0, 2) == "./") {

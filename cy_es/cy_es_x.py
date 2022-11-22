@@ -180,11 +180,31 @@ match_phraseBody = {
             }
 """
 
+def match(field: DocumentFields, content: str, boost: float = None):
+    """
 
+    :return:
+    """
+    ret = DocumentFields()
+    __match_content__ = {
+        "match": {
+            field.__name__: {
+                "query": content
+                # "boost": 0.5
+
+            }
+        }
+    }
+
+    if boost is not None:
+        __match_content__["boost"] = boost
+
+    ret.__es_expr__ = __match_content__
+    return ret
 def match_phrase(field: DocumentFields, content: str, boost: float = None, slop=None,
                  analyzer="standard") -> DocumentFields:
     ret = DocumentFields()
-    match_phrase = {
+    __match_phrase__ = {
         field.__name__: {
             "query": content,
             "analyzer": analyzer,
@@ -192,11 +212,11 @@ def match_phrase(field: DocumentFields, content: str, boost: float = None, slop=
         }
     }
     if boost is not None:
-        match_phrase["boost"] = boost
+        __match_phrase__["boost"] = boost
     if slop is not None:
-        match_phrase["slop"] = slop
+        __match_phrase__["slop"] = slop
     ret.__es_expr__ = {
-        "match_phrase": match_phrase
+        "match_phrase": __match_phrase__
     }
     return ret
 
@@ -391,11 +411,11 @@ def get_doc(client: Elasticsearch, index: str, id: str, doc_type: str = "_doc") 
         return None
 
 
-def create_doc(client: Elasticsearch, index: str, data, id: str = None, doc_type: str = "_doc"):
+def create_doc(client: Elasticsearch, index: str, body, id: str = None, doc_type: str = "_doc"):
     id = id or str(uuid.uuid4())
 
-    res = client.index(index=index, doc_type=doc_type, id=id, body=data)
-    res["_source"] = data
+    res = client.create(index=index, doc_type=doc_type, id=id, body=body)
+    res["_source"] = body
 
     return ESDocumentObjectInfo(res)
 
@@ -428,3 +448,4 @@ def create_index(client: Elasticsearch, index: str, body: typing.Union[dict, typ
     else:
         ret = client.indices.create(index=index, body=body)
     return ret
+

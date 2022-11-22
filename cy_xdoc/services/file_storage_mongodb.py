@@ -83,6 +83,8 @@ class MongoDbFileService(Base):
                         }
                     }
                 )
+            else:
+                return None
 
         ret = MongoDbFileStorage(fs,self.client.get_database(self.db_name(app_name)))
         return ret
@@ -116,3 +118,67 @@ class MongoDbFileService(Base):
             threading.Thread(target=run, args=()).start()
         else:
             run()
+
+    def copy_by_id(self, app_name: str, file_id_to_copy: str,rel_file_path_to:str, run_in_thread: bool) ->MongoDbFileStorage:
+        """
+            Copy file from id file and return new copy if successful
+            :param app_name:
+            :param file_id_to_copy:
+            :param run_in_thread:
+            :return:
+                """
+        source = self.get_file_by_id(
+            app_name=app_name,
+            id= file_id_to_copy
+        )
+        if not source:
+            return None
+        dest = self.create(
+            app_name=app_name,
+            rel_file_path=rel_file_path_to,
+            chunk_size=source.fs.chunk_size,
+            size=source.fs.length
+        )
+
+        @cy_kit.thread_makeup()
+        def process(s: MongoDbFileStorage, d: MongoDbFileStorage):
+            data =s.fs.read(s.fs.chunk_size)
+            index=0
+            while data.__len__()>0:
+                d.push(content=data,chunk_index=index)
+                data = s.fs.read(s.fs.chunk_size)
+                index+=1
+
+
+        if run_in_thread:
+            process(source, dest).start()
+        else:
+            process(source,dest).join()
+        return dest
+    def copy(self, app_name: str, rel_file_path_from: str, rel_file_path_to, run_in_thread: bool)->MongoDbFileStorage:
+        """
+            Copy file
+            :param rel_file_path_to:
+            :param rel_file_path_from:
+            :param app_name:
+            :param run_in_thread:True copy process will run in thread
+            :return:
+                """
+
+        source = self.get_file_by_name(
+            app_name=app_name,
+            rel_file_path= rel_file_path_from
+        )
+        if not source:
+            return None
+        dest  = self.create(
+            app_name=app_name,
+            rel_file_path = rel_file_path_to,
+            chunk_size = source.fs.chunk_size,
+            size = source.fs.length
+        )
+        @cy_kit.cy_kit_x.thread_makeup()
+        def process(s:MongoDbFileStorage,d:MongoDbFileStorage):
+            print(s,d)
+        process(source,dest).start()
+        return dest

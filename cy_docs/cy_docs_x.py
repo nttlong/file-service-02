@@ -28,8 +28,6 @@ import pydantic
 from motor.motor_asyncio import AsyncIOMotorGridFSBucket
 
 
-
-
 def get_version() -> str:
     return "0.0.1"
 
@@ -152,11 +150,11 @@ class __BaseField__:
         if hasattr(init_value, "__annotations__") and isinstance(init_value.__annotations__, dict):
             self.__set_check__(init_value)
             return
-        self.__field_name__ = None
+        self.__name__ = None
         self.__data__ = None
         self.__oprator__ = oprator
         if isinstance(init_value, str):
-            self.__field_name__ = init_value
+            self.__name__ = init_value
         elif isinstance(init_value, dict):
             self.__data__ = init_value
         else:
@@ -167,7 +165,7 @@ class __BaseField__:
 
     def __set_check__(self, cls):
         global __hash_check_dict__
-
+        self.__delegate_type__ = cls
         if isinstance(cls, dict):
             self.__check_map__module__ = cls["__module__"]
             self.__check_map__name__ = cls["__name__"]
@@ -198,13 +196,13 @@ class __BaseField__:
         if self.__data__ is not None:
             return self.__data__
         else:
-            return self.__field_name__
+            return self.__name__
 
     def to_mongo_db_expr(self) -> Union[str, dict]:
         if self.__data__ is not None:
             return self.__data__
         else:
-            return "$" + self.__field_name__
+            return "$" + self.__name__
 
 
 class Field(__BaseField__):
@@ -218,6 +216,49 @@ class Field(__BaseField__):
         self.__has_set_value__ = False
         self.__alias__ = None
         self.__sort__ = 1
+    def reduce(self,data,reduce_type:type=None):
+        reduce_type = reduce_type or self.__delegate_type__
+        ret = {"_id":data.get("_id")}
+        require_fields=[]
+        for k,v in reduce_type.__annotations__.items():
+            try:
+                ele_value = data.get(k)
+
+                if hasattr(v,"__module__") and v.__module__=="typing":
+                    if str(v).startswith("typing.Union["):
+                        if ele_value is None:
+                            if str(v).endswith(', NoneType]'):
+                                ret[k] = None
+                            else:
+                                require_fields+=[k]
+                        else:
+                            ret[k] = ele_value
+                    elif ele_value is None:
+                        require_fields += [k]
+                    elif type(ele_value) != v.__origin__:
+                        raise Exception(f"Can not cast {ele_value} to {v}")
+                    else:
+                        ret[k]=ele_value
+
+                elif ele_value is None:
+                    require_fields += [k]
+                elif isinstance(ele_value,v):
+                    ret[k] = ele_value
+                else:
+                    try:
+                        ret[k] = v(ele_value)
+                    except Exception as e:
+                        raise Exception(f"Can not cast {ele_value} to {v} property {k}")
+            except Exception as e:
+                raise e
+
+        if require_fields.__len__()>0:
+            import inspect
+            str_require_fields_list ='\n\t'.join(require_fields)
+            raise Exception(f"These below fields are require:\n {str_require_fields_list}\n"
+                            f"Preview file {inspect.getfile(reduce_type)} at {reduce_type.__name__}")
+
+        return DocumentObject(ret)
 
     def __lshift__(self, other):
         self.__has_set_value__ = True
@@ -226,8 +267,8 @@ class Field(__BaseField__):
             for x in other:
                 if isinstance(x, Field):
                     if not x.__has_set_value__:
-                        raise Exception(f"Thous must set {x.__field_name__}. Example:{x.__field_name__}<<my_value")
-                    data[x.__field_name__] = x.__value__
+                        raise Exception(f"Thous must set {x.__name__}. Example:{x.__name__}<<my_value")
+                    data[x.__name__] = x.__value__
                 elif isinstance(x, dict):
                     data = {**data, **x}
                 else:
@@ -245,20 +286,20 @@ class Field(__BaseField__):
             if isinstance(check_name, dict):
                 ret = Field(check_name["__name__"])
                 ret.__set_check__(check_name)
-                if self.__field_name__ is not None:
-                    ret.__field_name__ = f"{self.__field_name__}.{ret.__field_name__}"
+                if self.__name__ is not None:
+                    ret.__name__ = f"{self.__name__}.{ret.__name__}"
                 return ret
-            if self.__field_name__ is None:
+            if self.__name__ is None:
                 return Field(check_name)
             else:
-                return Field(f"{self.__field_name__}.{check_name}")
+                return Field(f"{self.__name__}.{check_name}")
         if isinstance(item, str):
             if item[0:2] == "__" and item[-2:] == "__":
                 return __BaseField__.__getattr__(self, item)
-            elif self.__field_name__ is None:
+            elif self.__name__ is None:
                 return Field(item)
             else:
-                return Field(f"{self.__field_name__}.{item}")
+                return Field(f"{self.__name__}.{item}")
         else:
             return __BaseField__.__getattr__(self, item)
 
@@ -267,7 +308,7 @@ class Field(__BaseField__):
             ret = get_mongodb_text(self.__data__)
             return json.dumps(ret)
         else:
-            return self.__field_name__
+            return self.__name__
 
     # all compare operator
     def __eq__(self, other):
@@ -283,7 +324,7 @@ class Field(__BaseField__):
             )
         elif self.__data__ is None:
             return Field({
-                self.__field_name__: other
+                self.__name__: other
             }, op)
         else:
             if isinstance(other, Field):
@@ -318,7 +359,7 @@ class Field(__BaseField__):
             )
         elif self.__data__ is None:
             return Field({
-                self.__field_name__: {
+                self.__name__: {
                     "$ne": other
                 }
             }, op)
@@ -355,7 +396,7 @@ class Field(__BaseField__):
             )
         elif self.__data__ is None:
             return Field({
-                self.__field_name__: {
+                self.__name__: {
                     op: other
                 }
             }, op)
@@ -392,7 +433,7 @@ class Field(__BaseField__):
             )
         elif self.__data__ is None:
             return Field({
-                self.__field_name__: {
+                self.__name__: {
                     op: other
                 }
             }, op)
@@ -429,7 +470,7 @@ class Field(__BaseField__):
             )
         elif self.__data__ is None:
             return Field({
-                self.__field_name__: {
+                self.__name__: {
                     op: other
                 }
             }, op)
@@ -466,7 +507,7 @@ class Field(__BaseField__):
             )
         elif self.__data__ is None:
             return Field({
-                self.__field_name__: {
+                self.__name__: {
                     op: other
                 }
             }, op)
@@ -661,14 +702,14 @@ class Field(__BaseField__):
 
                 ret = Field(expr)
             else:
-                ret = Field(other.__field_name__)
-            ret.__alias__ = self.__field_name__
+                ret = Field(other.__name__)
+            ret.__alias__ = self.__name__
 
             return ret
         elif type(other) in [int, str, float, bool, datetime.datetime]:
             ret = Field("")
-            ret.__field_name__ = other
-            ret.__alias__ = self.__field_name__
+            ret.__name__ = other
+            ret.__alias__ = self.__name__
             return ret
         elif isinstance(other, tuple):
             init_data = {}
@@ -678,9 +719,9 @@ class Field(__BaseField__):
                     init_data[x.__alias__] = x.to_mongo_db_expr()
 
                 else:
-                    init_data[f"${x.__field_name__}"] = 1
+                    init_data[f"${x.__name__}"] = 1
             ret = Field(init_data)
-            ret.__alias__ = self.__field_name__
+            ret.__alias__ = self.__name__
             return ret
 
         else:
@@ -688,19 +729,21 @@ class Field(__BaseField__):
         return self
 
     def asc(self):
-        init_data = self.__field_name__
-        if self.__field_name__ is None:
+        init_data = self.__name__
+        if self.__name__ is None:
             init_data = self.__data__
         ret = Field(init_data)
         ret.__sort__ = 1
         return ret
-    def like(self,value:str):
+
+    def like(self, value: str):
         import re
-        ret= self == re.compile(value,re.IGNORECASE)
+        ret = self == re.compile(value, re.IGNORECASE)
         return ret
+
     def desc(self):
-        init_data = self.__field_name__
-        if self.__field_name__ is None:
+        init_data = self.__name__
+        if self.__name__ is None:
             init_data = self.__data__
         ret = Field(init_data)
         ret.__sort__ = -1
@@ -738,8 +781,9 @@ class DocumentObject(dict):
         return to_json_convertable(self)
 
     def get(self, key):
+
         if isinstance(key, Field):
-            items = key.__field_name__.split('.')
+            items = key.__name__.split('.')
             ret = self
             for x in items:
                 ret = dict.get(ret, x)
@@ -750,6 +794,8 @@ class DocumentObject(dict):
 
             return ret
         else:
+            if isinstance(key,str)  and key.lower() =="id":
+                key="_id"
             return dict.get(self, key)
 
     def __getattr__(self, item):
@@ -760,6 +806,55 @@ class DocumentObject(dict):
             self[key] = DocumentObject(value)
         else:
             self[key] = value
+
+    def __getitem__(self, key):
+        if isinstance(key, Field):
+            items = key.__name__.split('.')
+            ret = self
+            for x in items:
+                ret = dict.get(ret, x)
+                if isinstance(ret, dict):
+                    ret = DocumentObject(ret)
+                if ret is None:
+                    return None
+
+            return ret
+        else:
+            if isinstance(key,str)  and key.lower() =="id":
+                key="_id"
+            return dict.get(self, key)
+
+    def __delitem__(self, key):
+        if isinstance(key, Field):
+            items = key.__name__.split('.')
+            ret = self
+
+            n = items.__len__() - 1
+            for i in range(0, n):
+                x = items[i]
+                ret = ret[x] or DocumentObject({})
+            dict.__delitem__(ret, items[n])
+
+        else:
+            if isinstance(key,str)  and key.lower() =="id":
+                key="_id"
+            dict.__setitem__(self, key)
+
+    def __setitem__(self, key, value):
+        if isinstance(key, Field):
+            items = key.__name__.split('.')
+            ret = self
+
+            n = items.__len__() - 1
+            for i in range(0, n):
+                x = items[i]
+                ret = ret[x] or DocumentObject({})
+            dict.__setitem__(ret, items[n], value)
+
+        else:
+            if isinstance(key,str)  and key.lower() =="id":
+                key="_id"
+            dict.__setitem__(self, key, value)
 
     def to_pydantic(self) -> pydantic.BaseModel:
         ret = pydantic.BaseModel()
@@ -778,6 +873,8 @@ class ExprBuilder:
             ret.__set_check__(item)
             return ret
         return Field(item)
+    def __set_type__(self,cls:type):
+        self.__cls__ = cls
 
 
 fields = ExprBuilder()
@@ -795,7 +892,7 @@ class DBDocument:
                     if not x.__has_set_value__:
                         raise Exception(f"Please set value for {x}")
                     else:
-                        insert_dict[x.__field_name__] = x.__value__
+                        insert_dict[x.__name__] = x.__value__
                 else:
                     raise Exception("All element in left shift document must be cy_docs.Field. Example:"
                                     "my_doc = cy_docs.get_doc('my-coll-__name__',__client__)"
@@ -956,9 +1053,9 @@ class DBDocument:
                     _fx: Field = args[0]
                     if not _fx.__has_set_value__:
                         raise Exception(
-                            f"Please set value for {_fx.__field_name__}. Example: {_fx.__field_name__}<<my_value")
+                            f"Please set value for {_fx.__name__}. Example: {_fx.__name__}<<my_value")
                     data = {
-                        _fx.__field_name__: _fx.__value__
+                        _fx.__name__: _fx.__value__
                     }
                     for k, v in kwargs:
                         data[k] = v
@@ -972,8 +1069,8 @@ class DBDocument:
                     if isinstance(x, Field):
                         if not x.__has_set_value__:
                             raise Exception(
-                                f"Please set value for {x.__field_name__}. Exmaple {x.__field_name__}<<my_value")
-                        data[x.__field_name__] = x.__value__
+                                f"Please set value for {x.__name__}. Exmaple {x.__name__}<<my_value")
+                        data[x.__name__] = x.__value__
                     elif isinstance(x, dict):
                         data = {**data, **x}
                 if data.get("_id") is None:
@@ -995,9 +1092,9 @@ class DBDocument:
                     _fx: Field = args[0]
                     if not _fx.__has_set_value__:
                         raise Exception(
-                            f"Please set value for {_fx.__field_name__}. Example: {_fx.__field_name__}<<my_value")
+                            f"Please set value for {_fx.__name__}. Example: {_fx.__name__}<<my_value")
                     data = {
-                        _fx.__field_name__: _fx.__value__
+                        _fx.__name__: _fx.__value__
                     }
                     for k, v in kwargs:
                         data[k] = v
@@ -1011,8 +1108,8 @@ class DBDocument:
                     if isinstance(x, Field):
                         if not x.__has_set_value__:
                             raise Exception(
-                                f"Please set value for {x.__field_name__}. Exmaple {x.__field_name__}<<my_value")
-                        data[x.__field_name__] = x.__value__
+                                f"Please set value for {x.__name__}. Exmaple {x.__name__}<<my_value")
+                        data[x.__name__] = x.__value__
                     elif isinstance(x, dict):
                         data = {**data, **x}
                 if data.get("_id") is None:
@@ -1034,8 +1131,8 @@ class DBDocument:
         for x in args:
             if isinstance(x, Field):
                 if not x.__has_set_value__:
-                    raise Exception(f"Thous must set {x.__field_name__} a value. Exmaple: {x.__field_name__}<<my_value")
-                updater[x.__field_name__] = x.__value__
+                    raise Exception(f"Thous must set {x.__name__} a value. Exmaple: {x.__name__}<<my_value")
+                updater[x.__name__] = x.__value__
             elif isinstance(x, dict):
                 updater = {**updater, **x}
         updater = {**updater, **kwargs}
@@ -1061,8 +1158,8 @@ class DBDocument:
         for x in args:
             if isinstance(x, Field):
                 if not x.__has_set_value__:
-                    raise Exception(f"Thous must set {x.__field_name__} a value. Exmaple: {x.__field_name__}<<my_value")
-                updater[x.__field_name__] = x.__value__
+                    raise Exception(f"Thous must set {x.__name__} a value. Exmaple: {x.__name__}<<my_value")
+                updater[x.__name__] = x.__value__
             elif isinstance(x, dict):
                 updater = {**updater, **x}
         updater = {**updater, **kwargs}
@@ -1103,16 +1200,16 @@ class AggregateDocument:
         if isinstance(args, Field):
             if args.__alias__ is not None:
                 stage[args.__alias__] = args.to_mongo_db_expr()
-            elif args.__field_name__ is not None:
-                stage[args.__field_name__] = 1
+            elif args.__name__ is not None:
+                stage[args.__name__] = 1
             else:
                 raise Exception(f"Thous can not use project stage with {args}")
         for x in args:
             if isinstance(x, Field):
                 if x.__alias__ is not None:
                     stage[x.__alias__] = x.to_mongo_db_expr()
-                elif x.__field_name__ is not None:
-                    stage[x.__field_name__] = 1
+                elif x.__name__ is not None:
+                    stage[x.__name__] = 1
                 else:
                     raise Exception(f"Thous can not use project stage with {x}")
             elif isinstance(x, dict):
@@ -1156,16 +1253,16 @@ class AggregateDocument:
         if isinstance(args, Field):
             if args.__alias__ is not None:
                 stage[args.__alias__] = args.to_mongo_db_expr()
-            elif args.__field_name__ is not None:
-                stage[args.__field_name__] = args.__sort__
+            elif args.__name__ is not None:
+                stage[args.__name__] = args.__sort__
             else:
                 raise Exception(f"Thous can not sort stage with {args}")
         for x in args:
             if isinstance(x, Field):
                 if x.__alias__ is not None:
                     raise Exception(f"Thous can not sort stage with {x}")
-                elif x.__field_name__ is not None:
-                    stage[x.__field_name__] = x.__sort__
+                elif x.__name__ is not None:
+                    stage[x.__name__] = x.__sort__
                 else:
                     raise Exception(f"Thous can not sort stage with {x}")
 
@@ -1290,7 +1387,6 @@ class Document:
         return DBDocument(coll)
 
 
-
 def get_doc(collection_name: str, client: pymongo.mongo_client.MongoClient, indexes: List[str] = [],
             unique_keys: List[str] = []) -> Document:
     return Document(collection_name, client, indexes=indexes, unique_keys=unique_keys)
@@ -1317,7 +1413,7 @@ class Funcs:
     def exists(field):
         if isinstance(field, Field):
             return Field({
-                field.__field_name__: {
+                field.__name__: {
                     "$exists": True
                 }
             })
@@ -1334,7 +1430,7 @@ class Funcs:
     def is_null(field):
         if isinstance(field, Field):
             return Field({
-                field.__field_name__: None
+                field.__name__: None
             })
         elif isinstance(field, str):
             return Field({
@@ -1347,7 +1443,7 @@ class Funcs:
     def is_not_null(field):
         if isinstance(field, Field):
             return Field({
-                field.__field_name__: {"$ne:": None}
+                field.__name__: {"$ne:": None}
             })
         elif isinstance(field, str):
             return Field({
@@ -1360,7 +1456,7 @@ class Funcs:
     def not_exists(field):
         if isinstance(field, Field):
             return Field({
-                field.__field_name__: {
+                field.__name__: {
                     "$exists": False
                 }
             })

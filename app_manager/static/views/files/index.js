@@ -101,7 +101,13 @@ var filesView = await View(import.meta, class FilesView extends BaseScope {
 
     }
     async doShowDetail(item){
-        redirect("file-info?id=" + item.UploadId+"&app="+this.currentAppName)
+        debugger;
+        var r = await import("../file-info/index.js");
+        var viewer = await r.default();
+        await viewer.loadDetailInfo(this.currentAppName,item.UploadId)
+         var win =await viewer.asWindow();
+         win.doMaximize()
+         console.log(win);
     }
 });
 export default filesView;
