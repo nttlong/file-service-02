@@ -40,7 +40,7 @@ def create_doc(client: Elasticsearch, index: str, id: str, body,
         client=client,
         index=index,
         doc_type=doc_type,
-        data=body,
+        body=body,
         id=id
     )
 
@@ -49,3 +49,11 @@ match_phrase = cy_es_x.match_phrase
 match = cy_es_x.match
 
 
+def update_doc_by_id(client: Elasticsearch, index: str, id: str, data, doc_type: str = "_doc"):
+    return cy_es_x.update_doc_by_id(
+        client=client,
+        index=index,
+        id=id,
+        data=data,
+        doc_type=doc_type
+    )

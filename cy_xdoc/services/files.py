@@ -266,7 +266,8 @@ class FileServices:
                 )
 
         copy_thumbs(app_name= app_name,upload_id= upload_id, thumbs_list = item.AvailableThumbs or []).start()
-        self.search_engine.copy(app_name, from_id=upload_id,to_id=item.id,attach_data = item,run_in_thread=True)
+        self.search_engine.copy(
+            app_name, from_id=upload_id,to_id=item.id,attach_data = item,run_in_thread=True)
         item.Status=1
         data_insert = document_context.fields.reduce(item)
         document_context.context.insert_one(data_insert)

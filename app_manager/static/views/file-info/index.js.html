@@ -13,7 +13,7 @@
                             </td>
                             <td ng-if="key=='AvailableThumbs'">
                                 <p  ng-repeat="r in value">
-                                    <img ng-src="../{{r}}" target="_blank"></img>
+                                    <img ng-src="../{{r}}"></img>
                                 </p>
                             </td>
 
@@ -24,7 +24,14 @@
                 </div>
 
 <div class="layout-rows">
+    <div style="padding:4px" ng-if="(!data.MarkDelete)||(data.MarkDelete==null)">
+        <input type="button" class="btn btn-primary pull-right btn-sm" value="{{$res('Mark delete')}}" ng-click="doSetMarkDelete(true).then()" />
+    </div>
+    <div style="padding:4px" ng-if="(data.MarkDelete==true)">
+        <input type="button" class="btn btn-primary pull-right btn-sm" value="{{$res('Unmarked delete')}}" ng-click="doSetMarkDelete(false).then()" />
+    </div>
     <div class="dock full"></div>
+
     <div style="padding:4px">
         <input type="button" class="btn btn-primary pull-right btn-sm" value="{{$res('Create filter tags')}}" ng-click="doCreateTags().then()" />
     </div>

@@ -26,7 +26,15 @@ class SearchEngine:
 
 
     def mark_delete(self, app_name, id, mark_delete_value):
-        raise NotImplemented
+        ret = cy_es.update_doc_by_id(
+            client=self.client,
+            id=id,
+            index=self.get_index(app_name),
+            data=(
+                cy_es.buiders.mark_delete<<mark_delete_value,
+            )
+        )
+        return ret
 
     def full_text_search(self, app_name, content, page_size: int, page_index: int, highlight: bool):
         search_expr = (cy_es.buiders.mark_delete == False) & cy_es.match(
@@ -63,7 +71,8 @@ class SearchEngine:
             if es_doc:
                 es_doc.source.upload_id = to_id
                 es_doc.source.data_item = attach_data
-                self.create_doc(app_name=app_name, id=to_id, body=es_doc.source)
+                es_doc.source["mark_delete"]=False
+                ret =self.create_doc(app_name=app_name, id=to_id, body=es_doc.source)
 
         if run_in_thread:
             copy_elastics_search(app_name,  from_id,to_id, attach_data).start()

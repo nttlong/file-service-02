@@ -422,24 +422,35 @@ def create_doc(client: Elasticsearch, index: str, body, id: str = None, doc_type
 
 def update_doc_by_id(client: Elasticsearch, index: str, id: str, data, doc_type: str = "_doc"):
     data_update = data
-    if isinstance(data, tuple):
+    if isinstance(data, DocumentFields):
+        if data.__has_set_value__ is None:
+            raise Exception(
+                f"Hey!\n what the fu**king that?\n.thous should call {data.__name__} << {{your value}} ")
+        data_update = {
+            data.__name__: data.__value__
+        }
+    elif isinstance(data, tuple):
         data_update = {}
+
         for x in data:
             if isinstance(x, DocumentFields):
                 if x.__has_set_value__ is None:
                     raise Exception(
                         f"Hey!\n what the fu**king that?\n.thous should call {x.__name__} << {{your value}} ")
-                data_update[x.__name__] == x.__value__
+                data_update[x.__name__] = x.__value__
+    try:
+        client.update(
+            index=index,
+            id=id,
+            doc_type=doc_type,
+            body=dict(
+                doc = data_update
+            )
 
-    client.update(
-        index=index,
-        id=id,
-        doc_type=doc_type,
-        body=dict(
-            data
         )
-
-    )
+        return data_update
+    except elasticsearch.exceptions.NotFoundError as e:
+        return None
 
 
 def create_index(client: Elasticsearch, index: str, body: typing.Union[dict, type]):

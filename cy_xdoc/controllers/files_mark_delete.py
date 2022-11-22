@@ -29,7 +29,7 @@ async def mark_delete(app_name: str, UploadId: str, IsDelete: bool, token=fastap
 
     ret = doc_context.context.update(
         doc_context.fields.id == UploadId,
-        doc_context.fields.MarkDelete == IsDelete
+        doc_context.fields.MarkDelete <<IsDelete
     )
     search_services.mark_delete(app_name=app_name, id=UploadId, mark_delete_value=IsDelete)
 

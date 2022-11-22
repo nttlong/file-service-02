@@ -10,6 +10,8 @@
 	"detail": "Chi tiết",
 	"delete": "Xóa",
 	"info detail": "Thông tin chi tiết",
-	"new": "Thêm mới"
+	"new": "Thêm mới",
+	"mark dlete": "Đánh dấu xóa",
+	"unmarked delete":"Bỏ đánh dấu xóa"
 
 }
