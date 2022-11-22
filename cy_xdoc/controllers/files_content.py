@@ -29,7 +29,7 @@ async def get_content_of_files(app_name: str, directory: str, request: fastapi.R
     if fs is None:
         return Response(status_code= 401)
     if mime_type.startswith('image/'):
-        content = fs.read()
+        content = fs.read(fs.get_size())
         fs.seek(0)
         cy_web.cache_content(app_name, directory.replace('/', '_'), content)
         del content

@@ -35,6 +35,7 @@ class UploadInfoResult:
     Status: int
     VideoInfo: typing.Optional[VideoInfoClass]
     AvailableThumbs: typing.List[str]
+    MarkDelete:typing.Optional[bool]
 
 
 @cy_web.hanlder(method="post", path="{app_name}/files/info")
