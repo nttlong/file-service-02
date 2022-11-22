@@ -210,8 +210,11 @@ class FileServices:
         item[document_context.fields.FullFileNameLower] = item[document_context.fields.FullFileName].lower()
         item[document_context.fields.Status] = 0
         item[document_context.fields.PercentageOfUploaded]=100
-        item[document_context.fields.MarkDelete]=False
+        item[document_context.fields.MarkDelete] = False
         item.ServerFileName = f"{item.id}.{item[document_context.fields.FileExt]}"
+        item.RegisterOn = datetime.datetime.utcnow()
+        item[document_context.fields.RegisteredBy] = "root"
+
         file_id_to_copy = item[document_context.fields.MainFileId]
         del item[document_context.fields.MainFileId]
         to_location = item[document_context.fields.FullFileNameLower].lower()
@@ -264,8 +267,10 @@ class FileServices:
 
         copy_thumbs(app_name= app_name,upload_id= upload_id, thumbs_list = item.AvailableThumbs or []).start()
         self.search_engine.copy(app_name, from_id=upload_id,to_id=item.id,attach_data = item,run_in_thread=True)
+        item.Status=1
         data_insert = document_context.fields.reduce(item)
         document_context.context.insert_one(data_insert)
+        return data_insert
 
 
         #

@@ -32,7 +32,8 @@ def search(client: Elasticsearch,
 def get_doc(client: Elasticsearch, index: str, id: str, doc_type: str = "_doc") -> cy_es_x.ESDocumentObjectInfo:
     return cy_es_x.get_doc(client, index, id, doc_type=doc_type)
 
-
+def delete_doc(client: Elasticsearch, index: str, id: str, doc_type: str = "_doc"):
+    return cy_es_x.delete_doc(client=client,index=index,id=id,doc_type=doc_type)
 def create_doc(client: Elasticsearch, index: str, id: str, body,
                doc_type: str = "_doc") -> cy_es_x.ESDocumentObjectInfo:
     return cy_es_x.create_doc(
@@ -46,3 +47,5 @@ def create_doc(client: Elasticsearch, index: str, id: str, body,
 
 match_phrase = cy_es_x.match_phrase
 match = cy_es_x.match
+
+

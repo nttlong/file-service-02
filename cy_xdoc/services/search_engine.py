@@ -18,7 +18,12 @@ class SearchEngine:
         return f"{self.prefix_index}_{app_name}"
 
     def delete_doc(self, app_name, id: str):
-        raise NotImplemented
+        return cy_es.delete_doc(
+            client=self.client,
+            index= self.get_index(app_name),
+            id =id
+        )
+
 
     def mark_delete(self, app_name, id, mark_delete_value):
         raise NotImplemented
