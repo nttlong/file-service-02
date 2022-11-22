@@ -1,6 +1,9 @@
-
+import datetime
 import pathlib
 import sys
+
+import fastapi
+
 sys.path.append(pathlib.Path(__file__).parent.parent.__str__())
 import cy_web
 
@@ -15,7 +18,15 @@ cy_web.create_web_app(
 
 )
 cy_web.add_cors(["*"])
-
+@cy_web.middleware()
+async def estimate_time(request:fastapi.Request,next):
+    start_time= datetime.datetime.utcnow()
+    res =await next(request)
+    end_time = datetime.datetime.utcnow()
+    res.headers["time:start"] = start_time.strftime("%H:%M:%S")
+    res.headers["time:end"] = end_time.strftime("%H:%M:%S")
+    res.headers["time:total(second)"] = (end_time-start_time).total_seconds().__str__()
+    return res
 
 cy_web.load_controller_from_dir("api","./controllers")
 cy_web.load_controller_from_dir("","./pages")

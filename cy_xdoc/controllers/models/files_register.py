@@ -3,7 +3,7 @@ from pydantic import Field, BaseModel
 import cy_web
 
 
-@cy_web.model(all_field_are_optional=True)
+@cy_web.model(all_fields_are_optional=True)
 class Error:
     """
     Thông tin chi tiết của lỗi
@@ -62,7 +62,7 @@ class RegisterUploadResult:
     FileSize: int
 
 
-@cy_web.model(all_field_are_optional=True)
+@cy_web.model(all_fields_are_optional=True)
 class RegisterUploadInfoResult:
     """
     Bảng ghi cấu trúc trả vể cho API upload

@@ -11,7 +11,15 @@ var searchView = await View(import.meta, class SearchView extends BaseScope {
     highlight=false
     currentAppName = undefined
     async init() {
-
+        var mainEle = await this.$getElement();
+        $(window).resize(()=>{
+                $(mainEle).css({
+                    "max-height":$(document).height()-60
+                })
+            })
+            $(mainEle).css({
+                    "max-height":$(document).height()-60
+               })
         this.listOfApp = await api.post(`admin/apps`, {
             Token: window.token
         })

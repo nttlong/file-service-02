@@ -219,6 +219,28 @@ class BaseView {
         
 
     }
+    async $getElement(timeOut){
+        var me = this;
+        timeOut = timeOut || 500;
+        var n = timeOut / 100;
+        return new Promise((resolve, reject) => {
+            function run() {
+                if (me.$elements) {
+                        resolve($(me.$elements));
+                    }
+                    else {
+                        if (n > 0) {
+                            setTimeout(run, 100);
+                            n--;
+                        }
+                        else {
+                            reject("Timeout,element wasnot found");
+                        }
+                    }
+            }
+            run();
+        });
+    }
     async render(ele) {
         
         var html = await this.getLayoutHtml();
@@ -253,17 +275,22 @@ class BaseView {
         var n = timeOut / 100;
         return new Promise((resolve, reject) => {
             function run() {
-                if (me.$elements.find(selector).length > 0) {
-                    resolve($(me.$elements.find(selector)[0]));
-                }
-                else {
-                    if (n > 0) {
-                        setTimeout(run, 100);
-                        n--;
+                if (me.$elements){
+                    if (me.$elements.find(selector).length > 0) {
+                        resolve($(me.$elements.find(selector)[0]));
                     }
                     else {
-                        reject("Timeout,element wasnot found");
+                        if (n > 0) {
+                            setTimeout(run, 100);
+                            n--;
+                        }
+                        else {
+                            reject("Timeout,element wasnot found");
+                        }
                     }
+                }
+                else {
+                    setTimeout(run, 300);
                 }
             }
             run();

@@ -39,13 +39,10 @@ def file_search(app_name: str, content: str,
         if upload_doc_item:
             # upload_doc_item.UploadId = upload_doc_item._id
             upload_doc_item.Highlight = x.highlight
-            upload_doc_item[
-                "UrlOfServerPath"] = url + f"/{app_name}/file/{upload_doc_item.FullFileName}"
-            upload_doc_item["AppName"] = app_name
-            upload_doc_item[
-                "RelUrlOfServerPath"] = f"/{app_name}/file/{upload_doc_item.FullFileName}"
-            upload_doc_item[
-                "ThumbUrl"] = url + f"/{app_name}/thumb/{upload_doc_item['_id']}/{upload_doc_item.FileName}.png"
+            upload_doc_item.UrlOfServerPath= f"{url}/{app_name}/file/{upload_doc_item.FullFileName}"
+            upload_doc_item.AppName = app_name
+            upload_doc_item.RelUrlOfServerPath = f"/{app_name}/file/{upload_doc_item.FullFileName}"
+            upload_doc_item.ThumbUrl = url + f"/{app_name}/thumb/{upload_doc_item['_id']}/{upload_doc_item.FileName}.png"
             ret_items += [upload_doc_item]
 
     return dict(

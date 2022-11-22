@@ -6,11 +6,21 @@ import api from "../../js/ClientApi/api.js"
 import {parseUrlParams, dialogConfirm, redirect, urlWatching, getPaths, msgError } from "../../js/ui/core.js"
 
 var fileInfoView = await View(import.meta, class FileInfoView extends BaseScope {
-      onInit() {
+      async init() {
         var queryData = parseUrlParams();
         this.uploadId  = queryData["id"]
         this.appName = queryData["app"]
-        this.loadDetailInfo()
+        await this.loadDetailInfo()
+
+        var r =await this.$getElement();
+        $(window).resize(()=>{
+                $(r).css({
+                    "max-height":$(document).height()-100
+                })
+            })
+            $(r).css({
+                    "max-height":$(document).height()-100
+                })
 
       }
       async loadDetailInfo(){

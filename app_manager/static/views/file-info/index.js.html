@@ -1,4 +1,23 @@
+
+<div class="layout-columns">
+                <div class="dock full" style="overflow-y:auto">
+                    <table>
+                        <tr ng-repeat="(key, value) in data">
+                            <td>
+                                <b style="margin-right:20px">{{key}}</b>
+                            </td>
+                            <td>:</td>
+                            <td>
+                                <span>{{value}}</span>
+                            </td>
+
+
+                        </tr>
+
+                    </table>
+                </div>
 <div>
-    Xem chi tiet file
-    {{data}}
+    <input type="button" class="btn btn-primary pull-right btn-sm" value="{{$res('Copy to ..')}}" ng-click="doCreateApp().then()" />
+
+</div>
 </div>

@@ -800,8 +800,13 @@ class BaseWebApp:
                             v.return_type = v.handler.__annotations__.get("return")
 
                 if v.return_type is not None:
-
-                    getattr(self.app, v.method)(_path, response_model=v.return_type)(v.handler)
+                    try:
+                        getattr(self.app, v.method)(_path, response_model=v.return_type)(v.handler)
+                    except Exception as e:
+                        raise Exception(f"Error when create handler\n"
+                                        f"Please preview file {v.handler.__code__.co_filename}\n"
+                                        f"Error msg\n"
+                                        f"\t{e}")
                 else:
 
                     getattr(self.app, v.method)(_path)(v.handler)
@@ -1227,12 +1232,12 @@ def auth_type(a_type: type):
 
     return wrapper
 import pydantic.fields
-def model(all_field_are_optional:bool=False):
+def model(all_fields_are_optional:bool=False):
     def warpper(cls):
         for x in cls.__bases__:
             if hasattr(x,"__annotations__"):
                 for k,v in x.__annotations__.items():
-                    if all_field_are_optional:
+                    if all_fields_are_optional:
                         cls.__annotations__[k] =Optional[v]
                     else:
                         cls.__annotations__[k]=v
@@ -1255,7 +1260,7 @@ def model(all_field_are_optional:bool=False):
                     description=v_d,
                 ))
             else:
-                if all_field_are_optional:
+                if all_fields_are_optional:
                     cls.__annotations__[k] = Optional[v]
 
 

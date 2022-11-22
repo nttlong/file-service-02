@@ -43,7 +43,7 @@ def do_login(request):
                     to=request.GET.get("ret")
                 )
 
-    return request.template.model({"request":request}).render()
+    return request.template.model({"request": request}).render()
 
 from django.http import HttpResponse
 import ReCompact.web

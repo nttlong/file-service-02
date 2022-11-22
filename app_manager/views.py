@@ -6,4 +6,4 @@ def index(request):
         import web.settings
         from django.shortcuts import redirect
         return redirect(web.settings.ROOT_URL+'/'+web.settings.LOGIN_URL)
-    return request.template.model({"request":request}).render()
+    return request.template.model({"request": request}).render()

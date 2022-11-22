@@ -13,7 +13,7 @@ class VideoInfoClass:
     Duration: int
 
 
-@cy_web.model()
+@cy_web.model(all_fields_are_optional=True)
 class UploadInfoResult:
     UploadId: str
     FileName: str

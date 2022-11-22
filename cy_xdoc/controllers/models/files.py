@@ -4,7 +4,7 @@ import typing
 import cy_web
 
 
-@cy_web.model(all_field_are_optional=True)
+@cy_web.model(all_fields_are_optional=True)
 class FileUploadRegisterInfo:
     UploadId:str
     FileName:str
