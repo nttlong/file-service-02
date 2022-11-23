@@ -3,13 +3,21 @@ import api from "../../js/ClientApi/api.js"
 import { redirect, urlWatching, getPaths, msgError, msgOK } from "../../js/ui/core.js"
 
 var uploadFileView = await View(import.meta, class UploadFileView extends BaseScope {
+    debugger;
     appName = ""
     info = {}
     data = {}
+    async init(){
+        alert("OK");
+        this.data= {};
+    }
     setApp(appName) {
+        alert("OK");
+        this.data= {};
         this.appName = appName;
     }
     async doUploadFile() {
+        debugger;
 
         var delay=(t)=>{
             return new Promise((r,x)=>{

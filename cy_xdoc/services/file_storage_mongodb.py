@@ -32,20 +32,22 @@ class MongoDbFileStorage:
         return self.fs.tell()
 
     def read(self, size: int) -> bytes:
+
         return self.fs.read(size)
 
     def get_id(self) -> str:
         return str(self.fs._id)
 
     def push(self, content: bytes, chunk_index: int):
-        fs_chunks = self.db.get_collection("fs.chunks")
-        fs_chunks.insert_one({
-            "_id": bson.objectid.ObjectId(),
-            "files_id": self.fs._id,
-            "n": chunk_index,
-            "data": content
-        })
-        del content
+        cy_docs.file_add_chunk(
+            client= self.db.client,
+            db_name = self.db.name,
+            file_id= self.fs._id,
+            chunk_index=chunk_index,
+            chunk_data = content
+
+        )
+
 
 
 @cy_kit.must_imlement(FileStorageService)
@@ -57,6 +59,7 @@ class MongoDbFileService(Base):
             file_name=rel_file_path,
             chunk_size=chunk_size,
             file_size=size
+
         )
         return MongoDbFileStorage(fs,self.client.get_database(self.db_name(app_name)))
 
@@ -90,7 +93,7 @@ class MongoDbFileService(Base):
         return ret
 
     def get_file_by_id(self, app_name: str, id: str) -> MongoDbFileStorage:
-        fs = cy_docs.get_file(self.client, self.db_name(app_name), bson.ObjectId(id))
+        fs = cy_docs.file_get(self.client, self.db_name(app_name), bson.ObjectId(id))
 
         ret = MongoDbFileStorage(fs,self.client.get_database(self.db_name(app_name)))
         return ret

@@ -27,12 +27,7 @@ var filesView = await View(import.meta, class FilesView extends BaseScope {
             
         })
         this.currentApp = this.listOfApp[0];
-        if (!queryData["app"]){
-            this.currentAppName = this.currentApp.Name;
-        }
-        else {
-            this.currentAppName =queryData["app"]
-        }
+        this.currentAppName = this.currentApp.Name;
         await this.doLoadAllFiles();
         this.$applyAsync();
         debugger;
@@ -45,7 +40,7 @@ var filesView = await View(import.meta, class FilesView extends BaseScope {
     }
     async doLoadAllFiles() {
         var me = this;
-        redirect("files?&app="+this.currentAppName)
+
         
         this.listOfFiles = await api.post(`${this.currentAppName}/files`, {
            
@@ -69,6 +64,7 @@ var filesView = await View(import.meta, class FilesView extends BaseScope {
 
     }
     async doOpenUploadWindow() {
+        debugger;
         var uploadForm = await (await import("../upload/index.js")).default();
         uploadForm.setApp(this.currentAppName);
         uploadForm.asWindow();

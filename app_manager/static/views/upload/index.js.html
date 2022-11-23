@@ -1,5 +1,16 @@
 <div style="padding:10px">
-    <rcmpct-grid cols="1fr 2fr">
+    <style>
+        .tags {
+            font-size:10pt !important;
+        }
+        .tags table th {
+            padding:2px !important;
+            margin-bottom: 4px !important;
+        }
+    </style>
+    <div class="layout-columns">
+        <div>
+            <rcmpct-grid cols="1fr 2fr">
 
         <label>{{$res("Select file")}}:</label>
         <div>
@@ -25,35 +36,71 @@
 
         </div>
 
-        <div style="grid-column:1/-1">
-            <input type="button" class="btn btn-primary btn-small" style="float:right" value="{{$res('Upload')}}" ng-click="doUploadFile().then()" />
 
-        </div>
     </rcmpct-grid>
-    <!--<div style="width:200px">
+        </div>
 
+        <div class="tags">
+            <fieldset>
+                <legend style="font-size:8pt">Tags</legend>
+                <div>
+                    <table class="table bordered">
+                        <thead>
+                        <tr>
+                        <th>
+
+                            <span>
+                                Object type
+                            </span>
+                        </th>
+                        <th>
+                            <span>
+                                Value
+                            </span>
+                        </th>
+                            <th>
+                                <button class="btn btn-primary btn-xs btn-sm">
+                                    <i class="bi bi plus"></i>
+                                    +
+                                </button>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type="text">
+                                </td>
+                                <td>
+                                    <input type="text">
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+        </div>
     </div>
-    <div class="dock full debug">
-        <div class="row">
-            <div class="col-4">
-                Select file
+
+    <div>
+        <div class="layout-rows">
+            <div class="dock full">
+                    {{data}}
             </div>
-            <div class="col-8">
-                <input type="file" id="file" />
+            <div>
+
+                <input type="button" class="btn btn-primary btn-sm" style="float:right" value="{{$res('Upload')}}" ng-click="doUploadFile().then()" />
+
             </div>
-        </div>
-        <div class="row">
-            <rcmpct-progressbar style="width:300px;height:50px" ng-value="{{info.Percent}}"/> 
-        </div>
-        <div class="row">
-            <div class="col-12">
-                {{info}}
+            <div>
+                &nbsp;
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                
+            <div>
+
+                <input type="button" class="btn btn-primary btn-sm" style="float:right" value="{{$res('Cancel')}}" ng-click="$close()" />
+
             </div>
         </div>
-    </div>-->
+    </div>
 </div>

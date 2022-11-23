@@ -41,7 +41,7 @@ def files_upload(app_name: str, UploadId: str, Index: int, FilePart: UploadFile,
     nun_of_chunks = upload_item.NumOfChunks or 0
     main_file_id = upload_item.MainFileId
     chunk_size_in_bytes = upload_item.ChunkSizeInBytes or 0
-    server_file_name = upload_item.ServerFileName
+    server_file_name = upload_item.FullFileNameLower
     if num_of_chunks_complete == 0:
         fs = file_storage_service.create(
             app_name=app_name,

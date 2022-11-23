@@ -11,8 +11,8 @@ import cy_xdoc.auths
 import cy_xdoc.services.file_storage
 
 @cy_web.hanlder(method="get", path="{app_name}/file/{directory:path}")
-async def get_content_of_files(app_name: str, directory: str, request: fastapi.Request,
-                               token=fastapi.Depends(cy_xdoc.auths.Authenticate)):
+async def get_content_of_files(app_name: str, directory: str, request: fastapi.Request):
+    import asyncio
     mime_type, _ = mimetypes.guess_type(directory)
     if mime_type.startswith('image/'):
         file_cache = cy_web.cache_content_check(app_name, directory.replace('/', '_'))
@@ -36,3 +36,9 @@ async def get_content_of_files(app_name: str, directory: str, request: fastapi.R
     mime_type, _ = mimetypes.guess_type(directory)
     ret = await cy_web.cy_web_x.streaming_async(fs, request, mime_type)
     return ret
+    # ret= cy_web.cy_web_x.FileObjectResponse(
+    #     file=fs,
+    #     status_code=206,
+    #     media_type= mime_type
+    # )
+    # return ret

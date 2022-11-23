@@ -1520,7 +1520,7 @@ def context(client, cls):
 import gridfs
 
 
-def get_file(client, db_name: str, file_id):
+def file_get(client, db_name: str, file_id):
     gfs = gridfs.GridFSBucket(client.get_database(db_name))
 
     if isinstance(file_id, str):
@@ -1531,13 +1531,52 @@ def get_file(client, db_name: str, file_id):
     return ret
 
 
-def get_file_by_name(client, db_name: str, filename):
+def file_get_by_name(client, db_name: str, filename):
     gfs = gridfs.GridFSBucket(client.get_database(db_name))
     items = list(gfs.find({"filename": filename}))
     if items.__len__() > 0:
         return items[0]
+@document_define(
+    name="fs.files",
+    unique_keys=["rel_file_path"],
+    indexes=[]
 
-
+)
+class __fs_files__:
+    _id:bson.ObjectId
+    chunkSize:int
+    length:int
+    rel_file_path:str
+    filename:str
+@document_define(
+    name="fs.chunks",
+    indexes=["files_id","files_id,n","n","_id,files_id,n"],
+    unique_keys=[]
+)
+class __fs_files_chunks__:
+    _id:bson.ObjectId
+    files_id: bson.ObjectId
+    n: int
+    data: bytes
+def file_add_chunk(client:pymongo.MongoClient, db_name:str, file_id:bson.ObjectId,chunk_index:int, chunk_data:bytes):
+    if isinstance(file_id,str):
+        file_id = bson.ObjectId(file_id)
+    context(client,__fs_files_chunks__)[db_name].insert_one(
+        {
+            "_id": bson.objectid.ObjectId(),
+            "files_id": file_id,
+            "n": chunk_index,
+            "data": chunk_data
+        }
+    )
+    # fs_chunks = self.db.get_collection("fs.chunks")
+    # fs_chunks.insert_one({
+    #     "_id": bson.objectid.ObjectId(),
+    #     "files_id": self.fs._id,
+    #     "n": chunk_index,
+    #     "data": content
+    # })
+    del chunk_data
 def create_file(client, db_name: str, file_name: str, file_size: int, chunk_size: int):
     db = client.get_database(db_name)
     gfs = gridfs.GridFS(client.get_database(db_name))  # gridfs.GridFSBucket(__client__.get_database(__db_name__))
@@ -1546,17 +1585,13 @@ def create_file(client, db_name: str, file_name: str, file_size: int, chunk_size
     fs.name = file_name
     fs.filename = file_name
     fs.close()
-    db.get_collection("fs.files").update_one(
-        {
-            "_id": fs._id
-        },
-        {
-            "$set": {
-                "chunkSize": chunk_size,
-                "length": file_size
-            }
-        }
+    context(client,__fs_files__)[db_name].update(
+        fields._id==fs._id,
+        fields.chunkSize<<chunk_size,
+        fields.length<<file_size,
+        fields.rel_file_path <<file_name
     )
+
     return fs
 
 
@@ -1582,3 +1617,5 @@ async def find_file_async(client, db_name: str, rel_file_path: str):
 
     # ret = gridfs.GridFS(__client__.get_database(__db_name__)).get(file_id)
     return ret
+
+
