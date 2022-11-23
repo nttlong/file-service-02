@@ -11,8 +11,13 @@ class Error:
     Code: str
     Message: str
     Fields: List[str]
-
-
+@cy_web.model()
+class PrivilegesType:
+    Type:str
+    Values:str
+    """
+    Separated by comma
+    """
 @cy_web.model()
 class RegisterUploadInfo:
     """
@@ -23,6 +28,7 @@ class RegisterUploadInfo:
     FileSize: int
     IsPublic: Optional[bool]
     ThumbConstraints: Optional[str]
+    Privileges: Optional[List[PrivilegesType]]
 
 
 @cy_web.model()

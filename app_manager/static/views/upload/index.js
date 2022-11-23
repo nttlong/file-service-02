@@ -6,15 +6,25 @@ var uploadFileView = await View(import.meta, class UploadFileView extends BaseSc
     debugger;
     appName = ""
     info = {}
-    data = {}
+    data = {
+        tags:[]
+    }
     async init(){
         alert("OK");
-        this.data= {};
     }
     setApp(appName) {
-        alert("OK");
-        this.data= {};
+
+
         this.appName = appName;
+    }
+    doAddTag(){
+        if (!this.data){
+            this.data={
+                tags:[]
+            }
+        }
+        this.data.tags.push({});
+        this.applyAsync();
     }
     async doUploadFile() {
         debugger;
@@ -39,7 +49,8 @@ var uploadFileView = await View(import.meta, class UploadFileView extends BaseSc
                     FileSize: fileUpload.size,
                     ChunkSizeInKB: 1024 * 10,
                     IsPublic: this.data.IsPublic||false,
-                    ThumbConstraints:"700,350,200,120"
+                    ThumbConstraints:"700,350,200,120",
+                    Privileges: this.data.tags
                 }
             });
             if (reg.Error) {
@@ -69,7 +80,7 @@ var uploadFileView = await View(import.meta, class UploadFileView extends BaseSc
                     this.info = chunk.Data;
                     this.$applyAsync();
                 }
-                msgOK(this.$res("Upload was conmplete"));
+                msgOK(this.$res("Uploading was complete"));
             }
             
             

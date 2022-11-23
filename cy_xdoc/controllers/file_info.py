@@ -36,6 +36,8 @@ class UploadInfoResult:
     VideoInfo: typing.Optional[VideoInfoClass]
     AvailableThumbs: typing.List[str]
     MarkDelete:typing.Optional[bool]
+    Privileges: typing.Optional[dict]
+    ClientPrivileges:typing.Optional[typing.List[dict]]
 
 
 @cy_web.hanlder(method="post", path="{app_name}/files/info")

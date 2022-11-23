@@ -11,6 +11,7 @@ from cy_xdoc.services.files import FileServices
 from cy_xdoc.services.file_storage import FileStorageObject,FileStorageService
 from cy_xdoc.services.msg import MessageService
 from cy_xdoc.models.files import DocUploadRegister
+import cy_xdoc.configs
 import typing
 
 
@@ -49,11 +50,13 @@ def files_upload(app_name: str, UploadId: str, Index: int, FilePart: UploadFile,
             chunk_size=chunk_size_in_bytes, size=file_size)
         fs.push(content_part, Index)
         upload_item.MainFileId = fs.get_id()
-        msg_service.emit(
-            app_name=app_name,
-            message_type="files.upload",
-            data=upload_item
-        )
+        print("warning message emit is disable")
+        if cy_xdoc.configs.config.message_when_upload:
+            msg_service.emit(
+                app_name=app_name,
+                message_type="files.upload",
+                data=upload_item
+            )
 
 
 

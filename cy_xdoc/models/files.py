@@ -4,7 +4,12 @@ import cy_docs
 import datetime
 import bson
 
-
+@cy_docs.define(
+    name="Privileges",
+    indexes=["Name"]
+)
+class Privileges:
+    Name:str
 @cy_docs.define(
     name="DocUploadRegister",
     uniques=["ServerFileName", "FullFileName", "FullFileNameLower"],
@@ -253,7 +258,11 @@ class DocUploadRegister:
     List of relative url of thumbs
     """
     IsProcessed: typing.Optional[bool]
-
+    Privileges: typing.Optional[dict]
+    """
+    Phan quyen
+    """
+    ClientPrivileges:typing.Optional[typing.List[dict]]
 
 @cy_docs.define(
     name="fs.files",

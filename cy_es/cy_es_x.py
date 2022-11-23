@@ -462,5 +462,8 @@ def create_index(client: Elasticsearch, index: str, body: typing.Union[dict, typ
 
 
 def delete_doc(client: Elasticsearch, index: str, id:str, doc_type:str ="_doc"):
-    ret = client.delete(index=index,id=id,doc_type=doc_type)
-    return ret
+    try:
+        ret = client.delete(index=index,id=id,doc_type=doc_type)
+        return ret
+    except elasticsearch.exceptions.NotFoundError as e:
+        return None

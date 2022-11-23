@@ -11,7 +11,7 @@ import cy_docs
 import cy_kit
 import cy_web
 from cy_xdoc.services.base import Base
-from cy_xdoc.models.files import DocUploadRegister
+from cy_xdoc.models.files import DocUploadRegister, Privileges
 import cy_xdoc.services.file_storage
 import cy_xdoc.services.search_engine
 
@@ -106,6 +106,7 @@ class FileServices:
     def find_file_async(self, app_name, relative_file_path):
         pass
 
+
     def get_main_main_thumb_file(self, app_name, upload_id):
         upload = self.db_connect.db(app_name).doc(DocUploadRegister).context @ upload_id
         if upload is None:
@@ -121,7 +122,8 @@ class FileServices:
                             file_size: int,
                             chunk_size: int,
                             thumbs_support: str,
-                            web_host_root_url: str):
+                            web_host_root_url: str,
+                            privileges_type):
 
         doc = self.db_connect.db(app_name).doc(DocUploadRegister)
         id = str(uuid.uuid4())
@@ -129,6 +131,22 @@ class FileServices:
         num_of_chunks, tail = divmod(file_size, chunk_size)
         if tail > 0:
             num_of_chunks += 1
+        privileges_dict = {}
+        client_privileges_dict =[]
+        if privileges_type:
+            privilege_context = self.db_connect.db(app_name).doc(Privileges)
+            for x in privileges_type:
+                privilege_item = privilege_context.context @ x.Type.lower()
+                if privilege_item is None:
+                    privilege_context.context.insert_one(
+                        privilege_context.fields.Name<<x.Type.lower()
+                    )
+                privileges_dict[x.Type.lower()] = x.Values.lower().split(',')
+                client_privileges_dict+=[{
+                    x.Type:x.Values
+                }]
+
+
         ret = doc.context.insert_one(
             doc.fields.id << id,
             doc.fields.FileName << client_file_name,
@@ -162,7 +180,16 @@ class FileServices:
             doc.fields.RegisteredBy << app_name,
             doc.fields.HasThumb << False,
             doc.fields.LastModifiedOn << datetime.datetime.utcnow(),
-            doc.fields.SizeInBytes << file_size
+            doc.fields.SizeInBytes << file_size,
+            doc.fields.Privileges << privileges_dict,
+            doc.fields.ClientPrivileges << client_privileges_dict
+        )
+        self.search_engine.create_or_update_privileges(
+            app_name=app_name,
+            upload_id = id,
+            data_item= doc.context@id,
+            privileges=privileges_dict
+
         )
         return cy_docs.DocumentObject(
             NumOfChunks=num_of_chunks,

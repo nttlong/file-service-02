@@ -43,7 +43,7 @@
         <div class="tags">
             <fieldset>
                 <legend style="font-size:8pt">Tags</legend>
-                <div>
+                <div style="height:400px; overflow-y:auto">
                     <table class="table bordered">
                         <thead>
                         <tr>
@@ -59,7 +59,7 @@
                             </span>
                         </th>
                             <th>
-                                <button class="btn btn-primary btn-xs btn-sm">
+                                <button class="btn btn-primary btn-xs btn-sm" ng-click="doAddTag()">
                                     <i class="bi bi plus"></i>
                                     +
                                 </button>
@@ -67,12 +67,12 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr ng-repeat="p in data.tags">
                                 <td>
-                                    <input type="text">
+                                    <input type="text" ng-model="p.Type">
                                 </td>
                                 <td>
-                                    <input type="text">
+                                    <input type="text" ng-model="p.Values">
                                 </td>
                             </tr>
 
@@ -86,7 +86,7 @@
     <div>
         <div class="layout-rows">
             <div class="dock full">
-                    {{data}}
+
             </div>
             <div>
 

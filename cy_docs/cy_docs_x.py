@@ -1079,6 +1079,11 @@ class DBDocument:
                 return ret
 
     def insert_one(self, *args, **kwargs):
+        if isinstance(args,Field):
+            ret = self.collection.insert_one({
+                        args.__name__: args.__value__
+                    })
+            return ret
         if isinstance(args, tuple):
             if args.__len__() == 1:
                 if isinstance(args[0], dict):
@@ -1098,8 +1103,8 @@ class DBDocument:
                     }
                     for k, v in kwargs:
                         data[k] = v
-                    if args[0].get("_id") is None:
-                        args[0] = bson.ObjectId()
+                    if data.get("_id") is None:
+                        data["_id"] = bson.ObjectId()
                     ret = self.collection.insert_one(data)
                     return ret
             else:

@@ -13207,8 +13207,8 @@ static PyObject *__pyx_pf_5cy_es_7cy_es_x_24create_index(CYTHON_UNUSED PyObject 
  * 
  * 
  * def delete_doc(client: Elasticsearch, index: str, id:str, doc_type:str ="_doc"):             # <<<<<<<<<<<<<<
- *     ret = client.delete(index=index,id=id,doc_type=doc_type)
- *     return ret
+ *     try:
+ *         ret = client.delete(index=index,id=id,doc_type=doc_type)
  */
 
 /* Python wrapper */
@@ -13332,60 +13332,191 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
 
 static PyObject *__pyx_pf_5cy_es_7cy_es_x_26delete_doc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_index, PyObject *__pyx_v_id, PyObject *__pyx_v_doc_type) {
   PyObject *__pyx_v_ret = NULL;
+  CYTHON_UNUSED PyObject *__pyx_v_e = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  PyObject *__pyx_t_8 = NULL;
+  int __pyx_t_9;
+  PyObject *__pyx_t_10 = NULL;
   __Pyx_RefNannySetupContext("delete_doc", 0);
 
   /* "cy_es/cy_es_x.py":465
  * 
  * def delete_doc(client: Elasticsearch, index: str, id:str, doc_type:str ="_doc"):
- *     ret = client.delete(index=index,id=id,doc_type=doc_type)             # <<<<<<<<<<<<<<
- *     return ret
+ *     try:             # <<<<<<<<<<<<<<
+ *         ret = client.delete(index=index,id=id,doc_type=doc_type)
+ *         return ret
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_client, __pyx_n_s_delete); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 465, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 465, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_index, __pyx_v_index) < 0) __PYX_ERR(0, 465, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_id, __pyx_v_id) < 0) __PYX_ERR(0, 465, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_doc_type, __pyx_v_doc_type) < 0) __PYX_ERR(0, 465, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 465, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_v_ret = __pyx_t_3;
-  __pyx_t_3 = 0;
+  {
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    __Pyx_ExceptionSave(&__pyx_t_1, &__pyx_t_2, &__pyx_t_3);
+    __Pyx_XGOTREF(__pyx_t_1);
+    __Pyx_XGOTREF(__pyx_t_2);
+    __Pyx_XGOTREF(__pyx_t_3);
+    /*try:*/ {
 
-  /* "cy_es/cy_es_x.py":466
+      /* "cy_es/cy_es_x.py":466
  * def delete_doc(client: Elasticsearch, index: str, id:str, doc_type:str ="_doc"):
- *     ret = client.delete(index=index,id=id,doc_type=doc_type)
- *     return ret             # <<<<<<<<<<<<<<
+ *     try:
+ *         ret = client.delete(index=index,id=id,doc_type=doc_type)             # <<<<<<<<<<<<<<
+ *         return ret
+ *     except elasticsearch.exceptions.NotFoundError as e:
  */
-  __Pyx_XDECREF(__pyx_r);
-  __Pyx_INCREF(__pyx_v_ret);
-  __pyx_r = __pyx_v_ret;
-  goto __pyx_L0;
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_client, __pyx_n_s_delete); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 466, __pyx_L3_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_5 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 466, __pyx_L3_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_index, __pyx_v_index) < 0) __PYX_ERR(0, 466, __pyx_L3_error)
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_id, __pyx_v_id) < 0) __PYX_ERR(0, 466, __pyx_L3_error)
+      if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_doc_type, __pyx_v_doc_type) < 0) __PYX_ERR(0, 466, __pyx_L3_error)
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_empty_tuple, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 466, __pyx_L3_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_v_ret = __pyx_t_6;
+      __pyx_t_6 = 0;
+
+      /* "cy_es/cy_es_x.py":467
+ *     try:
+ *         ret = client.delete(index=index,id=id,doc_type=doc_type)
+ *         return ret             # <<<<<<<<<<<<<<
+ *     except elasticsearch.exceptions.NotFoundError as e:
+ *         return None
+ */
+      __Pyx_XDECREF(__pyx_r);
+      __Pyx_INCREF(__pyx_v_ret);
+      __pyx_r = __pyx_v_ret;
+      goto __pyx_L7_try_return;
+
+      /* "cy_es/cy_es_x.py":465
+ * 
+ * def delete_doc(client: Elasticsearch, index: str, id:str, doc_type:str ="_doc"):
+ *     try:             # <<<<<<<<<<<<<<
+ *         ret = client.delete(index=index,id=id,doc_type=doc_type)
+ *         return ret
+ */
+    }
+    __pyx_L3_error:;
+    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+
+    /* "cy_es/cy_es_x.py":468
+ *         ret = client.delete(index=index,id=id,doc_type=doc_type)
+ *         return ret
+ *     except elasticsearch.exceptions.NotFoundError as e:             # <<<<<<<<<<<<<<
+ *         return None
+ */
+    __Pyx_ErrFetch(&__pyx_t_6, &__pyx_t_5, &__pyx_t_4);
+    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_elasticsearch); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 468, __pyx_L5_except_error)
+    __Pyx_GOTREF(__pyx_t_7);
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_exceptions); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 468, __pyx_L5_except_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_NotFoundError); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 468, __pyx_L5_except_error)
+    __Pyx_GOTREF(__pyx_t_7);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __pyx_t_9 = __Pyx_PyErr_GivenExceptionMatches(__pyx_t_6, __pyx_t_7);
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_ErrRestore(__pyx_t_6, __pyx_t_5, __pyx_t_4);
+    __pyx_t_6 = 0; __pyx_t_5 = 0; __pyx_t_4 = 0;
+    if (__pyx_t_9) {
+      __Pyx_AddTraceback("cy_es.cy_es_x.delete_doc", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_5, &__pyx_t_6) < 0) __PYX_ERR(0, 468, __pyx_L5_except_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_INCREF(__pyx_t_5);
+      __pyx_v_e = __pyx_t_5;
+      /*try:*/ {
+
+        /* "cy_es/cy_es_x.py":469
+ *         return ret
+ *     except elasticsearch.exceptions.NotFoundError as e:
+ *         return None             # <<<<<<<<<<<<<<
+ */
+        __Pyx_XDECREF(__pyx_r);
+        __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        goto __pyx_L13_return;
+      }
+
+      /* "cy_es/cy_es_x.py":468
+ *         ret = client.delete(index=index,id=id,doc_type=doc_type)
+ *         return ret
+ *     except elasticsearch.exceptions.NotFoundError as e:             # <<<<<<<<<<<<<<
+ *         return None
+ */
+      /*finally:*/ {
+        __pyx_L13_return: {
+          __pyx_t_10 = __pyx_r;
+          __pyx_r = 0;
+          __Pyx_DECREF(__pyx_v_e); __pyx_v_e = 0;
+          __pyx_r = __pyx_t_10;
+          __pyx_t_10 = 0;
+          goto __pyx_L6_except_return;
+        }
+      }
+    }
+    goto __pyx_L5_except_error;
+    __pyx_L5_except_error:;
+
+    /* "cy_es/cy_es_x.py":465
+ * 
+ * def delete_doc(client: Elasticsearch, index: str, id:str, doc_type:str ="_doc"):
+ *     try:             # <<<<<<<<<<<<<<
+ *         ret = client.delete(index=index,id=id,doc_type=doc_type)
+ *         return ret
+ */
+    __Pyx_XGIVEREF(__pyx_t_1);
+    __Pyx_XGIVEREF(__pyx_t_2);
+    __Pyx_XGIVEREF(__pyx_t_3);
+    __Pyx_ExceptionReset(__pyx_t_1, __pyx_t_2, __pyx_t_3);
+    goto __pyx_L1_error;
+    __pyx_L7_try_return:;
+    __Pyx_XGIVEREF(__pyx_t_1);
+    __Pyx_XGIVEREF(__pyx_t_2);
+    __Pyx_XGIVEREF(__pyx_t_3);
+    __Pyx_ExceptionReset(__pyx_t_1, __pyx_t_2, __pyx_t_3);
+    goto __pyx_L0;
+    __pyx_L6_except_return:;
+    __Pyx_XGIVEREF(__pyx_t_1);
+    __Pyx_XGIVEREF(__pyx_t_2);
+    __Pyx_XGIVEREF(__pyx_t_3);
+    __Pyx_ExceptionReset(__pyx_t_1, __pyx_t_2, __pyx_t_3);
+    goto __pyx_L0;
+  }
 
   /* "cy_es/cy_es_x.py":464
  * 
  * 
  * def delete_doc(client: Elasticsearch, index: str, id:str, doc_type:str ="_doc"):             # <<<<<<<<<<<<<<
- *     ret = client.delete(index=index,id=id,doc_type=doc_type)
- *     return ret
+ *     try:
+ *         ret = client.delete(index=index,id=id,doc_type=doc_type)
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_8);
   __Pyx_AddTraceback("cy_es.cy_es_x.delete_doc", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_ret);
+  __Pyx_XDECREF(__pyx_v_e);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -14578,13 +14709,13 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  * def delete_doc(client: Elasticsearch, index: str, id:str, doc_type:str ="_doc"):             # <<<<<<<<<<<<<<
- *     ret = client.delete(index=index,id=id,doc_type=doc_type)
- *     return ret
+ *     try:
+ *         ret = client.delete(index=index,id=id,doc_type=doc_type)
  */
-  __pyx_tuple__94 = PyTuple_Pack(5, __pyx_n_s_client, __pyx_n_s_index, __pyx_n_s_id, __pyx_n_s_doc_type, __pyx_n_s_ret); if (unlikely(!__pyx_tuple__94)) __PYX_ERR(0, 464, __pyx_L1_error)
+  __pyx_tuple__94 = PyTuple_Pack(6, __pyx_n_s_client, __pyx_n_s_index, __pyx_n_s_id, __pyx_n_s_doc_type, __pyx_n_s_ret, __pyx_n_s_e); if (unlikely(!__pyx_tuple__94)) __PYX_ERR(0, 464, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__94);
   __Pyx_GIVEREF(__pyx_tuple__94);
-  __pyx_codeobj__95 = (PyObject*)__Pyx_PyCode_New(4, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__94, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_es_cy_es_x_py, __pyx_n_s_delete_doc, 464, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__95)) __PYX_ERR(0, 464, __pyx_L1_error)
+  __pyx_codeobj__95 = (PyObject*)__Pyx_PyCode_New(4, 0, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__94, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_es_cy_es_x_py, __pyx_n_s_delete_doc, 464, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__95)) __PYX_ERR(0, 464, __pyx_L1_error)
   __pyx_tuple__96 = PyTuple_Pack(1, ((PyObject*)__pyx_n_s_doc)); if (unlikely(!__pyx_tuple__96)) __PYX_ERR(0, 464, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__96);
   __Pyx_GIVEREF(__pyx_tuple__96);
@@ -16688,8 +16819,8 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  * def delete_doc(client: Elasticsearch, index: str, id:str, doc_type:str ="_doc"):             # <<<<<<<<<<<<<<
- *     ret = client.delete(index=index,id=id,doc_type=doc_type)
- *     return ret
+ *     try:
+ *         ret = client.delete(index=index,id=id,doc_type=doc_type)
  */
     __pyx_t_1 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 464, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
