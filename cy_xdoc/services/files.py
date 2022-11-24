@@ -136,12 +136,12 @@ class FileServices:
         if privileges_type:
             privilege_context = self.db_connect.db(app_name).doc(Privileges)
             for x in privileges_type:
-                privilege_item = privilege_context.context @ x.Type.lower()
+                privilege_item = privilege_context.context @ x.Type.lower().strip()
                 if privilege_item is None:
                     privilege_context.context.insert_one(
-                        privilege_context.fields.Name<<x.Type.lower()
+                        privilege_context.fields.Name<<x.Type.lower().lower().strip()
                     )
-                privileges_dict[x.Type.lower()] = x.Values.lower().split(',')
+                privileges_dict[x.Type.lower()] =[v.strip() for v in  x.Values.lower().split(',')]
                 client_privileges_dict+=[{
                     x.Type:x.Values
                 }]
