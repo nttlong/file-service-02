@@ -181,9 +181,9 @@ class DocumentFields:
         if self.__name__ is None:
             raise Exception("Thous can not update expression")
         if other is not None:
-            if type(other) not in [str, int, float, bool, datetime.datetime]:
+            if type(other) not in [str, int, float, bool, datetime.datetime,dict,list]:
                 raise Exception(
-                    f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime]")
+                    f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime,dict,list]")
         ret = DocumentFields(self.__name__)
         ret.__value__ = other
         ret.__has_set_value__ = True

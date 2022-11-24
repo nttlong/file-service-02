@@ -9,12 +9,60 @@
                             </td>
                             <td  valign="top">:</td>
                             <td ng-if="key!='AvailableThumbs'">
-                                <span>{{value}}</span>
+                                <span ng-if="key!='ClientPrivileges'">{{value}}</span>
+
+                                <table class="table bordered" ng-if="key=='ClientPrivileges'">
+                                    <thead>
+                                        <tr>
+                                           <th>
+                                               Key
+                                           </th>
+                                            <th>
+                                                Value
+
+                                            </th>
+                                            <th style="max-width:40px" width="40">
+                                                <button class="btn btn-sm btn-primary" ng-click="doAddNewTags()">+</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="p in privileges">
+                                        <td>
+                                            <input type="text" ng-model="p.key" ng-if="p.isNew">
+                                            <span ng-if="!p.isNew">{{p.key}}</span>
+                                        </td>
+                                        <td colspan="2">
+                                            <input type="text" ng-model="p.values" style="width:100%;float:left">
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3">
+                                                <div class="layout-rows">
+                                                    <div class="dock full"></div>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-primary" ng-click="doUpdateTags().then()">
+                                                            {{$res('Update')}}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                    </tfoot>
+
+                                </table>
                             </td>
                             <td ng-if="key=='AvailableThumbs'">
-                                <p  ng-repeat="r in value">
-                                    <img ng-src="../{{r}}"></img>
+                                {{value.length}}
+                                <div style="display:none">
+                                    <p  ng-repeat="r in value">
+                                    <img ng-src="../{{r}}" style="max-width:200px;max-height:200px"></img>
                                 </p>
+                                </div>
+
                             </td>
 
 

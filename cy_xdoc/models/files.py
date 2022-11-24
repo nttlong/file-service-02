@@ -6,10 +6,24 @@ import bson
 
 @cy_docs.define(
     name="Privileges",
-    indexes=["Name"]
+    uniques=["Name"]
 )
 class Privileges:
+    """
+    Bang nay dung de luu danh sach cac loai quyen ma user tao
+    Muc dic la de tao phan goi y tren giao dien
+    """
     Name:str
+@cy_docs.define(
+    name="PrivilegesValues",
+    uniques=["Name","Value"]
+)
+class PrivilegesValues:
+    """
+    Ban nay luu lai cac dac quyen va ca gia tri cua tung dac quyen
+    """
+    Name:str
+    Value:str
 @cy_docs.define(
     name="DocUploadRegister",
     uniques=["ServerFileName", "FullFileName", "FullFileNameLower"],
@@ -260,9 +274,20 @@ class DocUploadRegister:
     IsProcessed: typing.Optional[bool]
     Privileges: typing.Optional[dict]
     """
-    Phan quyen
+    Moi phan tu trong danh sach nay co cau truc nhu sau:
+    {key:[value1,value2,..]} trong do kay la loai doi tuong duoc phan quyen value1, value2,.. la dinh danh cua di tuong duoc phan quyen
+    Vi du:
+        Privileges =[{user:[user_id_1,user_id_2]},{dept:[hr,acc]}]
+    
     """
     ClientPrivileges:typing.Optional[typing.List[dict]]
+    """
+    Day la danh sach ma moi phan tu co cau truc nhu sau:
+    {key:value} trong do key chin la loai doi tuong duoc phan quyen, value chinh la cac dinh danh cua loai doi tuong
+    cac dinh danh nay cach nhau bang dau ','
+    Vi du: ClientPrivileges = [{user:'user_id_1,user_id_2'},{dept:'hr,acc'}]
+    
+    """
 
 @cy_docs.define(
     name="fs.files",

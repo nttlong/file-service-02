@@ -3577,7 +3577,7 @@ static const char __pyx_k_ESDocumentObject__name__split[] = "_ESDocumentObject__
 static const char __pyx_k_index_long_test_2011_11__type[] = "\n    {'_index': 'long-test-2011-11',\n '_type': '_doc',\n '_id': '56330233-59f2-48b9-b213-72e75f9f9b28',\n '_version': 4,\n '_seq_no': 3,\n '_primary_term': 1,\n 'found': True,\n '_source': {'user_name': 'root',\n  'password': 'tes',\n  'tags': ['a', 'b', 'c', 'd']}}\n    ";
 static const char __pyx_k_Hey_what_the_fu_king_that_thous[] = "Hey!\n what the fu**king that?\n.thous should call ";
 static const char __pyx_k_Thous_can_not_update_expression[] = "Thous can not update expression";
-static const char __pyx_k_is_not_in_str_str_int_float_boo[] = " is not in [str,str,int,float,bool,datetime.datetime]";
+static const char __pyx_k_is_not_in_str_str_int_float_boo[] = " is not in [str,str,int,float,bool,datetime.datetime,dict,list]";
 static const char __pyx_k_Thous_can_not_update_by_non_prim[] = "Thous can not update by non primitive type. ";
 #if !CYTHON_COMPILING_IN_LIMITED_API
 static PyObject *__pyx_kp_s_;
@@ -7293,7 +7293,7 @@ static PyObject *__pyx_pf_5cy_es_7cy_es_x_14DocumentFields_16__lshift__(CYTHON_U
  *         if self.__name__ is None:
  *             raise Exception("Thous can not update expression")             # <<<<<<<<<<<<<<
  *         if other is not None:
- *             if type(other) not in [str, int, float, bool, datetime.datetime]:
+ *             if type(other) not in [str, int, float, bool, datetime.datetime,dict,list]:
  */
     __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -7314,7 +7314,7 @@ static PyObject *__pyx_pf_5cy_es_7cy_es_x_14DocumentFields_16__lshift__(CYTHON_U
  *         if self.__name__ is None:
  *             raise Exception("Thous can not update expression")
  *         if other is not None:             # <<<<<<<<<<<<<<
- *             if type(other) not in [str, int, float, bool, datetime.datetime]:
+ *             if type(other) not in [str, int, float, bool, datetime.datetime,dict,list]:
  *                 raise Exception(
  */
   __pyx_t_3 = (__pyx_v_other != Py_None);
@@ -7324,9 +7324,9 @@ static PyObject *__pyx_pf_5cy_es_7cy_es_x_14DocumentFields_16__lshift__(CYTHON_U
     /* "cy_es/cy_es_x.py":184
  *             raise Exception("Thous can not update expression")
  *         if other is not None:
- *             if type(other) not in [str, int, float, bool, datetime.datetime]:             # <<<<<<<<<<<<<<
+ *             if type(other) not in [str, int, float, bool, datetime.datetime,dict,list]:             # <<<<<<<<<<<<<<
  *                 raise Exception(
- *                     f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime]")
+ *                     f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime,dict,list]")
  */
     __Pyx_INCREF(((PyObject *)Py_TYPE(__pyx_v_other)));
     __pyx_t_1 = ((PyObject *)Py_TYPE(__pyx_v_other));
@@ -7371,6 +7371,22 @@ static PyObject *__pyx_pf_5cy_es_7cy_es_x_14DocumentFields_16__lshift__(CYTHON_U
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 184, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (__pyx_t_3) {
+    } else {
+      __pyx_t_2 = __pyx_t_3;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_4 = PyObject_RichCompare(((PyObject *)__pyx_t_1), ((PyObject *)(&PyDict_Type)), Py_NE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 184, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 184, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (__pyx_t_3) {
+    } else {
+      __pyx_t_2 = __pyx_t_3;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_4 = PyObject_RichCompare(((PyObject *)__pyx_t_1), ((PyObject *)(&PyList_Type)), Py_NE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 184, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 184, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_2 = __pyx_t_3;
     __pyx_L6_bool_binop_done:;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -7378,9 +7394,9 @@ static PyObject *__pyx_pf_5cy_es_7cy_es_x_14DocumentFields_16__lshift__(CYTHON_U
     if (unlikely(__pyx_t_3)) {
 
       /* "cy_es/cy_es_x.py":186
- *             if type(other) not in [str, int, float, bool, datetime.datetime]:
+ *             if type(other) not in [str, int, float, bool, datetime.datetime,dict,list]:
  *                 raise Exception(
- *                     f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime]")             # <<<<<<<<<<<<<<
+ *                     f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime,dict,list]")             # <<<<<<<<<<<<<<
  *         ret = DocumentFields(self.__name__)
  *         ret.__value__ = other
  */
@@ -7400,7 +7416,7 @@ static PyObject *__pyx_pf_5cy_es_7cy_es_x_14DocumentFields_16__lshift__(CYTHON_U
       PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_4);
       __pyx_t_4 = 0;
       __Pyx_INCREF(__pyx_kp_u_is_not_in_str_str_int_float_boo);
-      __pyx_t_6 += 53;
+      __pyx_t_6 += 63;
       __Pyx_GIVEREF(__pyx_kp_u_is_not_in_str_str_int_float_boo);
       PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_kp_u_is_not_in_str_str_int_float_boo);
       __pyx_t_4 = __Pyx_PyUnicode_Join(__pyx_t_1, 3, __pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 186, __pyx_L1_error)
@@ -7409,9 +7425,9 @@ static PyObject *__pyx_pf_5cy_es_7cy_es_x_14DocumentFields_16__lshift__(CYTHON_U
 
       /* "cy_es/cy_es_x.py":185
  *         if other is not None:
- *             if type(other) not in [str, int, float, bool, datetime.datetime]:
+ *             if type(other) not in [str, int, float, bool, datetime.datetime,dict,list]:
  *                 raise Exception(             # <<<<<<<<<<<<<<
- *                     f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime]")
+ *                     f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime,dict,list]")
  *         ret = DocumentFields(self.__name__)
  */
       __pyx_t_1 = __Pyx_PyObject_CallOneArg(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
@@ -7424,9 +7440,9 @@ static PyObject *__pyx_pf_5cy_es_7cy_es_x_14DocumentFields_16__lshift__(CYTHON_U
       /* "cy_es/cy_es_x.py":184
  *             raise Exception("Thous can not update expression")
  *         if other is not None:
- *             if type(other) not in [str, int, float, bool, datetime.datetime]:             # <<<<<<<<<<<<<<
+ *             if type(other) not in [str, int, float, bool, datetime.datetime,dict,list]:             # <<<<<<<<<<<<<<
  *                 raise Exception(
- *                     f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime]")
+ *                     f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime,dict,list]")
  */
     }
 
@@ -7434,14 +7450,14 @@ static PyObject *__pyx_pf_5cy_es_7cy_es_x_14DocumentFields_16__lshift__(CYTHON_U
  *         if self.__name__ is None:
  *             raise Exception("Thous can not update expression")
  *         if other is not None:             # <<<<<<<<<<<<<<
- *             if type(other) not in [str, int, float, bool, datetime.datetime]:
+ *             if type(other) not in [str, int, float, bool, datetime.datetime,dict,list]:
  *                 raise Exception(
  */
   }
 
   /* "cy_es/cy_es_x.py":187
  *                 raise Exception(
- *                     f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime]")
+ *                     f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime,dict,list]")
  *         ret = DocumentFields(self.__name__)             # <<<<<<<<<<<<<<
  *         ret.__value__ = other
  *         ret.__has_set_value__ = True
@@ -7475,7 +7491,7 @@ static PyObject *__pyx_pf_5cy_es_7cy_es_x_14DocumentFields_16__lshift__(CYTHON_U
   __pyx_t_1 = 0;
 
   /* "cy_es/cy_es_x.py":188
- *                     f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime]")
+ *                     f"Thous can not update by non primitive type. {type(other)} is not in [str,str,int,float,bool,datetime.datetime,dict,list]")
  *         ret = DocumentFields(self.__name__)
  *         ret.__value__ = other             # <<<<<<<<<<<<<<
  *         ret.__has_set_value__ = True
@@ -16531,7 +16547,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         if self.__name__ is None:
  *             raise Exception("Thous can not update expression")             # <<<<<<<<<<<<<<
  *         if other is not None:
- *             if type(other) not in [str, int, float, bool, datetime.datetime]:
+ *             if type(other) not in [str, int, float, bool, datetime.datetime,dict,list]:
  */
   __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_s_Thous_can_not_update_expression); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 182, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);

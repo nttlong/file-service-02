@@ -15,6 +15,7 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo,token = fa
     :return:
     """
     file_service = cy_kit.single(FileServices)
+
     ret = file_service.add_new_upload_info(
         app_name=app_name,
         chunk_size= Data.ChunkSizeInKB * 1024,

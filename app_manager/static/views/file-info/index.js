@@ -10,12 +10,49 @@ var fileInfoView = await View(import.meta, class FileInfoView extends BaseScope 
 
 
       }
+      doAddNewTags(){
+         if(!this.privileges){
+            this.privileges=[{isNew:true}]
+         }
+         else {
+            this.privileges.push({isNew:true})
+         }
+      }
+      async doUpdateTags(){
+            var privilegesData=[];
+            this.privileges = this.privileges ||[]
+            for(var i=0;i<this.privileges.length;i++){
+                privilegesData.push({
+                    Type:this.privileges[i].key,
+                    Values:this.privileges[i].values
+                })
+            }
+            debugger;
+            this.data = await api.post(`${this.appName}/files/update_privileges`, {
+                UploadId: this.uploadId,
+                Data:privilegesData
+            });
+      }
       async loadDetailInfo(appName, uploadId){
         this.appName=appName;
         this.uploadId=uploadId;
         this.data = await api.post(`${appName}/files/info`, {
             UploadId: uploadId
-        })
+        });
+        this.privileges =[];
+        if (!this.data.ClientPrivileges){
+            this.data.ClientPrivileges=[]
+        }
+        if (this.data.ClientPrivileges){
+
+            for (var i=0;i<this.data.ClientPrivileges.length;i++){
+                var keys=Object.keys(this.data.ClientPrivileges[i]);
+                this.privileges.push({
+                    key:keys[0],
+                    values: this.data.ClientPrivileges[i][keys[0]]
+                })
+            }
+        }
 
         this.$applyAsync();
       }

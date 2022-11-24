@@ -11,7 +11,7 @@ import cy_docs
 import cy_kit
 import cy_web
 from cy_xdoc.services.base import Base
-from cy_xdoc.models.files import DocUploadRegister, Privileges
+from cy_xdoc.models.files import DocUploadRegister, Privileges, PrivilegesValues
 import cy_xdoc.services.file_storage
 import cy_xdoc.services.search_engine
 
@@ -106,7 +106,6 @@ class FileServices:
     def find_file_async(self, app_name, relative_file_path):
         pass
 
-
     def get_main_main_thumb_file(self, app_name, upload_id):
         upload = self.db_connect.db(app_name).doc(DocUploadRegister).context @ upload_id
         if upload is None:
@@ -131,20 +130,10 @@ class FileServices:
         num_of_chunks, tail = divmod(file_size, chunk_size)
         if tail > 0:
             num_of_chunks += 1
-        privileges_dict = {}
-        client_privileges_dict =[]
-        if privileges_type:
-            privilege_context = self.db_connect.db(app_name).doc(Privileges)
-            for x in privileges_type:
-                privilege_item = privilege_context.context @ x.Type.lower().strip()
-                if privilege_item is None:
-                    privilege_context.context.insert_one(
-                        privilege_context.fields.Name<<x.Type.lower().lower().strip()
-                    )
-                privileges_dict[x.Type.lower()] =[v.strip() for v in  x.Values.lower().split(',')]
-                client_privileges_dict+=[{
-                    x.Type:x.Values
-                }]
+        privileges_server, privileges_client = self.create_privileges(
+            app_name=app_name,
+            privileges_type_from_client=privileges_type
+        )
 
 
         ret = doc.context.insert_one(
@@ -181,16 +170,21 @@ class FileServices:
             doc.fields.HasThumb << False,
             doc.fields.LastModifiedOn << datetime.datetime.utcnow(),
             doc.fields.SizeInBytes << file_size,
-            doc.fields.Privileges << privileges_dict,
-            doc.fields.ClientPrivileges << client_privileges_dict
+            doc.fields.Privileges << privileges_server,
+            doc.fields.ClientPrivileges << privileges_client
         )
-        self.search_engine.create_or_update_privileges(
-            app_name=app_name,
-            upload_id = id,
-            data_item= doc.context@id,
-            privileges=privileges_dict
 
-        )
+        @cy_kit.thread_makeup()
+        def search_engine_create_or_update_privileges():
+            self.search_engine.create_or_update_privileges(
+                app_name=app_name,
+                upload_id=id,
+                data_item=doc.context @ id,
+                privileges=privileges_server
+
+            )
+
+        search_engine_create_or_update_privileges().start()
         return cy_docs.DocumentObject(
             NumOfChunks=num_of_chunks,
             ChunkSizeInBytes=chunk_size,
@@ -236,7 +230,7 @@ class FileServices:
         item[document_context.fields.FullFileName] = f"{item.id}/{item[document_context.fields.FileName]}"
         item[document_context.fields.FullFileNameLower] = item[document_context.fields.FullFileName].lower()
         item[document_context.fields.Status] = 0
-        item[document_context.fields.PercentageOfUploaded]=100
+        item[document_context.fields.PercentageOfUploaded] = 100
         item[document_context.fields.MarkDelete] = False
         item.ServerFileName = f"{item.id}.{item[document_context.fields.FileExt]}"
         item.RegisterOn = datetime.datetime.utcnow()
@@ -292,42 +286,87 @@ class FileServices:
                     rel_file_path_from=x
                 )
 
-        copy_thumbs(app_name= app_name,upload_id= upload_id, thumbs_list = item.AvailableThumbs or []).start()
+        copy_thumbs(app_name=app_name, upload_id=upload_id, thumbs_list=item.AvailableThumbs or []).start()
         self.search_engine.copy(
-            app_name, from_id=upload_id,to_id=item.id,attach_data = item,run_in_thread=True)
-        item.Status=1
+            app_name, from_id=upload_id, to_id=item.id, attach_data=item, run_in_thread=True)
+        item.Status = 1
         data_insert = document_context.fields.reduce(item)
         document_context.context.insert_one(data_insert)
         return data_insert
 
+    def update_privileges(self, app_name: str, upload_id: str, privileges: typing.List[cy_docs.DocumentObject]):
 
-        #
+        server_privileges,client_privileges = self.create_privileges(
+            app_name=app_name,
+            privileges_type_from_client=privileges
+        )
 
-        #     if item.get(Files.VideoDuration.__name__) is not None:
-        #         ret.VideoInfo = VideoInfoClass()
-        #         ret.VideoInfo.Width = n_item.get(Files.VideoResolutionWidth.__name__)
-        #         ret.VideoInfo.Height = n_item.get(Files.VideoResolutionHeight.__name__)
-        #         ret.VideoInfo.Duration = n_item.get(Files.VideoDuration.__name__)
-        #     bool_body = {
-        #         "bool": {
-        #             "must":
-        #                 {"prefix": {
-        #                     "path.virtual": f'/{app_name}/{UploadId}'}}
-        #         }
-        #     }
-        #     resp = search_engine.get_client().search(index=fasty.config.search_engine.index, query=bool_body)
-        #     if resp.body.get('hits') and resp.body['hits']['hits'] and resp.body['hits']['hits'].__len__() > 0:
-        #         es_id = resp.body['hits']['hits'][0]['_id']
-        #         body = resp.body['hits']['hits'][0].get('_source')
-        #         body['path']['virtual'] = f'/{app_name}/{ret.UploadId}.{item[Files.FileExt.__name__]}'
-        #         body['MarkDelete'] = False
-        #         search_engine.get_client().index(
-        #             index=fasty.config.search_engine.index,
-        #             id=ret.UploadId,
-        #             body=body)
-        #
-        #     ret_copy.Info = ret
-        # except Exception as e:
-        #     print(e)
-        #
-        # return ret_copy
+        doc_context = self.db_connect.db(app_name).doc(cy_xdoc.models.files.DocUploadRegister)
+        doc_context.context.update(
+            doc_context.fields.id == upload_id,
+            doc_context.fields.Privileges << server_privileges,
+            doc_context.fields.ClientPrivileges << client_privileges
+        )
+        self.search_engine.create_or_update_privileges(
+            privileges=server_privileges,
+            upload_id=upload_id,
+            data_item=doc_context.context @ upload_id,
+            app_name=app_name
+        )
+
+    def create_privileges(self, app_name, privileges_type_from_client):
+        """
+        Chuyen doi danh sach cac dac quyen do nguoi dung tao sang dang luu tru trong mongodb va elastic search
+        Dong thoi ham nay cung update lai danh sach tham khao danh cho giao dien
+        Trong Mongodb la 2 ban Privileges, PrivilegesValues
+        :param app_name:
+        :param privileges_type_from_client:
+        :return: (privileges_server,privileges_client)
+        """
+
+        privileges_server = {}
+        privileges_client = []
+        if privileges_type_from_client:
+            privilege_context = self.db_connect.db(app_name).doc(Privileges)
+            privilege_value_context = self.db_connect.db(app_name).doc(PrivilegesValues)
+            check_types = dict()
+            for x in privileges_type_from_client:
+                if check_types.get(x.Type.lower().strip()) is None:
+                    privilege_item = privilege_context.context @ (privilege_context.fields.Name == x.Type.lower().strip())
+                    """
+                    Bo sung thong tin vao danh sach cac dac quyen va cac gia tri de tham khao
+    
+                    """
+                    if privilege_item is None:
+                        privilege_context.context.insert_one(
+                            privilege_context.fields.Name << x.Type.lower().lower().strip()
+                        )
+                        """
+                        Bo sung danh sach dac quyen, ho tro cho gia dien khi loc theo dac quyen
+                        """
+                    for v in x.Values.lower().split(','):
+                        """
+                        Bo sung danh sach dac quyen va gia tri
+                        """
+                        privileges_value_item = privilege_value_context.context @ (
+                                (
+                                        privilege_value_context.fields.Value == v
+                                ) & (
+                                        privilege_value_context.fields.Name == x.Type.lower().lower().strip()
+                                )
+                        )
+                        if not privileges_value_item:
+                            """
+                            Neu chua co
+                            """
+                            privilege_value_context.context.insert_one(
+                                privilege_value_context.fields.Value << v,
+                                privilege_value_context.fields.Name << x.Type.lower().lower().strip()
+                            )
+
+                    privileges_server[x.Type.lower()] = [v.strip() for v in x.Values.lower().split(',')]
+                    privileges_client += [{
+                        x.Type: x.Values
+                    }]
+                check_types[x.Type.lower().strip()]=x
+        return privileges_server, privileges_client

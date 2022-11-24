@@ -78,4 +78,8 @@ def get_info(app_name: str, UploadId: str, token=Depends(cy_xdoc.auths.Authentic
         upload_info.VideoInfo.Width = upload_info.VideoResolutionWidth
         upload_info.VideoInfo.Height = upload_info.VideoResolutionHeight
         upload_info.VideoInfo.Duration = upload_info.VideoDuration
+    if upload_info.ClientPrivileges and not isinstance(upload_info.ClientPrivileges,list):
+        upload_info.ClientPrivileges = [upload_info.ClientPrivileges]
+    if upload_info.ClientPrivileges is None:
+        upload_info.ClientPrivileges =[]
     return upload_info.to_pydantic()
