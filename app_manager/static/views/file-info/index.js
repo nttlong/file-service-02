@@ -17,6 +17,18 @@ var fileInfoView = await View(import.meta, class FileInfoView extends BaseScope 
          else {
             this.privileges.push({isNew:true})
          }
+         this.$applyAsync();
+      }
+      doRemoveTags(tag){
+            var ret=[];
+            for(var i=0;i<this.privileges.length;i++){
+                if (this.privileges[i]!=tag){
+                    ret.push(this.privileges[i])
+                }
+            }
+            this.privileges=ret;
+            this.$applyAsync();
+
       }
       async doUpdateTags(){
             var privilegesData=[];
@@ -27,11 +39,12 @@ var fileInfoView = await View(import.meta, class FileInfoView extends BaseScope 
                     Values:this.privileges[i].values
                 })
             }
-            debugger;
+
             this.data = await api.post(`${this.appName}/files/update_privileges`, {
                 UploadId: this.uploadId,
                 Data:privilegesData
             });
+            this.$applyAsync();
       }
       async loadDetailInfo(appName, uploadId){
         this.appName=appName;

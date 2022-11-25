@@ -27,7 +27,8 @@ class FileStorageObject:
     @classmethod
     def get_id(cls)->str:
         pass
-
+    def close(self):
+        pass
 
 
 

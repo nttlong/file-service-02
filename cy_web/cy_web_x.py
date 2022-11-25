@@ -964,23 +964,30 @@ class WebApp(BaseWebApp):
         # for k,v in self.web_app_module.__dict__.items():
         #     if v==self:
         #        self.web_app_name=k
+        if not isinstance(web_application,WebApp):
+            raise  Exception("Web application can not start")
         run_path = f"{start_path}:web_application.app"
+        if not self.dev_mode:
+            run_path=web_application.app
         if self.dev_mode:
             uvicorn.run(
-                run_path,
+                app=run_path,
+                loop="asyncio",
                 host=self.bind_ip,
                 port=self.host_port,
                 log_level="info",
                 lifespan='on',
-                ws_max_size=16777216 * 1024,
+                ws_max_size=8*8 * 1024*1024,
                 reload=self.dev_mode,
                 reload_dirs=self.working_dir,
                 workers=worker,
                 ws='websockets',
                 backlog=1000,
-                # interface='WSGI',
+                interface='asgi3',
                 timeout_keep_alive=True,
-                h11_max_incomplete_event_size=1024 * 1024 * 8
+                h11_max_incomplete_event_size=1024 * 1024 * 8,
+                http="httptools",
+                factory=not self.dev_mode
             )
         else:
             uvicorn.run(
@@ -1349,27 +1356,18 @@ import queue
 def __send_bytes_range_requests__(
         file_obj, start: int, end: int, chunk_size: int = 10_000
 ):
-    que = queue.Queue()
+    """Send a file in chunks using Range Requests specification RFC7233
 
-    def __read__(f, s, c_s):
-        f.seek(s)
-        data = [1]
-        pos = f.tell()
-        while len(data) > 0:
-            read_size = min(c_s, end + 1 - pos)
+        `start` and `end` parameters are inclusive due to specification
+        """
+    file_obj.seek(start)
+    data = [1]
+    pos = file_obj.tell()
+    while len(data) > 0:
+        read_size = min(chunk_size, end + 1 - pos)
+        data = file_obj.read(read_size)
 
-            data = file_obj.read(read_size)
-
-            yield data
-
-    t = threading.Thread(name="content-reading", target=lambda q, f, s, c_s: q.put(__read__(f, s, c_s)),
-                         args=(que, file_obj, start, chunk_size))
-
-    t.setDaemon(True)
-    t.start()
-    t.join()
-    ret = que.get()
-    return ret
+        yield data
 
 
 async def __send_bytes_range_requests_async__(
@@ -1387,14 +1385,114 @@ async def __send_bytes_range_requests_async__(
         data = await file_obj.read(read_size)
 
         yield data
-
-
+from functools import partial
+import anyio
 import os
 import stat
 import sys
 import typing
+from starlette.types import Receive, Send,Scope
+from fastapi import Response
+from starlette.background import BackgroundTask
+from  starlette.concurrency import iterate_in_threadpool
+Content = typing.Union[str, bytes]
+SyncContentStream = typing.Iterator[Content]
+AsyncContentStream = typing.AsyncIterable[Content]
+ContentStream = typing.Union[AsyncContentStream, SyncContentStream]
+class AsyncStreamingResponse(Response):
+    body_iterator: AsyncContentStream
+
+    def __init__(
+        self,
+        file_Stream,
+        start,
+        end,
+        segment_size,
+        buffering_size,
+        content: ContentStream,
+        status_code: int = 200,
+        headers: typing.Optional[typing.Mapping[str, str]] = None,
+        media_type: typing.Optional[str] = None,
+        background: typing.Optional[BackgroundTask] = None,
+    ) -> None:
+
+        self.start = start
+        self.end = end
+        size = self.end - self.start
+        self.segment_size=segment_size
+        self.buffering_size=buffering_size
+
+        self.file_Stream = file_Stream
+        self.content_reader = content
+        self.status_code = status_code
+        self.media_type = self.media_type if media_type is None else media_type
+        self.background = background
+        x=self.start
+        y=min(self.end, self.start + self.segment_size-1)
+        headers[
+            'content-range'] = f"bytes {x}-{y}/{self.file_Stream.get_size()}"
+        self.init_headers(headers)
+
+    async def listen_for_disconnect(self, receive: Receive) -> None:
+        while True:
+            message = await receive()
+            if message["type"] == "http.disconnect":
+                self.file_Stream.close()
+
+                break
+
+    async def stream_response(self, send: Send) -> None:
+        await send(
+            {
+                "type": "http.response.start",
+                "status": self.status_code,
+                "headers": self.raw_headers,
+            }
+        )
+        self.file_Stream.seek(self.start)
+        data = [1]
+        pos = self.file_Stream.tell()
+        b_size=0
+        while len(data) > 0:
+            read_size = min(self.buffering_size, self.end + 1 - pos)
+            data = self.file_Stream.read(read_size)
+            if data.__len__()>0:
+                await send({"type": "http.response.body", "body": data, "more_body": True})
+            else:
+                await send({"type": "http.response.body", "body": data, "more_body": True})
+                break
+            b_size+=read_size
 
 
+        # self.file_Stream.seek(self.start)
+
+
+
+        # begin = self.file_Stream.tell()
+        #
+        # while begin<self.end:
+        #     data = self.file_Stream.read(min(self.buffering_size, self.end - begin))
+        #     await send({"type": "http.response.body", "body": data, "more_body": True})
+        #     begin = self.file_Stream.tell()
+        #     # end = min(self.end, begin + self.segment_size)
+        #     # while begin <end:
+        #     #
+        #     #     end = begin+data.__len__()
+
+        #await send({"type": "http.response.body", "body": b"", "more_body": False})
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        async with anyio.create_task_group() as task_group:
+
+            async def wrap(func: "typing.Callable[[], typing.Awaitable[None]]") -> None:
+                await func()
+                task_group.cancel_scope.cancel()
+
+            task_group.start_soon(wrap, partial(self.stream_response, send))
+            await wrap(partial(self.listen_for_disconnect, receive))
+
+        if self.background is not None:
+            await self.background()
 async def streaming_async(fsg, request, content_type, streaming_buffering=1024 * 8 * 8, segment_size=None):
     """
     Streaming content
@@ -1419,8 +1517,7 @@ async def streaming_async(fsg, request, content_type, streaming_buffering=1024 *
     }
     start = 0
     end = file_size - 1
-    if segment_size is not None:
-        end = min(segment_size, file_size) - 1
+
 
     status_code = 200
 
@@ -1433,16 +1530,31 @@ async def streaming_async(fsg, request, content_type, streaming_buffering=1024 *
         headers["content-length"] = str(size)
         headers["content-range"] = f"bytes {start}-{end}/{file_size}"
         status_code = status.HTTP_206_PARTIAL_CONTENT
-    if hasattr(fsg, "delegate"):
-        content = __send_bytes_range_requests_async__(fsg, start, end, streaming_buffering)
+    if segment_size:
+        res = AsyncStreamingResponse(
+            file_Stream = fsg,
+            start=start,
+            end=end,
+            segment_size=segment_size,
+            buffering_size=streaming_buffering,
+            content=None,
+            headers=headers,
+            status_code=status_code,
+            media_type=content_type
+        )
+
     else:
-        content = __send_bytes_range_requests__(fsg, start, end, streaming_buffering)
-    res = StreamingResponse(
-        content=content,
-        headers=headers,
-        status_code=status_code,
-        media_type=content_type
-    )
+        if hasattr(fsg, "delegate"):
+            content = __send_bytes_range_requests_async__(fsg, start, end, streaming_buffering)
+        else:
+            content = __send_bytes_range_requests__(fsg, start, end, streaming_buffering)
+        res = StreamingResponse(
+            content=content,
+            media_type=content_type,
+            status_code=status_code,
+            headers=headers
+        )
+
     res.headers.append("Cache-Control", "max-age=86400")
     res.headers.append("Content-Type", content_type)
 

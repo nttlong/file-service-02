@@ -1530,10 +1530,11 @@ def file_get(client, db_name: str, file_id):
 
     if isinstance(file_id, str):
         file_id = bson.ObjectId(file_id)
-    ret = gfs.open_download_stream(file_id)
+    with client.start_session(causal_consistency=True) as session:
+        ret = gfs.open_download_stream(file_id,session)
 
     # ret = gridfs.GridFS(__client__.get_database(__db_name__)).get(file_id)
-    return ret
+        return ret
 
 
 def file_get_by_name(client, db_name: str, filename):

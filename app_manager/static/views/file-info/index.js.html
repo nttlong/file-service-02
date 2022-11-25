@@ -32,8 +32,11 @@
                                             <input type="text" ng-model="p.key" ng-if="p.isNew">
                                             <span ng-if="!p.isNew">{{p.key}}</span>
                                         </td>
-                                        <td colspan="2">
+                                        <td>
                                             <input type="text" ng-model="p.values" style="width:100%;float:left">
+                                        </td>
+                                        <td style="max-width:40px" width="40">
+                                            <button class="btn btn-sm btn-danger" ng-click="$parent.doRemoveTags(p)">-</button>
                                         </td>
                                     </tr>
                                     </tbody>

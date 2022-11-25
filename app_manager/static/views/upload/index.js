@@ -7,24 +7,31 @@ var uploadFileView = await View(import.meta, class UploadFileView extends BaseSc
     appName = ""
     info = {}
     data = {
-        tags:[]
+        tags:[],
+        IsPublic:true
     }
     async init(){
-        alert("OK");
+
     }
     setApp(appName) {
 
-
+        if (!this.data){
+            this.data={
+                tags:[],
+                IsPublic:true
+            }
+        }
         this.appName = appName;
     }
     doAddTag(){
         if (!this.data){
             this.data={
-                tags:[]
+                tags:[],
+                IsPublic:true
             }
         }
         this.data.tags.push({});
-        this.applyAsync();
+        this.$applyAsync();
     }
     async doUploadFile() {
         debugger;

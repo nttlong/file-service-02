@@ -1,3 +1,4 @@
+import datetime
 import threading
 import typing
 import uuid
@@ -7,6 +8,7 @@ import pymongo.database
 
 import cy_docs
 import cy_kit
+import cy_web
 from cy_xdoc.services.base import Base
 from cy_xdoc.models.files import DocUploadRegister, FsFile, FsChunks
 from gridfs import GridIn
@@ -21,6 +23,7 @@ class MongoDbFileStorage:
     def __init__(self, fs: GridIn,db:pymongo.database.Database):
         self.fs = fs
         self.db =db
+        self.is_dirty=False
 
     def seek(self, position: int):
         return self.fs.seek(position)
@@ -32,8 +35,8 @@ class MongoDbFileStorage:
         return self.fs.tell()
 
     def read(self, size: int) -> bytes:
-
         return self.fs.read(size)
+
 
     def get_id(self) -> str:
         return str(self.fs._id)
@@ -48,6 +51,11 @@ class MongoDbFileStorage:
 
         )
 
+    def close(self):
+        """
+        some how to implement thy source here ...
+        """
+        self.fs.close()
 
 
 @cy_kit.must_imlement(FileStorageService)
@@ -94,6 +102,8 @@ class MongoDbFileService(Base):
 
     def get_file_by_id(self, app_name: str, id: str) -> MongoDbFileStorage:
         fs = cy_docs.file_get(self.client, self.db_name(app_name), bson.ObjectId(id))
+
+
 
         ret = MongoDbFileStorage(fs,self.client.get_database(self.db_name(app_name)))
         return ret
