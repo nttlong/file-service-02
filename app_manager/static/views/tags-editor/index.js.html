@@ -36,6 +36,9 @@
         <div class="layout-rows">
             <div class="dock full"></div>
             <div>
+                <button class="btn btn-sm btn-primary" ng-click="doPostRemoveTags().then()"> {{$res('Remove tags to selected items')}} </button>
+            </div>
+            <div>
                 <button class="btn btn-sm btn-primary" ng-click="doPostAddTags().then()"> {{$res('Add tags to selected items')}} </button>
             </div>
         </div>

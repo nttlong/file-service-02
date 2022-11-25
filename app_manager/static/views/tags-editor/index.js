@@ -48,5 +48,21 @@ var tagEditor = await View(import.meta, class TagEditor extends BaseScope {
             });
             this.$applyAsync();
     }
+    async doPostRemoveTags() {
+        var privilegesData=[];
+            this.privileges = this.owner.tags ||[]
+            for(var i=0;i<this.privileges.length;i++){
+                privilegesData.push({
+                    Type:this.privileges[i].key,
+                    Values:this.privileges[i].values
+                })
+            }
+
+            this.data = await api.post(`${this.appName}/files/remove_privileges`, {
+                UploadIds: this.uploadIds,
+                Data:privilegesData
+            });
+            this.$applyAsync();
+    }
 });
 export default tagEditor;
