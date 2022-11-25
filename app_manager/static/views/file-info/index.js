@@ -41,7 +41,7 @@ var fileInfoView = await View(import.meta, class FileInfoView extends BaseScope 
             }
 
             this.data = await api.post(`${this.appName}/files/update_privileges`, {
-                UploadId: this.uploadId,
+                UploadIds: [this.uploadId],
                 Data:privilegesData
             });
             this.$applyAsync();

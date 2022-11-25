@@ -10,7 +10,11 @@ var filesView = await View(import.meta, class FilesView extends BaseScope {
     currentApp = undefined
     listOfFiles = []
     currentAppName = undefined
+    hasSelected=false
     async init() {
+        this.ui={
+            hasSelected:false
+        }
         var queryData = parseUrlParams();
         var r =await this.$getElement();
         $(window).resize(()=>{
@@ -38,6 +42,22 @@ var filesView = await View(import.meta, class FilesView extends BaseScope {
         });
         this.$applyAsync();
     }
+    async showAddTagsButton(){
+        for(var i=0;i<this.listOfFiles.length;i++){
+            if(this.listOfFiles[i].isSelected){
+                this.ui.hasSelected=true;
+                this.$applyAsync();
+                return;
+
+            }
+        }
+        this.ui.hasSelected=false;
+        this.$applyAsync();
+    }
+    async doAddTags(){
+        this.showAddTags= true;
+        this.$applyAsync();
+    }
     async doLoadAllFiles() {
         var me = this;
 
@@ -62,6 +82,19 @@ var filesView = await View(import.meta, class FilesView extends BaseScope {
 
 
 
+    }
+    async doShowWindowAddTags() {
+        var r = await import("../tags-editor/index.js");
+        var selectedId=[]
+        for(var i=0;i<this.listOfFiles.length;i++){
+            if(this.listOfFiles[i].isSelected){
+                selectedId.push(this.listOfFiles[i].UploadId);
+
+            }
+        }
+        var editor = await r.default();
+        editor.setData(this.currentAppName, this,selectedId);
+        editor.asWindow();
     }
     async doOpenUploadWindow() {
         debugger;

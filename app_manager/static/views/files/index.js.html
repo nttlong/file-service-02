@@ -132,6 +132,9 @@
                             </a>
                             <div style="grid-column: 1/-1">
                                 <div class="layout-rows">
+                                    <div>
+                                        <input type="checkbox" ng-model="p.isSelected" ng-change="showAddTagsButton().then()">
+                                    </div>
                                     <div class="dock full"></div>
                                     <div>
                                         <button class="btn btn-link btn-sm" ng-click="doShowDetail(p).then()">{{$res('Detail')}} </button>
@@ -225,6 +228,12 @@
         
     </div>
     <div class="layout-rows">
+        <div ng-if="ui.hasSelected">
+            <input type="button" class="btn btn-primary btn-sm" value="{{$res('Add tags')}}" ng-click="doShowWindowAddTags().then()" style="margin-right:10px" />
+        </div>
+        <div ng-if="ui.hasSelected">
+            <input type="button" class="btn btn-danger btn-sm" value="{{$res('Delete selected items')}}" ng-click="doDeleteItems().then()" style="margin-right:10px" />
+        </div>
         <div class="dock full"></div>
         <div style="padding:4px">
             <input type="button" class="btn btn-primary btn-sm" value="{{$res('New')}}" ng-click="doOpenUploadWindow().then()" style="margin-right:10px" />
