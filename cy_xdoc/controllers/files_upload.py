@@ -1,3 +1,5 @@
+import mimetypes
+
 import bson
 import humanize
 
@@ -43,11 +45,14 @@ def files_upload(app_name: str, UploadId: str, Index: int, FilePart: UploadFile,
     main_file_id = upload_item.MainFileId
     chunk_size_in_bytes = upload_item.ChunkSizeInBytes or 0
     server_file_name = upload_item.FullFileNameLower
+    content_type, _ = mimetypes.guess_type(server_file_name)
     if num_of_chunks_complete == 0:
         fs = file_storage_service.create(
             app_name=app_name,
             rel_file_path=server_file_name,
-            chunk_size=chunk_size_in_bytes, size=file_size)
+            chunk_size=chunk_size_in_bytes,
+            content_type=content_type,
+            size=file_size)
         fs.push(content_part, Index)
         upload_item.MainFileId = fs.get_id()
         print("warning message emit is disable")

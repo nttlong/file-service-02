@@ -1526,15 +1526,16 @@ import gridfs
 
 
 def file_get(client, db_name: str, file_id):
-    gfs = gridfs.GridFSBucket(client.get_database(db_name))
+    gfs = gridfs.GridFSBucket(client.get_database(db_name),chunk_size_bytes=1024*1024*2)
 
     if isinstance(file_id, str):
         file_id = bson.ObjectId(file_id)
-    with client.start_session(causal_consistency=True) as session:
-        ret = gfs.open_download_stream(file_id,session)
+
+    ret = gfs.open_download_stream(file_id)
+
 
     # ret = gridfs.GridFS(__client__.get_database(__db_name__)).get(file_id)
-        return ret
+    return ret
 
 
 def file_get_by_name(client, db_name: str, filename):
@@ -1583,7 +1584,7 @@ def file_add_chunk(client:pymongo.MongoClient, db_name:str, file_id:bson.ObjectI
     #     "data": content
     # })
     del chunk_data
-def create_file(client, db_name: str, file_name: str, file_size: int, chunk_size: int):
+def create_file(client, db_name: str, file_name: str,content_type:str, file_size: int, chunk_size: int):
     db = client.get_database(db_name)
     gfs = gridfs.GridFS(client.get_database(db_name))  # gridfs.GridFSBucket(__client__.get_database(__db_name__))
 
@@ -1595,7 +1596,8 @@ def create_file(client, db_name: str, file_name: str, file_size: int, chunk_size
         fields._id==fs._id,
         fields.chunkSize<<chunk_size,
         fields.length<<file_size,
-        fields.rel_file_path <<file_name
+        fields.rel_file_path <<file_name,
+        fields.contentType<< content_type
     )
 
     return fs

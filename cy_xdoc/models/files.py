@@ -16,7 +16,7 @@ class Privileges:
     Name:str
 @cy_docs.define(
     name="PrivilegesValues",
-    uniques=["Name","Value"]
+    uniques=["Name,Value"]
 )
 class PrivilegesValues:
     """
@@ -295,6 +295,7 @@ class DocUploadRegister:
     indexes=["filename"]
 )
 class FsFile:
+    _id: bson.ObjectId
     rel_file_path: str
     filename: str
     contentType: str

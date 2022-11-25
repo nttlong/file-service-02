@@ -47,7 +47,7 @@ class FileStorageObject:
 
 class FileStorageService:
     @classmethod
-    def create(cls, app_name: str, rel_file_path: str, chunk_size: int, size: int) -> FileStorageObject:
+    def create(cls, app_name: str, rel_file_path: str,content_type:str, chunk_size: int, size: int) -> FileStorageObject:
         """
         Create new file
         :param app_name:

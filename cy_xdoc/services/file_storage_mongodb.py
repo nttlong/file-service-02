@@ -35,6 +35,7 @@ class MongoDbFileStorage:
         return self.fs.tell()
 
     def read(self, size: int) -> bytes:
+
         return self.fs.read(size)
 
 
@@ -60,13 +61,14 @@ class MongoDbFileStorage:
 
 @cy_kit.must_imlement(FileStorageService)
 class MongoDbFileService(Base):
-    def create(self, app_name: str, rel_file_path: str, chunk_size: int, size: int) -> MongoDbFileStorage:
+    def create(self, app_name: str, rel_file_path: str,content_type:str, chunk_size: int, size: int) -> MongoDbFileStorage:
         fs = cy_docs.create_file(
             client=self.client,
             db_name=self.db_name(app_name),
             file_name=rel_file_path,
             chunk_size=chunk_size,
-            file_size=size
+            file_size=size,
+            content_type = content_type
 
         )
         return MongoDbFileStorage(fs,self.client.get_database(self.db_name(app_name)))
