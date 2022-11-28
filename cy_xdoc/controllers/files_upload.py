@@ -12,7 +12,6 @@ from cy_xdoc.services.files import FileServices
 from cy_xdoc.services.file_storage import FileStorageService
 from cyx.common.msg import MessageService
 from cy_xdoc.models.files import DocUploadRegister
-import cy_xdoc.configs
 
 
 @cy_web.hanlder("post", "{app_name}/files/upload")

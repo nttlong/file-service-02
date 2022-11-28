@@ -3,7 +3,7 @@ import pathlib
 import elasticsearch
 import cy_kit
 import cy_es
-import cy_xdoc.configs
+import cyx.common
 from cy_xdoc.services.text_procesors import TextProcessService
 from cy_xdoc.services.file_content_extractors import FileContentExtractorService
 
@@ -11,11 +11,11 @@ class SearchEngine:
     def __init__(self,
                  text_process_service:TextProcessService = cy_kit.singleton(TextProcessService),
                  file_content_extractor_service:FileContentExtractorService = cy_kit.singleton(FileContentExtractorService)):
-        self.config = cy_xdoc.configs.config
+        self.config = cyx.common.config
         self.client = elasticsearch.Elasticsearch(
-            cy_xdoc.configs.config.elastic_search.server
+            cyx.common.config.elastic_search.server
         )
-        self.prefix_index = cy_xdoc.configs.config.elastic_search.prefix_index
+        self.prefix_index = cyx.common.config.elastic_search.prefix_index
         self.text_process_service = text_process_service
         self.file_content_extractor_service=file_content_extractor_service
 

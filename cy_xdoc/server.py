@@ -5,7 +5,7 @@ sys.path.append(pathlib.Path(__file__).parent.parent.__str__())
 import fastapi
 import datetime
 import cy_kit
-import cy_xdoc.configs
+import cyx.common
 
 import cy_web
 
@@ -13,10 +13,10 @@ cy_web.create_web_app(
     working_dir=pathlib.Path(__file__).parent.__str__(),
     static_dir="./../resource/static",
     template_dir="./../resource/html",
-    host_url="http://172.16.13.72:8012",
-    bind="0.0.0.0:8012",
+    host_url="http://172.16.13.72:8011",
+    bind="0.0.0.0:8011",
     cache_folder="./cache",
-    dev_mode= cy_xdoc.configs.config.debug,
+    dev_mode= cyx.common.config.debug,
 
 )
 import asyncio

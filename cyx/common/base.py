@@ -2,7 +2,7 @@ import pymongo.database
 
 import cy_docs
 import cy_kit
-from cy_xdoc.configs import config
+from cyx.common import config
 from cy_docs import get_doc
 from pymongo.mongo_client import MongoClient
 from typing import TypeVar,Generic

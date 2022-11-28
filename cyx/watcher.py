@@ -1,24 +1,13 @@
 import threading
 import time
 
-from cy_xdoc.services.msg import MessageService
-
-import api_models.documents
-import enig
-import enig_frames.containers
-import enig_frames.services.msgs
-import enig_frames.config
-container = enig_frames.containers.Container
-import sync_local_files
-import process_contents
-sync_local_service = enig.depen(sync_local_files.SyncToLocalService)
-process_contents_service = enig.depen(process_contents.ProcessContents)
-message_service = enig.depen(
-    enig_frames.services.msgs.Message
+from cyx.common.msg import MessageService
+import cy_kit
+import cyx.common
+message_service:MessageService = cy_kit.singleton(
+    MessageService
 )
-config = enig.depen(
-    enig_frames.config.Configuration
-)
+config = cyx.common.config
 # import enig_frames.plugins.thumbs.office
 # import enig_frames.plugins.thumbs.pdf
 # import enig_frames.plugins.thumbs.images
@@ -29,14 +18,14 @@ config = enig.depen(
 # import enig_frames.plugins.search.office
 
 plug_in_list_delete =[
-    enig.depen(enig_frames.plugins.thumbs.office.Office).process,
-    enig.depen(enig_frames.plugins.thumbs.pdf.PDF).process,
-    enig.depen(enig_frames.plugins.thumbs.images.Images).process,
-    enig.depen(enig_frames.plugins.thumbs.video.Video).process,
-    enig.depen(enig_frames.plugins.thumbs.exe_file.ExeFile).process,
-    enig.depen(enig_frames.plugins.ocr.images.Images).process,
-    enig.depen(enig_frames.plugins.ocr.pdf_file.PdfFile).process,
-    enig.depen(enig_frames.plugins.search.office.Office).process,
+    # enig.depen(enig_frames.plugins.thumbs.office.Office).process,
+    # enig.depen(enig_frames.plugins.thumbs.pdf.PDF).process,
+    # enig.depen(enig_frames.plugins.thumbs.images.Images).process,
+    # enig.depen(enig_frames.plugins.thumbs.video.Video).process,
+    # enig.depen(enig_frames.plugins.thumbs.exe_file.ExeFile).process,
+    # enig.depen(enig_frames.plugins.ocr.images.Images).process,
+    # enig.depen(enig_frames.plugins.ocr.pdf_file.PdfFile).process,
+    # enig.depen(enig_frames.plugins.search.office.Office).process,
 
 
 ]

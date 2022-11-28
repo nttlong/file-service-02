@@ -65,11 +65,11 @@ class FileDiskStorage:
         somehow to implement thy source here ...
         """
         return self.file.read(size)
-import cy_xdoc.configs
+import cyx.common
 class FileDiskStorageService:
     def __init__(self):
         self.working_dir = pathlib.Path(__file__).parent.parent.__str__()
-        self.config = cy_xdoc.configs.config
+        self.config = cyx.common.config
         self.storage_path = self.config.storage_path
         if self.storage_path[0:2]=="./":
             self.storage_path=self.storage_path[2:]

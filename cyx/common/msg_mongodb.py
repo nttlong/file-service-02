@@ -3,17 +3,21 @@ import uuid
 
 import cy_docs
 import cy_kit
-from cyx.common.msg import MessageService
+from cyx.common.msg import MessageService,MessageInfo
+from typing import List
 from cyx.common.base import Base
 from cyx.models import SysMessage
 import pathlib
 import os
 import re
-
+import cyx.common.base
 
 @cy_kit.must_imlement(MessageService)
-class MessageServiceMongodb(Base):
-    def __init__(self):
+class MessageServiceMongodb:
+    def __init__(self,
+                 db_connect=cy_kit.inject(cyx.common.base.DbConnect)
+                 ):
+        self.db_connect:cyx.common.base.DbConnect =db_connect
         self.instance_id = str(uuid.uuid4())
         self.working_dir = pathlib.Path(__file__).parent.parent.parent.__str__()
         self.lock_dir = os.path.join(self.working_dir, "background_service_files", "msg_lock")
@@ -34,15 +38,76 @@ class MessageServiceMongodb(Base):
             self.instance_id = val_id
 
     def emit(self, app_name: str, message_type: str, data: dict):
-        doc = cy_docs.expr(SysMessage)
-        self.db('admin').doc(SysMessage).insert_one(
-            doc.Data << data,
-            doc.MsgId << str(uuid.uuid4()),
-            doc.AppName << app_name,
-            doc.MsgType << message_type,
-            doc.CreatedOn << datetime.datetime.utcnow(),
-            doc.IsLock << False,
-            doc.InstancesLock << {
+        doc_context = self.db_connect.db('admin').doc(SysMessage)
+        doc_context.context.insert_one(
+            doc_context.fields.Data <<data,
+            doc_context.fields.MsgType <<message_type,
+            doc_context.fields.CreatedOn <<datetime.datetime.utcnow(),
+            doc_context.fields.MsgId <<str(uuid.uuid4()),
+            doc_context.fields.IsLock << False,
+            doc_context.fields.AppName <<app_name,
+            doc_context.fields.InstancesLock << {
                 self.instance_id: True
             }
         )
+
+    def get_message(self, message_type: str, max_items: int = 1000) -> List[MessageInfo]:
+        doc_context = self.db_connect.db('admin').doc(SysMessage)
+        filter = doc_context.fields.MsgType==message_type
+        filter_2 = cy_docs.not_exists(doc_context.fields.RunInsLock)|(doc_context.fields.RunInsLock!=self.instance_id)
+        filter = filter & filter_2
+        filter_2 = (doc_context.fields.IsLock == False)|cy_docs.not_exists(doc_context.fields.IsLock)
+        filter=filter & filter_2
+        ret_list = doc_context.context.aggregate().match(
+            filter=filter
+        ).sort(
+           doc_context.fields.CreatedOn.asc()
+        ).limit(max_items)
+
+        ret = []
+        for x in ret_list:
+            fx = MessageInfo()
+            fx.MsgType = x.MsgType
+            fx.Data = x.Data
+            fx.AppName = x.AppName
+            fx.CreatedOn = x.CreatedOn
+            fx.Id = x.MsgId
+            ret += [fx]
+            doc_context.context.update(
+                doc_context.fields.MsgId == x.MsgId,
+                doc_context.fields.RunInsLock == self.instance_id
+            )
+
+        return ret
+
+    def unlock(self, item: MessageInfo):
+        """
+        somehow to implement thy source here ...
+        """
+        docs = self.db_connect.db('admin').doc(SysMessage)
+        docs.context.update(
+            docs.fields.MsgId == item.Id,
+            docs.fields.IsLock == False
+        )
+
+    def lock(self,  item:MessageInfo):
+        docs = self.db_connect.db('admin').doc(SysMessage)
+        docs.context.update(
+            docs.fields.MsgId == item.Id,
+            docs.fields.IsLock == True
+        )
+
+    def is_lock(self,  item:MessageInfo):
+        docs = self.db_connect.db('admin').doc(SysMessage)
+        item = docs.context @ (docs.fields.MsgId==item.Id)
+        if not item:
+            return False
+        else:
+            return item.IsLock == True
+
+    def delete(self, item:MessageInfo):
+        docs = self.db_connect.db('admin').doc(SysMessage)
+        docs.context.delete(
+            docs.fields.MsgId ==item.Id
+        )
+
