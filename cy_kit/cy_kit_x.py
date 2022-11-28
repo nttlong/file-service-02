@@ -6,20 +6,23 @@ import yaml
 import sys
 from copy import deepcopy
 
+import logging
+import datetime
 
 
-def __resolve_container__(cls:type):
-    if not hasattr(cls,"__annotations__"):
+def __resolve_container__(cls: type):
+    if not hasattr(cls, "__annotations__"):
         return inject(cls)
-    ret={}
-    if cls.__annotations__.items().__len__()==0:
+    ret = {}
+    if cls.__annotations__.items().__len__() == 0:
         return inject(cls)
-    for k,v in cls.__annotations__.items():
+    for k, v in cls.__annotations__.items():
         if inspect.isclass(v):
-            ret[k]=__resolve_container__(v)
+            ret[k] = __resolve_container__(v)
         else:
-            ret[k]=v
+            ret[k] = v
     return ret
+
 
 def container(*args, **kwargs):
     def container_wrapper(cls):
@@ -45,10 +48,10 @@ def container(*args, **kwargs):
             if inspect.isclass(ret):
 
                 ret_resolve = __resolve_container__(ret)
-                if isinstance(ret_resolve,dict):
+                if isinstance(ret_resolve, dict):
                     ret_instance = ret()
-                    for k,v in ret_resolve.items():
-                        setattr(ret_instance,k,v)
+                    for k, v in ret_resolve.items():
+                        setattr(ret_instance, k, v)
                     return ret_instance
                 return ret
 
@@ -67,7 +70,7 @@ __cache_yam_dict_lock__ = threading.Lock()
 
 
 def __change_init__(cls: type):
-    if cls ==object:
+    if cls == object:
         return
     __old_init__ = cls.__init__
 
@@ -90,7 +93,7 @@ def resolve_singleton(cls, *args, **kwargs):
 
             n = len(cls.__bases__)
             for i in range(n - 1, 0):
-                v =  cls.__base__[i].__init__(v)
+                v = cls.__base__[i].__init__(v)
             __change_init__(cls)
             if hasattr(cls.__init__, "__defaults__"):
                 if cls.__init__.__defaults__ is not None:
@@ -99,7 +102,7 @@ def resolve_singleton(cls, *args, **kwargs):
                         for x in cls.__init__.__defaults__:
                             if type(x) == v:
                                 args[k] = x
-                    v= cls(**args)
+                    v = cls(**args)
                 else:
                     v = cls()
             else:
@@ -127,23 +130,24 @@ def resolve_scope(cls, *args, **kwargs):
 
 class VALUE_DICT(dict):
     def __init__(self, data: dict):
-        dict.__init__(self,**data)
+        dict.__init__(self, **data)
         self.__data__ = data
-
 
     def __dir__(self) -> Iterable[str]:
         def get_property(d):
-            ret=[]
-            if isinstance(d,dict):
-                for k,v in d.items():
-                    if isinstance(v,dict):
+            ret = []
+            if isinstance(d, dict):
+                for k, v in d.items():
+                    if isinstance(v, dict):
                         items = get_property(v)
                         for x in items:
-                            ret+=[f"{k}.{x}"]
+                            ret += [f"{k}.{x}"]
                     else:
-                        ret+=[k]
+                        ret += [k]
             return ret
+
         return get_property(self.__data__)
+
     def __parse__(self, ret):
         if isinstance(ret, dict):
             return VALUE_DICT(ret)
@@ -152,12 +156,14 @@ class VALUE_DICT(dict):
             for x in ret:
                 ret_list += {self.__parse__(x)}
         return ret
-    def __get_errors__(self,attr:str):
-        pors= dir(self)
-        ret=f"{attr} was not found, available properties in in bellow lits:\n"
+
+    def __get_errors__(self, attr: str):
+        pors = dir(self)
+        ret = f"{attr} was not found, available properties in in bellow lits:\n"
         for x in pors:
-            ret+=f"\t{x}\n"
+            ret += f"\t{x}\n"
         return ret
+
     def __getattr__(self, item):
         if item[0:2] == "__" and item[-2:] == "__":
             return self.__dict__.get(item)
@@ -248,9 +254,9 @@ def check_implement(interface: type, implement: type):
         return __provider_cache__[key]
 
     def get_module(cls):
-        if not hasattr(cls,"__module__"):
+        if not hasattr(cls, "__module__"):
             return None, None
-        if not hasattr(cls,"__name__"):
+        if not hasattr(cls, "__name__"):
             # raise Exception(f"{cls} don have __name__")
             return cls.__module__, None
         return cls.__module__, cls.__name__
@@ -289,10 +295,10 @@ def check_implement(interface: type, implement: type):
         for x in miss_name:
             fnc_declare = ""
             handler = interface_methods[x]
-            agr_count = min(handler.__code__.co_argcount,handler.__code__.co_varnames.__len__())
-            i=0
+            agr_count = min(handler.__code__.co_argcount, handler.__code__.co_varnames.__len__())
+            i = 0
             for a in handler.__code__.co_varnames:
-                if i<agr_count:
+                if i < agr_count:
 
                     m = handler.__annotations__.get(a)
                     if m:
@@ -300,14 +306,13 @@ def check_implement(interface: type, implement: type):
                         if u != int.__module__:
                             importers[u] = v
 
-
                         if v is None:
                             fnc_declare += f"{a}:{m},"
                         else:
                             fnc_declare += f"{a}:{m.__name__},"
                     else:
                         fnc_declare += f"{a},"
-                i+=1
+                i += 1
             if fnc_declare != "":
                 fnc_declare = fnc_declare[:-1]
 
@@ -321,7 +326,7 @@ def check_implement(interface: type, implement: type):
             else:
                 full_fnc_decalre += ":"
             if handler.__doc__ is not None:
-                full_fnc_decalre+=f'\n\t"""{handler.__doc__}\t"""'
+                full_fnc_decalre += f'\n\t"""{handler.__doc__}\t"""'
             else:
                 full_fnc_decalre += f'\n\t"""\n\tsomehow to implement thy source here ...\n\t"""'
             msg += f"\n{full_fnc_decalre}\n" \
@@ -362,44 +367,55 @@ def config_provider(from_class: type, implement_class: type):
 
 import inspect
 
-
-
 __lazy_cache__ = {}
+
+
 def provider(cls):
     global __lazy_cache__
     global __config_provider_cache__
-    key=f"{cls.__module__}.{cls.__name__}"
+    key = f"{cls.__module__}.{cls.__name__}"
     if __lazy_cache__.get(key):
         return __lazy_cache__[key]
+
     class lazy_cls:
-        def __init__(self,cls):
-            self.__cls__=cls
+        def __init__(self, cls):
+            self.__cls__ = cls
             self.__ins__ = None
+
         def __get_ins__(self):
             key = f"{self.__cls__.__module__}/{self.__cls__.__name__}"
 
             if __config_provider_cache__.get(key) is None:
-                raise Exception(f"Thous must call config_provider for {self.__cls__.__module__}.{self.__cls__.__name__}")
+                raise Exception(
+                    f"Thous must call config_provider for {self.__cls__.__module__}.{self.__cls__.__name__}")
 
             if self.__ins__ is None:
                 self.__ins__ = resolve_singleton(__config_provider_cache__[key])
             return self.__ins__
+
         def __getattr__(self, item):
             ins = self.__get_ins__()
-            return getattr(ins,item)
+            return getattr(ins, item)
+
     __lazy_cache__[key] = lazy_cls(cls)
     return __lazy_cache__[key]
+
+
 __lazy_injector__ = {}
+
+
 def inject(cls):
     global __lazy_injector__
     global __config_provider_cache__
-    key=f"{cls.__module__}/{cls.__name__}"
+    key = f"{cls.__module__}/{cls.__name__}"
     if __lazy_injector__.get(key):
         return __lazy_injector__[key]
+
     class lazy_cls:
-        def __init__(self,cls):
-            self.__cls__=cls
+        def __init__(self, cls):
+            self.__cls__ = cls
             self.__ins__ = None
+
         def __get_ins__(self):
             if self.__ins__ is None:
                 if __config_provider_cache__.get(key) is None:
@@ -407,19 +423,24 @@ def inject(cls):
                 else:
                     self.__ins__ = resolve_singleton(__config_provider_cache__.get(key))
             return self.__ins__
+
         def __getattr__(self, item):
             ins = self.__get_ins__()
-            return getattr(ins,item)
+            return getattr(ins, item)
+
     __lazy_injector__[key] = lazy_cls(cls)
     return __lazy_injector__[key]
+
+
 def scope(cls):
     global __config_provider_cache__
-    key=f"{cls.__module__}/{cls.__name__}"
+    key = f"{cls.__module__}/{cls.__name__}"
 
     class lazy_scope_cls:
-        def __init__(self,cls):
-            self.__cls__=cls
+        def __init__(self, cls):
+            self.__cls__ = cls
             self.__ins__ = None
+
         def __get_ins__(self):
             if self.__ins__ is None:
                 if __config_provider_cache__.get(key) is None:
@@ -427,21 +448,27 @@ def scope(cls):
                 else:
                     self.__ins__ = resolve_scope(__config_provider_cache__.get(key))
             return self.__ins__
+
         def __getattr__(self, item):
             ins = self.__get_ins__()
-            return getattr(ins,item)
+            return getattr(ins, item)
+
     __lazy_injector__[key] = lazy_scope_cls(cls)
     return __lazy_injector__[key]
+
+
 def singleton(cls):
     global __lazy_injector__
     global __config_provider_cache__
-    key=f"{cls.__module__}/{cls.__name__}"
+    key = f"{cls.__module__}/{cls.__name__}"
     if __lazy_injector__.get(key):
         return __lazy_injector__[key]
+
     class lazy_cls:
-        def __init__(self,cls):
-            self.__cls__=cls
+        def __init__(self, cls):
+            self.__cls__ = cls
             self.__ins__ = None
+
         def __get_ins__(self):
             if self.__ins__ is None:
                 if __config_provider_cache__.get(key) is None:
@@ -449,53 +476,63 @@ def singleton(cls):
                 else:
                     self.__ins__ = resolve_singleton(__config_provider_cache__.get(key))
             return self.__ins__
+
         def __getattr__(self, item):
             ins = self.__get_ins__()
-            return getattr(ins,item)
+            return getattr(ins, item)
+
     __lazy_injector__[key] = lazy_cls(cls)
     return __lazy_injector__[key]
 
+
 def thread_makeup():
     def wrapper(func):
-        def runner(*args,**kwargs):
+        def runner(*args, **kwargs):
             class cls_run:
-                def __init__(self,fn, *a,**b):
-                    self.th = threading.Thread(target=fn,args=a,kwargs=b)
+                def __init__(self, fn, *a, **b):
+                    self.th = threading.Thread(target=fn, args=a, kwargs=b)
+
                 def start(self):
                     self.th.start()
                     return self
+
                 def join(self):
                     self.th.join()
                     return self
-            return cls_run(func,*args,**kwargs)
+
+            return cls_run(func, *args, **kwargs)
+
         return runner
+
     return wrapper
+
 
 def get_local_host_ip():
     import socket
     hostname = socket.gethostname()
     IPAddr = socket.gethostbyname(hostname)
     return IPAddr
-import logging
-import datetime
-def create_logs(logs_dir,name:str) -> logging.Logger:
-    full_dir= os.path.abspath(
+
+
+def create_logs(logs_dir, name: str) -> logging.Logger:
+    full_dir = os.path.abspath(
         os.path.join(
-            logs_dir,name
+            logs_dir, name
         )
     )
     if not os.path.isdir(full_dir):
         os.makedirs(full_dir, exist_ok=True)
 
     _logs = logging.Logger("name")
-    hdlr = logging.FileHandler(full_dir + '/log{}.txt'.format(datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d%H%M%S_%f')))
+    hdlr = logging.FileHandler(
+        full_dir + '/log{}.txt'.format(datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d%H%M%S_%f')))
     _logs.addHandler(hdlr)
     return _logs
 
 
 def get_runtime_type(injector_instance):
-    if hasattr(injector_instance,"__cls__"):
-        cls=injector_instance.__cls__
+    if hasattr(injector_instance, "__cls__"):
+        cls = injector_instance.__cls__
         key = f"{cls.__module__}/{cls.__name__}"
         if __config_provider_cache__.get(key):
             return __config_provider_cache__[key]
@@ -504,13 +541,13 @@ def get_runtime_type(injector_instance):
         return None
 
 
-def singleton_from_path(injector_path:str):
-    module_name,class_name =injector_path.split(':')
+def singleton_from_path(injector_path: str):
+    module_name, class_name = injector_path.split(':')
     import sys
     if sys.modules.get(module_name) is None:
         raise Exception(f"{module_name} was not found")
     if hasattr(sys.modules[module_name], class_name):
-        cls_type = getattr(sys.modules[module_name],class_name)
-        return  singleton(cls_type)
+        cls_type = getattr(sys.modules[module_name], class_name)
+        return singleton(cls_type)
     else:
         raise Exception(f"{class_name} was not found in {module_name}")

@@ -13,7 +13,7 @@
 version: rc.0.0.15
 debug: false
 message_when_upload: false # Important this configuration will disable all media process service
-
+storage_path: /home/vmadmin/python/v6/file-service-02/storage
 db_25:
 #  host: localhost
 #  port: 27017
