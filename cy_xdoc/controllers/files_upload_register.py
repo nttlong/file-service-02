@@ -8,7 +8,43 @@ from cy_xdoc.controllers.models.files_register import RegisterUploadInfo,Registe
 @cy_web.hanlder("post","{app_name}/files/register")
 async def register_new_upload(app_name: str, Data: RegisterUploadInfo,token = fastapi.Depends(cy_xdoc.auths.Authenticate))->RegisterUploadInfoResult:
     """
+    <p>
+    <b>
+    For a certain  Access Token, before upload any material. Thou must call this api with post data looks like :<br>
+     <code>
+        {\n
+           Data: { \n
+                    FileName: <original client file name only when user upload>,\n
+                    ChunkSizeInKB: < a certain file content will be split into many chunks, each chunk has size was limit in this argument >,\n
+                    FileSize: <The real certain file size when end user upload>,\n
+                    IsPublic: <true if anyone can access the content of file, false: just someone who can access the content of file with their privileges >,\n
+                    ThumbConstraints: <This is an optional param, the value looks like '100,200,400,800'.
+                                        The service will generate list of thumbnails in those size constraints in list of squares looks like 100x100, 200x200,400x400,800x800  >,\n
+                     Privileges: <This is an optional param. This is a list of tags. Each tag is a pair of Type and Values.
+                                    (   1- Type is an object type. Thou could set any text value for thy desire.
+                                        2- Values is a text which describe a list of values separated by comma.
+                                     )
+                                    Those looks like: [
+                                                            {
+                                                                Type: 'departemts',
+                                                                Values: 'accounting,hr'
+                                                            },
+                                                            ...
+                                                            {
+                                                                Type:'teams',
+                                                                Values:'codx,sale,marketing'
+                                                            },
+                                                            {
+                                                                Type:'position',
+                                                                Values:' director, team-leader, staff'
+                                                            }
 
+                                                        ] >
+                }
+        }
+     </code>
+     </b>
+    </p>
     :param app_name: Ứng dụng nào cần đăng ký Upload
     :param Data: Thông tin đăng ký Upload
     :param token:

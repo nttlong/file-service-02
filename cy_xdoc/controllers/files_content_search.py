@@ -9,9 +9,14 @@ def file_search(app_name: str, content: str,
                       page_size: Optional[int],
                       page_index: Optional[int],
                       highlight: Optional[bool],
+                      privileges: Optional[dict],
                       token = fastapi.Depends(cy_xdoc.auths.Authenticate)):
     """
-    Tim kiem noi dung
+    <br/>
+    <p>
+    Search content
+    </p>
+    :param privileges: <p> Filter by privileges<br/> The privileges tags is a pair key and values </p>
     :param request:
     :param app_name:
     :param content:

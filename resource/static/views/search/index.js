@@ -41,7 +41,7 @@ var searchView = await View(import.meta, class SearchView extends BaseScope {
         else {
             this.data = await api.post(`${this.currentAppName}/search`, {
                 content: this.searchContent,
-                page_size:1000,
+                page_size:20,
                 page_index:0
             });
             this.$applyAsync();
