@@ -74,6 +74,7 @@ class MongoDbFileService(Base):
         return MongoDbFileStorage(fs,self.client.get_database(self.db_name(app_name)))
 
     def get_file_by_name(self, app_name, rel_file_path: str) -> MongoDbFileStorage:
+        rel_file_path=rel_file_path.lower()
         fs = gridfs.GridFS(self.client.get_database(self.db_name(app_name))).find_one(
             {
                 "rel_file_path": rel_file_path

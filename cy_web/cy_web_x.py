@@ -683,11 +683,6 @@ from fastapi.templating import Jinja2Templates
 # __instance__ = None
 
 
-def load_controller_from_file(file):
-    if not os.path.isfile(file):
-        print(f"{file} was not found")
-        logging.Logger.error(f"{file} was not found")
-    pass
 
 
 class BaseWebApp:

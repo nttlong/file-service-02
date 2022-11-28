@@ -27,6 +27,10 @@ cy_kit.config_provider(
     from_class=cy_xdoc.services.file_storage.FileStorageService,
     implement_class=cy_xdoc.services.file_storage_mongodb.MongoDbFileService
 )
+# cy_kit.config_provider(
+#     from_class=cy_xdoc.services.file_storage.FileStorageService,
+#     implement_class=cy_xdoc.services.file_storage_disk.FileDiskStorageService
+# )
 """
 Cau hinh luu file dung mongodb
 """

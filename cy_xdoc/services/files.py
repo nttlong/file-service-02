@@ -135,6 +135,7 @@ class FileServices:
             privileges_type_from_client=privileges_type
         )
 
+
         ret = doc.context.insert_one(
             doc.fields.id << id,
             doc.fields.FileName << client_file_name,
@@ -302,7 +303,7 @@ class FileServices:
         :return:
         """
 
-        server_privileges, client_privileges = self.create_privileges(
+        server_privileges,client_privileges = self.create_privileges(
             app_name=app_name,
             privileges_type_from_client=privileges
         )
@@ -319,7 +320,6 @@ class FileServices:
             data_item=(doc_context.context @ upload_id).to_json_convertable(),
             app_name=app_name
         )
-
     def add_privileges(self, app_name, upload_id, privileges):
         """
         Add new if not exist
@@ -337,19 +337,20 @@ class FileServices:
         upload = (doc_context.context @ upload_id)
         old_server_privileges = upload[doc_context.fields.Privileges] or {}
         old_client_privileges = upload[doc_context.fields.ClientPrivileges] or {}
-        for k, v in old_server_privileges.items():
+        for k,v in old_server_privileges.items():
 
             if server_privileges.get(k):
-                server_privileges[k] = list(set(server_privileges[k] + v))
+                server_privileges[k]=list(set(server_privileges[k]+v))
 
             else:
                 server_privileges[k] = v
 
-        client_privileges = []
-        for k, v in server_privileges.items():
-            client_privileges += [{
-                k: ",".join(v)
+        client_privileges=[]
+        for k,v in server_privileges.items():
+            client_privileges+=[{
+                k:",".join(v)
             }]
+
 
         doc_context.context.update(
             doc_context.fields.id == upload_id,
@@ -362,48 +363,6 @@ class FileServices:
             data_item=(doc_context.context @ upload_id).to_json_convertable(),
             app_name=app_name
         )
-
-    def remove_privileges(self, app_name, upload_id, privileges):
-        """
-        Remove if exist
-        :param app_name:
-        :param upload_id:
-        :param privileges:
-        :return:
-        """
-        server_privileges_remove, client_privileges_remove = self.create_privileges(
-            app_name=app_name,
-            privileges_type_from_client=privileges
-        )
-
-        doc_context = self.db_connect.db(app_name).doc(cy_xdoc.models.files.DocUploadRegister)
-        upload = (doc_context.context @ upload_id)
-        server_privileges = upload[doc_context.fields.Privileges] or {}
-
-        for k, v in server_privileges_remove.items():
-
-            if server_privileges.get(k):
-                server_privileges[k] = list(set(server_privileges[k]).difference(set(v)))
-
-
-        client_privileges = []
-        for k, v in server_privileges.items():
-            client_privileges += [{
-                k: ",".join(v)
-            }]
-
-        doc_context.context.update(
-            doc_context.fields.id == upload_id,
-            doc_context.fields.Privileges << server_privileges,
-            doc_context.fields.ClientPrivileges << client_privileges
-        )
-        self.search_engine.create_or_update_privileges(
-            privileges=server_privileges.to_json_convertable(),
-            upload_id=upload_id,
-            data_item=(doc_context.context @ upload_id).to_json_convertable(),
-            app_name=app_name
-        )
-
     def create_privileges(self, app_name, privileges_type_from_client):
         """
         Chuyen doi danh sach cac dac quyen do nguoi dung tao sang dang luu tru trong mongodb va elastic search
@@ -422,8 +381,7 @@ class FileServices:
             check_types = dict()
             for x in privileges_type_from_client:
                 if check_types.get(x.Type.lower().strip()) is None:
-                    privilege_item = privilege_context.context @ (
-                            privilege_context.fields.Name == x.Type.lower().strip())
+                    privilege_item = privilege_context.context @ (privilege_context.fields.Name == x.Type.lower().strip())
                     """
                     Bo sung thong tin vao danh sach cac dac quyen va cac gia tri de tham khao
     
@@ -459,5 +417,20 @@ class FileServices:
                     privileges_client += [{
                         x.Type: x.Values
                     }]
-                check_types[x.Type.lower().strip()] = x
+                check_types[x.Type.lower().strip()]=x
         return privileges_server, privileges_client
+
+
+    def get_main_file_of_upload_by_rel_file_path(self, app_name, rel_file_path, runtime_file_reader:type = None):
+        if runtime_file_reader is not None:
+            return runtime_file_reader.get_file_by_name(
+            app_name=app_name,
+            rel_file_path=rel_file_path
+        )
+        return self.file_storage_service.get_file_by_name(
+            app_name=app_name,
+            rel_file_path=rel_file_path
+        )
+
+
+

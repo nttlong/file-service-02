@@ -1,4 +1,3 @@
-import enig
 import pathlib
 import os
 import sys
@@ -9,7 +8,13 @@ class FileContentExtractorService:
     def __init__(self):
         self.working_path = str(pathlib.Path(__file__).parent)
         self.ext_lib_folder= os.path.join(str(pathlib.Path(__file__).parent),"ext_libs")
-        os.environ['TIKA_SERVER_JAR'] = os.path.join(self.ext_lib_folder, "tika-server.jar")
+        path_to_java =os.path.join(self.ext_lib_folder, "tika-server.jar")
+        path_to_java_md5= os.path.join(self.ext_lib_folder, "tika-server.jar.md5")
+        if not os.path.isfile(path_to_java):
+            raise  Exception(f"f{path_to_java} was not found")
+        if not os.path.isfile(path_to_java_md5):
+            raise  Exception(f"f{path_to_java_md5} was not found")
+        os.environ['TIKA_SERVER_JAR'] = path_to_java
         os.environ['TIKA_PATH'] = self.ext_lib_folder
         if sys.modules.get("tika") is not None:
             import importlib

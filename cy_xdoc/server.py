@@ -11,8 +11,8 @@ import cy_web
 
 cy_web.create_web_app(
     working_dir=pathlib.Path(__file__).parent.__str__(),
-    static_dir="./../app_manager/static",
-    template_dir="./../app_manager/html",
+    static_dir="./../resource/static",
+    template_dir="./../resource/html",
     host_url="http://172.16.13.72:8013",
     bind="0.0.0.0:8013",
     cache_folder="./cache",

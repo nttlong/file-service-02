@@ -73,3 +73,22 @@ def scope(cls:T)->T:
 
 def thread_makeup():
     return cy_kit_x.thread_makeup()
+def get_local_host_ip():
+    return cy_kit_x.get_local_host_ip()
+
+
+def create_logs(log_dir, name):
+    return cy_kit_x.create_logs(log_dir,name)
+
+
+def get_runtime_type(injector_instance):
+    return cy_kit_x.get_runtime_type(injector_instance)
+
+
+def singleton_from_path(injector_path:str):
+    """
+
+    :param injector_path: <module>:<class name>
+    :return:
+    """
+    return cy_kit_x.singleton_from_path(injector_path)

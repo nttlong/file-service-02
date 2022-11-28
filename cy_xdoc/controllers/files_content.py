@@ -21,11 +21,23 @@ async def get_content_of_files(app_name: str, directory: str, request: fastapi.R
 
     file_service = cy_kit.singleton(cy_xdoc.services.files.FileServices)
     upload_id = directory.split('/')[0]
-
-    fs = file_service.get_main_file_of_upload(
+    upload = file_service.get_upload_register(app_name,upload_id)
+    runtime_file_reader = None
+    if upload and upload.FileModuleController:
+        runtime_file_reader = cy_kit.singleton_from_path(upload.FileModuleController)
+    fs = file_service.get_main_file_of_upload_by_rel_file_path(
         app_name=app_name,
-        upload_id=upload_id
+        rel_file_path=directory,
+        runtime_file_reader =runtime_file_reader
     )
+
+    if fs is None:
+
+        fs = file_service.get_main_file_of_upload(
+            app_name=app_name,
+            upload_id=upload_id
+        )
+
     if fs is None:
         return Response(status_code= 401)
     if mime_type.startswith('image/'):

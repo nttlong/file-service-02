@@ -29,7 +29,7 @@ def container(*args, **kwargs):
 
         def __container__getattribute____(obj, item):
             ret = None
-            if item[0:2] == "__" and item[-2] == "__":
+            if item[0:2] == "__" and item[:-2] == "__":
                 if old_getattr is not None:
                     return old_getattr(obj, item)
                 else:
@@ -248,6 +248,11 @@ def check_implement(interface: type, implement: type):
         return __provider_cache__[key]
 
     def get_module(cls):
+        if not hasattr(cls,"__module__"):
+            return None, None
+        if not hasattr(cls,"__name__"):
+            # raise Exception(f"{cls} don have __name__")
+            return cls.__module__, None
         return cls.__module__, cls.__name__
 
     interface_methods = {}
@@ -294,7 +299,12 @@ def check_implement(interface: type, implement: type):
                         u, v = get_module(m)
                         if u != int.__module__:
                             importers[u] = v
-                        fnc_declare += f"{a}:{m.__name__},"
+
+
+                        if v is None:
+                            fnc_declare += f"{a}:{m},"
+                        else:
+                            fnc_declare += f"{a}:{m.__name__},"
                     else:
                         fnc_declare += f"{a},"
                 i+=1
@@ -313,11 +323,14 @@ def check_implement(interface: type, implement: type):
             if handler.__doc__ is not None:
                 full_fnc_decalre+=f'\n\t"""{handler.__doc__}\t"""'
             else:
-                full_fnc_decalre += f'\n\t"""\n\tsome how to implement thy source here ...\n\t"""'
+                full_fnc_decalre += f'\n\t"""\n\tsomehow to implement thy source here ...\n\t"""'
             msg += f"\n{full_fnc_decalre}\n" \
                    f"\traise NotImplemented"
         for k, v in importers.items():
-            msg = f"\nfrom {k} import {v}\n{msg}"
+            if v is None:
+                msg = f"\nimport {k}\n{msg}"
+            else:
+                msg = f"\nfrom {k} import {v}\n{msg}"
         description = f"\nIt looks likes thou forgot implement thy source code\n\tPlease open file:\n\t\t\t{inspect.getfile(implement)}\n\t\t Then goto \n\t\t\t class {implement.__name__} \n\t\tinsert bellow code\n--------------------------------------------\n"
         raise Exception(f"{description}{msg}\n-----------------------\ngood luck!")
 
@@ -458,3 +471,46 @@ def thread_makeup():
         return runner
     return wrapper
 
+def get_local_host_ip():
+    import socket
+    hostname = socket.gethostname()
+    IPAddr = socket.gethostbyname(hostname)
+    return IPAddr
+import logging
+import datetime
+def create_logs(logs_dir,name:str) -> logging.Logger:
+    full_dir= os.path.abspath(
+        os.path.join(
+            logs_dir,name
+        )
+    )
+    if not os.path.isdir(full_dir):
+        os.makedirs(full_dir, exist_ok=True)
+
+    _logs = logging.Logger("name")
+    hdlr = logging.FileHandler(full_dir + '/log{}.txt'.format(datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d%H%M%S_%f')))
+    _logs.addHandler(hdlr)
+    return _logs
+
+
+def get_runtime_type(injector_instance):
+    if hasattr(injector_instance,"__cls__"):
+        cls=injector_instance.__cls__
+        key = f"{cls.__module__}/{cls.__name__}"
+        if __config_provider_cache__.get(key):
+            return __config_provider_cache__[key]
+        return injector_instance.__cls__
+    else:
+        return None
+
+
+def singleton_from_path(injector_path:str):
+    module_name,class_name =injector_path.split(':')
+    import sys
+    if sys.modules.get(module_name) is None:
+        raise Exception(f"{module_name} was not found")
+    if hasattr(sys.modules[module_name], class_name):
+        cls_type = getattr(sys.modules[module_name],class_name)
+        return  singleton(cls_type)
+    else:
+        raise Exception(f"{class_name} was not found in {module_name}")

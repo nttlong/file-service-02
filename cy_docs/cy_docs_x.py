@@ -42,6 +42,7 @@ import bson
 
 def get_mongodb_text(data):
     if isinstance(data, dict):
+
         ret = {}
         for k, v in data.items():
             ret[k] = get_mongodb_text(v)
