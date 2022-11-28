@@ -4,6 +4,7 @@ import cy_docs
 import datetime
 import bson
 
+
 @cy_docs.define(
     name="Privileges",
     uniques=["Name"]
@@ -13,7 +14,9 @@ class Privileges:
     Bang nay dung de luu danh sach cac loai quyen ma user tao
     Muc dic la de tao phan goi y tren giao dien
     """
-    Name:str
+    Name: str
+
+
 @cy_docs.define(
     name="PrivilegesValues",
     uniques=["Name,Value"]
@@ -22,8 +25,10 @@ class PrivilegesValues:
     """
     Ban nay luu lai cac dac quyen va ca gia tri cua tung dac quyen
     """
-    Name:str
-    Value:str
+    Name: str
+    Value: str
+
+
 @cy_docs.define(
     name="DocUploadRegister",
     uniques=["ServerFileName", "FullFileName", "FullFileNameLower"],
@@ -280,7 +285,7 @@ class DocUploadRegister:
         Privileges =[{user:[user_id_1,user_id_2]},{dept:[hr,acc]}]
     
     """
-    ClientPrivileges:typing.Optional[typing.List[dict]]
+    ClientPrivileges: typing.Optional[typing.List[dict]]
     """
     Day la danh sach ma moi phan tu co cau truc nhu sau:
     {key:value} trong do key chin la loai doi tuong duoc phan quyen, value chinh la cac dinh danh cua loai doi tuong
@@ -288,11 +293,12 @@ class DocUploadRegister:
     Vi du: ClientPrivileges = [{user:'user_id_1,user_id_2'},{dept:'hr,acc'}]
     
     """
-    FileModuleController:typing.Optional[dict]
+    FileModuleController: typing.Optional[dict]
     """
     Cau hinh tai file
     dic={relative file path:{__module__}:{__class name__}}
     """
+
 
 @cy_docs.define(
     name="fs.files",
@@ -316,20 +322,4 @@ class FsChunks:
     data: bytes
 
 
-@cy_docs.define(
-    name="Sys_messages",
-    indexes=["MsgType", "CreatedOn", "AppName", "MsgId"]
-)
-class SysMessage:
-    """
-    Message
-    """
-    MsgId: str
-    AppName: str
-    MsgType: str
-    Data: str
-    CreatedOn: datetime.datetime
-    IsFinish: bool
-    IsLock: bool
-    InstancesLock: dict
-    RunInsLock: str
+

@@ -3,8 +3,7 @@ import uuid
 
 import cy_kit
 
-from cy_xdoc.services.base import Base,DbConnect
-import cy_docs
+from cyx.common.base import DbConnect
 from cy_xdoc.models.users import User
 from cy_xdoc.models.sso import SSO
 from passlib.context import CryptContext

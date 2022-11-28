@@ -12,7 +12,11 @@
 # python hypercorn_start.py db.host=172.16.7.25 db.port=27018 db.username= db.password= db.authSource= db.authMechanism= admin_db_name=enigma-media
 version: rc.0.0.15
 debug: false
-message_when_upload: false # Important this configuration will disable all media process service
+message:
+  type: mongodb
+  config:
+    kafka:
+      host: 192.168.18.36
 storage_path: /home/vmadmin/python/v6/file-service-02/storage
 db_25:
 #  host: localhost

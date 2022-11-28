@@ -106,7 +106,8 @@ def file_search(app_name: str, content: str,
         content =content,
         page_size=page_size,
         page_index=page_index,
-        highlight=highlight
+        highlight=highlight,
+        privileges= privileges
     )
 
     ret_items = []

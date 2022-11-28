@@ -1,20 +1,18 @@
 import mimetypes
 
-import bson
 import humanize
 
 import cy_docs
 import cy_web
 from cy_xdoc.auths import Authenticate
-from fastapi import File, Depends, UploadFile
+from fastapi import Depends, UploadFile
 from cy_xdoc.controllers.models.file_upload import UploadFilesChunkInfoResult
 import cy_kit
 from cy_xdoc.services.files import FileServices
-from cy_xdoc.services.file_storage import FileStorageObject,FileStorageService
-from cy_xdoc.services.msg import MessageService
+from cy_xdoc.services.file_storage import FileStorageService
+from cyx.common.msg import MessageService
 from cy_xdoc.models.files import DocUploadRegister
 import cy_xdoc.configs
-import typing
 
 
 @cy_web.hanlder("post", "{app_name}/files/upload")
@@ -55,17 +53,11 @@ def files_upload(app_name: str, UploadId: str, Index: int, FilePart: UploadFile,
             size=file_size)
         fs.push(content_part, Index)
         upload_item.MainFileId = fs.get_id()
-        print("warning message emit is disable")
-        if cy_xdoc.configs.config.message_when_upload:
-            msg_service.emit(
-                app_name=app_name,
-                message_type="files.upload",
-                data=upload_item
-            )
-
-
-
-
+        msg_service.emit(
+            app_name=app_name,
+            message_type="files.upload",
+            data=upload_item
+        )
     else:
         fs = file_storage_service.get_file_by_name(
             app_name=app_name,

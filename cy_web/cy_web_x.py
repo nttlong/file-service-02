@@ -3,6 +3,8 @@ import mimetypes
 import pathlib
 import time
 
+from yaml import SafeDumper
+
 mime_data = {}
 mime_data[".323"] = "text/h323"
 mime_data[".3g2"] = "video/3gpp2"
@@ -954,6 +956,14 @@ class WebApp(BaseWebApp):
 
         self.app.post("/" + self.url_get_token)(login_for_access_token)
 
+
+    def gunicorn_start(self,start_path):
+        global web_application
+        from gunicorn.app import wsgiapp
+        wsgiapp.run()
+
+
+
     def unvicorn_start(self, start_path, worker=4):
         global web_application
         # for k,v in self.web_app_module.__dict__.items():
@@ -964,43 +974,43 @@ class WebApp(BaseWebApp):
         run_path = f"{start_path}:web_application.app"
         # if not self.dev_mode:
         #     run_path=web_application.app
-        if self.dev_mode:
-            uvicorn.run(
-                app=run_path,
-                loop="asyncio",
-                host=self.bind_ip,
-                port=self.host_port,
-                log_level="info",
-                lifespan='on',
-                ws_max_size=8*8 * 1024*1024,
-                reload=self.dev_mode,
-                reload_dirs=self.working_dir,
-                workers=worker,
-                ws='websockets',
-                backlog=1000,
-                interface='asgi3',
-                timeout_keep_alive=True,
-                h11_max_incomplete_event_size=1024 * 1024 * 8,
-                http="httptools",
-            )
-        else:
-            uvicorn.run(
-                run_path,
-                loop="asyncio",
-                host=self.bind_ip,
-                port=self.host_port,
-                log_level="info",
-                lifespan='on',
-                ws_max_size=16777216 * 1024,
-                # reload=self.dev_mode,
-                reload_dirs=self.working_dir,
-                workers=worker,
-                ws='websockets',
-                backlog=1000,
-                # interface='WSGI',
-                timeout_keep_alive=True
-
-            )
+        # if self.dev_mode:
+        uvicorn.run(
+            app=run_path,
+            loop="asyncio",
+            host=self.bind_ip,
+            port=self.host_port,
+            log_level="info",
+            lifespan='on',
+            # ws_max_size=8*8 * 1024*1024,
+            reload=self.dev_mode,
+            reload_dirs=self.working_dir,
+            workers=worker,
+            ws='websockets',
+            backlog=1000,
+            interface='asgi3',
+            timeout_keep_alive=True,
+            h11_max_incomplete_event_size=1024 * 1024 * 8,
+            http="httptools",
+        )
+        # else:
+        #     uvicorn.run(
+        #         run_path,
+        #         # loop="asyncio",
+        #         host=self.bind_ip,
+        #         port=self.host_port,
+        #         log_level="info",
+        #         lifespan='on',
+        #         # ws_max_size=16777216 * 1024,
+        #         # reload=self.dev_mode,
+        #         reload_dirs=self.working_dir,
+        #         workers=worker,
+        #         # ws='websockets',
+        #         backlog=1000,
+        #         # interface='WSGI',
+        #         timeout_keep_alive=True
+        #
+        #     )
 
 
 def web_handler(path: str, method: str, response_model=None):
@@ -1029,7 +1039,15 @@ async def windows_fxi_javascript_resource(request: Request, call_next):
 
     return res
 
-
+def start_with_guicorn(worker):
+    global web_application
+    if isinstance(web_application, WebApp):
+        web_application.unvicorn_start(
+            f"{WebApp.__module__}",
+            worker
+        )
+        print("web run on:")
+        print(web_application.host_url)
 def start_with_uvicorn(worker=4):
     global web_application
     if isinstance(web_application, WebApp):
@@ -1041,7 +1059,15 @@ def start_with_uvicorn(worker=4):
         print(web_application.host_url)
     # run_path=path.replace(os.sep,"/").replace('/','.')
     # web_app.unvicorn_start(run_path)
-
+def start_with_gunicorn(worker=4):
+    global web_application
+    if isinstance(web_application, WebApp):
+        web_application.unvicorn_start(
+            f"{WebApp.__module__}",
+            worker
+        )
+        print("web run on:")
+        print(web_application.host_url)
 
 def load_controller_from_dir(prefix, controller_path):
     global web_application
@@ -1554,3 +1580,5 @@ async def streaming_async(fsg, request, content_type, streaming_buffering=1024 *
     res.headers.append("Content-Type", content_type)
 
     return res
+
+

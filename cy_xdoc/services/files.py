@@ -10,18 +10,17 @@ import humanize
 import cy_docs
 import cy_kit
 import cy_web
-from cy_xdoc.services.base import Base
 from cy_xdoc.models.files import DocUploadRegister, Privileges, PrivilegesValues
 import cy_xdoc.services.file_storage
 import cy_xdoc.services.search_engine
-
+import cyx.common.base
 
 class FileServices:
     def __init__(self,
                  file_storage_service: cy_xdoc.services.file_storage.FileStorageService = cy_kit.inject(
                      cy_xdoc.services.file_storage.FileStorageService),
                  search_engine=cy_kit.inject(cy_xdoc.services.search_engine.SearchEngine),
-                 db_connect=cy_kit.inject(cy_xdoc.services.base.DbConnect)):
+                 db_connect=cy_kit.inject(cyx.common.base.DbConnect)):
 
         self.file_storage_service: cy_xdoc.services.file_storage.FileStorageService = file_storage_service
         self.search_engine = search_engine
@@ -35,7 +34,6 @@ class FileServices:
         if value_search is not None and value_search != "":
             if field_search is None or field_search == "":
                 field_search = "FileName"
-            import re
             arrg = arrg.match(getattr(doc.fields, field_search).like(value_search))
         items = arrg.sort(
             doc.fields.RegisterOn.desc(),

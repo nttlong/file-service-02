@@ -12,11 +12,7 @@ setup(
     name='cy_web',
     ext_modules=cythonize(file_path),
     zip_safe=True,
-    packages=["cy_web"],
-    install_requires=[
-        "fastapi"
-    ]
-
+    packages=["cy_web"]
 )
 #python cy_web/setup.py build_ext --inplace
 #python cy_web/setup.py bdist_wheel --universal

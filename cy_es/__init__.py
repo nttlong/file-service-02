@@ -59,3 +59,20 @@ def update_doc_by_id(client: Elasticsearch, index: str, id: str, data, doc_type:
         data=data,
         doc_type=doc_type
     )
+
+
+def nested(field_name:str, filter:dict):
+    return cy_es_x.nested(prefix=field_name,filter=filter)
+
+
+def create_filter_from_dict(filter:dict):
+    return cy_es_x.create_filter_from_dict(filter)
+
+
+def is_exist(client:Elasticsearch, index:str, id:str,doc_type:str ="_doc")->bool:
+    return cy_es_x.is_exist(
+        client=client,
+        index=index,
+        id=id,
+        doc_type=doc_type
+    )

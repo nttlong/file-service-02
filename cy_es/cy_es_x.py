@@ -555,7 +555,22 @@ def __all_primitive__(x):
                 return False
         return True
 
+def nested(prefix:str, filter):
+    ret = {}
+    if isinstance(filter,dict):
+        for k,v in filter.items():
+            _k =k
+            _v = v
+            if k[:1]!="$":
+                _k = f"{prefix}.{_k}"
+            if isinstance(v,dict):
+                _v = nested(prefix,_v)
+            elif isinstance(v,list):
+                _v = [nested(prefix, x) for x in _v]
 
+            ret[_k] = _v
+            return ret
+    return filter
 def create_filter_from_dict(expr: dict, owner_caller=None):
     global __map__
     if isinstance(expr, dict):
@@ -606,3 +621,7 @@ def create_filter_from_dict(expr: dict, owner_caller=None):
 
     else:
         raise NotImplemented
+
+
+def is_exist(client:Elasticsearch, index:str, id:str, doc_type:str ="_doc")->bool:
+    return client.exists(index=index, id=id,doc_type=doc_type)

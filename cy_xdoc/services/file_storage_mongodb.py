@@ -1,21 +1,16 @@
-import datetime
 import threading
 import typing
-import uuid
 
 import gridfs
 import pymongo.database
 
 import cy_docs
 import cy_kit
-import cy_web
-from cy_xdoc.services.base import Base
-from cy_xdoc.models.files import DocUploadRegister, FsFile, FsChunks
+from cyx.common.base import Base
 from gridfs import GridIn
 import bson
 
 from cy_xdoc.services.file_storage import FileStorageService, FileStorageObject
-from gridfs import GridOut
 
 
 @cy_kit.must_imlement(FileStorageObject)
@@ -135,7 +130,6 @@ class MongoDbFileService(Base):
             threading.Thread(target=run, args=()).start()
         else:
             run()
-
     def copy_by_id(self, app_name: str, file_id_to_copy: str,rel_file_path_to:str, run_in_thread: bool) ->MongoDbFileStorage:
         """
             Copy file from id file and return new copy if successful

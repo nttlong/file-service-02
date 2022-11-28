@@ -45,12 +45,30 @@ class SearchEngine:
         )
         return ret
 
-    def full_text_search(self, app_name, content, page_size: int, page_index: int, highlight: bool):
-        search_expr = (cy_es.buiders.mark_delete == False) & cy_es.match(
+    def full_text_search(self,
+                         app_name,
+                         content,
+                         page_size: int,
+                         page_index: int,
+                         highlight: bool,
+                         privileges:dict):
+
+        search_expr = cy_es.buiders.mark_delete == False
+        if privileges is not None and privileges != {}:
+            search_expr = search_expr & cy_es.create_filter_from_dict(
+                filter=
+                cy_es.nested(
+                    field_name= "privileges",
+                    filter= privileges
+                )
+            )
+
+        search_expr= search_expr & cy_es.match(
             field=cy_es.buiders.content,
             content=content
 
         )
+
         skip = page_index * page_size
         highlight_expr = None
         if highlight:
@@ -128,8 +146,9 @@ class SearchEngine:
         del vn_on_accent_content
 
     def create_or_update_privileges(self, app_name, upload_id, data_item: dict, privileges):
-        doc = self.get_doc(app_name,id=upload_id)
-        if doc:
+        is_exist = self.is_exist(app_name,id=upload_id)
+
+        if is_exist:
             return cy_es.update_doc_by_id(
                 client=self.client,
                 index=self.get_index(app_name),
@@ -145,4 +164,11 @@ class SearchEngine:
                 upload_id=upload_id,
                 data_item=data_item
             )
+
+    def is_exist(self, app_name:str, id:str)->bool:
+        return cy_es.is_exist(
+            client=self.client,
+            index = self.get_index(app_name),
+            id=id
+        )
 

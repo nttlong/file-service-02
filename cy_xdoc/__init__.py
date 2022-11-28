@@ -1,4 +1,3 @@
-import fastapi
 import cy_kit
 import cy_xdoc.services.file_storage
 import cy_xdoc.services.file_storage_mongodb
@@ -8,21 +7,20 @@ from cy_xdoc.services.accounts import AccountService
 
 import cy_xdoc.services.file_storage_disk
 import cy_xdoc.services.files
-import cy_xdoc.services.msg
-import cy_xdoc.services.msg_mongodb
 
 import cy_xdoc.services.search_engine
 import cy_xdoc.services.files
 import cy_xdoc.services.apps
-import cy_xdoc.services.msg
+
 import cy_xdoc.services.file_storage
 import cy_xdoc.services.file_storage_mongodb
 import cy_xdoc.services.file_storage_disk
 import cy_xdoc.services.search_engine
 import cy_xdoc.services.accounts
 import cy_xdoc.services.secutities
-import cy_xdoc.services.base
-
+import cyx.common.base
+import cyx.common.msg_mongodb
+import cyx.common.msg
 cy_kit.config_provider(
     from_class=cy_xdoc.services.file_storage.FileStorageService,
     implement_class=cy_xdoc.services.file_storage_mongodb.MongoDbFileService
@@ -35,24 +33,26 @@ cy_kit.config_provider(
 Cau hinh luu file dung mongodb
 """
 cy_kit.config_provider(
-    from_class=cy_xdoc.services.msg.MessageService,
-    implement_class=cy_xdoc.services.msg_mongodb.MessageServiceMongodb
+    from_class=cyx.common.msg.MessageService,
+    implement_class=cyx.common.msg_mongodb.MessageServiceMongodb
 )
 """
 Cau hinh he thong msg dung Mongodb
 """
+import cyx.common.base
+import cyx.common.msg
 
 
 class Container:
     def __init__(self,
-                 data_context: cy_xdoc.services.base.DbConnect = cy_kit.singleton(cy_xdoc.services.base.DbConnect),
+                 data_context: cyx.common.base.DbConnect = cy_kit.singleton(cyx.common.base.DbConnect),
                  service_search: cy_xdoc.services.search_engine.SearchEngine = cy_kit.singleton(
                      cy_xdoc.services.search_engine.SearchEngine),
                  service_file: cy_xdoc.services.files.FileServices = cy_kit.singleton(
                      cy_xdoc.services.files.FileServices),
                  service_app: cy_xdoc.services.apps.AppServices = cy_kit.singleton(cy_xdoc.services.apps.AppServices),
-                 services_msg: cy_xdoc.services.msg.MessageService = cy_kit.singleton(
-                     cy_xdoc.services.msg.MessageService),
+                 services_msg: cyx.common.msg.MessageService = cy_kit.singleton(
+                     cyx.common.msg.MessageService),
                  service_storage: cy_xdoc.services.file_storage.FileStorageService = cy_kit.singleton(
                      cy_xdoc.services.file_storage.FileStorageService),
                  service_account: cy_xdoc.services.accounts.AccountService = cy_kit.singleton(

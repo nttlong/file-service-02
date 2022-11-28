@@ -3,7 +3,7 @@ import uuid
 
 import cy_docs
 import cy_kit
-from cy_xdoc.services.base import Base,DbConnect
+from cyx.common.base import DbConnect
 from cy_xdoc.models.apps import App
 
 
