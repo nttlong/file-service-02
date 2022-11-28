@@ -962,8 +962,8 @@ class WebApp(BaseWebApp):
         if not isinstance(web_application,WebApp):
             raise  Exception("Web application can not start")
         run_path = f"{start_path}:web_application.app"
-        if not self.dev_mode:
-            run_path=web_application.app
+        # if not self.dev_mode:
+        #     run_path=web_application.app
         if self.dev_mode:
             uvicorn.run(
                 app=run_path,
@@ -982,11 +982,11 @@ class WebApp(BaseWebApp):
                 timeout_keep_alive=True,
                 h11_max_incomplete_event_size=1024 * 1024 * 8,
                 http="httptools",
-                factory=not self.dev_mode
             )
         else:
             uvicorn.run(
                 run_path,
+                loop="asyncio",
                 host=self.bind_ip,
                 port=self.host_port,
                 log_level="info",
