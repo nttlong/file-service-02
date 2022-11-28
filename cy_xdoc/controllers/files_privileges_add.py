@@ -33,6 +33,37 @@ def add_privileges(
         Data: typing.List[cy_xdoc.controllers.models.files_register.PrivilegesType],
         UploadIds: typing.List[str],
         token=fastapi.Depends(cy_xdoc.auths.Authenticate)) -> Result:
+    """
+            <p>
+            <b>
+                For a certain pair of Application and  Access Token<br/>
+            </b>
+                The API allow thou add more list of a privileges tags (for privileges tags refer to API <i></b>{app_name}/files/register</b></i>) from a list of UploadIds
+                <code>\n
+                    //Example add more  accounting department, hr department and teams Codx,xdoC from upload id 1,2,3
+                    {
+                        Data: [
+                                    {
+                                        Type:'departments',
+                                        Values: 'accounting,hr'
+                                    },
+                                    {
+                                        Type:'teams',
+                                        Values: 'Codx,xdoC'
+                                    }
+                                ],
+                        UploadIds:[1,2,3]
+                    }
+                </code>
+
+
+            </p>
+            :param app_name:
+            :param Data:
+            :param UploadIds:
+            :param token:
+            :return:
+            """
     file_services = cy_kit.singleton(cy_xdoc.services.files.FileServices)
     for upload_id in UploadIds:
         ret = file_services.add_privileges(

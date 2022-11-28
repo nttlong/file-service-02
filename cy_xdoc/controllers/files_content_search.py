@@ -14,7 +14,79 @@ def file_search(app_name: str, content: str,
     """
     <br/>
     <p>
-    Search content
+    <b>For a certain pair of Application and  Access Token </b><br/>
+    This API allow thou search content in full content of any document.<br>
+    <code>\n
+        {
+            content:<any text for searching>,
+            page_size: <limit search result>,
+            page_index: <page index of result, start value is 0>,
+            highlight: <Highlight match content if set true>,
+            privileges: <JSON filter>
+
+        }
+    </code>
+    <p >
+        <b style='color:red !important'> Highlight maybe crash Elasticsearch or ake very long time </b>
+    <p>
+    <h1>
+     How to make privileges filter json expression?
+    </h1>
+    <div>
+        Privileges filter json expression has some bellow key words (they are nested together):
+        <ol>
+            <li><b>$and</b>: and logical follow by list of other filters.</li>
+            <li><b>$or</b>: or logical follow by list of other filters.</li>
+            <li><b>$not</b>: negative a filter expression.</li>
+            <li><b>$contains</b>: check a privileges has contains a list of values.</li>
+        </ol>
+    </div>
+    <code>\n
+        docs = [
+                 {
+                    id:1,
+                    users:['admin','root'],
+                    position: ['staff','deputy']
+                 } ,
+                 {
+                    id:2,
+                    users :['root','admin','user1'],
+                    position: ['director','deputy']
+                 }
+                ]
+        //Example filter all document share to user root and admin only
+        filter ={
+                    users:['root','admin']
+                }
+        thou will get docs=[{id:1}]
+
+        //filter all document has share root and admin
+        filter ={
+                    users:{
+                        $contains:['root','admin']
+                    }
+
+                }
+        //filter all document share to director position but deputy
+        filter = {
+                    $and:[
+                        {
+                            position:{
+                                $contains:['director']
+                            },
+                            {
+                                $not: {
+                                    position:{
+                                        $contains:['deputy']
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+
+    </code>
+
     </p>
     :param privileges: <p> Filter by privileges<br/> The privileges tags is a pair key and values </p>
     :param request:

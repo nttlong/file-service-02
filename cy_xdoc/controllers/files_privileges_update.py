@@ -38,7 +38,7 @@ def update_privileges(
         <b>
             For a certain pair of Application and  Access Token<br/>
         </b>
-            The API allow thou remove old list of a privileges tags and set new list (for privileges tags refer to API <i></b>{app_name}/files/register</b></i>) from a list of UploadIds
+            The API allow thou remove old list of a privileges tags and set new list of privileges (for privileges tags refer to API <i></b>{app_name}/files/register</b></i>) from a list of UploadIds
             <code>\n
                 //Example set a new  accounting department, hr department and teams Codx,xdoC from upload id 1,2,3
                 {
@@ -51,7 +51,8 @@ def update_privileges(
                                     Type:'teams',
                                     Values: 'Codx,xdoC'
                                 }
-                            ]
+                            ],
+                    UploadIds:[1,2,3]
                 }
             </code>
 

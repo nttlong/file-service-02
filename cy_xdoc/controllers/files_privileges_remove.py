@@ -51,7 +51,9 @@ def remove_privileges(
                                 Type:'teams',
                                 Values: 'Codx,xdoC'
                             }
-                        ]
+                        ],
+                UploadIds:[1,2,3]
+
             }
         </code>
 
