@@ -1,16 +1,18 @@
-
 import fastapi
 import cy_web
 import cy_kit
 import cy_xdoc.auths
 from cy_xdoc.services.files import FileServices
-from cy_xdoc.controllers.models.files_register import RegisterUploadInfo,RegisterUploadInfoResult
-@cy_web.hanlder("post","{app_name}/files/register")
-async def register_new_upload(app_name: str, Data: RegisterUploadInfo,token = fastapi.Depends(cy_xdoc.auths.Authenticate))->RegisterUploadInfoResult:
+from cy_xdoc.controllers.models.files_register import RegisterUploadInfo, RegisterUploadInfoResult
+
+
+@cy_web.hanlder("post", "{app_name}/files/register")
+async def register_new_upload(app_name: str, Data: RegisterUploadInfo,
+                              token=fastapi.Depends(cy_xdoc.auths.Authenticate)) -> RegisterUploadInfoResult:
     """
     <p>
     <b>
-    For a certain  Access Token, before upload any material. Thou must call this api with post data looks like :<br>
+    For a certain pair of Application and  Access Token, before upload any file. Thou must call this api with post data looks like :<br>
      <code>
         {\n
            Data: { \n
@@ -54,16 +56,13 @@ async def register_new_upload(app_name: str, Data: RegisterUploadInfo,token = fa
 
     ret = file_service.add_new_upload_info(
         app_name=app_name,
-        chunk_size= Data.ChunkSizeInKB * 1024,
-        file_size= Data.FileSize,
-        client_file_name= Data.FileName,
-        is_public= Data.IsPublic,
-        thumbs_support= Data.ThumbConstraints,
-        web_host_root_url= cy_web.get_host_url(),
-        privileges_type= Data.Privileges
+        chunk_size=Data.ChunkSizeInKB * 1024,
+        file_size=Data.FileSize,
+        client_file_name=Data.FileName,
+        is_public=Data.IsPublic,
+        thumbs_support=Data.ThumbConstraints,
+        web_host_root_url=cy_web.get_host_url(),
+        privileges_type=Data.Privileges
 
     )
-    return RegisterUploadInfoResult(Data = ret.to_pydantic())
-
-
-
+    return RegisterUploadInfoResult(Data=ret.to_pydantic())
