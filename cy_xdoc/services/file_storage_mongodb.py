@@ -112,9 +112,10 @@ class MongoDbFileService(Base):
         return ret
 
     def delete_files_by_id(self, app_name: str, ids: typing.List[str], run_in_thread: bool):
+        bson_id = [id for id in ids if bson.is_valid(id.encode())]
         def run():
             fs = gridfs.GridFS(self.client.get_database(self.db_name(app_name)))
-            for x in ids:
+            for x in bson_id:
                 fs.delete(bson.ObjectId(x))
 
         if run_in_thread:
