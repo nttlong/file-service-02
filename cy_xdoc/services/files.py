@@ -122,6 +122,13 @@ class FileServices:
                             web_host_root_url: str,
                             privileges_type):
 
+
+        server_file_name_only = ""
+        for x in client_file_name:
+            if x in "!@#$%^&*()+<>?[]'\"~=+":
+                server_file_name_only+="_"
+            else:
+                server_file_name_only+=x
         doc = self.db_connect.db(app_name).doc(DocUploadRegister)
         id = str(uuid.uuid4())
         mime_type, _ = mimetypes.guess_type(client_file_name)
@@ -140,11 +147,11 @@ class FileServices:
             doc.fields.FileNameOnly << pathlib.Path(client_file_name).stem,
             doc.fields.FileNameLower << client_file_name.lower(),
             doc.fields.FileExt << os.path.splitext(client_file_name)[1].split('.')[1],
-            doc.fields.FullFileName << f"{id}/{client_file_name}",
-            doc.fields.FullFileNameLower << f"{id}/{client_file_name}".lower(),
-            doc.fields.FullFileNameWithoutExtenstion << f"{id}/{pathlib.Path(client_file_name).stem}",
-            doc.fields.FullFileNameWithoutExtenstionLower << f"{id}/{pathlib.Path(client_file_name).stem}".lower(),
-            doc.fields.ServerFileName << f"{id}.{os.path.splitext(client_file_name)[1].split('.')[1]}",
+            doc.fields.FullFileName << f"{id}/{server_file_name_only}",
+            doc.fields.FullFileNameLower << f"{id}/{server_file_name_only}".lower(),
+            doc.fields.FullFileNameWithoutExtenstion << f"{id}/{pathlib.Path(server_file_name_only).stem}",
+            doc.fields.FullFileNameWithoutExtenstionLower << f"{id}/{pathlib.Path(server_file_name_only).stem}".lower(),
+            doc.fields.ServerFileName << f"{id}.{os.path.splitext(server_file_name_only)[1].split('.')[1]}",
             doc.fields.AvailableThumbSize << thumbs_support,
 
             doc.fields.ChunkSizeInKB << chunk_size / 1024,
@@ -187,14 +194,14 @@ class FileServices:
             NumOfChunks=num_of_chunks,
             ChunkSizeInBytes=chunk_size,
             UploadId=id,
-            ServerFilePath=f"{id}{os.path.splitext(client_file_name)[1]}",
+            ServerFilePath=f"{id}{os.path.splitext(server_file_name_only)[1]}",
             MimeType=mime_type,
-            RelUrlOfServerPath=f"api/{app_name}/file/register/{id}/{pathlib.Path(client_file_name).stem.lower()}",
+            RelUrlOfServerPath=f"api/{app_name}/file/register/{id}/{pathlib.Path(server_file_name_only).stem.lower()}",
             SizeInHumanReadable=humanize.filesize.naturalsize(file_size),
-            UrlOfServerPath=f"{web_host_root_url}/api/{app_name}/file/register/{id}/{pathlib.Path(client_file_name).stem.lower()}",
-            RelUrlThumb=f"api/{app_name}/thumb/{id}/{pathlib.Path(client_file_name).stem.lower()}.webp",
+            UrlOfServerPath=f"{web_host_root_url}/api/{app_name}/file/register/{id}/{pathlib.Path(server_file_name_only).stem.lower()}",
+            RelUrlThumb=f"api/{app_name}/thumb/{id}/{pathlib.Path(server_file_name_only).stem.lower()}.webp",
             FileSize=file_size,
-            UrlThumb=f"{web_host_root_url}/api/{app_name}/thumb/{id}/{pathlib.Path(client_file_name).stem.lower()}.webp",
+            UrlThumb=f"{web_host_root_url}/api/{app_name}/thumb/{id}/{pathlib.Path(server_file_name_only).stem.lower()}.webp",
             OriginalFileName=client_file_name
         )
 
