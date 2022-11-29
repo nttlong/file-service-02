@@ -62,12 +62,12 @@ class SearchEngine:
                     filter= privileges
                 )
             )
+        if content is not None and  content!="":
+            search_expr= search_expr & cy_es.match(
+                field=cy_es.buiders.content,
+                content=content
 
-        search_expr= search_expr & cy_es.match(
-            field=cy_es.buiders.content,
-            content=content
-
-        )
+            )
 
         skip = page_index * page_size
         highlight_expr = None

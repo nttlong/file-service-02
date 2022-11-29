@@ -5,7 +5,7 @@ import cy_web
 import cy_xdoc.auths
 from typing import Optional
 @cy_web.hanlder("post","{app_name}/search")
-def file_search(app_name: str, content: str,
+def file_search(app_name: str, content: Optional[str],
                       page_size: Optional[int],
                       page_index: Optional[int],
                       highlight: Optional[bool],

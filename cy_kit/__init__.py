@@ -77,7 +77,7 @@ def get_local_host_ip():
     return cy_kit_x.get_local_host_ip()
 
 
-def create_logs(log_dir, name):
+def create_logs(log_dir:str, name:str):
     return cy_kit_x.create_logs(log_dir,name)
 
 

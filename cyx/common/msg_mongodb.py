@@ -75,7 +75,7 @@ class MessageServiceMongodb:
             ret += [fx]
             doc_context.context.update(
                 doc_context.fields.MsgId == x.MsgId,
-                doc_context.fields.RunInsLock == self.instance_id
+                doc_context.fields.RunInsLock << self.instance_id
             )
 
         return ret

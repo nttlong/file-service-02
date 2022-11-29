@@ -15,6 +15,7 @@ import cy_xdoc.services.file_storage
 import cy_xdoc.services.search_engine
 import cyx.common.base
 
+
 class FileServices:
     def __init__(self,
                  file_storage_service: cy_xdoc.services.file_storage.FileStorageService = cy_kit.inject(
@@ -122,13 +123,12 @@ class FileServices:
                             web_host_root_url: str,
                             privileges_type):
 
-
         server_file_name_only = ""
         for x in client_file_name:
             if x in "!@#$%^&*()+<>?[]'\"~=+":
-                server_file_name_only+="_"
+                server_file_name_only += "_"
             else:
-                server_file_name_only+=x
+                server_file_name_only += x
         doc = self.db_connect.db(app_name).doc(DocUploadRegister)
         id = str(uuid.uuid4())
         mime_type, _ = mimetypes.guess_type(client_file_name)
@@ -139,7 +139,6 @@ class FileServices:
             app_name=app_name,
             privileges_type_from_client=privileges_type
         )
-
 
         ret = doc.context.insert_one(
             doc.fields.id << id,
@@ -308,7 +307,7 @@ class FileServices:
         :return:
         """
 
-        server_privileges,client_privileges = self.create_privileges(
+        server_privileges, client_privileges = self.create_privileges(
             app_name=app_name,
             privileges_type_from_client=privileges
         )
@@ -325,6 +324,7 @@ class FileServices:
             data_item=(doc_context.context @ upload_id).to_json_convertable(),
             app_name=app_name
         )
+
     def add_privileges(self, app_name, upload_id, privileges):
         """
         Add new if not exist
@@ -342,20 +342,19 @@ class FileServices:
         upload = (doc_context.context @ upload_id)
         old_server_privileges = upload[doc_context.fields.Privileges] or {}
         old_client_privileges = upload[doc_context.fields.ClientPrivileges] or {}
-        for k,v in old_server_privileges.items():
+        for k, v in old_server_privileges.items():
 
             if server_privileges.get(k):
-                server_privileges[k]=list(set(server_privileges[k]+v))
+                server_privileges[k] = list(set(server_privileges[k] + v))
 
             else:
                 server_privileges[k] = v
 
-        client_privileges=[]
-        for k,v in server_privileges.items():
-            client_privileges+=[{
-                k:",".join(v)
+        client_privileges = []
+        for k, v in server_privileges.items():
+            client_privileges += [{
+                k: ",".join(v)
             }]
-
 
         doc_context.context.update(
             doc_context.fields.id == upload_id,
@@ -368,6 +367,7 @@ class FileServices:
             data_item=(doc_context.context @ upload_id).to_json_convertable(),
             app_name=app_name
         )
+
     def create_privileges(self, app_name, privileges_type_from_client):
         """
         Chuyen doi danh sach cac dac quyen do nguoi dung tao sang dang luu tru trong mongodb va elastic search
@@ -386,7 +386,8 @@ class FileServices:
             check_types = dict()
             for x in privileges_type_from_client:
                 if check_types.get(x.Type.lower().strip()) is None:
-                    privilege_item = privilege_context.context @ (privilege_context.fields.Name == x.Type.lower().strip())
+                    privilege_item = privilege_context.context @ (
+                                privilege_context.fields.Name == x.Type.lower().strip())
                     """
                     Bo sung thong tin vao danh sach cac dac quyen va cac gia tri de tham khao
     
@@ -422,20 +423,16 @@ class FileServices:
                     privileges_client += [{
                         x.Type: x.Values
                     }]
-                check_types[x.Type.lower().strip()]=x
+                check_types[x.Type.lower().strip()] = x
         return privileges_server, privileges_client
 
-
-    def get_main_file_of_upload_by_rel_file_path(self, app_name, rel_file_path, runtime_file_reader:type = None):
+    def get_main_file_of_upload_by_rel_file_path(self, app_name, rel_file_path, runtime_file_reader: type = None):
         if runtime_file_reader is not None:
             return runtime_file_reader.get_file_by_name(
-            app_name=app_name,
-            rel_file_path=rel_file_path
-        )
+                app_name=app_name,
+                rel_file_path=rel_file_path
+            )
         return self.file_storage_service.get_file_by_name(
             app_name=app_name,
             rel_file_path=rel_file_path
         )
-
-
-

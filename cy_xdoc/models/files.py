@@ -300,26 +300,7 @@ class DocUploadRegister:
     """
 
 
-@cy_docs.define(
-    name="fs.files",
-    uniques=["rel_file_path"],
-    indexes=["filename"]
-)
-class FsFile:
-    _id: bson.ObjectId
-    rel_file_path: str
-    filename: str
-    contentType: str
 
-
-@cy_docs.define(
-    name="fs.chunks",
-    indexes=["files_id", "n", "files_id,n"]
-)
-class FsChunks:
-    files_id: bson.ObjectId
-    n: int
-    data: bytes
 
 
 

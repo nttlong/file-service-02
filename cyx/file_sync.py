@@ -4,20 +4,22 @@ import pathlib
 import threading
 import time
 
-import bson
-import gridfs
+import cy_kit
+from cyx.common.msg import MessageInfo, MessageService
+from cyx.common.base import DbConnect
+from cyx.models import FsFile,FsChunks
 
-from concurrent.futures import ThreadPoolExecutor
-import multiprocessing
+import bson
 from typing import List
 
-import cy_kit
-from cyx.base import BaseService
-class FilesSync(BaseService):
-    def __init__(self):
-        self.msg_service=msg_service
-        self.db = db
-        self.clean_up = clean_up
+class FilesSync:
+    def __init__(
+            self,
+            db_connect: DbConnect = cy_kit.singleton(DbConnect),
+            message_service:MessageService =cy_kit.singleton(MessageService)
+    ):
+        self.message_service=message_service
+        self.db_connect:DbConnect = db_connect
         self.working_dir = pathlib.Path(__file__).parent.parent.__str__()
         self.file_dir = os.path.join(self.working_dir, "background_service_files", "file")
         self.logs_dir = os.path.join(self.working_dir, "background_service_files", "logs")
@@ -25,25 +27,25 @@ class FilesSync(BaseService):
             os.makedirs(self.file_dir, exist_ok=True)
         if not os.path.isdir(self.logs_dir):
             os.makedirs(self.logs_dir, exist_ok=True)
-        self.logs = loggers.get_logger(SyncToLocalService.__name__, self.logs_dir)
+        self.logs = cy_kit.create_logs(self.logs_dir,FilesSync.__name__)
         self.logs.info(
-            f"start service {SyncToLocalService.__name__}"
+            f"start service {FilesSync.__name__}"
         )
 
-    def sync_file(self, item: enig_frames.services.msgs.MessageInfo):
+    def sync_file(self, item: MessageInfo):
         upload_id = item.Data.get("_id")
         upload_item = item.Data
-        app_db = self.db.context(item.AppName)
+
         if not upload_item:
             return
-        file_ext = upload_item[api_models.documents.Files.FileExt.__name__]
+        file_ext = upload_item.FileExt
         full_file_path = os.path.join(self.file_dir, f"{upload_id}.{file_ext}")
         if os.path.isfile(full_file_path):
             return full_file_path
-        file_id = upload_item[api_models.documents.Files.MainFileId.__name__]
+        file_id = upload_item.MainFileId
 
         current_chunk_index = 0
-        num_of_chunks = upload_item[api_models.documents.MediaTracking.NumOfChunks.__name__]
+        num_of_chunks = upload_item.NumOfChunks
 
         start_time = datetime.datetime.utcnow()
 
@@ -54,16 +56,9 @@ class FilesSync(BaseService):
             _file_id = file_id
             if isinstance(file_id,str):
                 _file_id = bson.ObjectId(file_id)
-
+            chunk_context = self.db_connect.db(app_name=upload_item.AppName).doc(FsChunks)
             while current_chunk_index < num_of_chunks:
-
-                chunk = app_db.find_one(
-                    api_models.documents.FsChunks,
-                    filter={
-                        "files_id": _file_id,
-                        "n": current_chunk_index
-                    }
-                )
+                chunk = chunk_context.context @ ((chunk_context.fields.files_id == _file_id)&(chunk_context.fields.n ==current_chunk_index))
                 if timeout_count > 100:
                     self.logs.info(f"sync file {full_file_path} fail, timeout {timeout_count / 2} senconds")
                     os.remove(full_file_path)
@@ -78,26 +73,18 @@ class FilesSync(BaseService):
                         with open(full_file_path, "wb") as f:
                             f.write(chunk["data"])
                         del chunk["data"]
-                        self.clean_up.clean_up()
                     else:
                         with open(full_file_path, "ab") as f:
                             f.write(chunk["data"])
                         del chunk["data"]
-                        self.clean_up.clean_up()
                     current_chunk_index += 1
                 time.sleep(0.001)
             total_seconds = (datetime.datetime.utcnow() - start_time).total_seconds()
             self.logs.info(f"sync file {full_file_path} complete in {total_seconds} second")
-
-
             return full_file_path
-
         except Exception as e:
             self.logs.exception(e)
-
-        finally:
-            self.clean_up.clean_up()
-    def sync_file_in_thread(self,item:enig_frames.services.msgs.MessageInfo,plugins,output:dict):
+    def sync_file_in_thread(self,item:MessageInfo,plugins,output:dict):
         def run(_output:dict):
             _output={}
             try:

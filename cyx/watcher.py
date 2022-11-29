@@ -32,6 +32,8 @@ plug_in_list_delete =[
 plug_in_list=[]
 import multiprocessing
 import concurrent.futures
+from cyx.file_sync import FilesSync
+file_sync_service = cy_kit.singleton(FilesSync)
 def run():
     while True:
         items = message_service.get_message(
@@ -45,10 +47,10 @@ def run():
             try:
                 upload_item = x.Data
                 app_name = x.AppName
-                file_ext = upload_item[api_models.documents.Files.FileExt.__name__]
+                file_ext = upload_item.FileExt
 
-                mime_type = upload_item[api_models.documents.Files.MimeType.__name__]
-                full_file_path = sync_local_service.sync_file_in_thread(
+                mime_type = upload_item.MimeType
+                full_file_path = file_sync_service.sync_file_in_thread(
                     item=x,
                     plugins=plug_in_list, output=output)
                 print(f"{upload_item['_id']}.{file_ext}")

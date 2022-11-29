@@ -1,12 +1,19 @@
-import signal
-signal.signal(signal.SIGCHLD, signal.SIG_IGN)
+import datetime
 import os
 import pathlib
 import sys
+
+import cy_kit
+from cyx.common.msg import MessageService
+from cyx.common.msg_mongodb import MessageServiceMongodb
 working_dir = pathlib.Path(__file__).parent.parent.__str__()
 sys.path.append(working_dir)
-
-print("running")
+log_start = cy_kit.create_logs(os.path.join(working_dir,"logs","file-process"),"start")
+log_start.info(f"start at {datetime.datetime.utcnow()}")
+cy_kit.config_provider(
+    from_class= MessageService,
+    implement_class= MessageServiceMongodb
+)
 if __name__ == "__main__":
     if sys.platform == "linux":
         import signal
