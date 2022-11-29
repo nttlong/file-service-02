@@ -1,7 +1,8 @@
 import mimetypes
 import os.path
 import pathlib
-
+from PIL import Image
+import img2pdf
 import cy_web
 import cy_kit
 from cyx.media.video import VideoServices
@@ -31,6 +32,11 @@ class ImageExtractorService:
         self.processing_folder = os.path.abspath(
             os.path.join(self.working_dir,"tmp","images")
         )
+        self.processing_tmp_pdf_folder = os.path.join(
+            self.processing_folder,"pdf"
+        )
+        if not os.path.isdir(self.processing_tmp_pdf_folder):
+            os.makedirs(self.processing_tmp_pdf_folder,exist_ok= True)
         if not os.path.isdir(self.processing_folder):
             os.makedirs(self.processing_folder,exist_ok=True)
         self.graphics_service: GraphicsService = graphics_service
@@ -67,3 +73,20 @@ class ImageExtractorService:
             return thumb_file_path
         except Exception as e:
             self.logs.exception(e)
+
+    def convert_to_pdf(self, file_path):
+        pdf_file = os.path.join(
+            self.processing_tmp_pdf_folder, f"{pathlib.Path(file_path).stem}{os.path.splitext(file_path)[1]}"
+        )
+        if os.path.isfile(pdf_file):
+            return pdf_file
+        image = Image.open(file_path)
+        pdf_bytes = img2pdf.convert(image.filename)
+        file = open(pdf_file, "wb")
+        file.write(pdf_bytes)
+        image.close()
+        file.close()
+        return pdf_file
+
+
+    
