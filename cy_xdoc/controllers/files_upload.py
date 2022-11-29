@@ -9,7 +9,7 @@ from fastapi import Depends, UploadFile
 from cy_xdoc.controllers.models.file_upload import UploadFilesChunkInfoResult
 import cy_kit
 from cy_xdoc.services.files import FileServices
-from cy_xdoc.services.file_storage import FileStorageService
+from cyx.common.file_storage import FileStorageService
 from cyx.common.msg import MessageService
 from cy_xdoc.models.files import DocUploadRegister
 

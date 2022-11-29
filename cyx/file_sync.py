@@ -4,22 +4,26 @@ import pathlib
 import threading
 import time
 
+import cy_docs
 import cy_kit
 from cyx.common.msg import MessageInfo, MessageService
 from cyx.common.base import DbConnect
-from cyx.models import FsFile,FsChunks
-
+from cyx.models import FsFile, FsChunks
+from cyx.media.image_extractor import ImageExtractorService
 import bson
 from typing import List
+
 
 class FilesSync:
     def __init__(
             self,
             db_connect: DbConnect = cy_kit.singleton(DbConnect),
-            message_service:MessageService =cy_kit.singleton(MessageService)
+
+            message_service: MessageService = cy_kit.singleton(MessageService)
     ):
-        self.message_service=message_service
-        self.db_connect:DbConnect = db_connect
+
+        self.message_service = message_service
+        self.db_connect: DbConnect = db_connect
         self.working_dir = pathlib.Path(__file__).parent.parent.__str__()
         self.file_dir = os.path.join(self.working_dir, "background_service_files", "file")
         self.logs_dir = os.path.join(self.working_dir, "background_service_files", "logs")
@@ -27,14 +31,14 @@ class FilesSync:
             os.makedirs(self.file_dir, exist_ok=True)
         if not os.path.isdir(self.logs_dir):
             os.makedirs(self.logs_dir, exist_ok=True)
-        self.logs = cy_kit.create_logs(self.logs_dir,FilesSync.__name__)
+        self.logs = cy_kit.create_logs(self.logs_dir, FilesSync.__name__)
         self.logs.info(
             f"start service {FilesSync.__name__}"
         )
 
     def sync_file(self, item: MessageInfo):
         upload_id = item.Data.get("_id")
-        upload_item = item.Data
+        upload_item = cy_docs.DocumentObject(item.Data)
 
         if not upload_item:
             return
@@ -54,11 +58,13 @@ class FilesSync:
         try:
             timeout_count = 0
             _file_id = file_id
-            if isinstance(file_id,str):
+            if isinstance(file_id, str):
                 _file_id = bson.ObjectId(file_id)
-            chunk_context = self.db_connect.db(app_name=upload_item.AppName).doc(FsChunks)
+            chunk_context = self.db_connect.db(app_name=item.AppName).doc(FsChunks)
             while current_chunk_index < num_of_chunks:
-                chunk = chunk_context.context @ ((chunk_context.fields.files_id == _file_id)&(chunk_context.fields.n ==current_chunk_index))
+                chunk = chunk_context.context @ ((chunk_context.fields.files_id == _file_id) & (
+                            chunk_context.fields.n == current_chunk_index))
+                data = chunk.data
                 if timeout_count > 100:
                     self.logs.info(f"sync file {full_file_path} fail, timeout {timeout_count / 2} senconds")
                     os.remove(full_file_path)
@@ -71,12 +77,12 @@ class FilesSync:
                 else:
                     if not os.path.isfile(full_file_path):
                         with open(full_file_path, "wb") as f:
-                            f.write(chunk["data"])
-                        del chunk["data"]
+                            f.write(data)
+                        del data
                     else:
                         with open(full_file_path, "ab") as f:
-                            f.write(chunk["data"])
-                        del chunk["data"]
+                            f.write(data)
+                        del data
                     current_chunk_index += 1
                 time.sleep(0.001)
             total_seconds = (datetime.datetime.utcnow() - start_time).total_seconds()
@@ -84,45 +90,23 @@ class FilesSync:
             return full_file_path
         except Exception as e:
             self.logs.exception(e)
-    def sync_file_in_thread(self,item:MessageInfo,plugins,output:dict):
-        def run(_output:dict):
-            _output={}
+
+    def sync_file_in_thread(self, item: MessageInfo, handler_service, output: dict, use_thread = True):
+        output = dict()
+        def run(_output: dict):
+            _output = {}
             try:
                 full_file_path = self.sync_file(item)
-                if full_file_path is None:
+                handler_service.resolve(item,full_file_path)
 
-                    return
-                app_name = item.AppName
-                upload_id = item.Data["_id"]
-                list_of_plugin_threads:List[threading.Thread] =[]
-                for x in plugins:
-                    def run(call,full_file_path, app_name, upload_id):
-                        try:
-                            if callable(call):
-                                print(f"{call.__module__}/{call.__name__}\n")
-                                call(full_file_path,app_name,upload_id)
-                                print(f"file { full_file_path}\n")
-                        except Exception as e:
-                            print(f"file fail {full_file_path}\n")
-                            os.remove(full_file_path)
-                            self.msg_service.delete(item)
-                    list_of_plugin_threads+=[threading.Thread(target=run,args=(x,full_file_path, app_name, upload_id,))]
-                # with ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()-1) as executor:
-                #     ordinal = 1
-                #     for x in plugins:
-                #         executor.submit(x, (full_file_path, app_name, upload_id))
-                for t in list_of_plugin_threads:
-                    t.start()
-                for t in list_of_plugin_threads:
-                    t.join()
-                os.remove(full_file_path)
-                self.msg_service.delete(item)
-                self.clean_up.clean_up()
+
+
             except Exception as e:
-
+                output["error"] =e
                 self.logs.exception(e)
-                _output['error']=e
 
-
-        th_run = threading.Thread(target=run,args=(output,)).start()
-        return th_run
+        if use_thread:
+            th_run = threading.Thread(target=run, args=(output,)).start()
+            return th_run
+        else:
+            run(output)

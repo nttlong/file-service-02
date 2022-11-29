@@ -62,7 +62,7 @@ from typing import TypeVar, Generic
 T = TypeVar("T")
 
 config = cy_kit.yaml_config(os.path.join(
-    pathlib.Path(__file__).parent.parent.parent.__str__(), "config.yml"
+    pathlib.Path(__file__).parent.parent.__str__(), "config.yml"
 ))
 config_path = os.path.join(pathlib.Path(__file__).parent.parent.parent.__str__(), "config.yml")
 

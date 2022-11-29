@@ -11,19 +11,19 @@ import cy_docs
 import cy_kit
 import cy_web
 from cy_xdoc.models.files import DocUploadRegister, Privileges, PrivilegesValues
-import cy_xdoc.services.file_storage
+import cyx.common.file_storage
 import cy_xdoc.services.search_engine
 import cyx.common.base
 
 
 class FileServices:
     def __init__(self,
-                 file_storage_service: cy_xdoc.services.file_storage.FileStorageService = cy_kit.inject(
-                     cy_xdoc.services.file_storage.FileStorageService),
+                 file_storage_service: cyx.common.file_storage.FileStorageService = cy_kit.inject(
+                     cyx.common.file_storage.FileStorageService),
                  search_engine=cy_kit.inject(cy_xdoc.services.search_engine.SearchEngine),
                  db_connect=cy_kit.inject(cyx.common.base.DbConnect)):
 
-        self.file_storage_service: cy_xdoc.services.file_storage.FileStorageService = file_storage_service
+        self.file_storage_service: cyx.common.file_storage.FileStorageService = file_storage_service
         self.search_engine = search_engine
         self.db_connect = db_connect
 
@@ -435,4 +435,14 @@ class FileServices:
         return self.file_storage_service.get_file_by_name(
             app_name=app_name,
             rel_file_path=rel_file_path
+        )
+
+    def update_main_thumb_id(self, app_name, upload_id, main_thumb_id):
+        if isinstance(main_thumb_id,str):
+            main_thumb_id = bson.ObjectId(main_thumb_id)
+        doc_context = self.db_connect.db(app_name).doc(DocUploadRegister)
+        doc_context.context.update(
+            doc_context.fields.id == upload_id,
+            doc_context.fields.ThumbFileId << main_thumb_id,
+            doc_context.fields.HasThumb << True
         )

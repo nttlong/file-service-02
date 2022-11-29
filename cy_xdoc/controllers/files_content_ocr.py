@@ -8,7 +8,7 @@ import cy_xdoc
 import mimetypes
 import cy_kit
 import cy_xdoc.services.files
-import cy_xdoc.services.file_storage
+import cyx.common.file_storage
 @cy_web.hanlder("get","{app_name}/file-ocr/{directory:path}")
 def files_contet_orc(app_name: str, directory: str, request: fastapi.Request,
                         token: str =fastapi.Depends(cy_xdoc.auths.Authenticate)):
@@ -21,7 +21,7 @@ def files_contet_orc(app_name: str, directory: str, request: fastapi.Request,
     mime_type, _ = mimetypes.guess_type(directory)
 
     file_service:cy_xdoc.services.files.FileServices = cy_kit.singleton(cy_xdoc.services.files.FileServices)
-    file_store_service = cy_kit.singleton(cy_xdoc.services.file_storage.FileStorageService)
+    file_store_service = cy_kit.singleton(cyx.common.file_storage.FileStorageService)
     upload_id = directory.split('/')[0]
     upload = file_service.get_upload_register(app_name=app_name,upload_id=upload_id)
     if upload is None:

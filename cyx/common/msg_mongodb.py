@@ -52,12 +52,13 @@ class MessageServiceMongodb:
         )
 
     def get_message(self, message_type: str, max_items: int = 1000) -> List[MessageInfo]:
+
         doc_context = self.db_connect.db('admin').doc(SysMessage)
         filter = doc_context.fields.MsgType==message_type
-        filter_2 = cy_docs.not_exists(doc_context.fields.RunInsLock)|(doc_context.fields.RunInsLock!=self.instance_id)
-        filter = filter & filter_2
+        filter_1 = cy_docs.not_exists(doc_context.fields.RunInsLock)|(doc_context.fields.RunInsLock!=self.instance_id)
+
         filter_2 = (doc_context.fields.IsLock == False)|cy_docs.not_exists(doc_context.fields.IsLock)
-        filter=filter & filter_2
+        filter=filter & (filter_2 | filter_1)
         ret_list = doc_context.context.aggregate().match(
             filter=filter
         ).sort(
@@ -78,6 +79,7 @@ class MessageServiceMongodb:
                 doc_context.fields.RunInsLock << self.instance_id
             )
 
+
         return ret
 
     def unlock(self, item: MessageInfo):
@@ -87,14 +89,14 @@ class MessageServiceMongodb:
         docs = self.db_connect.db('admin').doc(SysMessage)
         docs.context.update(
             docs.fields.MsgId == item.Id,
-            docs.fields.IsLock == False
+            docs.fields.IsLock << False
         )
 
     def lock(self,  item:MessageInfo):
         docs = self.db_connect.db('admin').doc(SysMessage)
         docs.context.update(
             docs.fields.MsgId == item.Id,
-            docs.fields.IsLock == True
+            docs.fields.IsLock << True
         )
 
     def is_lock(self,  item:MessageInfo):
@@ -106,8 +108,21 @@ class MessageServiceMongodb:
             return item.IsLock == True
 
     def delete(self, item:MessageInfo):
-        docs = self.db_connect.db('admin').doc(SysMessage)
-        docs.context.delete(
-            docs.fields.MsgId ==item.Id
-        )
+        raise NotImplemented
+        # docs = self.db_connect.db('admin').doc(SysMessage)
+        # docs.context.delete(
+        #     docs.fields.MsgId ==item.Id
+        # )
 
+    def reset_status(self, message_type: str):
+        """
+            Reset status
+            :param message_type:
+            :return:
+                """
+        docs = self.db_connect.db('admin').doc(SysMessage)
+        docs.context.update(
+            docs.fields.MsgType == message_type,
+            docs.fields.IsLock << False,
+            docs.fields.RunInsLock << None
+        )

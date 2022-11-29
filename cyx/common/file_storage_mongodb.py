@@ -1,3 +1,5 @@
+import mimetypes
+import os
 import threading
 import typing
 
@@ -10,7 +12,7 @@ from cyx.common.base import Base
 from gridfs import GridIn
 import bson
 
-from cy_xdoc.services.file_storage import FileStorageService, FileStorageObject
+from cyx.common.file_storage import FileStorageService, FileStorageObject
 
 
 @cy_kit.must_imlement(FileStorageObject)
@@ -54,7 +56,7 @@ class MongoDbFileStorage:
         self.fs.close()
 
 
-@cy_kit.must_imlement(FileStorageService)
+
 class MongoDbFileService(Base):
     def create(self, app_name: str, rel_file_path: str,content_type:str, chunk_size: int, size: int) -> MongoDbFileStorage:
         fs = cy_docs.create_file(
@@ -67,6 +69,32 @@ class MongoDbFileService(Base):
 
         )
         return MongoDbFileStorage(fs,self.client.get_database(self.db_name(app_name)))
+
+    def store_file(self, app_name:str, source_file:str, rel_file_store_path:str)-> MongoDbFileStorage:
+        ret = self.get_file_by_name(
+            app_name= app_name,
+            rel_file_path= rel_file_store_path
+        )
+        if ret:
+            return ret
+        content_type, _  = mimetypes.guess_type(source_file)
+        chunk_size = 1024*1024*2
+        ret = self.create(
+            app_name =app_name,
+            rel_file_path= rel_file_store_path,
+            chunk_size = chunk_size,
+            content_type= content_type,
+            size= os.stat(source_file).st_size
+        )
+        chunk_index = 0
+        with open(source_file,"rb") as f:
+            data = f.read(chunk_size)
+            while data.__len__()>0:
+                ret.push(data,chunk_index)
+                chunk_index += 1
+                del data
+                data = f.read(chunk_size)
+        return ret
 
     def get_file_by_name(self, app_name, rel_file_path: str) -> MongoDbFileStorage:
         rel_file_path=rel_file_path.lower()
@@ -193,3 +221,5 @@ class MongoDbFileService(Base):
             print(s,d)
         process(source,dest).start()
         return dest
+
+

@@ -2,8 +2,7 @@ import cy_kit, cy_web
 import os
 from fastapi import Response,Request
 from fastapi.responses import FileResponse
-import cy_xdoc.services.files
-import cy_xdoc.services.file_storage
+import cyx.common.file_storage
 import mimetypes
 @cy_web.hanlder(method="get",path="{app_name}/thumbs/{directory:path}")
 async def get_thumb_of_files(app_name: str, directory: str,request:Request):
@@ -12,7 +11,7 @@ async def get_thumb_of_files(app_name: str, directory: str,request:Request):
     :param app_name:
     :return:
     """
-    file_storage_service = cy_kit.singleton(cy_xdoc.services.file_storage.FileStorageService)
+    file_storage_service = cy_kit.singleton(cyx.common.file_storage.FileStorageService)
     thumb_dir_cache = os.path.join(app_name, "custom_thumbs")
     cache_thumb_path = cy_web.cache_content_check(thumb_dir_cache, directory.lower().replace("/", "_"))
     if cache_thumb_path:

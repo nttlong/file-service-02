@@ -1,23 +1,22 @@
-import pathlib
 import os
 
 import cy_kit
-from cyx.base import Config, Base
-from graphics import Graphics
-import ocrmypdf
-import pillow_avif
+from cyx.base import Base
+from cyx.media.core.graphics import GraphicsService
+
+
 class ImageServices(Base):
     def __init__(
             self,
-            graphics:Graphics=cy_kit.singleton(Graphics)
+            graphics_service:GraphicsService=cy_kit.singleton(GraphicsService)
     ):
         self.init(__name__)
         self.pdf_convert_folder = os.path.join(self.processing_folder, "pdf_convert")
         if not os.path.isdir(self.pdf_convert_folder):
             os.makedirs(self.pdf_convert_folder, exist_ok=True)
-        self.graphics:Graphics=graphics
+        self.graphics_service:GraphicsService= graphics_service
 
-    def create_thumbs(self, image_file_path, size: int = 350)->str:
+    def create_thumbs(self, image_file_path, size: int = 350) -> str:
         ext_file =self.get_file_extenstion(image_file_path)
 
         try:

@@ -1,29 +1,26 @@
 import cy_kit
-import cy_xdoc.services.file_storage
-import cy_xdoc.services.file_storage_mongodb
+import cyx.common.file_storage
 
 from cy_xdoc.services.apps import AppServices
 from cy_xdoc.services.accounts import AccountService
 
-import cy_xdoc.services.file_storage_disk
 import cy_xdoc.services.files
 
 import cy_xdoc.services.search_engine
 import cy_xdoc.services.files
 import cy_xdoc.services.apps
 
-import cy_xdoc.services.file_storage
-import cy_xdoc.services.file_storage_mongodb
-import cy_xdoc.services.file_storage_disk
 import cy_xdoc.services.search_engine
 import cy_xdoc.services.accounts
 import cy_xdoc.services.secutities
 import cyx.common.base
 import cyx.common.msg_mongodb
 import cyx.common.msg
+import cyx.common.file_storage
+import cyx.common.file_storage_mongodb
 cy_kit.config_provider(
-    from_class=cy_xdoc.services.file_storage.FileStorageService,
-    implement_class=cy_xdoc.services.file_storage_mongodb.MongoDbFileService
+    from_class=cyx.common.file_storage.FileStorageService,
+    implement_class=cyx.common.file_storage_mongodb.MongoDbFileService
 )
 # cy_kit.config_provider(
 #     from_class=cy_xdoc.services.file_storage.FileStorageService,
@@ -39,7 +36,6 @@ cy_kit.config_provider(
 """
 Cau hinh he thong msg dung Mongodb
 """
-import cyx.common.base
 import cyx.common.msg
 
 
@@ -53,8 +49,8 @@ class Container:
                  service_app: cy_xdoc.services.apps.AppServices = cy_kit.singleton(cy_xdoc.services.apps.AppServices),
                  services_msg: cyx.common.msg.MessageService = cy_kit.singleton(
                      cyx.common.msg.MessageService),
-                 service_storage: cy_xdoc.services.file_storage.FileStorageService = cy_kit.singleton(
-                     cy_xdoc.services.file_storage.FileStorageService),
+                 service_storage: cyx.common.file_storage.FileStorageService = cy_kit.singleton(
+                     cyx.common.file_storage.FileStorageService),
                  service_account: cy_xdoc.services.accounts.AccountService = cy_kit.singleton(
                      cy_xdoc.services.accounts.AccountService),
                  service_sercutity: cy_xdoc.services.secutities.Sercurity = cy_kit.singleton(

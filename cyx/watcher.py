@@ -1,70 +1,84 @@
+import os
+import pathlib
 import threading
 import time
 
-from cyx.common.msg import MessageService
+import cy_docs
+from cyx.common.msg import MessageService, MessageInfo
 import cy_kit
 import cyx.common
-message_service:MessageService = cy_kit.singleton(
-    MessageService
-)
-config = cyx.common.config
-# import enig_frames.plugins.thumbs.office
-# import enig_frames.plugins.thumbs.pdf
-# import enig_frames.plugins.thumbs.images
-# import enig_frames.plugins.thumbs.video
-# import enig_frames.plugins.thumbs.exe_file
-# import enig_frames.plugins.ocr.images
-# import enig_frames.plugins.ocr.pdf_file
-# import enig_frames.plugins.search.office
-
-plug_in_list_delete =[
-    # enig.depen(enig_frames.plugins.thumbs.office.Office).process,
-    # enig.depen(enig_frames.plugins.thumbs.pdf.PDF).process,
-    # enig.depen(enig_frames.plugins.thumbs.images.Images).process,
-    # enig.depen(enig_frames.plugins.thumbs.video.Video).process,
-    # enig.depen(enig_frames.plugins.thumbs.exe_file.ExeFile).process,
-    # enig.depen(enig_frames.plugins.ocr.images.Images).process,
-    # enig.depen(enig_frames.plugins.ocr.pdf_file.PdfFile).process,
-    # enig.depen(enig_frames.plugins.search.office.Office).process,
-
-
-]
-plug_in_list=[]
 import multiprocessing
 import concurrent.futures
 from cyx.file_sync import FilesSync
+from cyx.media.image_extractor import ImageExtractorService
+from cyx.file_content_process import FileContentProcessService
+
+message_service: MessageService = cy_kit.singleton(
+    MessageService
+)
+config = cyx.common.config
+file_content_process_service = cy_kit.singleton(FileContentProcessService)
+
 file_sync_service = cy_kit.singleton(FilesSync)
-def run():
-    while True:
-        items = message_service.get_message(
-            message_type='files.upload'
-        )
-        output={}
-        def run(x):
-            if message_service.is_lock(x):
-                return
-            message_service.lock(x)
+
+message_type = 'files.upload'
+
+
+
+
+
+watcher_log = cy_kit.create_logs(
+    log_dir=os.path.join(pathlib.Path(__file__).parent.parent.__str__(), "background_service_files", "logs"),
+    name=pathlib.Path(__file__).stem
+)
+
+
+def run(use_thread=True):
+    try:
+        message_service.reset_status(message_type)
+        while True:
             try:
-                upload_item = x.Data
-                app_name = x.AppName
-                file_ext = upload_item.FileExt
+                items = message_service.get_message(
+                    message_type='files.upload'
+                )
+                output = {}
 
-                mime_type = upload_item.MimeType
-                full_file_path = file_sync_service.sync_file_in_thread(
-                    item=x,
-                    plugins=plug_in_list, output=output)
-                print(f"{upload_item['_id']}.{file_ext}")
-                print(output)
+                def run(x):
+                    if message_service.is_lock(x):
+                        return
+                    message_service.lock(x)
+                    try:
+                        upload_item = cy_docs.DocumentObject(x.Data)
+                        app_name = x.AppName
+                        file_ext = upload_item.FileExt
+
+                        mime_type = upload_item.MimeType
+                        full_file_path = file_sync_service.sync_file_in_thread(
+                            item=x,
+
+                            output=output,
+                            use_thread=use_thread,
+                            handler_service= file_content_process_service,
+
+                        )
+                        print(f"{upload_item['_id']}.{file_ext}")
+                        print(output)
+
+                    except Exception as e:
+                        watcher_log.exception(e)
+
+                if use_thread:
+                    workers_numbers = max(multiprocessing.cpu_count() - 1, 2) * 10
+                    with concurrent.futures.ThreadPoolExecutor(max_workers=workers_numbers) as executor:
+
+                        for x in items:
+                            executor.submit(run, x)
+                else:
+                    for x in items:
+                        run(x)
+                time.sleep(0.05)
             except Exception as e:
-                print(e)
-                message_service.unlock(x)
-            finally:
-                message_service.delete(x)
-        workers_numbers=max(multiprocessing.cpu_count() - 1,2)*10
-        with concurrent.futures.ThreadPoolExecutor(max_workers=workers_numbers) as executor:
-
-            for x in items:
-                executor.submit(run,x)
-
-
-        time.sleep(0.05)
+                watcher_log.exception(e)
+    except Exception as e:
+        watcher_log.exception(e)
+        watcher_log.info("Can not start")

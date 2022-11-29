@@ -17,6 +17,13 @@ class MessageService:
 
     def delete(self, item: MessageInfo):
         pass
+    def reset_status(self,message_type:str):
+        """
+        Reset status
+        :param message_type:
+        :return:
+        """
+        raise NotImplemented
 
     def lock(self, item: MessageInfo):
         pass
