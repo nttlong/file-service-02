@@ -217,21 +217,22 @@ class Field(__BaseField__):
         self.__has_set_value__ = False
         self.__alias__ = None
         self.__sort__ = 1
-    def reduce(self,data,reduce_type:type=None):
+
+    def reduce(self, data, reduce_type: type = None):
         reduce_type = reduce_type or self.__delegate_type__
-        ret = {"_id":data.get("_id")}
-        require_fields=[]
-        for k,v in reduce_type.__annotations__.items():
+        ret = {"_id": data.get("_id")}
+        require_fields = []
+        for k, v in reduce_type.__annotations__.items():
             try:
                 ele_value = data.get(k)
 
-                if hasattr(v,"__module__") and v.__module__=="typing":
+                if hasattr(v, "__module__") and v.__module__ == "typing":
                     if str(v).startswith("typing.Union["):
                         if ele_value is None:
                             if str(v).endswith(', NoneType]'):
                                 ret[k] = None
                             else:
-                                require_fields+=[k]
+                                require_fields += [k]
                         else:
                             ret[k] = ele_value
                     elif ele_value is None:
@@ -239,11 +240,11 @@ class Field(__BaseField__):
                     elif type(ele_value) != v.__origin__:
                         raise Exception(f"Can not cast {ele_value} to {v}")
                     else:
-                        ret[k]=ele_value
+                        ret[k] = ele_value
 
                 elif ele_value is None:
                     require_fields += [k]
-                elif isinstance(ele_value,v):
+                elif isinstance(ele_value, v):
                     ret[k] = ele_value
                 else:
                     try:
@@ -253,9 +254,9 @@ class Field(__BaseField__):
             except Exception as e:
                 raise e
 
-        if require_fields.__len__()>0:
+        if require_fields.__len__() > 0:
             import inspect
-            str_require_fields_list ='\n\t'.join(require_fields)
+            str_require_fields_list = '\n\t'.join(require_fields)
             raise Exception(f"These below fields are require:\n {str_require_fields_list}\n"
                             f"Preview file {inspect.getfile(reduce_type)} at {reduce_type.__name__}")
 
@@ -795,8 +796,8 @@ class DocumentObject(dict):
 
             return ret
         else:
-            if isinstance(key,str)  and key.lower() =="id":
-                key="_id"
+            if isinstance(key, str) and key.lower() == "id":
+                key = "_id"
             return dict.get(self, key)
 
     def __getattr__(self, item):
@@ -821,8 +822,8 @@ class DocumentObject(dict):
 
             return ret
         else:
-            if isinstance(key,str)  and key.lower() =="id":
-                key="_id"
+            if isinstance(key, str) and key.lower() == "id":
+                key = "_id"
             return dict.get(self, key)
 
     def __delitem__(self, key):
@@ -837,8 +838,8 @@ class DocumentObject(dict):
             dict.__delitem__(ret, items[n])
 
         else:
-            if isinstance(key,str)  and key.lower() =="id":
-                key="_id"
+            if isinstance(key, str) and key.lower() == "id":
+                key = "_id"
             dict.__setitem__(self, key)
 
     def __setitem__(self, key, value):
@@ -853,8 +854,8 @@ class DocumentObject(dict):
             dict.__setitem__(ret, items[n], value)
 
         else:
-            if isinstance(key,str)  and key.lower() =="id":
-                key="_id"
+            if isinstance(key, str) and key.lower() == "id":
+                key = "_id"
             dict.__setitem__(self, key, value)
 
     def to_pydantic(self) -> pydantic.BaseModel:
@@ -874,7 +875,8 @@ class ExprBuilder:
             ret.__set_check__(item)
             return ret
         return Field(item)
-    def __set_type__(self,cls:type):
+
+    def __set_type__(self, cls: type):
         self.__cls__ = cls
 
 
@@ -1080,10 +1082,10 @@ class DBDocument:
                 return ret
 
     def insert_one(self, *args, **kwargs):
-        if isinstance(args,Field):
+        if isinstance(args, Field):
             ret = self.collection.insert_one({
-                        args.__name__: args.__value__
-                    })
+                args.__name__: args.__value__
+            })
             return ret
         if isinstance(args, tuple):
             if args.__len__() == 1:
@@ -1527,13 +1529,12 @@ import gridfs
 
 
 def file_get(client, db_name: str, file_id):
-    gfs = gridfs.GridFSBucket(client.get_database(db_name),chunk_size_bytes=1024*1024*2)
+    gfs = gridfs.GridFSBucket(client.get_database(db_name), chunk_size_bytes=1024 * 1024 * 2)
 
     if isinstance(file_id, str):
         file_id = bson.ObjectId(file_id)
 
     ret = gfs.open_download_stream(file_id)
-
 
     # ret = gridfs.GridFS(__client__.get_database(__db_name__)).get(file_id)
     return ret
@@ -1544,6 +1545,8 @@ def file_get_by_name(client, db_name: str, filename):
     items = list(gfs.find({"filename": filename}))
     if items.__len__() > 0:
         return items[0]
+
+
 @document_define(
     name="fs.files",
     unique_keys=["rel_file_path"],
@@ -1551,25 +1554,30 @@ def file_get_by_name(client, db_name: str, filename):
 
 )
 class __fs_files__:
-    _id:bson.ObjectId
-    chunkSize:int
-    length:int
-    rel_file_path:str
-    filename:str
+    _id: bson.ObjectId
+    chunkSize: int
+    length: int
+    rel_file_path: str
+    filename: str
+
+
 @document_define(
     name="fs.chunks",
-    indexes=["files_id","files_id,n","n","_id,files_id,n"],
+    indexes=["files_id", "files_id,n", "n", "_id,files_id,n"],
     unique_keys=[]
 )
 class __fs_files_chunks__:
-    _id:bson.ObjectId
+    _id: bson.ObjectId
     files_id: bson.ObjectId
     n: int
     data: bytes
-def file_add_chunk(client:pymongo.MongoClient, db_name:str, file_id:bson.ObjectId,chunk_index:int, chunk_data:bytes):
-    if isinstance(file_id,str):
+
+
+def file_add_chunk(client: pymongo.MongoClient, db_name: str, file_id: bson.ObjectId, chunk_index: int,
+                   chunk_data: bytes):
+    if isinstance(file_id, str):
         file_id = bson.ObjectId(file_id)
-    context(client,__fs_files_chunks__)[db_name].insert_one(
+    context(client, __fs_files_chunks__)[db_name].insert_one(
         {
             "_id": bson.objectid.ObjectId(),
             "files_id": file_id,
@@ -1585,7 +1593,9 @@ def file_add_chunk(client:pymongo.MongoClient, db_name:str, file_id:bson.ObjectI
     #     "data": content
     # })
     del chunk_data
-def create_file(client, db_name: str, file_name: str,content_type:str, file_size: int, chunk_size: int):
+
+
+def create_file(client, db_name: str, file_name: str, content_type: str, file_size: int, chunk_size: int):
     db = client.get_database(db_name)
     gfs = gridfs.GridFS(client.get_database(db_name))  # gridfs.GridFSBucket(__client__.get_database(__db_name__))
 
@@ -1593,12 +1603,12 @@ def create_file(client, db_name: str, file_name: str,content_type:str, file_size
     fs.name = file_name
     fs.filename = file_name
     fs.close()
-    context(client,__fs_files__)[db_name].update(
-        fields._id==fs._id,
-        fields.chunkSize<<chunk_size,
-        fields.length<<file_size,
-        fields.rel_file_path <<file_name,
-        fields.contentType<< content_type
+    context(client, __fs_files__)[db_name].update(
+        fields._id == fs._id,
+        fields.chunkSize << chunk_size,
+        fields.length << file_size,
+        fields.rel_file_path << file_name,
+        fields.contentType << content_type
     )
 
     return fs
@@ -1628,3 +1638,196 @@ async def find_file_async(client, db_name: str, rel_file_path: str):
     return ret
 
 
+import io
+
+from gridfs import GridOut
+from pymongo.collection import Collection
+from pymongo.client_session import ClientSession
+from typing import Optional
+import math
+from pymongo.cursor import Cursor
+from pymongo.errors import CursorNotFound
+from gridfs.errors import CorruptGridFile
+
+
+class FS_GridOutChunkIterator(object):
+    """Iterates over a file's chunks using a single cursor.
+
+    Raises CorruptGridFile when encountering any truncated, missing, or extra
+    chunk in a file.
+    """
+
+    def __init__(
+            self,
+            grid_out: GridOut,
+            chunks: Collection,
+            session: Optional[ClientSession],
+            next_chunk,
+    ) -> None:
+        self._id = grid_out._id
+        self._chunk_size = int(grid_out.chunk_size)
+        self._length = int(grid_out.length)
+        self._chunks = chunks
+        self._session = session
+        self._next_chunk = next_chunk
+        self._num_chunks = math.ceil(float(self._length) / self._chunk_size)
+        self._cursor = None
+
+    _cursor: Optional[Cursor]
+
+    def expected_chunk_length(self, chunk_n: int) -> int:
+        if chunk_n < self._num_chunks - 1:
+            return self._chunk_size
+        return self._length - (self._chunk_size * (self._num_chunks - 1))
+
+    def __iter__(self) -> "FS_GridOutChunkIterator":
+        return self
+
+    def _create_cursor(self) -> None:
+        filter = {"files_id": self._id}
+        # if self._next_chunk > 0:
+        #     filter["n"] = {"$gte": self._next_chunk}
+        t = datetime.datetime.utcnow()
+        self._cursor = self._chunks.find(filter,skip=self._next_chunk)
+        n=(datetime.datetime.utcnow()-t).total_seconds()*1000
+        print(f"create collection {n}")
+
+    def _next_with_retry(self):
+        """Return the next chunk and retry once on CursorNotFound.
+
+        We retry on CursorNotFound to maintain backwards compatibility in
+        cases where two calls to read occur more than 10 minutes apart (the
+        server's default cursor timeout).
+        """
+        if self._cursor is None:
+            self._create_cursor()
+            assert self._cursor is not None
+        try:
+            return self._cursor.next()
+        except CursorNotFound:
+            self._cursor.close()
+            self._create_cursor()
+            return self._cursor.next()
+
+    def next(self):
+        try:
+            chunk = self._next_with_retry()
+        except StopIteration:
+            if self._next_chunk >= self._num_chunks:
+                raise
+            raise CorruptGridFile("no chunk #%d" % self._next_chunk)
+
+        if chunk["n"] != self._next_chunk:
+            self.close()
+            raise CorruptGridFile(
+                "Missing chunk: expected chunk #%d but found "
+                "chunk with n=%d" % (self._next_chunk, chunk["n"])
+            )
+
+        if chunk["n"] >= self._num_chunks:
+            # According to spec, ignore extra chunks if they are empty.
+            if len(chunk["data"]):
+                self.close()
+                raise CorruptGridFile(
+                    "Extra chunk found: expected %d chunks but found "
+                    "chunk with n=%d" % (self._num_chunks, chunk["n"])
+                )
+
+        expected_length = self.expected_chunk_length(chunk["n"])
+        if len(chunk["data"]) != expected_length:
+            self.close()
+            raise CorruptGridFile(
+                "truncated chunk #%d: expected chunk length to be %d but "
+                "found chunk with length %d" % (chunk["n"], expected_length, len(chunk["data"]))
+            )
+
+        self._next_chunk += 1
+        return chunk
+
+    __next__ = next
+
+    def close(self) -> None:
+        if self._cursor:
+            self._cursor.close()
+            self._cursor = None
+def readchunk(db,fs: GridOut) -> bytes:
+    """Reads a chunk at a time. If the current position is within a
+    chunk the remainder of the chunk is returned.
+    """
+    if not hasattr(fs,"__chunks"):
+        setattr(fs, "__chunks",db.get_collection("fs.chunks"))
+
+    if not hasattr(fs,"__buffer"):
+        setattr(fs,"__buffer",b"")
+    received = len(fs.__buffer)
+    chunk_data = b""
+    chunk_size = int(fs.chunk_size)
+
+    if received > 0:
+        chunk_data = fs.__buffer
+    elif fs.__position < int(fs.length):
+        chunk_number = int((received + fs.__position) / chunk_size)
+        if not hasattr(fs,"__chunk_iter"):
+            setattr(fs,"__chunk_iter",None)
+        if fs.__chunk_iter is None:
+            fs.__chunk_iter = FS_GridOutChunkIterator(
+                fs, fs.__chunks, fs._session, chunk_number
+            )
+
+        chunk = fs.__chunk_iter.next()
+        chunk_data = chunk["data"][fs.__position % chunk_size:]
+
+        if not chunk_data:
+            raise CorruptGridFile("truncated chunk")
+
+    fs.__position += len(chunk_data)
+    fs.__buffer = b""
+    return chunk_data
+
+
+def read_grid_fs_file(db, fs: gridfs.GridOut, size: int = -1) -> bytes:
+    """Read at most `size` bytes from the file (less if there
+    isn't enough data).
+
+    The bytes are returned as an instance of :class:`str` (:class:`bytes`
+    in python 3). If `size` is negative or omitted all data is read.
+
+    :Parameters:
+      - `size` (optional): the number of bytes to read
+
+    .. versionchanged:: 3.8
+       This method now only checks for extra chunks after reading the
+       entire file. Previously, this method would check for extra chunks
+       on every call.
+    """
+    # fs._ensure_file()
+    if not hasattr(fs,"__position"):
+        setattr(fs,"__position",fs.tell())
+    remainder = int(fs.length) - fs.__position
+    if size < 0 or size > remainder:
+        size = remainder
+
+    if size == 0:
+        return b""
+
+    received = 0
+    data = io.BytesIO()
+    while received < size:
+        chunk_data = readchunk(db,fs)
+        received += len(chunk_data)
+        data.write(chunk_data)
+
+    # Detect extra chunks after reading the entire file.
+    if size == remainder and fs.__chunk_iter:
+        try:
+            fs.__chunk_iter.next()
+        except StopIteration:
+            pass
+
+    fs.__position -= received - size
+
+    # Return 'size' bytes and store the rest.
+    data.seek(size)
+    fs.__buffer = data.read()
+    data.seek(0)
+    return data.read(size)

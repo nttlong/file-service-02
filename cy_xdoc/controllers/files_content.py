@@ -45,8 +45,7 @@ async def get_content_of_files(app_name: str, directory: str, request: fastapi.R
         del content
     mime_type, _ = mimetypes.guess_type(directory)
     ret = await cy_web.cy_web_x.streaming_async(
-        fs, request, mime_type,streaming_buffering=1024*4*3*8,
-        segment_size=1024*1024*4
+        fs, request, mime_type,streaming_buffering=1024*4*3*8
     )
     return ret
     # ret= cy_web.cy_web_x.FileObjectResponse(

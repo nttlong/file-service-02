@@ -1381,14 +1381,19 @@ def __send_bytes_range_requests__(
 
         `start` and `end` parameters are inclusive due to specification
         """
-    file_obj.seek(start)
-    data = [1]
-    pos = file_obj.tell()
-    while len(data) > 0:
-        read_size = min(chunk_size, end + 1 - pos)
-        data = file_obj.read(read_size)
+    if hasattr(file_obj,"read_chunks") and callable(file_obj.read_chunks):
+        ret = file_obj.read_chunks(start,end)
+        for x in ret:
+            yield x
+    else:
+        file_obj.seek(start)
+        data = [1]
+        pos = file_obj.tell()
+        while len(data) > 0:
+            read_size = min(chunk_size, end + 1 - pos)
+            data = file_obj.read(read_size)
 
-        yield data
+            yield data
 
 
 async def __send_bytes_range_requests_async__(
