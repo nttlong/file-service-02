@@ -313,6 +313,9 @@ class FileServices:
         )
 
         doc_context = self.db_connect.db(app_name).doc(cy_xdoc.models.files.DocUploadRegister)
+        upload = (doc_context.context @ upload_id)
+        if upload is None:
+            raise Exception("Upload was not found")
         doc_context.context.update(
             doc_context.fields.id == upload_id,
             doc_context.fields.Privileges << server_privileges,

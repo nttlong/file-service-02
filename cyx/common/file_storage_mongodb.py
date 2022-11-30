@@ -21,15 +21,21 @@ class MongoDbFileStorage:
         self.fs = fs
         self.db =db
         self.is_dirty=False
+        self.position = 0
+        self.chunk_index =0
+        self.chunk_size = fs.chunk_size
 
     def seek(self, position: int):
-        return self.fs.seek(position)
+        self.position = position
+        a,b = divmod(self.position,self.chunk_size)
+        # return self.fs.seek(position)
 
     def get_size(self) -> int:
         return self.fs.length
 
     def tell(self) -> int:
-        return self.fs.tell()
+        return self.position
+        # return self.fs.tell()
 
     def read(self, size: int) -> bytes:
 
@@ -54,6 +60,7 @@ class MongoDbFileStorage:
         some how to implement thy source here ...
         """
         self.fs.close()
+        # pass
 
 
 

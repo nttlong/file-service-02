@@ -37,5 +37,6 @@ Server-Timing: miss, db;dur=53, app;dur=47.2"""
 
 cy_web.load_controller_from_dir("api","./controllers")
 cy_web.load_controller_from_dir("","./pages")
+app = cy_web.get_fastapi_app()
 if __name__ == "__main__":
-    cy_web.start_with_uvicorn(worker=2)
+    cy_web.start_with_uvicorn(worker=1)

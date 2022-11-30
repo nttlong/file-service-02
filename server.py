@@ -89,4 +89,4 @@ web_app = cy_web.create_app(
 app = web_app.app
 cy_web.on_auth(on_auth)
 cy_web.add_controller("api","./controllers")
-cy_web.uvicon_start()
+# cy_web.uvicon_start()
