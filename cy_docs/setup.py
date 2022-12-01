@@ -7,7 +7,7 @@ file=os.path.join(pathlib.Path(__file__).parent.__str__(), f"cy_docs_x.py")
 print(file)
 setup(
     name='cy_docs',
-    ext_modules=cythonize(file),
+    ext_modules=cythonize(file,language_level = "3"),
     zip_safe=True,
     packages=["cy_docs"]
 )

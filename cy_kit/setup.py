@@ -8,7 +8,7 @@ file_cy_kit_x=os.path.join(build_dir, f"cy_kit_x.py")
 
 setup(
     name='cy_kit',
-    ext_modules=cythonize(file_cy_kit_x),
+    ext_modules=cythonize(file_cy_kit_x,language_level = "3"),
     zip_safe=True,
     packages=["cy_kit"]
 )

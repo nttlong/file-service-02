@@ -1,4 +1,0 @@
-hosts: [
-        http://192.168.18.36:9200
-]
-index: lv-files-server # Xem cấu hình trong thư mục fs crawler

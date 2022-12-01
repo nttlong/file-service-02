@@ -10,7 +10,7 @@ file_path=os.path.join(build_dir, f"cy_web_x.py")
 
 setup(
     name='cy_web',
-    ext_modules=cythonize(file_path),
+    ext_modules=cythonize(file_path,language_level = "3"),
     zip_safe=True,
     packages=["cy_web"]
 )
