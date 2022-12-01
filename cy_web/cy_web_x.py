@@ -1519,6 +1519,33 @@ class AsyncStreamingResponse(Response):
 
         if self.background is not None:
             await self.background()
+def __read_chunks_iter__(gfs,start:int,end:int):
+        segment_len = gfs.cursor_len
+        chunk_index ,remain = divmod(start,gfs.chunk_size)
+        segment_run =1
+        cursor = gfs.get_cursor(chunk_index, segment_run)
+        size_read =0
+
+        total,m = divmod(end-start,gfs.chunk_size)
+        if m >0:
+            total += 1
+        while size_read < (end-start):
+            try:
+                data = cursor.next()["data"]
+                if size_read ==0 and remain>0:
+                    data =data[remain:]
+
+                if size_read + data.__len__()>end-start+1:
+                    data = data[:end-size_read]
+                size_read += data.__len__()
+                yield data
+            except StopIteration as e:
+                time.sleep(0.01)
+                chunk_index +=segment_run
+                segment_run =segment_len
+                cursor.close()
+                cursor = gfs.get_cursor(chunk_index,segment_run)
+        cursor.close()
 async def streaming_async(fsg, request, content_type, streaming_buffering=1024 * 8 * 8, segment_size=None):
     """
     Streaming content
@@ -1572,8 +1599,11 @@ async def streaming_async(fsg, request, content_type, streaming_buffering=1024 *
     else:
         if hasattr(fsg, "delegate"):
             content = __send_bytes_range_requests_async__(fsg, start, end, streaming_buffering)
+        elif hasattr(fsg,"get_cursor") and callable(fsg.get_cursor):
+            content = __read_chunks_iter__(fsg,start,end)
         else:
             content = __send_bytes_range_requests__(fsg, start, end, streaming_buffering)
+
         res = StreamingResponse(
             content=content,
             media_type=content_type,

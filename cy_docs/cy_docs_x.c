@@ -2191,19 +2191,6 @@ static PyObject *__Pyx_CyFunction_New(PyMethodDef *ml,
 /* None.proto */
 static CYTHON_INLINE void __Pyx_RaiseClosureNameError(const char *varname);
 
-/* FastTypeChecks.proto */
-#if CYTHON_COMPILING_IN_CPYTHON
-#define __Pyx_TypeCheck(obj, type) __Pyx_IsSubtype(Py_TYPE(obj), (PyTypeObject *)type)
-static CYTHON_INLINE int __Pyx_IsSubtype(PyTypeObject *a, PyTypeObject *b);
-static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches(PyObject *err, PyObject *type);
-static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObject *type1, PyObject *type2);
-#else
-#define __Pyx_TypeCheck(obj, type) PyObject_TypeCheck(obj, (PyTypeObject *)type)
-#define __Pyx_PyErr_GivenExceptionMatches(err, type) PyErr_GivenExceptionMatches(err, type)
-#define __Pyx_PyErr_GivenExceptionMatches2(err, type1, type2) (PyErr_GivenExceptionMatches(err, type1) || PyErr_GivenExceptionMatches(err, type2))
-#endif
-#define __Pyx_PyException_Check(obj) __Pyx_TypeCheck(obj, PyExc_Exception)
-
 /* SetNameInClass.proto */
 #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
 #define __Pyx_SetNameInClass(ns, name, value)\
@@ -2263,6 +2250,19 @@ static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
+
+/* FastTypeChecks.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+#define __Pyx_TypeCheck(obj, type) __Pyx_IsSubtype(Py_TYPE(obj), (PyTypeObject *)type)
+static CYTHON_INLINE int __Pyx_IsSubtype(PyTypeObject *a, PyTypeObject *b);
+static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches(PyObject *err, PyObject *type);
+static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObject *type1, PyObject *type2);
+#else
+#define __Pyx_TypeCheck(obj, type) PyObject_TypeCheck(obj, (PyTypeObject *)type)
+#define __Pyx_PyErr_GivenExceptionMatches(err, type) PyErr_GivenExceptionMatches(err, type)
+#define __Pyx_PyErr_GivenExceptionMatches2(err, type1, type2) (PyErr_GivenExceptionMatches(err, type1) || PyErr_GivenExceptionMatches(err, type2))
+#endif
+#define __Pyx_PyException_Check(obj) __Pyx_TypeCheck(obj, PyExc_Exception)
 
 /* Generator.proto */
 #define __Pyx_Generator_USED
@@ -2354,13 +2354,7 @@ typedef struct {
   PyObject *__pyx_n_s_BaseField___to_mongo_db;
   PyObject *__pyx_n_s_BaseField___to_mongo_db_expr;
   PyObject *__pyx_n_s_BaseModel;
-  PyObject *__pyx_n_s_BytesIO;
   PyObject *__pyx_kp_u_Can_not_cast;
-  PyObject *__pyx_n_s_ClientSession;
-  PyObject *__pyx_n_s_Collection;
-  PyObject *__pyx_n_s_CorruptGridFile;
-  PyObject *__pyx_n_s_Cursor;
-  PyObject *__pyx_n_s_CursorNotFound;
   PyObject *__pyx_n_s_DBDocument;
   PyObject *__pyx_n_s_DBDocument___init;
   PyObject *__pyx_n_s_DBDocument___lshift;
@@ -2405,16 +2399,6 @@ typedef struct {
   PyObject *__pyx_n_s_ExprBuilder___getattr;
   PyObject *__pyx_n_s_ExprBuilder___getitem;
   PyObject *__pyx_n_s_ExprBuilder___set_type;
-  PyObject *__pyx_kp_s_Extra_chunk_found_expected_d_chu;
-  PyObject *__pyx_n_s_FS_GridOutChunkIterator;
-  PyObject *__pyx_kp_s_FS_GridOutChunkIterator_2;
-  PyObject *__pyx_n_s_FS_GridOutChunkIterator___init;
-  PyObject *__pyx_n_s_FS_GridOutChunkIterator___iter;
-  PyObject *__pyx_n_s_FS_GridOutChunkIterator__create;
-  PyObject *__pyx_n_s_FS_GridOutChunkIterator__next_wi;
-  PyObject *__pyx_n_s_FS_GridOutChunkIterator_close;
-  PyObject *__pyx_n_s_FS_GridOutChunkIterator_expected;
-  PyObject *__pyx_n_s_FS_GridOutChunkIterator_next;
   PyObject *__pyx_n_s_Field;
   PyObject *__pyx_n_s_Field___add;
   PyObject *__pyx_n_s_Field___and;
@@ -2449,25 +2433,18 @@ typedef struct {
   PyObject *__pyx_n_s_Funcs_not_exists;
   PyObject *__pyx_n_s_GridFS;
   PyObject *__pyx_n_s_GridFSBucket;
-  PyObject *__pyx_n_s_GridOut;
   PyObject *__pyx_n_s_IGNORECASE;
   PyObject *__pyx_kp_s_Invalid_expression;
-  PyObject *__pyx_kp_s_Iterates_over_a_file_s_chunks_us;
   PyObject *__pyx_n_s_List;
   PyObject *__pyx_kp_s_List_str;
   PyObject *__pyx_n_s_Lock;
-  PyObject *__pyx_kp_s_Missing_chunk_expected_chunk_d_b;
-  PyObject *__pyx_n_s_None;
   PyObject *__pyx_kp_s_NoneType;
   PyObject *__pyx_n_s_ObjectId;
   PyObject *__pyx_kp_u_ObjectId_2;
-  PyObject *__pyx_n_s_Optional;
-  PyObject *__pyx_kp_s_Optional_ClientSession;
   PyObject *__pyx_kp_s_Param_in_Find_one_must_be_cy_doc;
   PyObject *__pyx_n_s_Pattern;
   PyObject *__pyx_kp_u_Please_set_value_for;
   PyObject *__pyx_kp_u_Preview_file;
-  PyObject *__pyx_n_s_StopIteration;
   PyObject *__pyx_kp_u_These_below_fields_are_require;
   PyObject *__pyx_kp_u_Thous_can_not_alias_mongodb_expr;
   PyObject *__pyx_kp_u_Thous_can_not_sort_stage_with;
@@ -2484,7 +2461,6 @@ typedef struct {
   PyObject *__pyx_kp_u__11;
   PyObject *__pyx_n_s__12;
   PyObject *__pyx_kp_s__13;
-  PyObject *__pyx_kp_b__2;
   PyObject *__pyx_kp_s__2;
   PyObject *__pyx_n_u__3;
   PyObject *__pyx_kp_s__30;
@@ -2515,7 +2491,6 @@ typedef struct {
   PyObject *__pyx_n_s_background;
   PyObject *__pyx_n_s_bson;
   PyObject *__pyx_kp_s_bson_ObjectId;
-  PyObject *__pyx_n_s_buffer;
   PyObject *__pyx_n_s_bytes;
   PyObject *__pyx_n_s_c;
   PyObject *__pyx_n_s_cache_index;
@@ -2523,24 +2498,15 @@ typedef struct {
   PyObject *__pyx_n_s_camel_cache;
   PyObject *__pyx_n_s_camel_dict;
   PyObject *__pyx_n_s_camel_lock;
-  PyObject *__pyx_n_s_ceil;
   PyObject *__pyx_n_s_check_constraint;
   PyObject *__pyx_n_s_check_map__module;
   PyObject *__pyx_n_s_check_map__name;
   PyObject *__pyx_n_s_check_name;
-  PyObject *__pyx_n_s_chunk;
   PyObject *__pyx_n_s_chunkSize;
   PyObject *__pyx_n_s_chunk_data;
   PyObject *__pyx_n_s_chunk_index;
-  PyObject *__pyx_n_s_chunk_iter;
-  PyObject *__pyx_n_s_chunk_n;
-  PyObject *__pyx_n_s_chunk_number;
   PyObject *__pyx_n_s_chunk_size;
-  PyObject *__pyx_n_s_chunk_size_2;
   PyObject *__pyx_n_s_chunk_size_bytes;
-  PyObject *__pyx_n_s_chunks;
-  PyObject *__pyx_n_s_chunks_2;
-  PyObject *__pyx_n_s_chunks_3;
   PyObject *__pyx_n_s_client;
   PyObject *__pyx_n_s_cline_in_traceback;
   PyObject *__pyx_n_s_close;
@@ -2559,10 +2525,8 @@ typedef struct {
   PyObject *__pyx_n_s_count;
   PyObject *__pyx_n_s_count_async;
   PyObject *__pyx_n_s_count_documents;
-  PyObject *__pyx_n_s_create_cursor;
   PyObject *__pyx_n_s_create_file;
   PyObject *__pyx_n_s_create_index;
-  PyObject *__pyx_n_s_cursor;
   PyObject *__pyx_n_s_cy_docs_cy_docs_x;
   PyObject *__pyx_kp_s_cy_docs_cy_docs_x_py;
   PyObject *__pyx_n_s_d;
@@ -2602,8 +2566,6 @@ typedef struct {
   PyObject *__pyx_n_s_exists_2;
   PyObject *__pyx_kp_u_exists_require_cy_docs_fields_fi;
   PyObject *__pyx_n_s_exit;
-  PyObject *__pyx_n_s_expected_chunk_length;
-  PyObject *__pyx_n_s_expected_length;
   PyObject *__pyx_n_s_expr;
   PyObject *__pyx_n_s_expr_2;
   PyObject *__pyx_n_u_f;
@@ -2650,10 +2612,7 @@ typedef struct {
   PyObject *__pyx_n_s_getfile;
   PyObject *__pyx_n_s_getitem;
   PyObject *__pyx_n_s_gfs;
-  PyObject *__pyx_n_s_grid_out;
   PyObject *__pyx_n_s_gridfs;
-  PyObject *__pyx_kp_s_gridfs_GridOut;
-  PyObject *__pyx_n_s_gridfs_errors;
   PyObject *__pyx_kp_s_gt;
   PyObject *__pyx_n_s_gt_2;
   PyObject *__pyx_kp_s_gte;
@@ -2681,7 +2640,6 @@ typedef struct {
   PyObject *__pyx_n_s_instance;
   PyObject *__pyx_n_s_int;
   PyObject *__pyx_n_s_invert;
-  PyObject *__pyx_n_s_io;
   PyObject *__pyx_n_s_is_not_null;
   PyObject *__pyx_n_s_is_null;
   PyObject *__pyx_n_s_isoformat;
@@ -2699,7 +2657,6 @@ typedef struct {
   PyObject *__pyx_n_s_len;
   PyObject *__pyx_n_s_len_2;
   PyObject *__pyx_n_s_length;
-  PyObject *__pyx_n_s_length_2;
   PyObject *__pyx_n_s_like;
   PyObject *__pyx_kp_s_limit;
   PyObject *__pyx_n_s_limit_2;
@@ -2713,7 +2670,6 @@ typedef struct {
   PyObject *__pyx_n_s_main;
   PyObject *__pyx_kp_s_match;
   PyObject *__pyx_n_s_match_2;
-  PyObject *__pyx_n_s_math;
   PyObject *__pyx_n_s_matmul;
   PyObject *__pyx_n_s_metaclass;
   PyObject *__pyx_kp_s_mod;
@@ -2734,15 +2690,8 @@ typedef struct {
   PyObject *__pyx_n_s_ne_3;
   PyObject *__pyx_n_s_new;
   PyObject *__pyx_n_s_new_file;
-  PyObject *__pyx_n_s_next;
-  PyObject *__pyx_n_s_next_2;
-  PyObject *__pyx_n_s_next_chunk;
-  PyObject *__pyx_n_s_next_chunk_2;
-  PyObject *__pyx_n_s_next_with_retry;
-  PyObject *__pyx_kp_s_no_chunk_d;
   PyObject *__pyx_kp_s_not;
   PyObject *__pyx_n_s_not_exists;
-  PyObject *__pyx_n_s_num_chunks;
   PyObject *__pyx_n_s_obj;
   PyObject *__pyx_n_s_object;
   PyObject *__pyx_n_s_objectid;
@@ -2759,7 +2708,6 @@ typedef struct {
   PyObject *__pyx_n_s_pattern;
   PyObject *__pyx_n_s_pipeline;
   PyObject *__pyx_n_s_pos;
-  PyObject *__pyx_n_s_position;
   PyObject *__pyx_kp_s_pow;
   PyObject *__pyx_n_s_pow_2;
   PyObject *__pyx_n_s_power;
@@ -2771,27 +2719,18 @@ typedef struct {
   PyObject *__pyx_kp_s_pydantic_BaseModel;
   PyObject *__pyx_n_s_pymongo;
   PyObject *__pyx_kp_s_pymongo_MongoClient;
-  PyObject *__pyx_n_s_pymongo_client_session;
-  PyObject *__pyx_n_s_pymongo_collection;
   PyObject *__pyx_kp_s_pymongo_collection_Collection;
-  PyObject *__pyx_n_s_pymongo_cursor;
-  PyObject *__pyx_n_s_pymongo_errors;
   PyObject *__pyx_n_s_pymongo_mongo_client;
   PyObject *__pyx_kp_s_pymongo_mongo_client_MongoClient;
   PyObject *__pyx_n_s_qualname;
   PyObject *__pyx_n_s_range;
   PyObject *__pyx_n_s_re;
-  PyObject *__pyx_n_s_read;
-  PyObject *__pyx_n_s_read_grid_fs_file;
-  PyObject *__pyx_n_s_readchunk;
   PyObject *__pyx_n_s_real;
-  PyObject *__pyx_n_s_received;
   PyObject *__pyx_n_s_reduce;
   PyObject *__pyx_n_s_reduce_type;
   PyObject *__pyx_kp_s_regex;
   PyObject *__pyx_n_s_rel_file_path;
   PyObject *__pyx_n_s_release;
-  PyObject *__pyx_n_s_remainder;
   PyObject *__pyx_n_s_repr;
   PyObject *__pyx_n_s_require_fields;
   PyObject *__pyx_n_s_ret;
@@ -2800,17 +2739,13 @@ typedef struct {
   PyObject *__pyx_n_s_ret_pipe;
   PyObject *__pyx_n_s_return;
   PyObject *__pyx_n_s_rshift;
-  PyObject *__pyx_n_s_seek;
   PyObject *__pyx_n_s_self;
   PyObject *__pyx_n_s_send;
-  PyObject *__pyx_n_s_session;
-  PyObject *__pyx_n_s_session_2;
   PyObject *__pyx_kp_s_set;
   PyObject *__pyx_n_s_set_check;
   PyObject *__pyx_n_s_set_type;
   PyObject *__pyx_n_s_setattr;
   PyObject *__pyx_n_s_setitem;
-  PyObject *__pyx_n_s_size;
   PyObject *__pyx_kp_s_skip;
   PyObject *__pyx_n_s_skip_2;
   PyObject *__pyx_n_s_sort;
@@ -2828,7 +2763,6 @@ typedef struct {
   PyObject *__pyx_kp_s_sub;
   PyObject *__pyx_n_s_sub_2;
   PyObject *__pyx_n_s_super;
-  PyObject *__pyx_n_s_tell;
   PyObject *__pyx_n_s_test;
   PyObject *__pyx_n_s_threading;
   PyObject *__pyx_n_s_throw;
@@ -2840,8 +2774,6 @@ typedef struct {
   PyObject *__pyx_n_s_to_mongo_db_expr;
   PyObject *__pyx_n_s_to_pydantic;
   PyObject *__pyx_n_s_truediv;
-  PyObject *__pyx_kp_s_truncated_chunk;
-  PyObject *__pyx_kp_s_truncated_chunk_d_expected_chunk;
   PyObject *__pyx_n_s_type;
   PyObject *__pyx_n_s_typing;
   PyObject *__pyx_kp_s_typing_Union;
@@ -2858,7 +2790,6 @@ typedef struct {
   PyObject *__pyx_kp_u_was_not_found_in;
   PyObject *__pyx_kp_u_was_not_found_in_2;
   PyObject *__pyx_n_s_wrapper;
-  PyObject *__pyx_n_s_write;
   PyObject *__pyx_n_s_x;
   PyObject *__pyx_n_s_y;
   PyObject *__pyx_int_0;
@@ -2985,17 +2916,6 @@ typedef struct {
   PyObject *__pyx_tuple__220;
   PyObject *__pyx_tuple__222;
   PyObject *__pyx_tuple__223;
-  PyObject *__pyx_tuple__224;
-  PyObject *__pyx_tuple__225;
-  PyObject *__pyx_tuple__227;
-  PyObject *__pyx_tuple__229;
-  PyObject *__pyx_tuple__231;
-  PyObject *__pyx_tuple__233;
-  PyObject *__pyx_tuple__235;
-  PyObject *__pyx_tuple__237;
-  PyObject *__pyx_tuple__239;
-  PyObject *__pyx_tuple__241;
-  PyObject *__pyx_tuple__243;
   PyObject *__pyx_codeobj__19;
   PyObject *__pyx_codeobj__22;
   PyObject *__pyx_codeobj__23;
@@ -3091,15 +3011,6 @@ typedef struct {
   PyObject *__pyx_codeobj__217;
   PyObject *__pyx_codeobj__219;
   PyObject *__pyx_codeobj__221;
-  PyObject *__pyx_codeobj__226;
-  PyObject *__pyx_codeobj__228;
-  PyObject *__pyx_codeobj__230;
-  PyObject *__pyx_codeobj__232;
-  PyObject *__pyx_codeobj__234;
-  PyObject *__pyx_codeobj__236;
-  PyObject *__pyx_codeobj__238;
-  PyObject *__pyx_codeobj__240;
-  PyObject *__pyx_codeobj__242;
 } __pyx_mstate;
 
 #ifdef __cplusplus
@@ -3186,13 +3097,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_BaseField___to_mongo_db);
   Py_CLEAR(clear_module_state->__pyx_n_s_BaseField___to_mongo_db_expr);
   Py_CLEAR(clear_module_state->__pyx_n_s_BaseModel);
-  Py_CLEAR(clear_module_state->__pyx_n_s_BytesIO);
   Py_CLEAR(clear_module_state->__pyx_kp_u_Can_not_cast);
-  Py_CLEAR(clear_module_state->__pyx_n_s_ClientSession);
-  Py_CLEAR(clear_module_state->__pyx_n_s_Collection);
-  Py_CLEAR(clear_module_state->__pyx_n_s_CorruptGridFile);
-  Py_CLEAR(clear_module_state->__pyx_n_s_Cursor);
-  Py_CLEAR(clear_module_state->__pyx_n_s_CursorNotFound);
   Py_CLEAR(clear_module_state->__pyx_n_s_DBDocument);
   Py_CLEAR(clear_module_state->__pyx_n_s_DBDocument___init);
   Py_CLEAR(clear_module_state->__pyx_n_s_DBDocument___lshift);
@@ -3237,16 +3142,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_ExprBuilder___getattr);
   Py_CLEAR(clear_module_state->__pyx_n_s_ExprBuilder___getitem);
   Py_CLEAR(clear_module_state->__pyx_n_s_ExprBuilder___set_type);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_Extra_chunk_found_expected_d_chu);
-  Py_CLEAR(clear_module_state->__pyx_n_s_FS_GridOutChunkIterator);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_FS_GridOutChunkIterator_2);
-  Py_CLEAR(clear_module_state->__pyx_n_s_FS_GridOutChunkIterator___init);
-  Py_CLEAR(clear_module_state->__pyx_n_s_FS_GridOutChunkIterator___iter);
-  Py_CLEAR(clear_module_state->__pyx_n_s_FS_GridOutChunkIterator__create);
-  Py_CLEAR(clear_module_state->__pyx_n_s_FS_GridOutChunkIterator__next_wi);
-  Py_CLEAR(clear_module_state->__pyx_n_s_FS_GridOutChunkIterator_close);
-  Py_CLEAR(clear_module_state->__pyx_n_s_FS_GridOutChunkIterator_expected);
-  Py_CLEAR(clear_module_state->__pyx_n_s_FS_GridOutChunkIterator_next);
   Py_CLEAR(clear_module_state->__pyx_n_s_Field);
   Py_CLEAR(clear_module_state->__pyx_n_s_Field___add);
   Py_CLEAR(clear_module_state->__pyx_n_s_Field___and);
@@ -3281,25 +3176,18 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_Funcs_not_exists);
   Py_CLEAR(clear_module_state->__pyx_n_s_GridFS);
   Py_CLEAR(clear_module_state->__pyx_n_s_GridFSBucket);
-  Py_CLEAR(clear_module_state->__pyx_n_s_GridOut);
   Py_CLEAR(clear_module_state->__pyx_n_s_IGNORECASE);
   Py_CLEAR(clear_module_state->__pyx_kp_s_Invalid_expression);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_Iterates_over_a_file_s_chunks_us);
   Py_CLEAR(clear_module_state->__pyx_n_s_List);
   Py_CLEAR(clear_module_state->__pyx_kp_s_List_str);
   Py_CLEAR(clear_module_state->__pyx_n_s_Lock);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_Missing_chunk_expected_chunk_d_b);
-  Py_CLEAR(clear_module_state->__pyx_n_s_None);
   Py_CLEAR(clear_module_state->__pyx_kp_s_NoneType);
   Py_CLEAR(clear_module_state->__pyx_n_s_ObjectId);
   Py_CLEAR(clear_module_state->__pyx_kp_u_ObjectId_2);
-  Py_CLEAR(clear_module_state->__pyx_n_s_Optional);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_Optional_ClientSession);
   Py_CLEAR(clear_module_state->__pyx_kp_s_Param_in_Find_one_must_be_cy_doc);
   Py_CLEAR(clear_module_state->__pyx_n_s_Pattern);
   Py_CLEAR(clear_module_state->__pyx_kp_u_Please_set_value_for);
   Py_CLEAR(clear_module_state->__pyx_kp_u_Preview_file);
-  Py_CLEAR(clear_module_state->__pyx_n_s_StopIteration);
   Py_CLEAR(clear_module_state->__pyx_kp_u_These_below_fields_are_require);
   Py_CLEAR(clear_module_state->__pyx_kp_u_Thous_can_not_alias_mongodb_expr);
   Py_CLEAR(clear_module_state->__pyx_kp_u_Thous_can_not_sort_stage_with);
@@ -3316,7 +3204,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_kp_u__11);
   Py_CLEAR(clear_module_state->__pyx_n_s__12);
   Py_CLEAR(clear_module_state->__pyx_kp_s__13);
-  Py_CLEAR(clear_module_state->__pyx_kp_b__2);
   Py_CLEAR(clear_module_state->__pyx_kp_s__2);
   Py_CLEAR(clear_module_state->__pyx_n_u__3);
   Py_CLEAR(clear_module_state->__pyx_kp_s__30);
@@ -3347,7 +3234,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_background);
   Py_CLEAR(clear_module_state->__pyx_n_s_bson);
   Py_CLEAR(clear_module_state->__pyx_kp_s_bson_ObjectId);
-  Py_CLEAR(clear_module_state->__pyx_n_s_buffer);
   Py_CLEAR(clear_module_state->__pyx_n_s_bytes);
   Py_CLEAR(clear_module_state->__pyx_n_s_c);
   Py_CLEAR(clear_module_state->__pyx_n_s_cache_index);
@@ -3355,24 +3241,15 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_camel_cache);
   Py_CLEAR(clear_module_state->__pyx_n_s_camel_dict);
   Py_CLEAR(clear_module_state->__pyx_n_s_camel_lock);
-  Py_CLEAR(clear_module_state->__pyx_n_s_ceil);
   Py_CLEAR(clear_module_state->__pyx_n_s_check_constraint);
   Py_CLEAR(clear_module_state->__pyx_n_s_check_map__module);
   Py_CLEAR(clear_module_state->__pyx_n_s_check_map__name);
   Py_CLEAR(clear_module_state->__pyx_n_s_check_name);
-  Py_CLEAR(clear_module_state->__pyx_n_s_chunk);
   Py_CLEAR(clear_module_state->__pyx_n_s_chunkSize);
   Py_CLEAR(clear_module_state->__pyx_n_s_chunk_data);
   Py_CLEAR(clear_module_state->__pyx_n_s_chunk_index);
-  Py_CLEAR(clear_module_state->__pyx_n_s_chunk_iter);
-  Py_CLEAR(clear_module_state->__pyx_n_s_chunk_n);
-  Py_CLEAR(clear_module_state->__pyx_n_s_chunk_number);
   Py_CLEAR(clear_module_state->__pyx_n_s_chunk_size);
-  Py_CLEAR(clear_module_state->__pyx_n_s_chunk_size_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_chunk_size_bytes);
-  Py_CLEAR(clear_module_state->__pyx_n_s_chunks);
-  Py_CLEAR(clear_module_state->__pyx_n_s_chunks_2);
-  Py_CLEAR(clear_module_state->__pyx_n_s_chunks_3);
   Py_CLEAR(clear_module_state->__pyx_n_s_client);
   Py_CLEAR(clear_module_state->__pyx_n_s_cline_in_traceback);
   Py_CLEAR(clear_module_state->__pyx_n_s_close);
@@ -3391,10 +3268,8 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_count);
   Py_CLEAR(clear_module_state->__pyx_n_s_count_async);
   Py_CLEAR(clear_module_state->__pyx_n_s_count_documents);
-  Py_CLEAR(clear_module_state->__pyx_n_s_create_cursor);
   Py_CLEAR(clear_module_state->__pyx_n_s_create_file);
   Py_CLEAR(clear_module_state->__pyx_n_s_create_index);
-  Py_CLEAR(clear_module_state->__pyx_n_s_cursor);
   Py_CLEAR(clear_module_state->__pyx_n_s_cy_docs_cy_docs_x);
   Py_CLEAR(clear_module_state->__pyx_kp_s_cy_docs_cy_docs_x_py);
   Py_CLEAR(clear_module_state->__pyx_n_s_d);
@@ -3434,8 +3309,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_exists_2);
   Py_CLEAR(clear_module_state->__pyx_kp_u_exists_require_cy_docs_fields_fi);
   Py_CLEAR(clear_module_state->__pyx_n_s_exit);
-  Py_CLEAR(clear_module_state->__pyx_n_s_expected_chunk_length);
-  Py_CLEAR(clear_module_state->__pyx_n_s_expected_length);
   Py_CLEAR(clear_module_state->__pyx_n_s_expr);
   Py_CLEAR(clear_module_state->__pyx_n_s_expr_2);
   Py_CLEAR(clear_module_state->__pyx_n_u_f);
@@ -3482,10 +3355,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_getfile);
   Py_CLEAR(clear_module_state->__pyx_n_s_getitem);
   Py_CLEAR(clear_module_state->__pyx_n_s_gfs);
-  Py_CLEAR(clear_module_state->__pyx_n_s_grid_out);
   Py_CLEAR(clear_module_state->__pyx_n_s_gridfs);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_gridfs_GridOut);
-  Py_CLEAR(clear_module_state->__pyx_n_s_gridfs_errors);
   Py_CLEAR(clear_module_state->__pyx_kp_s_gt);
   Py_CLEAR(clear_module_state->__pyx_n_s_gt_2);
   Py_CLEAR(clear_module_state->__pyx_kp_s_gte);
@@ -3513,7 +3383,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_instance);
   Py_CLEAR(clear_module_state->__pyx_n_s_int);
   Py_CLEAR(clear_module_state->__pyx_n_s_invert);
-  Py_CLEAR(clear_module_state->__pyx_n_s_io);
   Py_CLEAR(clear_module_state->__pyx_n_s_is_not_null);
   Py_CLEAR(clear_module_state->__pyx_n_s_is_null);
   Py_CLEAR(clear_module_state->__pyx_n_s_isoformat);
@@ -3531,7 +3400,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_len);
   Py_CLEAR(clear_module_state->__pyx_n_s_len_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_length);
-  Py_CLEAR(clear_module_state->__pyx_n_s_length_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_like);
   Py_CLEAR(clear_module_state->__pyx_kp_s_limit);
   Py_CLEAR(clear_module_state->__pyx_n_s_limit_2);
@@ -3545,7 +3413,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_main);
   Py_CLEAR(clear_module_state->__pyx_kp_s_match);
   Py_CLEAR(clear_module_state->__pyx_n_s_match_2);
-  Py_CLEAR(clear_module_state->__pyx_n_s_math);
   Py_CLEAR(clear_module_state->__pyx_n_s_matmul);
   Py_CLEAR(clear_module_state->__pyx_n_s_metaclass);
   Py_CLEAR(clear_module_state->__pyx_kp_s_mod);
@@ -3566,15 +3433,8 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_ne_3);
   Py_CLEAR(clear_module_state->__pyx_n_s_new);
   Py_CLEAR(clear_module_state->__pyx_n_s_new_file);
-  Py_CLEAR(clear_module_state->__pyx_n_s_next);
-  Py_CLEAR(clear_module_state->__pyx_n_s_next_2);
-  Py_CLEAR(clear_module_state->__pyx_n_s_next_chunk);
-  Py_CLEAR(clear_module_state->__pyx_n_s_next_chunk_2);
-  Py_CLEAR(clear_module_state->__pyx_n_s_next_with_retry);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_no_chunk_d);
   Py_CLEAR(clear_module_state->__pyx_kp_s_not);
   Py_CLEAR(clear_module_state->__pyx_n_s_not_exists);
-  Py_CLEAR(clear_module_state->__pyx_n_s_num_chunks);
   Py_CLEAR(clear_module_state->__pyx_n_s_obj);
   Py_CLEAR(clear_module_state->__pyx_n_s_object);
   Py_CLEAR(clear_module_state->__pyx_n_s_objectid);
@@ -3591,7 +3451,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_pattern);
   Py_CLEAR(clear_module_state->__pyx_n_s_pipeline);
   Py_CLEAR(clear_module_state->__pyx_n_s_pos);
-  Py_CLEAR(clear_module_state->__pyx_n_s_position);
   Py_CLEAR(clear_module_state->__pyx_kp_s_pow);
   Py_CLEAR(clear_module_state->__pyx_n_s_pow_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_power);
@@ -3603,27 +3462,18 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_kp_s_pydantic_BaseModel);
   Py_CLEAR(clear_module_state->__pyx_n_s_pymongo);
   Py_CLEAR(clear_module_state->__pyx_kp_s_pymongo_MongoClient);
-  Py_CLEAR(clear_module_state->__pyx_n_s_pymongo_client_session);
-  Py_CLEAR(clear_module_state->__pyx_n_s_pymongo_collection);
   Py_CLEAR(clear_module_state->__pyx_kp_s_pymongo_collection_Collection);
-  Py_CLEAR(clear_module_state->__pyx_n_s_pymongo_cursor);
-  Py_CLEAR(clear_module_state->__pyx_n_s_pymongo_errors);
   Py_CLEAR(clear_module_state->__pyx_n_s_pymongo_mongo_client);
   Py_CLEAR(clear_module_state->__pyx_kp_s_pymongo_mongo_client_MongoClient);
   Py_CLEAR(clear_module_state->__pyx_n_s_qualname);
   Py_CLEAR(clear_module_state->__pyx_n_s_range);
   Py_CLEAR(clear_module_state->__pyx_n_s_re);
-  Py_CLEAR(clear_module_state->__pyx_n_s_read);
-  Py_CLEAR(clear_module_state->__pyx_n_s_read_grid_fs_file);
-  Py_CLEAR(clear_module_state->__pyx_n_s_readchunk);
   Py_CLEAR(clear_module_state->__pyx_n_s_real);
-  Py_CLEAR(clear_module_state->__pyx_n_s_received);
   Py_CLEAR(clear_module_state->__pyx_n_s_reduce);
   Py_CLEAR(clear_module_state->__pyx_n_s_reduce_type);
   Py_CLEAR(clear_module_state->__pyx_kp_s_regex);
   Py_CLEAR(clear_module_state->__pyx_n_s_rel_file_path);
   Py_CLEAR(clear_module_state->__pyx_n_s_release);
-  Py_CLEAR(clear_module_state->__pyx_n_s_remainder);
   Py_CLEAR(clear_module_state->__pyx_n_s_repr);
   Py_CLEAR(clear_module_state->__pyx_n_s_require_fields);
   Py_CLEAR(clear_module_state->__pyx_n_s_ret);
@@ -3632,17 +3482,13 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_ret_pipe);
   Py_CLEAR(clear_module_state->__pyx_n_s_return);
   Py_CLEAR(clear_module_state->__pyx_n_s_rshift);
-  Py_CLEAR(clear_module_state->__pyx_n_s_seek);
   Py_CLEAR(clear_module_state->__pyx_n_s_self);
   Py_CLEAR(clear_module_state->__pyx_n_s_send);
-  Py_CLEAR(clear_module_state->__pyx_n_s_session);
-  Py_CLEAR(clear_module_state->__pyx_n_s_session_2);
   Py_CLEAR(clear_module_state->__pyx_kp_s_set);
   Py_CLEAR(clear_module_state->__pyx_n_s_set_check);
   Py_CLEAR(clear_module_state->__pyx_n_s_set_type);
   Py_CLEAR(clear_module_state->__pyx_n_s_setattr);
   Py_CLEAR(clear_module_state->__pyx_n_s_setitem);
-  Py_CLEAR(clear_module_state->__pyx_n_s_size);
   Py_CLEAR(clear_module_state->__pyx_kp_s_skip);
   Py_CLEAR(clear_module_state->__pyx_n_s_skip_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_sort);
@@ -3660,7 +3506,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_kp_s_sub);
   Py_CLEAR(clear_module_state->__pyx_n_s_sub_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_super);
-  Py_CLEAR(clear_module_state->__pyx_n_s_tell);
   Py_CLEAR(clear_module_state->__pyx_n_s_test);
   Py_CLEAR(clear_module_state->__pyx_n_s_threading);
   Py_CLEAR(clear_module_state->__pyx_n_s_throw);
@@ -3672,8 +3517,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_to_mongo_db_expr);
   Py_CLEAR(clear_module_state->__pyx_n_s_to_pydantic);
   Py_CLEAR(clear_module_state->__pyx_n_s_truediv);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_truncated_chunk);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_truncated_chunk_d_expected_chunk);
   Py_CLEAR(clear_module_state->__pyx_n_s_type);
   Py_CLEAR(clear_module_state->__pyx_n_s_typing);
   Py_CLEAR(clear_module_state->__pyx_kp_s_typing_Union);
@@ -3690,7 +3533,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_kp_u_was_not_found_in);
   Py_CLEAR(clear_module_state->__pyx_kp_u_was_not_found_in_2);
   Py_CLEAR(clear_module_state->__pyx_n_s_wrapper);
-  Py_CLEAR(clear_module_state->__pyx_n_s_write);
   Py_CLEAR(clear_module_state->__pyx_n_s_x);
   Py_CLEAR(clear_module_state->__pyx_n_s_y);
   Py_CLEAR(clear_module_state->__pyx_int_0);
@@ -3817,17 +3659,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_tuple__220);
   Py_CLEAR(clear_module_state->__pyx_tuple__222);
   Py_CLEAR(clear_module_state->__pyx_tuple__223);
-  Py_CLEAR(clear_module_state->__pyx_tuple__224);
-  Py_CLEAR(clear_module_state->__pyx_tuple__225);
-  Py_CLEAR(clear_module_state->__pyx_tuple__227);
-  Py_CLEAR(clear_module_state->__pyx_tuple__229);
-  Py_CLEAR(clear_module_state->__pyx_tuple__231);
-  Py_CLEAR(clear_module_state->__pyx_tuple__233);
-  Py_CLEAR(clear_module_state->__pyx_tuple__235);
-  Py_CLEAR(clear_module_state->__pyx_tuple__237);
-  Py_CLEAR(clear_module_state->__pyx_tuple__239);
-  Py_CLEAR(clear_module_state->__pyx_tuple__241);
-  Py_CLEAR(clear_module_state->__pyx_tuple__243);
   Py_CLEAR(clear_module_state->__pyx_codeobj__19);
   Py_CLEAR(clear_module_state->__pyx_codeobj__22);
   Py_CLEAR(clear_module_state->__pyx_codeobj__23);
@@ -3923,15 +3754,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_codeobj__217);
   Py_CLEAR(clear_module_state->__pyx_codeobj__219);
   Py_CLEAR(clear_module_state->__pyx_codeobj__221);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__226);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__228);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__230);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__232);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__234);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__236);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__238);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__240);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__242);
   return 0;
 }
 #endif
@@ -4005,13 +3827,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_BaseField___to_mongo_db);
   Py_VISIT(traverse_module_state->__pyx_n_s_BaseField___to_mongo_db_expr);
   Py_VISIT(traverse_module_state->__pyx_n_s_BaseModel);
-  Py_VISIT(traverse_module_state->__pyx_n_s_BytesIO);
   Py_VISIT(traverse_module_state->__pyx_kp_u_Can_not_cast);
-  Py_VISIT(traverse_module_state->__pyx_n_s_ClientSession);
-  Py_VISIT(traverse_module_state->__pyx_n_s_Collection);
-  Py_VISIT(traverse_module_state->__pyx_n_s_CorruptGridFile);
-  Py_VISIT(traverse_module_state->__pyx_n_s_Cursor);
-  Py_VISIT(traverse_module_state->__pyx_n_s_CursorNotFound);
   Py_VISIT(traverse_module_state->__pyx_n_s_DBDocument);
   Py_VISIT(traverse_module_state->__pyx_n_s_DBDocument___init);
   Py_VISIT(traverse_module_state->__pyx_n_s_DBDocument___lshift);
@@ -4056,16 +3872,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_ExprBuilder___getattr);
   Py_VISIT(traverse_module_state->__pyx_n_s_ExprBuilder___getitem);
   Py_VISIT(traverse_module_state->__pyx_n_s_ExprBuilder___set_type);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_Extra_chunk_found_expected_d_chu);
-  Py_VISIT(traverse_module_state->__pyx_n_s_FS_GridOutChunkIterator);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_FS_GridOutChunkIterator_2);
-  Py_VISIT(traverse_module_state->__pyx_n_s_FS_GridOutChunkIterator___init);
-  Py_VISIT(traverse_module_state->__pyx_n_s_FS_GridOutChunkIterator___iter);
-  Py_VISIT(traverse_module_state->__pyx_n_s_FS_GridOutChunkIterator__create);
-  Py_VISIT(traverse_module_state->__pyx_n_s_FS_GridOutChunkIterator__next_wi);
-  Py_VISIT(traverse_module_state->__pyx_n_s_FS_GridOutChunkIterator_close);
-  Py_VISIT(traverse_module_state->__pyx_n_s_FS_GridOutChunkIterator_expected);
-  Py_VISIT(traverse_module_state->__pyx_n_s_FS_GridOutChunkIterator_next);
   Py_VISIT(traverse_module_state->__pyx_n_s_Field);
   Py_VISIT(traverse_module_state->__pyx_n_s_Field___add);
   Py_VISIT(traverse_module_state->__pyx_n_s_Field___and);
@@ -4100,25 +3906,18 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_Funcs_not_exists);
   Py_VISIT(traverse_module_state->__pyx_n_s_GridFS);
   Py_VISIT(traverse_module_state->__pyx_n_s_GridFSBucket);
-  Py_VISIT(traverse_module_state->__pyx_n_s_GridOut);
   Py_VISIT(traverse_module_state->__pyx_n_s_IGNORECASE);
   Py_VISIT(traverse_module_state->__pyx_kp_s_Invalid_expression);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_Iterates_over_a_file_s_chunks_us);
   Py_VISIT(traverse_module_state->__pyx_n_s_List);
   Py_VISIT(traverse_module_state->__pyx_kp_s_List_str);
   Py_VISIT(traverse_module_state->__pyx_n_s_Lock);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_Missing_chunk_expected_chunk_d_b);
-  Py_VISIT(traverse_module_state->__pyx_n_s_None);
   Py_VISIT(traverse_module_state->__pyx_kp_s_NoneType);
   Py_VISIT(traverse_module_state->__pyx_n_s_ObjectId);
   Py_VISIT(traverse_module_state->__pyx_kp_u_ObjectId_2);
-  Py_VISIT(traverse_module_state->__pyx_n_s_Optional);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_Optional_ClientSession);
   Py_VISIT(traverse_module_state->__pyx_kp_s_Param_in_Find_one_must_be_cy_doc);
   Py_VISIT(traverse_module_state->__pyx_n_s_Pattern);
   Py_VISIT(traverse_module_state->__pyx_kp_u_Please_set_value_for);
   Py_VISIT(traverse_module_state->__pyx_kp_u_Preview_file);
-  Py_VISIT(traverse_module_state->__pyx_n_s_StopIteration);
   Py_VISIT(traverse_module_state->__pyx_kp_u_These_below_fields_are_require);
   Py_VISIT(traverse_module_state->__pyx_kp_u_Thous_can_not_alias_mongodb_expr);
   Py_VISIT(traverse_module_state->__pyx_kp_u_Thous_can_not_sort_stage_with);
@@ -4135,7 +3934,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_kp_u__11);
   Py_VISIT(traverse_module_state->__pyx_n_s__12);
   Py_VISIT(traverse_module_state->__pyx_kp_s__13);
-  Py_VISIT(traverse_module_state->__pyx_kp_b__2);
   Py_VISIT(traverse_module_state->__pyx_kp_s__2);
   Py_VISIT(traverse_module_state->__pyx_n_u__3);
   Py_VISIT(traverse_module_state->__pyx_kp_s__30);
@@ -4166,7 +3964,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_background);
   Py_VISIT(traverse_module_state->__pyx_n_s_bson);
   Py_VISIT(traverse_module_state->__pyx_kp_s_bson_ObjectId);
-  Py_VISIT(traverse_module_state->__pyx_n_s_buffer);
   Py_VISIT(traverse_module_state->__pyx_n_s_bytes);
   Py_VISIT(traverse_module_state->__pyx_n_s_c);
   Py_VISIT(traverse_module_state->__pyx_n_s_cache_index);
@@ -4174,24 +3971,15 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_camel_cache);
   Py_VISIT(traverse_module_state->__pyx_n_s_camel_dict);
   Py_VISIT(traverse_module_state->__pyx_n_s_camel_lock);
-  Py_VISIT(traverse_module_state->__pyx_n_s_ceil);
   Py_VISIT(traverse_module_state->__pyx_n_s_check_constraint);
   Py_VISIT(traverse_module_state->__pyx_n_s_check_map__module);
   Py_VISIT(traverse_module_state->__pyx_n_s_check_map__name);
   Py_VISIT(traverse_module_state->__pyx_n_s_check_name);
-  Py_VISIT(traverse_module_state->__pyx_n_s_chunk);
   Py_VISIT(traverse_module_state->__pyx_n_s_chunkSize);
   Py_VISIT(traverse_module_state->__pyx_n_s_chunk_data);
   Py_VISIT(traverse_module_state->__pyx_n_s_chunk_index);
-  Py_VISIT(traverse_module_state->__pyx_n_s_chunk_iter);
-  Py_VISIT(traverse_module_state->__pyx_n_s_chunk_n);
-  Py_VISIT(traverse_module_state->__pyx_n_s_chunk_number);
   Py_VISIT(traverse_module_state->__pyx_n_s_chunk_size);
-  Py_VISIT(traverse_module_state->__pyx_n_s_chunk_size_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_chunk_size_bytes);
-  Py_VISIT(traverse_module_state->__pyx_n_s_chunks);
-  Py_VISIT(traverse_module_state->__pyx_n_s_chunks_2);
-  Py_VISIT(traverse_module_state->__pyx_n_s_chunks_3);
   Py_VISIT(traverse_module_state->__pyx_n_s_client);
   Py_VISIT(traverse_module_state->__pyx_n_s_cline_in_traceback);
   Py_VISIT(traverse_module_state->__pyx_n_s_close);
@@ -4210,10 +3998,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_count);
   Py_VISIT(traverse_module_state->__pyx_n_s_count_async);
   Py_VISIT(traverse_module_state->__pyx_n_s_count_documents);
-  Py_VISIT(traverse_module_state->__pyx_n_s_create_cursor);
   Py_VISIT(traverse_module_state->__pyx_n_s_create_file);
   Py_VISIT(traverse_module_state->__pyx_n_s_create_index);
-  Py_VISIT(traverse_module_state->__pyx_n_s_cursor);
   Py_VISIT(traverse_module_state->__pyx_n_s_cy_docs_cy_docs_x);
   Py_VISIT(traverse_module_state->__pyx_kp_s_cy_docs_cy_docs_x_py);
   Py_VISIT(traverse_module_state->__pyx_n_s_d);
@@ -4253,8 +4039,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_exists_2);
   Py_VISIT(traverse_module_state->__pyx_kp_u_exists_require_cy_docs_fields_fi);
   Py_VISIT(traverse_module_state->__pyx_n_s_exit);
-  Py_VISIT(traverse_module_state->__pyx_n_s_expected_chunk_length);
-  Py_VISIT(traverse_module_state->__pyx_n_s_expected_length);
   Py_VISIT(traverse_module_state->__pyx_n_s_expr);
   Py_VISIT(traverse_module_state->__pyx_n_s_expr_2);
   Py_VISIT(traverse_module_state->__pyx_n_u_f);
@@ -4301,10 +4085,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_getfile);
   Py_VISIT(traverse_module_state->__pyx_n_s_getitem);
   Py_VISIT(traverse_module_state->__pyx_n_s_gfs);
-  Py_VISIT(traverse_module_state->__pyx_n_s_grid_out);
   Py_VISIT(traverse_module_state->__pyx_n_s_gridfs);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_gridfs_GridOut);
-  Py_VISIT(traverse_module_state->__pyx_n_s_gridfs_errors);
   Py_VISIT(traverse_module_state->__pyx_kp_s_gt);
   Py_VISIT(traverse_module_state->__pyx_n_s_gt_2);
   Py_VISIT(traverse_module_state->__pyx_kp_s_gte);
@@ -4332,7 +4113,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_instance);
   Py_VISIT(traverse_module_state->__pyx_n_s_int);
   Py_VISIT(traverse_module_state->__pyx_n_s_invert);
-  Py_VISIT(traverse_module_state->__pyx_n_s_io);
   Py_VISIT(traverse_module_state->__pyx_n_s_is_not_null);
   Py_VISIT(traverse_module_state->__pyx_n_s_is_null);
   Py_VISIT(traverse_module_state->__pyx_n_s_isoformat);
@@ -4350,7 +4130,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_len);
   Py_VISIT(traverse_module_state->__pyx_n_s_len_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_length);
-  Py_VISIT(traverse_module_state->__pyx_n_s_length_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_like);
   Py_VISIT(traverse_module_state->__pyx_kp_s_limit);
   Py_VISIT(traverse_module_state->__pyx_n_s_limit_2);
@@ -4364,7 +4143,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_main);
   Py_VISIT(traverse_module_state->__pyx_kp_s_match);
   Py_VISIT(traverse_module_state->__pyx_n_s_match_2);
-  Py_VISIT(traverse_module_state->__pyx_n_s_math);
   Py_VISIT(traverse_module_state->__pyx_n_s_matmul);
   Py_VISIT(traverse_module_state->__pyx_n_s_metaclass);
   Py_VISIT(traverse_module_state->__pyx_kp_s_mod);
@@ -4385,15 +4163,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_ne_3);
   Py_VISIT(traverse_module_state->__pyx_n_s_new);
   Py_VISIT(traverse_module_state->__pyx_n_s_new_file);
-  Py_VISIT(traverse_module_state->__pyx_n_s_next);
-  Py_VISIT(traverse_module_state->__pyx_n_s_next_2);
-  Py_VISIT(traverse_module_state->__pyx_n_s_next_chunk);
-  Py_VISIT(traverse_module_state->__pyx_n_s_next_chunk_2);
-  Py_VISIT(traverse_module_state->__pyx_n_s_next_with_retry);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_no_chunk_d);
   Py_VISIT(traverse_module_state->__pyx_kp_s_not);
   Py_VISIT(traverse_module_state->__pyx_n_s_not_exists);
-  Py_VISIT(traverse_module_state->__pyx_n_s_num_chunks);
   Py_VISIT(traverse_module_state->__pyx_n_s_obj);
   Py_VISIT(traverse_module_state->__pyx_n_s_object);
   Py_VISIT(traverse_module_state->__pyx_n_s_objectid);
@@ -4410,7 +4181,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_pattern);
   Py_VISIT(traverse_module_state->__pyx_n_s_pipeline);
   Py_VISIT(traverse_module_state->__pyx_n_s_pos);
-  Py_VISIT(traverse_module_state->__pyx_n_s_position);
   Py_VISIT(traverse_module_state->__pyx_kp_s_pow);
   Py_VISIT(traverse_module_state->__pyx_n_s_pow_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_power);
@@ -4422,27 +4192,18 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_kp_s_pydantic_BaseModel);
   Py_VISIT(traverse_module_state->__pyx_n_s_pymongo);
   Py_VISIT(traverse_module_state->__pyx_kp_s_pymongo_MongoClient);
-  Py_VISIT(traverse_module_state->__pyx_n_s_pymongo_client_session);
-  Py_VISIT(traverse_module_state->__pyx_n_s_pymongo_collection);
   Py_VISIT(traverse_module_state->__pyx_kp_s_pymongo_collection_Collection);
-  Py_VISIT(traverse_module_state->__pyx_n_s_pymongo_cursor);
-  Py_VISIT(traverse_module_state->__pyx_n_s_pymongo_errors);
   Py_VISIT(traverse_module_state->__pyx_n_s_pymongo_mongo_client);
   Py_VISIT(traverse_module_state->__pyx_kp_s_pymongo_mongo_client_MongoClient);
   Py_VISIT(traverse_module_state->__pyx_n_s_qualname);
   Py_VISIT(traverse_module_state->__pyx_n_s_range);
   Py_VISIT(traverse_module_state->__pyx_n_s_re);
-  Py_VISIT(traverse_module_state->__pyx_n_s_read);
-  Py_VISIT(traverse_module_state->__pyx_n_s_read_grid_fs_file);
-  Py_VISIT(traverse_module_state->__pyx_n_s_readchunk);
   Py_VISIT(traverse_module_state->__pyx_n_s_real);
-  Py_VISIT(traverse_module_state->__pyx_n_s_received);
   Py_VISIT(traverse_module_state->__pyx_n_s_reduce);
   Py_VISIT(traverse_module_state->__pyx_n_s_reduce_type);
   Py_VISIT(traverse_module_state->__pyx_kp_s_regex);
   Py_VISIT(traverse_module_state->__pyx_n_s_rel_file_path);
   Py_VISIT(traverse_module_state->__pyx_n_s_release);
-  Py_VISIT(traverse_module_state->__pyx_n_s_remainder);
   Py_VISIT(traverse_module_state->__pyx_n_s_repr);
   Py_VISIT(traverse_module_state->__pyx_n_s_require_fields);
   Py_VISIT(traverse_module_state->__pyx_n_s_ret);
@@ -4451,17 +4212,13 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_ret_pipe);
   Py_VISIT(traverse_module_state->__pyx_n_s_return);
   Py_VISIT(traverse_module_state->__pyx_n_s_rshift);
-  Py_VISIT(traverse_module_state->__pyx_n_s_seek);
   Py_VISIT(traverse_module_state->__pyx_n_s_self);
   Py_VISIT(traverse_module_state->__pyx_n_s_send);
-  Py_VISIT(traverse_module_state->__pyx_n_s_session);
-  Py_VISIT(traverse_module_state->__pyx_n_s_session_2);
   Py_VISIT(traverse_module_state->__pyx_kp_s_set);
   Py_VISIT(traverse_module_state->__pyx_n_s_set_check);
   Py_VISIT(traverse_module_state->__pyx_n_s_set_type);
   Py_VISIT(traverse_module_state->__pyx_n_s_setattr);
   Py_VISIT(traverse_module_state->__pyx_n_s_setitem);
-  Py_VISIT(traverse_module_state->__pyx_n_s_size);
   Py_VISIT(traverse_module_state->__pyx_kp_s_skip);
   Py_VISIT(traverse_module_state->__pyx_n_s_skip_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_sort);
@@ -4479,7 +4236,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_kp_s_sub);
   Py_VISIT(traverse_module_state->__pyx_n_s_sub_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_super);
-  Py_VISIT(traverse_module_state->__pyx_n_s_tell);
   Py_VISIT(traverse_module_state->__pyx_n_s_test);
   Py_VISIT(traverse_module_state->__pyx_n_s_threading);
   Py_VISIT(traverse_module_state->__pyx_n_s_throw);
@@ -4491,8 +4247,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_to_mongo_db_expr);
   Py_VISIT(traverse_module_state->__pyx_n_s_to_pydantic);
   Py_VISIT(traverse_module_state->__pyx_n_s_truediv);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_truncated_chunk);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_truncated_chunk_d_expected_chunk);
   Py_VISIT(traverse_module_state->__pyx_n_s_type);
   Py_VISIT(traverse_module_state->__pyx_n_s_typing);
   Py_VISIT(traverse_module_state->__pyx_kp_s_typing_Union);
@@ -4509,7 +4263,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_kp_u_was_not_found_in);
   Py_VISIT(traverse_module_state->__pyx_kp_u_was_not_found_in_2);
   Py_VISIT(traverse_module_state->__pyx_n_s_wrapper);
-  Py_VISIT(traverse_module_state->__pyx_n_s_write);
   Py_VISIT(traverse_module_state->__pyx_n_s_x);
   Py_VISIT(traverse_module_state->__pyx_n_s_y);
   Py_VISIT(traverse_module_state->__pyx_int_0);
@@ -4636,17 +4389,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_tuple__220);
   Py_VISIT(traverse_module_state->__pyx_tuple__222);
   Py_VISIT(traverse_module_state->__pyx_tuple__223);
-  Py_VISIT(traverse_module_state->__pyx_tuple__224);
-  Py_VISIT(traverse_module_state->__pyx_tuple__225);
-  Py_VISIT(traverse_module_state->__pyx_tuple__227);
-  Py_VISIT(traverse_module_state->__pyx_tuple__229);
-  Py_VISIT(traverse_module_state->__pyx_tuple__231);
-  Py_VISIT(traverse_module_state->__pyx_tuple__233);
-  Py_VISIT(traverse_module_state->__pyx_tuple__235);
-  Py_VISIT(traverse_module_state->__pyx_tuple__237);
-  Py_VISIT(traverse_module_state->__pyx_tuple__239);
-  Py_VISIT(traverse_module_state->__pyx_tuple__241);
-  Py_VISIT(traverse_module_state->__pyx_tuple__243);
   Py_VISIT(traverse_module_state->__pyx_codeobj__19);
   Py_VISIT(traverse_module_state->__pyx_codeobj__22);
   Py_VISIT(traverse_module_state->__pyx_codeobj__23);
@@ -4742,15 +4484,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_codeobj__217);
   Py_VISIT(traverse_module_state->__pyx_codeobj__219);
   Py_VISIT(traverse_module_state->__pyx_codeobj__221);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__226);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__228);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__230);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__232);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__234);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__236);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__238);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__240);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__242);
   return 0;
 }
 #endif
@@ -4824,13 +4557,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_BaseField___to_mongo_db __pyx_mstate_global->__pyx_n_s_BaseField___to_mongo_db
 #define __pyx_n_s_BaseField___to_mongo_db_expr __pyx_mstate_global->__pyx_n_s_BaseField___to_mongo_db_expr
 #define __pyx_n_s_BaseModel __pyx_mstate_global->__pyx_n_s_BaseModel
-#define __pyx_n_s_BytesIO __pyx_mstate_global->__pyx_n_s_BytesIO
 #define __pyx_kp_u_Can_not_cast __pyx_mstate_global->__pyx_kp_u_Can_not_cast
-#define __pyx_n_s_ClientSession __pyx_mstate_global->__pyx_n_s_ClientSession
-#define __pyx_n_s_Collection __pyx_mstate_global->__pyx_n_s_Collection
-#define __pyx_n_s_CorruptGridFile __pyx_mstate_global->__pyx_n_s_CorruptGridFile
-#define __pyx_n_s_Cursor __pyx_mstate_global->__pyx_n_s_Cursor
-#define __pyx_n_s_CursorNotFound __pyx_mstate_global->__pyx_n_s_CursorNotFound
 #define __pyx_n_s_DBDocument __pyx_mstate_global->__pyx_n_s_DBDocument
 #define __pyx_n_s_DBDocument___init __pyx_mstate_global->__pyx_n_s_DBDocument___init
 #define __pyx_n_s_DBDocument___lshift __pyx_mstate_global->__pyx_n_s_DBDocument___lshift
@@ -4875,16 +4602,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_ExprBuilder___getattr __pyx_mstate_global->__pyx_n_s_ExprBuilder___getattr
 #define __pyx_n_s_ExprBuilder___getitem __pyx_mstate_global->__pyx_n_s_ExprBuilder___getitem
 #define __pyx_n_s_ExprBuilder___set_type __pyx_mstate_global->__pyx_n_s_ExprBuilder___set_type
-#define __pyx_kp_s_Extra_chunk_found_expected_d_chu __pyx_mstate_global->__pyx_kp_s_Extra_chunk_found_expected_d_chu
-#define __pyx_n_s_FS_GridOutChunkIterator __pyx_mstate_global->__pyx_n_s_FS_GridOutChunkIterator
-#define __pyx_kp_s_FS_GridOutChunkIterator_2 __pyx_mstate_global->__pyx_kp_s_FS_GridOutChunkIterator_2
-#define __pyx_n_s_FS_GridOutChunkIterator___init __pyx_mstate_global->__pyx_n_s_FS_GridOutChunkIterator___init
-#define __pyx_n_s_FS_GridOutChunkIterator___iter __pyx_mstate_global->__pyx_n_s_FS_GridOutChunkIterator___iter
-#define __pyx_n_s_FS_GridOutChunkIterator__create __pyx_mstate_global->__pyx_n_s_FS_GridOutChunkIterator__create
-#define __pyx_n_s_FS_GridOutChunkIterator__next_wi __pyx_mstate_global->__pyx_n_s_FS_GridOutChunkIterator__next_wi
-#define __pyx_n_s_FS_GridOutChunkIterator_close __pyx_mstate_global->__pyx_n_s_FS_GridOutChunkIterator_close
-#define __pyx_n_s_FS_GridOutChunkIterator_expected __pyx_mstate_global->__pyx_n_s_FS_GridOutChunkIterator_expected
-#define __pyx_n_s_FS_GridOutChunkIterator_next __pyx_mstate_global->__pyx_n_s_FS_GridOutChunkIterator_next
 #define __pyx_n_s_Field __pyx_mstate_global->__pyx_n_s_Field
 #define __pyx_n_s_Field___add __pyx_mstate_global->__pyx_n_s_Field___add
 #define __pyx_n_s_Field___and __pyx_mstate_global->__pyx_n_s_Field___and
@@ -4919,25 +4636,18 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_Funcs_not_exists __pyx_mstate_global->__pyx_n_s_Funcs_not_exists
 #define __pyx_n_s_GridFS __pyx_mstate_global->__pyx_n_s_GridFS
 #define __pyx_n_s_GridFSBucket __pyx_mstate_global->__pyx_n_s_GridFSBucket
-#define __pyx_n_s_GridOut __pyx_mstate_global->__pyx_n_s_GridOut
 #define __pyx_n_s_IGNORECASE __pyx_mstate_global->__pyx_n_s_IGNORECASE
 #define __pyx_kp_s_Invalid_expression __pyx_mstate_global->__pyx_kp_s_Invalid_expression
-#define __pyx_kp_s_Iterates_over_a_file_s_chunks_us __pyx_mstate_global->__pyx_kp_s_Iterates_over_a_file_s_chunks_us
 #define __pyx_n_s_List __pyx_mstate_global->__pyx_n_s_List
 #define __pyx_kp_s_List_str __pyx_mstate_global->__pyx_kp_s_List_str
 #define __pyx_n_s_Lock __pyx_mstate_global->__pyx_n_s_Lock
-#define __pyx_kp_s_Missing_chunk_expected_chunk_d_b __pyx_mstate_global->__pyx_kp_s_Missing_chunk_expected_chunk_d_b
-#define __pyx_n_s_None __pyx_mstate_global->__pyx_n_s_None
 #define __pyx_kp_s_NoneType __pyx_mstate_global->__pyx_kp_s_NoneType
 #define __pyx_n_s_ObjectId __pyx_mstate_global->__pyx_n_s_ObjectId
 #define __pyx_kp_u_ObjectId_2 __pyx_mstate_global->__pyx_kp_u_ObjectId_2
-#define __pyx_n_s_Optional __pyx_mstate_global->__pyx_n_s_Optional
-#define __pyx_kp_s_Optional_ClientSession __pyx_mstate_global->__pyx_kp_s_Optional_ClientSession
 #define __pyx_kp_s_Param_in_Find_one_must_be_cy_doc __pyx_mstate_global->__pyx_kp_s_Param_in_Find_one_must_be_cy_doc
 #define __pyx_n_s_Pattern __pyx_mstate_global->__pyx_n_s_Pattern
 #define __pyx_kp_u_Please_set_value_for __pyx_mstate_global->__pyx_kp_u_Please_set_value_for
 #define __pyx_kp_u_Preview_file __pyx_mstate_global->__pyx_kp_u_Preview_file
-#define __pyx_n_s_StopIteration __pyx_mstate_global->__pyx_n_s_StopIteration
 #define __pyx_kp_u_These_below_fields_are_require __pyx_mstate_global->__pyx_kp_u_These_below_fields_are_require
 #define __pyx_kp_u_Thous_can_not_alias_mongodb_expr __pyx_mstate_global->__pyx_kp_u_Thous_can_not_alias_mongodb_expr
 #define __pyx_kp_u_Thous_can_not_sort_stage_with __pyx_mstate_global->__pyx_kp_u_Thous_can_not_sort_stage_with
@@ -4954,7 +4664,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_kp_u__11 __pyx_mstate_global->__pyx_kp_u__11
 #define __pyx_n_s__12 __pyx_mstate_global->__pyx_n_s__12
 #define __pyx_kp_s__13 __pyx_mstate_global->__pyx_kp_s__13
-#define __pyx_kp_b__2 __pyx_mstate_global->__pyx_kp_b__2
 #define __pyx_kp_s__2 __pyx_mstate_global->__pyx_kp_s__2
 #define __pyx_n_u__3 __pyx_mstate_global->__pyx_n_u__3
 #define __pyx_kp_s__30 __pyx_mstate_global->__pyx_kp_s__30
@@ -4985,7 +4694,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_background __pyx_mstate_global->__pyx_n_s_background
 #define __pyx_n_s_bson __pyx_mstate_global->__pyx_n_s_bson
 #define __pyx_kp_s_bson_ObjectId __pyx_mstate_global->__pyx_kp_s_bson_ObjectId
-#define __pyx_n_s_buffer __pyx_mstate_global->__pyx_n_s_buffer
 #define __pyx_n_s_bytes __pyx_mstate_global->__pyx_n_s_bytes
 #define __pyx_n_s_c __pyx_mstate_global->__pyx_n_s_c
 #define __pyx_n_s_cache_index __pyx_mstate_global->__pyx_n_s_cache_index
@@ -4993,24 +4701,15 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_camel_cache __pyx_mstate_global->__pyx_n_s_camel_cache
 #define __pyx_n_s_camel_dict __pyx_mstate_global->__pyx_n_s_camel_dict
 #define __pyx_n_s_camel_lock __pyx_mstate_global->__pyx_n_s_camel_lock
-#define __pyx_n_s_ceil __pyx_mstate_global->__pyx_n_s_ceil
 #define __pyx_n_s_check_constraint __pyx_mstate_global->__pyx_n_s_check_constraint
 #define __pyx_n_s_check_map__module __pyx_mstate_global->__pyx_n_s_check_map__module
 #define __pyx_n_s_check_map__name __pyx_mstate_global->__pyx_n_s_check_map__name
 #define __pyx_n_s_check_name __pyx_mstate_global->__pyx_n_s_check_name
-#define __pyx_n_s_chunk __pyx_mstate_global->__pyx_n_s_chunk
 #define __pyx_n_s_chunkSize __pyx_mstate_global->__pyx_n_s_chunkSize
 #define __pyx_n_s_chunk_data __pyx_mstate_global->__pyx_n_s_chunk_data
 #define __pyx_n_s_chunk_index __pyx_mstate_global->__pyx_n_s_chunk_index
-#define __pyx_n_s_chunk_iter __pyx_mstate_global->__pyx_n_s_chunk_iter
-#define __pyx_n_s_chunk_n __pyx_mstate_global->__pyx_n_s_chunk_n
-#define __pyx_n_s_chunk_number __pyx_mstate_global->__pyx_n_s_chunk_number
 #define __pyx_n_s_chunk_size __pyx_mstate_global->__pyx_n_s_chunk_size
-#define __pyx_n_s_chunk_size_2 __pyx_mstate_global->__pyx_n_s_chunk_size_2
 #define __pyx_n_s_chunk_size_bytes __pyx_mstate_global->__pyx_n_s_chunk_size_bytes
-#define __pyx_n_s_chunks __pyx_mstate_global->__pyx_n_s_chunks
-#define __pyx_n_s_chunks_2 __pyx_mstate_global->__pyx_n_s_chunks_2
-#define __pyx_n_s_chunks_3 __pyx_mstate_global->__pyx_n_s_chunks_3
 #define __pyx_n_s_client __pyx_mstate_global->__pyx_n_s_client
 #define __pyx_n_s_cline_in_traceback __pyx_mstate_global->__pyx_n_s_cline_in_traceback
 #define __pyx_n_s_close __pyx_mstate_global->__pyx_n_s_close
@@ -5029,10 +4728,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_count __pyx_mstate_global->__pyx_n_s_count
 #define __pyx_n_s_count_async __pyx_mstate_global->__pyx_n_s_count_async
 #define __pyx_n_s_count_documents __pyx_mstate_global->__pyx_n_s_count_documents
-#define __pyx_n_s_create_cursor __pyx_mstate_global->__pyx_n_s_create_cursor
 #define __pyx_n_s_create_file __pyx_mstate_global->__pyx_n_s_create_file
 #define __pyx_n_s_create_index __pyx_mstate_global->__pyx_n_s_create_index
-#define __pyx_n_s_cursor __pyx_mstate_global->__pyx_n_s_cursor
 #define __pyx_n_s_cy_docs_cy_docs_x __pyx_mstate_global->__pyx_n_s_cy_docs_cy_docs_x
 #define __pyx_kp_s_cy_docs_cy_docs_x_py __pyx_mstate_global->__pyx_kp_s_cy_docs_cy_docs_x_py
 #define __pyx_n_s_d __pyx_mstate_global->__pyx_n_s_d
@@ -5072,8 +4769,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_exists_2 __pyx_mstate_global->__pyx_n_s_exists_2
 #define __pyx_kp_u_exists_require_cy_docs_fields_fi __pyx_mstate_global->__pyx_kp_u_exists_require_cy_docs_fields_fi
 #define __pyx_n_s_exit __pyx_mstate_global->__pyx_n_s_exit
-#define __pyx_n_s_expected_chunk_length __pyx_mstate_global->__pyx_n_s_expected_chunk_length
-#define __pyx_n_s_expected_length __pyx_mstate_global->__pyx_n_s_expected_length
 #define __pyx_n_s_expr __pyx_mstate_global->__pyx_n_s_expr
 #define __pyx_n_s_expr_2 __pyx_mstate_global->__pyx_n_s_expr_2
 #define __pyx_n_u_f __pyx_mstate_global->__pyx_n_u_f
@@ -5120,10 +4815,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_getfile __pyx_mstate_global->__pyx_n_s_getfile
 #define __pyx_n_s_getitem __pyx_mstate_global->__pyx_n_s_getitem
 #define __pyx_n_s_gfs __pyx_mstate_global->__pyx_n_s_gfs
-#define __pyx_n_s_grid_out __pyx_mstate_global->__pyx_n_s_grid_out
 #define __pyx_n_s_gridfs __pyx_mstate_global->__pyx_n_s_gridfs
-#define __pyx_kp_s_gridfs_GridOut __pyx_mstate_global->__pyx_kp_s_gridfs_GridOut
-#define __pyx_n_s_gridfs_errors __pyx_mstate_global->__pyx_n_s_gridfs_errors
 #define __pyx_kp_s_gt __pyx_mstate_global->__pyx_kp_s_gt
 #define __pyx_n_s_gt_2 __pyx_mstate_global->__pyx_n_s_gt_2
 #define __pyx_kp_s_gte __pyx_mstate_global->__pyx_kp_s_gte
@@ -5151,7 +4843,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_instance __pyx_mstate_global->__pyx_n_s_instance
 #define __pyx_n_s_int __pyx_mstate_global->__pyx_n_s_int
 #define __pyx_n_s_invert __pyx_mstate_global->__pyx_n_s_invert
-#define __pyx_n_s_io __pyx_mstate_global->__pyx_n_s_io
 #define __pyx_n_s_is_not_null __pyx_mstate_global->__pyx_n_s_is_not_null
 #define __pyx_n_s_is_null __pyx_mstate_global->__pyx_n_s_is_null
 #define __pyx_n_s_isoformat __pyx_mstate_global->__pyx_n_s_isoformat
@@ -5169,7 +4860,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_len __pyx_mstate_global->__pyx_n_s_len
 #define __pyx_n_s_len_2 __pyx_mstate_global->__pyx_n_s_len_2
 #define __pyx_n_s_length __pyx_mstate_global->__pyx_n_s_length
-#define __pyx_n_s_length_2 __pyx_mstate_global->__pyx_n_s_length_2
 #define __pyx_n_s_like __pyx_mstate_global->__pyx_n_s_like
 #define __pyx_kp_s_limit __pyx_mstate_global->__pyx_kp_s_limit
 #define __pyx_n_s_limit_2 __pyx_mstate_global->__pyx_n_s_limit_2
@@ -5183,7 +4873,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_main __pyx_mstate_global->__pyx_n_s_main
 #define __pyx_kp_s_match __pyx_mstate_global->__pyx_kp_s_match
 #define __pyx_n_s_match_2 __pyx_mstate_global->__pyx_n_s_match_2
-#define __pyx_n_s_math __pyx_mstate_global->__pyx_n_s_math
 #define __pyx_n_s_matmul __pyx_mstate_global->__pyx_n_s_matmul
 #define __pyx_n_s_metaclass __pyx_mstate_global->__pyx_n_s_metaclass
 #define __pyx_kp_s_mod __pyx_mstate_global->__pyx_kp_s_mod
@@ -5204,15 +4893,8 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_ne_3 __pyx_mstate_global->__pyx_n_s_ne_3
 #define __pyx_n_s_new __pyx_mstate_global->__pyx_n_s_new
 #define __pyx_n_s_new_file __pyx_mstate_global->__pyx_n_s_new_file
-#define __pyx_n_s_next __pyx_mstate_global->__pyx_n_s_next
-#define __pyx_n_s_next_2 __pyx_mstate_global->__pyx_n_s_next_2
-#define __pyx_n_s_next_chunk __pyx_mstate_global->__pyx_n_s_next_chunk
-#define __pyx_n_s_next_chunk_2 __pyx_mstate_global->__pyx_n_s_next_chunk_2
-#define __pyx_n_s_next_with_retry __pyx_mstate_global->__pyx_n_s_next_with_retry
-#define __pyx_kp_s_no_chunk_d __pyx_mstate_global->__pyx_kp_s_no_chunk_d
 #define __pyx_kp_s_not __pyx_mstate_global->__pyx_kp_s_not
 #define __pyx_n_s_not_exists __pyx_mstate_global->__pyx_n_s_not_exists
-#define __pyx_n_s_num_chunks __pyx_mstate_global->__pyx_n_s_num_chunks
 #define __pyx_n_s_obj __pyx_mstate_global->__pyx_n_s_obj
 #define __pyx_n_s_object __pyx_mstate_global->__pyx_n_s_object
 #define __pyx_n_s_objectid __pyx_mstate_global->__pyx_n_s_objectid
@@ -5229,7 +4911,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_pattern __pyx_mstate_global->__pyx_n_s_pattern
 #define __pyx_n_s_pipeline __pyx_mstate_global->__pyx_n_s_pipeline
 #define __pyx_n_s_pos __pyx_mstate_global->__pyx_n_s_pos
-#define __pyx_n_s_position __pyx_mstate_global->__pyx_n_s_position
 #define __pyx_kp_s_pow __pyx_mstate_global->__pyx_kp_s_pow
 #define __pyx_n_s_pow_2 __pyx_mstate_global->__pyx_n_s_pow_2
 #define __pyx_n_s_power __pyx_mstate_global->__pyx_n_s_power
@@ -5241,27 +4922,18 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_kp_s_pydantic_BaseModel __pyx_mstate_global->__pyx_kp_s_pydantic_BaseModel
 #define __pyx_n_s_pymongo __pyx_mstate_global->__pyx_n_s_pymongo
 #define __pyx_kp_s_pymongo_MongoClient __pyx_mstate_global->__pyx_kp_s_pymongo_MongoClient
-#define __pyx_n_s_pymongo_client_session __pyx_mstate_global->__pyx_n_s_pymongo_client_session
-#define __pyx_n_s_pymongo_collection __pyx_mstate_global->__pyx_n_s_pymongo_collection
 #define __pyx_kp_s_pymongo_collection_Collection __pyx_mstate_global->__pyx_kp_s_pymongo_collection_Collection
-#define __pyx_n_s_pymongo_cursor __pyx_mstate_global->__pyx_n_s_pymongo_cursor
-#define __pyx_n_s_pymongo_errors __pyx_mstate_global->__pyx_n_s_pymongo_errors
 #define __pyx_n_s_pymongo_mongo_client __pyx_mstate_global->__pyx_n_s_pymongo_mongo_client
 #define __pyx_kp_s_pymongo_mongo_client_MongoClient __pyx_mstate_global->__pyx_kp_s_pymongo_mongo_client_MongoClient
 #define __pyx_n_s_qualname __pyx_mstate_global->__pyx_n_s_qualname
 #define __pyx_n_s_range __pyx_mstate_global->__pyx_n_s_range
 #define __pyx_n_s_re __pyx_mstate_global->__pyx_n_s_re
-#define __pyx_n_s_read __pyx_mstate_global->__pyx_n_s_read
-#define __pyx_n_s_read_grid_fs_file __pyx_mstate_global->__pyx_n_s_read_grid_fs_file
-#define __pyx_n_s_readchunk __pyx_mstate_global->__pyx_n_s_readchunk
 #define __pyx_n_s_real __pyx_mstate_global->__pyx_n_s_real
-#define __pyx_n_s_received __pyx_mstate_global->__pyx_n_s_received
 #define __pyx_n_s_reduce __pyx_mstate_global->__pyx_n_s_reduce
 #define __pyx_n_s_reduce_type __pyx_mstate_global->__pyx_n_s_reduce_type
 #define __pyx_kp_s_regex __pyx_mstate_global->__pyx_kp_s_regex
 #define __pyx_n_s_rel_file_path __pyx_mstate_global->__pyx_n_s_rel_file_path
 #define __pyx_n_s_release __pyx_mstate_global->__pyx_n_s_release
-#define __pyx_n_s_remainder __pyx_mstate_global->__pyx_n_s_remainder
 #define __pyx_n_s_repr __pyx_mstate_global->__pyx_n_s_repr
 #define __pyx_n_s_require_fields __pyx_mstate_global->__pyx_n_s_require_fields
 #define __pyx_n_s_ret __pyx_mstate_global->__pyx_n_s_ret
@@ -5270,17 +4942,13 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_ret_pipe __pyx_mstate_global->__pyx_n_s_ret_pipe
 #define __pyx_n_s_return __pyx_mstate_global->__pyx_n_s_return
 #define __pyx_n_s_rshift __pyx_mstate_global->__pyx_n_s_rshift
-#define __pyx_n_s_seek __pyx_mstate_global->__pyx_n_s_seek
 #define __pyx_n_s_self __pyx_mstate_global->__pyx_n_s_self
 #define __pyx_n_s_send __pyx_mstate_global->__pyx_n_s_send
-#define __pyx_n_s_session __pyx_mstate_global->__pyx_n_s_session
-#define __pyx_n_s_session_2 __pyx_mstate_global->__pyx_n_s_session_2
 #define __pyx_kp_s_set __pyx_mstate_global->__pyx_kp_s_set
 #define __pyx_n_s_set_check __pyx_mstate_global->__pyx_n_s_set_check
 #define __pyx_n_s_set_type __pyx_mstate_global->__pyx_n_s_set_type
 #define __pyx_n_s_setattr __pyx_mstate_global->__pyx_n_s_setattr
 #define __pyx_n_s_setitem __pyx_mstate_global->__pyx_n_s_setitem
-#define __pyx_n_s_size __pyx_mstate_global->__pyx_n_s_size
 #define __pyx_kp_s_skip __pyx_mstate_global->__pyx_kp_s_skip
 #define __pyx_n_s_skip_2 __pyx_mstate_global->__pyx_n_s_skip_2
 #define __pyx_n_s_sort __pyx_mstate_global->__pyx_n_s_sort
@@ -5298,7 +4966,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_kp_s_sub __pyx_mstate_global->__pyx_kp_s_sub
 #define __pyx_n_s_sub_2 __pyx_mstate_global->__pyx_n_s_sub_2
 #define __pyx_n_s_super __pyx_mstate_global->__pyx_n_s_super
-#define __pyx_n_s_tell __pyx_mstate_global->__pyx_n_s_tell
 #define __pyx_n_s_test __pyx_mstate_global->__pyx_n_s_test
 #define __pyx_n_s_threading __pyx_mstate_global->__pyx_n_s_threading
 #define __pyx_n_s_throw __pyx_mstate_global->__pyx_n_s_throw
@@ -5310,8 +4977,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_to_mongo_db_expr __pyx_mstate_global->__pyx_n_s_to_mongo_db_expr
 #define __pyx_n_s_to_pydantic __pyx_mstate_global->__pyx_n_s_to_pydantic
 #define __pyx_n_s_truediv __pyx_mstate_global->__pyx_n_s_truediv
-#define __pyx_kp_s_truncated_chunk __pyx_mstate_global->__pyx_kp_s_truncated_chunk
-#define __pyx_kp_s_truncated_chunk_d_expected_chunk __pyx_mstate_global->__pyx_kp_s_truncated_chunk_d_expected_chunk
 #define __pyx_n_s_type __pyx_mstate_global->__pyx_n_s_type
 #define __pyx_n_s_typing __pyx_mstate_global->__pyx_n_s_typing
 #define __pyx_kp_s_typing_Union __pyx_mstate_global->__pyx_kp_s_typing_Union
@@ -5328,7 +4993,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_kp_u_was_not_found_in __pyx_mstate_global->__pyx_kp_u_was_not_found_in
 #define __pyx_kp_u_was_not_found_in_2 __pyx_mstate_global->__pyx_kp_u_was_not_found_in_2
 #define __pyx_n_s_wrapper __pyx_mstate_global->__pyx_n_s_wrapper
-#define __pyx_n_s_write __pyx_mstate_global->__pyx_n_s_write
 #define __pyx_n_s_x __pyx_mstate_global->__pyx_n_s_x
 #define __pyx_n_s_y __pyx_mstate_global->__pyx_n_s_y
 #define __pyx_int_0 __pyx_mstate_global->__pyx_int_0
@@ -5455,17 +5119,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_tuple__220 __pyx_mstate_global->__pyx_tuple__220
 #define __pyx_tuple__222 __pyx_mstate_global->__pyx_tuple__222
 #define __pyx_tuple__223 __pyx_mstate_global->__pyx_tuple__223
-#define __pyx_tuple__224 __pyx_mstate_global->__pyx_tuple__224
-#define __pyx_tuple__225 __pyx_mstate_global->__pyx_tuple__225
-#define __pyx_tuple__227 __pyx_mstate_global->__pyx_tuple__227
-#define __pyx_tuple__229 __pyx_mstate_global->__pyx_tuple__229
-#define __pyx_tuple__231 __pyx_mstate_global->__pyx_tuple__231
-#define __pyx_tuple__233 __pyx_mstate_global->__pyx_tuple__233
-#define __pyx_tuple__235 __pyx_mstate_global->__pyx_tuple__235
-#define __pyx_tuple__237 __pyx_mstate_global->__pyx_tuple__237
-#define __pyx_tuple__239 __pyx_mstate_global->__pyx_tuple__239
-#define __pyx_tuple__241 __pyx_mstate_global->__pyx_tuple__241
-#define __pyx_tuple__243 __pyx_mstate_global->__pyx_tuple__243
 #define __pyx_codeobj__19 __pyx_mstate_global->__pyx_codeobj__19
 #define __pyx_codeobj__22 __pyx_mstate_global->__pyx_codeobj__22
 #define __pyx_codeobj__23 __pyx_mstate_global->__pyx_codeobj__23
@@ -5561,15 +5214,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_codeobj__217 __pyx_mstate_global->__pyx_codeobj__217
 #define __pyx_codeobj__219 __pyx_mstate_global->__pyx_codeobj__219
 #define __pyx_codeobj__221 __pyx_mstate_global->__pyx_codeobj__221
-#define __pyx_codeobj__226 __pyx_mstate_global->__pyx_codeobj__226
-#define __pyx_codeobj__228 __pyx_mstate_global->__pyx_codeobj__228
-#define __pyx_codeobj__230 __pyx_mstate_global->__pyx_codeobj__230
-#define __pyx_codeobj__232 __pyx_mstate_global->__pyx_codeobj__232
-#define __pyx_codeobj__234 __pyx_mstate_global->__pyx_codeobj__234
-#define __pyx_codeobj__236 __pyx_mstate_global->__pyx_codeobj__236
-#define __pyx_codeobj__238 __pyx_mstate_global->__pyx_codeobj__238
-#define __pyx_codeobj__240 __pyx_mstate_global->__pyx_codeobj__240
-#define __pyx_codeobj__242 __pyx_mstate_global->__pyx_codeobj__242
 #endif
 
 /* Module declarations from "cy_docs.cy_docs_x" */
@@ -5599,7 +5243,6 @@ static PyObject *__pyx_builtin_object;
 static PyObject *__pyx_builtin_AttributeError;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_super;
-static PyObject *__pyx_builtin_StopIteration;
 static const char __pyx_k_[] = ")";
 static const char __pyx_k_a[] = "a";
 static const char __pyx_k_b[] = "b";
@@ -5626,7 +5269,6 @@ static const char __pyx_k_fx[] = "fx";
 static const char __pyx_k_ge[] = "__ge__";
 static const char __pyx_k_gt[] = "$gt";
 static const char __pyx_k_id[] = "id";
-static const char __pyx_k_io[] = "io";
 static const char __pyx_k_kw[] = "kw";
 static const char __pyx_k_le[] = "__le__";
 static const char __pyx_k_lt[] = "$lt";
@@ -5668,11 +5310,9 @@ static const char __pyx_k_str[] = "__str__";
 static const char __pyx_k_sub[] = "$sub";
 static const char __pyx_k_List[] = "List";
 static const char __pyx_k_Lock[] = "Lock";
-static const char __pyx_k_None[] = "None";
 static const char __pyx_k_UUID[] = "UUID";
 static const char __pyx_k_args[] = "args";
 static const char __pyx_k_bson[] = "bson";
-static const char __pyx_k_ceil[] = "ceil";
 static const char __pyx_k_coll[] = "coll";
 static const char __pyx_k_data[] = "__data__";
 static const char __pyx_k_desc[] = "desc";
@@ -5694,24 +5334,18 @@ static const char __pyx_k_like[] = "like";
 static const char __pyx_k_lock[] = "__lock__";
 static const char __pyx_k_lt_2[] = "__lt__";
 static const char __pyx_k_main[] = "__main__";
-static const char __pyx_k_math[] = "math";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_ne_2[] = "$ne:";
 static const char __pyx_k_ne_3[] = "__ne__";
-static const char __pyx_k_next[] = "next";
 static const char __pyx_k_or_2[] = "__or__";
 static const char __pyx_k_orig[] = "orig";
-static const char __pyx_k_read[] = "read";
 static const char __pyx_k_real[] = "real";
 static const char __pyx_k_repr[] = "__repr__";
-static const char __pyx_k_seek[] = "seek";
 static const char __pyx_k_self[] = "self";
 static const char __pyx_k_send[] = "send";
-static const char __pyx_k_size[] = "size";
 static const char __pyx_k_skip[] = "$skip";
 static const char __pyx_k_sort[] = "__sort__";
 static const char __pyx_k_spec[] = "__spec__";
-static const char __pyx_k_tell[] = "tell";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_type[] = "type";
 static const char __pyx_k_uuid[] = "uuid";
@@ -5724,7 +5358,6 @@ static const char __pyx_k_alias[] = "__alias__";
 static const char __pyx_k_and_2[] = "__and__";
 static const char __pyx_k_await[] = "__await__";
 static const char __pyx_k_bytes[] = "bytes";
-static const char __pyx_k_chunk[] = "chunk";
 static const char __pyx_k_close[] = "close";
 static const char __pyx_k_cls_2[] = "__cls__";
 static const char __pyx_k_count[] = "count";
@@ -5754,15 +5387,10 @@ static const char __pyx_k_sub_2[] = "__sub__";
 static const char __pyx_k_super[] = "super";
 static const char __pyx_k_throw[] = "throw";
 static const char __pyx_k_value[] = "value";
-static const char __pyx_k_write[] = "write";
-static const char __pyx_k_Cursor[] = "Cursor";
 static const char __pyx_k_GridFS[] = "GridFS";
 static const char __pyx_k_args_2[] = "__args";
-static const char __pyx_k_buffer[] = "__buffer";
-static const char __pyx_k_chunks[] = "chunks";
 static const char __pyx_k_client[] = "client";
 static const char __pyx_k_concat[] = "$concat";
-static const char __pyx_k_cursor[] = "_cursor";
 static const char __pyx_k_data_2[] = "data";
 static const char __pyx_k_delete[] = "delete";
 static const char __pyx_k_dict_2[] = "dict";
@@ -5782,7 +5410,6 @@ static const char __pyx_k_matmul[] = "__matmul__";
 static const char __pyx_k_module[] = "__module__";
 static const char __pyx_k_modulo[] = "modulo";
 static const char __pyx_k_name_2[] = "name";
-static const char __pyx_k_next_2[] = "__next__";
 static const char __pyx_k_object[] = "object";
 static const char __pyx_k_origin[] = "__origin__";
 static const char __pyx_k_reduce[] = "reduce";
@@ -5795,13 +5422,10 @@ static const char __pyx_k_sparse[] = "sparse";
 static const char __pyx_k_typing[] = "typing";
 static const char __pyx_k_unique[] = "unique";
 static const char __pyx_k_update[] = "update";
-static const char __pyx_k_BytesIO[] = "BytesIO";
 static const char __pyx_k_Example[] = ". Example:";
 static const char __pyx_k_Exmaple[] = ". Exmaple ";
-static const char __pyx_k_GridOut[] = "GridOut";
 static const char __pyx_k_Pattern[] = "Pattern";
 static const char __pyx_k_acquire[] = "acquire";
-static const char __pyx_k_chunk_n[] = "chunk_n";
 static const char __pyx_k_compile[] = "compile";
 static const char __pyx_k_context[] = "context";
 static const char __pyx_k_db_name[] = "db_name";
@@ -5823,7 +5447,6 @@ static const char __pyx_k_prepare[] = "__prepare__";
 static const char __pyx_k_project[] = "$project";
 static const char __pyx_k_pymongo[] = "pymongo";
 static const char __pyx_k_release[] = "release";
-static const char __pyx_k_session[] = "session";
 static const char __pyx_k_setattr[] = "__setattr__";
 static const char __pyx_k_setitem[] = "__setitem__";
 static const char __pyx_k_to_list[] = "to_list";
@@ -5835,9 +5458,6 @@ static const char __pyx_k_Document[] = "Document";
 static const char __pyx_k_List_str[] = "List[str]";
 static const char __pyx_k_NoneType[] = ", NoneType]";
 static const char __pyx_k_ObjectId[] = "ObjectId";
-static const char __pyx_k_Optional[] = "Optional";
-static const char __pyx_k_chunks_2[] = "_chunks";
-static const char __pyx_k_chunks_3[] = "__chunks";
 static const char __pyx_k_concat_2[] = "concat";
 static const char __pyx_k_database[] = "database";
 static const char __pyx_k_datetime[] = "datetime";
@@ -5852,20 +5472,16 @@ static const char __pyx_k_filter_2[] = "_filter";
 static const char __pyx_k_find_one[] = "find_one";
 static const char __pyx_k_floordiv[] = "__floordiv__";
 static const char __pyx_k_fs_files[] = "__fs_files__";
-static const char __pyx_k_grid_out[] = "grid_out";
 static const char __pyx_k_hash_key[] = "hash_key";
 static const char __pyx_k_instance[] = "_instance";
-static const char __pyx_k_length_2[] = "_length";
 static const char __pyx_k_multiply[] = "$multiply";
 static const char __pyx_k_my_value[] = "<<my_value";
 static const char __pyx_k_new_file[] = "new_file";
 static const char __pyx_k_objectid[] = "objectid";
 static const char __pyx_k_pipeline[] = "pipeline";
-static const char __pyx_k_position[] = "__position";
 static const char __pyx_k_property[] = " property ";
 static const char __pyx_k_pydantic[] = "pydantic";
 static const char __pyx_k_qualname[] = "__qualname__";
-static const char __pyx_k_received[] = "received";
 static const char __pyx_k_ret_item[] = "ret_item";
 static const char __pyx_k_ret_pipe[] = "ret_pipe";
 static const char __pyx_k_set_type[] = "__set_type__";
@@ -5887,13 +5503,9 @@ static const char __pyx_k_isoformat[] = "isoformat";
 static const char __pyx_k_metaclass[] = "__metaclass__";
 static const char __pyx_k_oprator_2[] = "__oprator__";
 static const char __pyx_k_project_2[] = "project";
-static const char __pyx_k_readchunk[] = "readchunk";
-static const char __pyx_k_remainder[] = "remainder";
 static const char __pyx_k_ret_items[] = "ret_items";
-static const char __pyx_k_session_2[] = "_session";
 static const char __pyx_k_set_check[] = "__set_check__";
 static const char __pyx_k_threading[] = "threading";
-static const char __pyx_k_Collection[] = "Collection";
 static const char __pyx_k_DBDocument[] = "DBDocument";
 static const char __pyx_k_Field___eq[] = "Field.__eq__";
 static const char __pyx_k_Field___ge[] = "Field.__ge__";
@@ -5911,7 +5523,6 @@ static const char __pyx_k_camel_dict[] = "camel_dict";
 static const char __pyx_k_camel_lock[] = "__camel_lock__";
 static const char __pyx_k_check_name[] = "check_name";
 static const char __pyx_k_chunk_data[] = "chunk_data";
-static const char __pyx_k_chunk_iter[] = "__chunk_iter";
 static const char __pyx_k_chunk_size[] = "chunk_size";
 static const char __pyx_k_collection[] = "collection";
 static const char __pyx_k_files_id_n[] = "files_id,n";
@@ -5920,10 +5531,7 @@ static const char __pyx_k_first_item[] = "first_item";
 static const char __pyx_k_fs_files_2[] = "fs.files";
 static const char __pyx_k_init_value[] = "init_value";
 static const char __pyx_k_insert_one[] = "insert_one";
-static const char __pyx_k_next_chunk[] = "next_chunk";
-static const char __pyx_k_no_chunk_d[] = "no chunk #%d";
 static const char __pyx_k_not_exists[] = "not_exists";
-static const char __pyx_k_num_chunks[] = "_num_chunks";
 static const char __pyx_k_startswith[] = "startswith";
 static const char __pyx_k_ExprBuilder[] = "ExprBuilder";
 static const char __pyx_k_Field___add[] = "Field.__add__";
@@ -5959,31 +5567,23 @@ static const char __pyx_k_GridFSBucket[] = "GridFSBucket";
 static const char __pyx_k_Preview_file[] = "\nPreview file ";
 static const char __pyx_k_async_client[] = "async_client";
 static const char __pyx_k_cache_unique[] = "__cache_unique__";
-static const char __pyx_k_chunk_number[] = "chunk_number";
-static const char __pyx_k_chunk_size_2[] = "_chunk_size";
 static const char __pyx_k_content_type[] = "content_type";
 static const char __pyx_k_create_index[] = "create_index";
 static const char __pyx_k_delete_async[] = "delete_async";
 static const char __pyx_k_get_database[] = "get_database";
 static const char __pyx_k_initializing[] = "_initializing";
 static const char __pyx_k_mongo_client[] = "mongo_client";
-static const char __pyx_k_next_chunk_2[] = "_next_chunk";
 static const char __pyx_k_staticmethod[] = "staticmethod";
 static const char __pyx_k_typing_Union[] = "typing.Union[";
 static const char __pyx_k_update_async[] = "update_async";
-static const char __pyx_k_ClientSession[] = "ClientSession";
 static const char __pyx_k_Funcs_is_null[] = "Funcs.is_null";
-static const char __pyx_k_StopIteration[] = "StopIteration";
 static const char __pyx_k_bson_ObjectId[] = "bson.ObjectId";
-static const char __pyx_k_create_cursor[] = "_create_cursor";
 static const char __pyx_k_delegate_type[] = "__delegate_type__";
 static const char __pyx_k_document_name[] = "__document_name__";
-static const char __pyx_k_gridfs_errors[] = "gridfs.errors";
 static const char __pyx_k_has_set_value[] = "__has_set_value__";
 static const char __pyx_k_id_files_id_n[] = "_id,files_id,n";
 static const char __pyx_k_rel_file_path[] = "rel_file_path";
 static const char __pyx_k_AttributeError[] = "AttributeError";
-static const char __pyx_k_CursorNotFound[] = "CursorNotFound";
 static const char __pyx_k_DocumentObject[] = "DocumentObject";
 static const char __pyx_k_Field___invert[] = "Field.__invert__";
 static const char __pyx_k_Field___lshift[] = "Field.__lshift__";
@@ -5995,11 +5595,7 @@ static const char __pyx_k_file_add_chunk[] = "file_add_chunk";
 static const char __pyx_k_find_one_async[] = "find_one_async";
 static const char __pyx_k_get_collection[] = "get_collection";
 static const char __pyx_k_get_file_async[] = "get_file_async";
-static const char __pyx_k_gridfs_GridOut[] = "gridfs.GridOut";
-static const char __pyx_k_pymongo_cursor[] = "pymongo.cursor";
-static const char __pyx_k_pymongo_errors[] = "pymongo.errors";
 static const char __pyx_k_require_fields[] = "require_fields";
-static const char __pyx_k_CorruptGridFile[] = "CorruptGridFile";
 static const char __pyx_k_DBDocument_find[] = "DBDocument.find";
 static const char __pyx_k_DbContext___new[] = "DbContext.__new__";
 static const char __pyx_k_Document___init[] = "Document.__init__";
@@ -6010,12 +5606,9 @@ static const char __pyx_k_check_map__name[] = "__check_map__name__";
 static const char __pyx_k_collection_name[] = "collection_name";
 static const char __pyx_k_count_documents[] = "count_documents";
 static const char __pyx_k_document_define[] = "document_define";
-static const char __pyx_k_expected_length[] = "expected_length";
 static const char __pyx_k_find_file_async[] = "find_file_async";
 static const char __pyx_k_fs_files_chunks[] = "__fs_files_chunks__";
 static const char __pyx_k_hash_check_dict[] = "__hash_check_dict__";
-static const char __pyx_k_next_with_retry[] = "_next_with_retry";
-static const char __pyx_k_truncated_chunk[] = "truncated chunk";
 static const char __pyx_k_DBDocument_count[] = "DBDocument.count";
 static const char __pyx_k_DbContext__cache[] = "__DbContext__cache__";
 static const char __pyx_k_Field___floordiv[] = "Field.__floordiv__";
@@ -6036,7 +5629,6 @@ static const char __pyx_k_DBDocument_update[] = "DBDocument.update";
 static const char __pyx_k_Funcs_is_not_null[] = "Funcs.is_not_null";
 static const char __pyx_k_check_map__module[] = "__check_map__module__";
 static const char __pyx_k_cy_docs_cy_docs_x[] = "cy_docs.cy_docs_x";
-static const char __pyx_k_read_grid_fs_file[] = "read_grid_fs_file";
 static const char __pyx_k_AsyncIOMotorClient[] = "AsyncIOMotorClient";
 static const char __pyx_k_BaseField_____init[] = "__BaseField__.__init__";
 static const char __pyx_k_DocumentObject_get[] = "DocumentObject.get";
@@ -6044,7 +5636,6 @@ static const char __pyx_k_Document___getitem[] = "Document.__getitem__";
 static const char __pyx_k_Invalid_expression[] = "Invalid expression";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_pydantic_BaseModel[] = "pydantic.BaseModel";
-static const char __pyx_k_pymongo_collection[] = "pymongo.collection";
 static const char __pyx_k_was_not_found_in_2[] = " was not found in ";
 static const char __pyx_k_DBDocument___lshift[] = "DBDocument.__lshift__";
 static const char __pyx_k_DBDocument___matmul[] = "DBDocument.__matmul__";
@@ -6067,22 +5658,18 @@ static const char __pyx_k_DBDocument_insert_one[] = "DBDocument.insert_one";
 static const char __pyx_k_DocumentObject___init[] = "DocumentObject.__init__";
 static const char __pyx_k_ExprBuilder___getattr[] = "ExprBuilder.__getattr__";
 static const char __pyx_k_ExprBuilder___getitem[] = "ExprBuilder.__getitem__";
-static const char __pyx_k_expected_chunk_length[] = "expected_chunk_length";
 static const char __pyx_k_AggregateDocument_skip[] = "AggregateDocument.skip";
 static const char __pyx_k_AggregateDocument_sort[] = "AggregateDocument.sort";
 static const char __pyx_k_AsyncIOMotorCollection[] = "AsyncIOMotorCollection";
 static const char __pyx_k_DBDocument_count_async[] = "DBDocument.count_async";
 static const char __pyx_k_DbContext__cache__lock[] = "__DbContext__cache__lock__";
 static const char __pyx_k_ExprBuilder___set_type[] = "ExprBuilder.__set_type__";
-static const char __pyx_k_Optional_ClientSession[] = "Optional[ClientSession]";
-static const char __pyx_k_pymongo_client_session[] = "pymongo.client_session";
 static const char __pyx_k_AggregateDocument_limit[] = "AggregateDocument.limit";
 static const char __pyx_k_AggregateDocument_match[] = "AggregateDocument.match";
 static const char __pyx_k_BaseField_____set_check[] = "__BaseField__.__set_check__";
 static const char __pyx_k_BaseField___to_mongo_db[] = "__BaseField__.to_mongo_db";
 static const char __pyx_k_DBDocument_delete_async[] = "DBDocument.delete_async";
 static const char __pyx_k_DBDocument_update_async[] = "DBDocument.update_async";
-static const char __pyx_k_FS_GridOutChunkIterator[] = "FS_GridOutChunkIterator";
 static const char __pyx_k_str_require_fields_list[] = "str_require_fields_list";
 static const char __pyx_k_AggregateDocument___init[] = "AggregateDocument.__init__";
 static const char __pyx_k_AggregateDocument___iter[] = "AggregateDocument.__iter__";
@@ -6096,42 +5683,30 @@ static const char __pyx_k_DocumentObject___setitem[] = "DocumentObject.__setitem
 static const char __pyx_k_find_to_json_convertable[] = "find_to_json_convertable";
 static const char __pyx_k_AggregateDocument_project[] = "AggregateDocument.project";
 static const char __pyx_k_DBDocument_find_one_async[] = "DBDocument.find_one_async";
-static const char __pyx_k_FS_GridOutChunkIterator_2[] = "'FS_GridOutChunkIterator'";
 static const char __pyx_k_DocumentObject_to_pydantic[] = "DocumentObject.to_pydantic";
 static const char __pyx_k_DBDocument_insert_one_async[] = "DBDocument.insert_one_async";
 static const char __pyx_k_AggregateDocument_first_item[] = "AggregateDocument.first_item";
 static const char __pyx_k_BaseField___to_mongo_db_expr[] = "__BaseField__.to_mongo_db_expr";
-static const char __pyx_k_FS_GridOutChunkIterator_next[] = "FS_GridOutChunkIterator.next";
-static const char __pyx_k_FS_GridOutChunkIterator_close[] = "FS_GridOutChunkIterator.close";
 static const char __pyx_k_Thous_can_not_sort_stage_with[] = "Thous can not sort stage with ";
 static const char __pyx_k_and_operation_require_2_Field[] = "and operation require 2 Field";
 static const char __pyx_k_pymongo_collection_Collection[] = "pymongo.collection.Collection";
 static const char __pyx_k_DbContext___new___locals_empty[] = "DbContext.__new__.<locals>.empty";
-static const char __pyx_k_FS_GridOutChunkIterator___init[] = "FS_GridOutChunkIterator.__init__";
-static const char __pyx_k_FS_GridOutChunkIterator___iter[] = "FS_GridOutChunkIterator.__iter__";
 static const char __pyx_k_These_below_fields_are_require[] = "These below fields are require:\n ";
 static const char __pyx_k_cy_docs_is_library_for_mongodb[] = "\ncy_docs is library for mongodb document manipulating such as:\n1-binary mongodb expression builder:\n    Example: print(cy_docs.fields.code=='001' and cy_docs.fields.age>18)\n\nfind, find_one, find_async, find_one_async\nExample:\n    __client__ = pymongo.mongo_client.MongoClient(host=..,port=..,..)\n    my_doc = cy_docs.get_doc(\n        \"my-docs\",\n         __client__\n        )\n    ret =my_doc['my-db'].insert_one(cy_docs.fields.code<<'001',cy_docs.fields.age<<32)\n    print (ret)\nSpecial:\n    ret =my_doc['my-db'].insert_one(cy_docs.fields.code<<'001',cy_docs.fields.age<<32) can be changed\n    ret =my_doc['my-db']<<(cy_docs.fields.code<<'001',cy_docs.fields.age<<32)\n    find_item =my_doc['my-db'].find_one(cy_docs.fields.code=='001' & cy_docs.fields.age == 32) can be changed\n    find_item =my_doc['my-db']@(cy_docs.fields.code=='001' & cy_docs.fields.age == 32) can be changed\n    find_items = my_doc['my-db'].find(cy_docs.fields.code!='001' & cy_docs.fields.age < 32) can be changed\n    find_items = my_doc['my-db']>>(cy_docs.fields.code!='001' & cy_docs.fields.age < 32) can be changed\n";
 static const char __pyx_k_document_define_locals_wrapper[] = "document_define.<locals>.wrapper";
 static const char __pyx_k_init_value_must_be_str_or_ditc[] = "init_value must be str or ditc";
-static const char __pyx_k_FS_GridOutChunkIterator__create[] = "FS_GridOutChunkIterator._create_cursor";
 static const char __pyx_k_Thous_can_not_use_project_stage[] = "Thous can not use project stage with ";
 static const char __pyx_k_AggregateDocument_to_json_conver[] = "AggregateDocument.to_json_convertable";
 static const char __pyx_k_All_element_in_left_shift_docume[] = "All element in left shift document must be cy_docs.Field. Example:my_doc = cy_docs.get_doc('my-coll-__name__',__client__)test_docs['my-db-__name__']<<( cy_docs.fields.Code <<'001', cy_docs.fields.Name << 'Name'";
 static const char __pyx_k_All_element_in_right_shift_docum[] = "All element in right shift document must be cy_docs.Field. Example:my_doc = cy_docs.get_doc('my-coll-__name__',__client__)test_docs['my-db-__name__']>>( cy_docs.fields.MyNumber>1000";
 static const char __pyx_k_DBDocument_find_to_json_converta[] = "DBDocument.find_to_json_convertable";
 static const char __pyx_k_DocumentObject_to_json_convertab[] = "DocumentObject.to_json_convertable";
-static const char __pyx_k_Extra_chunk_found_expected_d_chu[] = "Extra chunk found: expected %d chunks but found chunk with n=%d";
-static const char __pyx_k_FS_GridOutChunkIterator__next_wi[] = "FS_GridOutChunkIterator._next_with_retry";
-static const char __pyx_k_FS_GridOutChunkIterator_expected[] = "FS_GridOutChunkIterator.expected_chunk_length";
-static const char __pyx_k_Iterates_over_a_file_s_chunks_us[] = "Iterates over a file's chunks using a single cursor.\n\n    Raises CorruptGridFile when encountering any truncated, missing, or extra\n    chunk in a file.\n    ";
-static const char __pyx_k_Missing_chunk_expected_chunk_d_b[] = "Missing chunk: expected chunk #%d but found chunk with n=%d";
 static const char __pyx_k_Param_in_Find_one_must_be_cy_doc[] = "Param in Find one must be cy_docs.Field or dict";
 static const char __pyx_k_Thous_can_not_alias_mongodb_expr[] = "Thous can not alias mongodb expression with ";
 static const char __pyx_k_Thous_can_not_use_sort_stage_wit[] = "Thous can not use sort stage with ";
 static const char __pyx_k_and_operation_require_2_Field_Wh[] = "and operation require 2 Field. While ";
 static const char __pyx_k_exists_require_cy_docs_fields_fi[] = "exists require cy_docs.fields.<field-__name__> or str";
 static const char __pyx_k_pymongo_mongo_client_MongoClient[] = "pymongo.mongo_client.MongoClient";
-static const char __pyx_k_truncated_chunk_d_expected_chunk[] = "truncated chunk #%d: expected chunk length to be %d but found chunk with length %d";
 #if !CYTHON_COMPILING_IN_LIMITED_API
 static PyObject *__pyx_kp_u_;
 static PyObject *__pyx_kp_s_0_0_1;
@@ -6160,13 +5735,7 @@ static PyObject *__pyx_n_s_BaseField_____set_check;
 static PyObject *__pyx_n_s_BaseField___to_mongo_db;
 static PyObject *__pyx_n_s_BaseField___to_mongo_db_expr;
 static PyObject *__pyx_n_s_BaseModel;
-static PyObject *__pyx_n_s_BytesIO;
 static PyObject *__pyx_kp_u_Can_not_cast;
-static PyObject *__pyx_n_s_ClientSession;
-static PyObject *__pyx_n_s_Collection;
-static PyObject *__pyx_n_s_CorruptGridFile;
-static PyObject *__pyx_n_s_Cursor;
-static PyObject *__pyx_n_s_CursorNotFound;
 static PyObject *__pyx_n_s_DBDocument;
 static PyObject *__pyx_n_s_DBDocument___init;
 static PyObject *__pyx_n_s_DBDocument___lshift;
@@ -6211,16 +5780,6 @@ static PyObject *__pyx_n_s_ExprBuilder;
 static PyObject *__pyx_n_s_ExprBuilder___getattr;
 static PyObject *__pyx_n_s_ExprBuilder___getitem;
 static PyObject *__pyx_n_s_ExprBuilder___set_type;
-static PyObject *__pyx_kp_s_Extra_chunk_found_expected_d_chu;
-static PyObject *__pyx_n_s_FS_GridOutChunkIterator;
-static PyObject *__pyx_kp_s_FS_GridOutChunkIterator_2;
-static PyObject *__pyx_n_s_FS_GridOutChunkIterator___init;
-static PyObject *__pyx_n_s_FS_GridOutChunkIterator___iter;
-static PyObject *__pyx_n_s_FS_GridOutChunkIterator__create;
-static PyObject *__pyx_n_s_FS_GridOutChunkIterator__next_wi;
-static PyObject *__pyx_n_s_FS_GridOutChunkIterator_close;
-static PyObject *__pyx_n_s_FS_GridOutChunkIterator_expected;
-static PyObject *__pyx_n_s_FS_GridOutChunkIterator_next;
 static PyObject *__pyx_n_s_Field;
 static PyObject *__pyx_n_s_Field___add;
 static PyObject *__pyx_n_s_Field___and;
@@ -6255,25 +5814,18 @@ static PyObject *__pyx_n_s_Funcs_is_null;
 static PyObject *__pyx_n_s_Funcs_not_exists;
 static PyObject *__pyx_n_s_GridFS;
 static PyObject *__pyx_n_s_GridFSBucket;
-static PyObject *__pyx_n_s_GridOut;
 static PyObject *__pyx_n_s_IGNORECASE;
 static PyObject *__pyx_kp_s_Invalid_expression;
-static PyObject *__pyx_kp_s_Iterates_over_a_file_s_chunks_us;
 static PyObject *__pyx_n_s_List;
 static PyObject *__pyx_kp_s_List_str;
 static PyObject *__pyx_n_s_Lock;
-static PyObject *__pyx_kp_s_Missing_chunk_expected_chunk_d_b;
-static PyObject *__pyx_n_s_None;
 static PyObject *__pyx_kp_s_NoneType;
 static PyObject *__pyx_n_s_ObjectId;
 static PyObject *__pyx_kp_u_ObjectId_2;
-static PyObject *__pyx_n_s_Optional;
-static PyObject *__pyx_kp_s_Optional_ClientSession;
 static PyObject *__pyx_kp_s_Param_in_Find_one_must_be_cy_doc;
 static PyObject *__pyx_n_s_Pattern;
 static PyObject *__pyx_kp_u_Please_set_value_for;
 static PyObject *__pyx_kp_u_Preview_file;
-static PyObject *__pyx_n_s_StopIteration;
 static PyObject *__pyx_kp_u_These_below_fields_are_require;
 static PyObject *__pyx_kp_u_Thous_can_not_alias_mongodb_expr;
 static PyObject *__pyx_kp_u_Thous_can_not_sort_stage_with;
@@ -6290,7 +5842,6 @@ static PyObject *__pyx_kp_s__11;
 static PyObject *__pyx_kp_u__11;
 static PyObject *__pyx_n_s__12;
 static PyObject *__pyx_kp_s__13;
-static PyObject *__pyx_kp_b__2;
 static PyObject *__pyx_kp_s__2;
 static PyObject *__pyx_n_u__3;
 static PyObject *__pyx_kp_s__30;
@@ -6321,7 +5872,6 @@ static PyObject *__pyx_n_s_b;
 static PyObject *__pyx_n_s_background;
 static PyObject *__pyx_n_s_bson;
 static PyObject *__pyx_kp_s_bson_ObjectId;
-static PyObject *__pyx_n_s_buffer;
 static PyObject *__pyx_n_s_bytes;
 static PyObject *__pyx_n_s_c;
 static PyObject *__pyx_n_s_cache_index;
@@ -6329,24 +5879,15 @@ static PyObject *__pyx_n_s_cache_unique;
 static PyObject *__pyx_n_s_camel_cache;
 static PyObject *__pyx_n_s_camel_dict;
 static PyObject *__pyx_n_s_camel_lock;
-static PyObject *__pyx_n_s_ceil;
 static PyObject *__pyx_n_s_check_constraint;
 static PyObject *__pyx_n_s_check_map__module;
 static PyObject *__pyx_n_s_check_map__name;
 static PyObject *__pyx_n_s_check_name;
-static PyObject *__pyx_n_s_chunk;
 static PyObject *__pyx_n_s_chunkSize;
 static PyObject *__pyx_n_s_chunk_data;
 static PyObject *__pyx_n_s_chunk_index;
-static PyObject *__pyx_n_s_chunk_iter;
-static PyObject *__pyx_n_s_chunk_n;
-static PyObject *__pyx_n_s_chunk_number;
 static PyObject *__pyx_n_s_chunk_size;
-static PyObject *__pyx_n_s_chunk_size_2;
 static PyObject *__pyx_n_s_chunk_size_bytes;
-static PyObject *__pyx_n_s_chunks;
-static PyObject *__pyx_n_s_chunks_2;
-static PyObject *__pyx_n_s_chunks_3;
 static PyObject *__pyx_n_s_client;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_close;
@@ -6365,10 +5906,8 @@ static PyObject *__pyx_n_s_convention_get;
 static PyObject *__pyx_n_s_count;
 static PyObject *__pyx_n_s_count_async;
 static PyObject *__pyx_n_s_count_documents;
-static PyObject *__pyx_n_s_create_cursor;
 static PyObject *__pyx_n_s_create_file;
 static PyObject *__pyx_n_s_create_index;
-static PyObject *__pyx_n_s_cursor;
 static PyObject *__pyx_n_s_cy_docs_cy_docs_x;
 static PyObject *__pyx_kp_s_cy_docs_cy_docs_x_py;
 static PyObject *__pyx_n_s_d;
@@ -6408,8 +5947,6 @@ static PyObject *__pyx_kp_s_exists;
 static PyObject *__pyx_n_s_exists_2;
 static PyObject *__pyx_kp_u_exists_require_cy_docs_fields_fi;
 static PyObject *__pyx_n_s_exit;
-static PyObject *__pyx_n_s_expected_chunk_length;
-static PyObject *__pyx_n_s_expected_length;
 static PyObject *__pyx_n_s_expr;
 static PyObject *__pyx_n_s_expr_2;
 static PyObject *__pyx_n_u_f;
@@ -6456,10 +5993,7 @@ static PyObject *__pyx_n_s_getattr;
 static PyObject *__pyx_n_s_getfile;
 static PyObject *__pyx_n_s_getitem;
 static PyObject *__pyx_n_s_gfs;
-static PyObject *__pyx_n_s_grid_out;
 static PyObject *__pyx_n_s_gridfs;
-static PyObject *__pyx_kp_s_gridfs_GridOut;
-static PyObject *__pyx_n_s_gridfs_errors;
 static PyObject *__pyx_kp_s_gt;
 static PyObject *__pyx_n_s_gt_2;
 static PyObject *__pyx_kp_s_gte;
@@ -6487,7 +6021,6 @@ static PyObject *__pyx_n_s_inspect;
 static PyObject *__pyx_n_s_instance;
 static PyObject *__pyx_n_s_int;
 static PyObject *__pyx_n_s_invert;
-static PyObject *__pyx_n_s_io;
 static PyObject *__pyx_n_s_is_not_null;
 static PyObject *__pyx_n_s_is_null;
 static PyObject *__pyx_n_s_isoformat;
@@ -6505,7 +6038,6 @@ static PyObject *__pyx_n_s_le;
 static PyObject *__pyx_n_s_len;
 static PyObject *__pyx_n_s_len_2;
 static PyObject *__pyx_n_s_length;
-static PyObject *__pyx_n_s_length_2;
 static PyObject *__pyx_n_s_like;
 static PyObject *__pyx_kp_s_limit;
 static PyObject *__pyx_n_s_limit_2;
@@ -6519,7 +6051,6 @@ static PyObject *__pyx_kp_s_lte;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_kp_s_match;
 static PyObject *__pyx_n_s_match_2;
-static PyObject *__pyx_n_s_math;
 static PyObject *__pyx_n_s_matmul;
 static PyObject *__pyx_n_s_metaclass;
 static PyObject *__pyx_kp_s_mod;
@@ -6540,15 +6071,8 @@ static PyObject *__pyx_kp_s_ne_2;
 static PyObject *__pyx_n_s_ne_3;
 static PyObject *__pyx_n_s_new;
 static PyObject *__pyx_n_s_new_file;
-static PyObject *__pyx_n_s_next;
-static PyObject *__pyx_n_s_next_2;
-static PyObject *__pyx_n_s_next_chunk;
-static PyObject *__pyx_n_s_next_chunk_2;
-static PyObject *__pyx_n_s_next_with_retry;
-static PyObject *__pyx_kp_s_no_chunk_d;
 static PyObject *__pyx_kp_s_not;
 static PyObject *__pyx_n_s_not_exists;
-static PyObject *__pyx_n_s_num_chunks;
 static PyObject *__pyx_n_s_obj;
 static PyObject *__pyx_n_s_object;
 static PyObject *__pyx_n_s_objectid;
@@ -6565,7 +6089,6 @@ static PyObject *__pyx_n_s_owner;
 static PyObject *__pyx_n_s_pattern;
 static PyObject *__pyx_n_s_pipeline;
 static PyObject *__pyx_n_s_pos;
-static PyObject *__pyx_n_s_position;
 static PyObject *__pyx_kp_s_pow;
 static PyObject *__pyx_n_s_pow_2;
 static PyObject *__pyx_n_s_power;
@@ -6577,27 +6100,18 @@ static PyObject *__pyx_n_s_pydantic;
 static PyObject *__pyx_kp_s_pydantic_BaseModel;
 static PyObject *__pyx_n_s_pymongo;
 static PyObject *__pyx_kp_s_pymongo_MongoClient;
-static PyObject *__pyx_n_s_pymongo_client_session;
-static PyObject *__pyx_n_s_pymongo_collection;
 static PyObject *__pyx_kp_s_pymongo_collection_Collection;
-static PyObject *__pyx_n_s_pymongo_cursor;
-static PyObject *__pyx_n_s_pymongo_errors;
 static PyObject *__pyx_n_s_pymongo_mongo_client;
 static PyObject *__pyx_kp_s_pymongo_mongo_client_MongoClient;
 static PyObject *__pyx_n_s_qualname;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_re;
-static PyObject *__pyx_n_s_read;
-static PyObject *__pyx_n_s_read_grid_fs_file;
-static PyObject *__pyx_n_s_readchunk;
 static PyObject *__pyx_n_s_real;
-static PyObject *__pyx_n_s_received;
 static PyObject *__pyx_n_s_reduce;
 static PyObject *__pyx_n_s_reduce_type;
 static PyObject *__pyx_kp_s_regex;
 static PyObject *__pyx_n_s_rel_file_path;
 static PyObject *__pyx_n_s_release;
-static PyObject *__pyx_n_s_remainder;
 static PyObject *__pyx_n_s_repr;
 static PyObject *__pyx_n_s_require_fields;
 static PyObject *__pyx_n_s_ret;
@@ -6606,17 +6120,13 @@ static PyObject *__pyx_n_s_ret_items;
 static PyObject *__pyx_n_s_ret_pipe;
 static PyObject *__pyx_n_s_return;
 static PyObject *__pyx_n_s_rshift;
-static PyObject *__pyx_n_s_seek;
 static PyObject *__pyx_n_s_self;
 static PyObject *__pyx_n_s_send;
-static PyObject *__pyx_n_s_session;
-static PyObject *__pyx_n_s_session_2;
 static PyObject *__pyx_kp_s_set;
 static PyObject *__pyx_n_s_set_check;
 static PyObject *__pyx_n_s_set_type;
 static PyObject *__pyx_n_s_setattr;
 static PyObject *__pyx_n_s_setitem;
-static PyObject *__pyx_n_s_size;
 static PyObject *__pyx_kp_s_skip;
 static PyObject *__pyx_n_s_skip_2;
 static PyObject *__pyx_n_s_sort;
@@ -6634,7 +6144,6 @@ static PyObject *__pyx_n_s_str_require_fields_list;
 static PyObject *__pyx_kp_s_sub;
 static PyObject *__pyx_n_s_sub_2;
 static PyObject *__pyx_n_s_super;
-static PyObject *__pyx_n_s_tell;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_threading;
 static PyObject *__pyx_n_s_throw;
@@ -6646,8 +6155,6 @@ static PyObject *__pyx_n_s_to_mongo_db;
 static PyObject *__pyx_n_s_to_mongo_db_expr;
 static PyObject *__pyx_n_s_to_pydantic;
 static PyObject *__pyx_n_s_truediv;
-static PyObject *__pyx_kp_s_truncated_chunk;
-static PyObject *__pyx_kp_s_truncated_chunk_d_expected_chunk;
 static PyObject *__pyx_n_s_type;
 static PyObject *__pyx_n_s_typing;
 static PyObject *__pyx_kp_s_typing_Union;
@@ -6664,7 +6171,6 @@ static PyObject *__pyx_n_s_value_2;
 static PyObject *__pyx_kp_u_was_not_found_in;
 static PyObject *__pyx_kp_u_was_not_found_in_2;
 static PyObject *__pyx_n_s_wrapper;
-static PyObject *__pyx_n_s_write;
 static PyObject *__pyx_n_s_x;
 static PyObject *__pyx_n_s_y;
 #endif
@@ -6744,10 +6250,10 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_17AggregateDocument_12__repr__(CYT
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_17AggregateDocument_14__iter__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_17AggregateDocument_17to_json_convertable(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_17AggregateDocument_20first_item(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_36__defaults__(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_32__defaults__(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_8Document___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_collection_name, PyObject *__pyx_v_client, PyObject *__pyx_v_indexes, PyObject *__pyx_v_unique_keys); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_8Document_2__getitem__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_item); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_38__defaults__(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_34__defaults__(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_12get_doc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_collection_name, PyObject *__pyx_v_client, PyObject *__pyx_v_indexes, PyObject *__pyx_v_unique_keys); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_5Funcs_concat(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_args); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_5Funcs_2exists(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_field); /* proto */
@@ -6765,15 +6271,6 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_22file_add_chunk(CYTHON_UNUSED PyO
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_24create_file(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_file_name, PyObject *__pyx_v_content_type, PyObject *__pyx_v_file_size, PyObject *__pyx_v_chunk_size); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_26get_file_async(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_file_id); /* proto */
 static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_29find_file_async(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_client, PyObject *__pyx_v_db_name, PyObject *__pyx_v_rel_file_path); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_grid_out, PyObject *__pyx_v_chunks, PyObject *__pyx_v_session, PyObject *__pyx_v_next_chunk); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_2expected_chunk_length(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_chunk_n); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_4__iter__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_6_create_cursor(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_8_next_with_retry(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_10next(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_12close(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_32readchunk(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_db, PyObject *__pyx_v_fs); /* proto */
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_34read_grid_fs_file(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_db, PyObject *__pyx_v_fs, PyObject *__pyx_v_size); /* proto */
 static PyObject *__pyx_tp_new_7cy_docs_9cy_docs_x___pyx_scope_struct____rshift__(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_7cy_docs_9cy_docs_x___pyx_scope_struct_1_delete_async(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_7cy_docs_9cy_docs_x___pyx_scope_struct_2_find_one_async(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -6920,17 +6417,6 @@ static PyObject *__pyx_tuple__218;
 static PyObject *__pyx_tuple__220;
 static PyObject *__pyx_tuple__222;
 static PyObject *__pyx_tuple__223;
-static PyObject *__pyx_tuple__224;
-static PyObject *__pyx_tuple__225;
-static PyObject *__pyx_tuple__227;
-static PyObject *__pyx_tuple__229;
-static PyObject *__pyx_tuple__231;
-static PyObject *__pyx_tuple__233;
-static PyObject *__pyx_tuple__235;
-static PyObject *__pyx_tuple__237;
-static PyObject *__pyx_tuple__239;
-static PyObject *__pyx_tuple__241;
-static PyObject *__pyx_tuple__243;
 static PyObject *__pyx_codeobj__19;
 static PyObject *__pyx_codeobj__22;
 static PyObject *__pyx_codeobj__23;
@@ -7026,15 +6512,6 @@ static PyObject *__pyx_codeobj__215;
 static PyObject *__pyx_codeobj__217;
 static PyObject *__pyx_codeobj__219;
 static PyObject *__pyx_codeobj__221;
-static PyObject *__pyx_codeobj__226;
-static PyObject *__pyx_codeobj__228;
-static PyObject *__pyx_codeobj__230;
-static PyObject *__pyx_codeobj__232;
-static PyObject *__pyx_codeobj__234;
-static PyObject *__pyx_codeobj__236;
-static PyObject *__pyx_codeobj__238;
-static PyObject *__pyx_codeobj__240;
-static PyObject *__pyx_codeobj__242;
 #endif
 /* Late includes */
 
@@ -38902,7 +38379,7 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_17AggregateDocument_20first_item(C
  *         self.collection_name = collection_name
  */
 
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_36__defaults__(CYTHON_UNUSED PyObject *__pyx_self) {
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_32__defaults__(CYTHON_UNUSED PyObject *__pyx_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -40624,7 +40101,7 @@ static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_8Document_2__getitem__(CYTHON_UNUS
  *     return Document(collection_name, client, indexes=indexes, unique_keys=unique_keys)
  */
 
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_38__defaults__(CYTHON_UNUSED PyObject *__pyx_self) {
+static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_34__defaults__(CYTHON_UNUSED PyObject *__pyx_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -45588,3164 +45065,6 @@ static PyObject *__pyx_gb_7cy_docs_9cy_docs_x_31generator12(__pyx_CoroutineObjec
   return __pyx_r;
 }
 
-/* "cy_docs/cy_docs_x.py":1660
- *     """
- * 
- *     def __init__(             # <<<<<<<<<<<<<<
- *             self,
- *             grid_out: GridOut,
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_1__init__(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_1__init__ = {"__init__", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_1__init__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_1__init__(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  PyObject *__pyx_v_self = 0;
-  PyObject *__pyx_v_grid_out = 0;
-  PyObject *__pyx_v_chunks = 0;
-  PyObject *__pyx_v_session = 0;
-  PyObject *__pyx_v_next_chunk = 0;
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED const Py_ssize_t __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__init__ (wrapper)", 0);
-  {
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_grid_out,&__pyx_n_s_chunks,&__pyx_n_s_session,&__pyx_n_s_next_chunk,0};
-    #else
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_grid_out,&__pyx_n_s_chunks,&__pyx_n_s_session,&__pyx_n_s_next_chunk,0};
-    #endif
-    PyObject* values[5] = {0,0,0,0,0};
-    if (__pyx_kwds) {
-      Py_ssize_t kw_args;
-      switch (__pyx_nargs) {
-        case  5: values[4] = __Pyx_Arg_FASTCALL(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
-        case  3: values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
-      switch (__pyx_nargs) {
-        case  0:
-        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_self)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1660, __pyx_L3_error)
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_grid_out)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1660, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 1); __PYX_ERR(0, 1660, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_chunks)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1660, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 2); __PYX_ERR(0, 1660, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (likely((values[3] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_session)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1660, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 3); __PYX_ERR(0, 1660, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (likely((values[4] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_next_chunk)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1660, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, 4); __PYX_ERR(0, 1660, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "__init__") < 0)) __PYX_ERR(0, 1660, __pyx_L3_error)
-      }
-    } else if (unlikely(__pyx_nargs != 5)) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-      values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-      values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
-      values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);
-      values[4] = __Pyx_Arg_FASTCALL(__pyx_args, 4);
-    }
-    __pyx_v_self = values[0];
-    __pyx_v_grid_out = values[1];
-    __pyx_v_chunks = values[2];
-    __pyx_v_session = values[3];
-    __pyx_v_next_chunk = values[4];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 5, 5, __pyx_nargs); __PYX_ERR(0, 1660, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cy_docs.cy_docs_x.FS_GridOutChunkIterator.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator___init__(__pyx_self, __pyx_v_self, __pyx_v_grid_out, __pyx_v_chunks, __pyx_v_session, __pyx_v_next_chunk);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_grid_out, PyObject *__pyx_v_chunks, PyObject *__pyx_v_session, PyObject *__pyx_v_next_chunk) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  int __pyx_t_6;
-  __Pyx_RefNannySetupContext("__init__", 0);
-
-  /* "cy_docs/cy_docs_x.py":1667
- *             next_chunk,
- *     ) -> None:
- *         self._id = grid_out._id             # <<<<<<<<<<<<<<
- *         self._chunk_size = int(grid_out.chunk_size)
- *         self._length = int(grid_out.length)
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_grid_out, __pyx_n_s_id_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1667, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_id_2, __pyx_t_1) < 0) __PYX_ERR(0, 1667, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1668
- *     ) -> None:
- *         self._id = grid_out._id
- *         self._chunk_size = int(grid_out.chunk_size)             # <<<<<<<<<<<<<<
- *         self._length = int(grid_out.length)
- *         self._chunks = chunks
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_grid_out, __pyx_n_s_chunk_size); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1668, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyNumber_Int(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1668, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_chunk_size_2, __pyx_t_2) < 0) __PYX_ERR(0, 1668, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1669
- *         self._id = grid_out._id
- *         self._chunk_size = int(grid_out.chunk_size)
- *         self._length = int(grid_out.length)             # <<<<<<<<<<<<<<
- *         self._chunks = chunks
- *         self._session = session
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_grid_out, __pyx_n_s_length); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1669, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyNumber_Int(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1669, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_length_2, __pyx_t_1) < 0) __PYX_ERR(0, 1669, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1670
- *         self._chunk_size = int(grid_out.chunk_size)
- *         self._length = int(grid_out.length)
- *         self._chunks = chunks             # <<<<<<<<<<<<<<
- *         self._session = session
- *         self._next_chunk = next_chunk
- */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_chunks_2, __pyx_v_chunks) < 0) __PYX_ERR(0, 1670, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1671
- *         self._length = int(grid_out.length)
- *         self._chunks = chunks
- *         self._session = session             # <<<<<<<<<<<<<<
- *         self._next_chunk = next_chunk
- *         self._num_chunks = math.ceil(float(self._length) / self._chunk_size)
- */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_session_2, __pyx_v_session) < 0) __PYX_ERR(0, 1671, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1672
- *         self._chunks = chunks
- *         self._session = session
- *         self._next_chunk = next_chunk             # <<<<<<<<<<<<<<
- *         self._num_chunks = math.ceil(float(self._length) / self._chunk_size)
- *         self._cursor = None
- */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_next_chunk_2, __pyx_v_next_chunk) < 0) __PYX_ERR(0, 1672, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1673
- *         self._session = session
- *         self._next_chunk = next_chunk
- *         self._num_chunks = math.ceil(float(self._length) / self._chunk_size)             # <<<<<<<<<<<<<<
- *         self._cursor = None
- * 
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_math); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1673, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_ceil); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1673, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_length_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1673, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyNumber_Float(__pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1673, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_chunk_size_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1673, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1673, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = NULL;
-  __pyx_t_6 = 0;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-    if (likely(__pyx_t_2)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-      __Pyx_INCREF(__pyx_t_2);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_3, function);
-      __pyx_t_6 = 1;
-    }
-  }
-  {
-    PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_t_5};
-    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_6, 1+__pyx_t_6);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1673, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  }
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_num_chunks, __pyx_t_1) < 0) __PYX_ERR(0, 1673, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1674
- *         self._next_chunk = next_chunk
- *         self._num_chunks = math.ceil(float(self._length) / self._chunk_size)
- *         self._cursor = None             # <<<<<<<<<<<<<<
- * 
- *     _cursor: Optional[Cursor]
- */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_cursor, Py_None) < 0) __PYX_ERR(0, 1674, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1660
- *     """
- * 
- *     def __init__(             # <<<<<<<<<<<<<<
- *             self,
- *             grid_out: GridOut,
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("cy_docs.cy_docs_x.FS_GridOutChunkIterator.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cy_docs/cy_docs_x.py":1678
- *     _cursor: Optional[Cursor]
- * 
- *     def expected_chunk_length(self, chunk_n: int) -> int:             # <<<<<<<<<<<<<<
- *         if chunk_n < self._num_chunks - 1:
- *             return self._chunk_size
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_3expected_chunk_length(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_3expected_chunk_length = {"expected_chunk_length", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_3expected_chunk_length, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_3expected_chunk_length(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  PyObject *__pyx_v_self = 0;
-  PyObject *__pyx_v_chunk_n = 0;
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED const Py_ssize_t __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("expected_chunk_length (wrapper)", 0);
-  {
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_chunk_n,0};
-    #else
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_chunk_n,0};
-    #endif
-    PyObject* values[2] = {0,0};
-    if (__pyx_kwds) {
-      Py_ssize_t kw_args;
-      switch (__pyx_nargs) {
-        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
-      switch (__pyx_nargs) {
-        case  0:
-        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_self)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1678, __pyx_L3_error)
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_chunk_n)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1678, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("expected_chunk_length", 1, 2, 2, 1); __PYX_ERR(0, 1678, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "expected_chunk_length") < 0)) __PYX_ERR(0, 1678, __pyx_L3_error)
-      }
-    } else if (unlikely(__pyx_nargs != 2)) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-      values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-    }
-    __pyx_v_self = values[0];
-    __pyx_v_chunk_n = values[1];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("expected_chunk_length", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 1678, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cy_docs.cy_docs_x.FS_GridOutChunkIterator.expected_chunk_length", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_2expected_chunk_length(__pyx_self, __pyx_v_self, __pyx_v_chunk_n);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_2expected_chunk_length(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_chunk_n) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  int __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  __Pyx_RefNannySetupContext("expected_chunk_length", 0);
-
-  /* "cy_docs/cy_docs_x.py":1679
- * 
- *     def expected_chunk_length(self, chunk_n: int) -> int:
- *         if chunk_n < self._num_chunks - 1:             # <<<<<<<<<<<<<<
- *             return self._chunk_size
- *         return self._length - (self._chunk_size * (self._num_chunks - 1))
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_num_chunks); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1679, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_SubtractObjC(__pyx_t_1, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1679, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyObject_RichCompare(__pyx_v_chunk_n, __pyx_t_2, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1679, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 1679, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (__pyx_t_3) {
-
-    /* "cy_docs/cy_docs_x.py":1680
- *     def expected_chunk_length(self, chunk_n: int) -> int:
- *         if chunk_n < self._num_chunks - 1:
- *             return self._chunk_size             # <<<<<<<<<<<<<<
- *         return self._length - (self._chunk_size * (self._num_chunks - 1))
- * 
- */
-    __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_chunk_size_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1680, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_r = __pyx_t_1;
-    __pyx_t_1 = 0;
-    goto __pyx_L0;
-
-    /* "cy_docs/cy_docs_x.py":1679
- * 
- *     def expected_chunk_length(self, chunk_n: int) -> int:
- *         if chunk_n < self._num_chunks - 1:             # <<<<<<<<<<<<<<
- *             return self._chunk_size
- *         return self._length - (self._chunk_size * (self._num_chunks - 1))
- */
-  }
-
-  /* "cy_docs/cy_docs_x.py":1681
- *         if chunk_n < self._num_chunks - 1:
- *             return self._chunk_size
- *         return self._length - (self._chunk_size * (self._num_chunks - 1))             # <<<<<<<<<<<<<<
- * 
- *     def __iter__(self) -> "FS_GridOutChunkIterator":
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_length_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1681, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_chunk_size_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1681, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_num_chunks); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1681, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1681, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1681, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyNumber_Subtract(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1681, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_r = __pyx_t_5;
-  __pyx_t_5 = 0;
-  goto __pyx_L0;
-
-  /* "cy_docs/cy_docs_x.py":1678
- *     _cursor: Optional[Cursor]
- * 
- *     def expected_chunk_length(self, chunk_n: int) -> int:             # <<<<<<<<<<<<<<
- *         if chunk_n < self._num_chunks - 1:
- *             return self._chunk_size
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("cy_docs.cy_docs_x.FS_GridOutChunkIterator.expected_chunk_length", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cy_docs/cy_docs_x.py":1683
- *         return self._length - (self._chunk_size * (self._num_chunks - 1))
- * 
- *     def __iter__(self) -> "FS_GridOutChunkIterator":             # <<<<<<<<<<<<<<
- *         return self
- * 
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_5__iter__(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_5__iter__ = {"__iter__", (PyCFunction)__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_5__iter__, METH_O, 0};
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_5__iter__(PyObject *__pyx_self, PyObject *__pyx_v_self) {
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__iter__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_4__iter__(__pyx_self, ((PyObject *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_4__iter__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__iter__", 0);
-
-  /* "cy_docs/cy_docs_x.py":1684
- * 
- *     def __iter__(self) -> "FS_GridOutChunkIterator":
- *         return self             # <<<<<<<<<<<<<<
- * 
- *     def _create_cursor(self) -> None:
- */
-  __Pyx_XDECREF(__pyx_r);
-  __Pyx_INCREF(__pyx_v_self);
-  __pyx_r = __pyx_v_self;
-  goto __pyx_L0;
-
-  /* "cy_docs/cy_docs_x.py":1683
- *         return self._length - (self._chunk_size * (self._num_chunks - 1))
- * 
- *     def __iter__(self) -> "FS_GridOutChunkIterator":             # <<<<<<<<<<<<<<
- *         return self
- * 
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cy_docs/cy_docs_x.py":1686
- *         return self
- * 
- *     def _create_cursor(self) -> None:             # <<<<<<<<<<<<<<
- *         filter = {"files_id": self._id}
- *         # if self._next_chunk > 0:
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_7_create_cursor(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_7_create_cursor = {"_create_cursor", (PyCFunction)__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_7_create_cursor, METH_O, 0};
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_7_create_cursor(PyObject *__pyx_self, PyObject *__pyx_v_self) {
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_create_cursor (wrapper)", 0);
-  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_6_create_cursor(__pyx_self, ((PyObject *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_6_create_cursor(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
-  PyObject *__pyx_v_filter = NULL;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  __Pyx_RefNannySetupContext("_create_cursor", 0);
-
-  /* "cy_docs/cy_docs_x.py":1687
- * 
- *     def _create_cursor(self) -> None:
- *         filter = {"files_id": self._id}             # <<<<<<<<<<<<<<
- *         # if self._next_chunk > 0:
- *         #     filter["n"] = {"$gte": self._next_chunk}
- */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1687, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_id_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1687, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_files_id, __pyx_t_2) < 0) __PYX_ERR(0, 1687, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_v_filter = ((PyObject*)__pyx_t_1);
-  __pyx_t_1 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1690
- *         # if self._next_chunk > 0:
- *         #     filter["n"] = {"$gte": self._next_chunk}
- *         self._cursor = self._chunks.find(filter,skip=self._next_chunk)             # <<<<<<<<<<<<<<
- * 
- *     def _next_with_retry(self):
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_chunks_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1690, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_find); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1690, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1690, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_v_filter);
-  __Pyx_GIVEREF(__pyx_v_filter);
-  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_filter);
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1690, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_next_chunk_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1690, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_skip_2, __pyx_t_4) < 0) __PYX_ERR(0, 1690, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1690, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_cursor, __pyx_t_4) < 0) __PYX_ERR(0, 1690, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1686
- *         return self
- * 
- *     def _create_cursor(self) -> None:             # <<<<<<<<<<<<<<
- *         filter = {"files_id": self._id}
- *         # if self._next_chunk > 0:
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("cy_docs.cy_docs_x.FS_GridOutChunkIterator._create_cursor", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_filter);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cy_docs/cy_docs_x.py":1692
- *         self._cursor = self._chunks.find(filter,skip=self._next_chunk)
- * 
- *     def _next_with_retry(self):             # <<<<<<<<<<<<<<
- *         """Return the next chunk and retry once on CursorNotFound.
- * 
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_9_next_with_retry(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-PyDoc_STRVAR(__pyx_doc_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_8_next_with_retry, "Return the next chunk and retry once on CursorNotFound.\n\n        We retry on CursorNotFound to maintain backwards compatibility in\n        cases where two calls to read occur more than 10 minutes apart (the\n        server's default cursor timeout).\n        ");
-static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_9_next_with_retry = {"_next_with_retry", (PyCFunction)__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_9_next_with_retry, METH_O, __pyx_doc_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_8_next_with_retry};
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_9_next_with_retry(PyObject *__pyx_self, PyObject *__pyx_v_self) {
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_next_with_retry (wrapper)", 0);
-  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_8_next_with_retry(__pyx_self, ((PyObject *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_8_next_with_retry(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_t_2;
-  int __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  int __pyx_t_6;
-  PyObject *__pyx_t_7 = NULL;
-  PyObject *__pyx_t_8 = NULL;
-  PyObject *__pyx_t_9 = NULL;
-  int __pyx_t_10;
-  PyObject *__pyx_t_11 = NULL;
-  int __pyx_t_12;
-  PyObject *__pyx_t_13 = NULL;
-  PyObject *__pyx_t_14 = NULL;
-  int __pyx_t_15;
-  int __pyx_t_16;
-  __Pyx_RefNannySetupContext("_next_with_retry", 0);
-
-  /* "cy_docs/cy_docs_x.py":1699
- *         server's default cursor timeout).
- *         """
- *         if self._cursor is None:             # <<<<<<<<<<<<<<
- *             self._create_cursor()
- *             assert self._cursor is not None
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_cursor); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1699, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = (__pyx_t_1 == Py_None);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = (__pyx_t_2 != 0);
-  if (__pyx_t_3) {
-
-    /* "cy_docs/cy_docs_x.py":1700
- *         """
- *         if self._cursor is None:
- *             self._create_cursor()             # <<<<<<<<<<<<<<
- *             assert self._cursor is not None
- *         try:
- */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_create_cursor); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1700, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = NULL;
-    __pyx_t_6 = 0;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-        __pyx_t_6 = 1;
-      }
-    }
-    {
-      PyObject *__pyx_callargs[1] = {__pyx_t_5, };
-      __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_6, 0+__pyx_t_6);
-      __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1700, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    }
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1701
- *         if self._cursor is None:
- *             self._create_cursor()
- *             assert self._cursor is not None             # <<<<<<<<<<<<<<
- *         try:
- *             return self._cursor.next()
- */
-    #ifndef CYTHON_WITHOUT_ASSERTIONS
-    if (unlikely(!Py_OptimizeFlag)) {
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_cursor); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1701, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_3 = (__pyx_t_1 != Py_None);
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (unlikely(!(__pyx_t_3 != 0))) {
-        PyErr_SetNone(PyExc_AssertionError);
-        __PYX_ERR(0, 1701, __pyx_L1_error)
-      }
-    }
-    #endif
-
-    /* "cy_docs/cy_docs_x.py":1699
- *         server's default cursor timeout).
- *         """
- *         if self._cursor is None:             # <<<<<<<<<<<<<<
- *             self._create_cursor()
- *             assert self._cursor is not None
- */
-  }
-
-  /* "cy_docs/cy_docs_x.py":1702
- *             self._create_cursor()
- *             assert self._cursor is not None
- *         try:             # <<<<<<<<<<<<<<
- *             return self._cursor.next()
- *         except CursorNotFound:
- */
-  {
-    __Pyx_PyThreadState_declare
-    __Pyx_PyThreadState_assign
-    __Pyx_ExceptionSave(&__pyx_t_7, &__pyx_t_8, &__pyx_t_9);
-    __Pyx_XGOTREF(__pyx_t_7);
-    __Pyx_XGOTREF(__pyx_t_8);
-    __Pyx_XGOTREF(__pyx_t_9);
-    /*try:*/ {
-
-      /* "cy_docs/cy_docs_x.py":1703
- *             assert self._cursor is not None
- *         try:
- *             return self._cursor.next()             # <<<<<<<<<<<<<<
- *         except CursorNotFound:
- *             self._cursor.close()
- */
-      __Pyx_XDECREF(__pyx_r);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_cursor); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1703, __pyx_L4_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_next); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1703, __pyx_L4_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = NULL;
-      __pyx_t_10 = 0;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
-        __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_5);
-        if (likely(__pyx_t_4)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-          __Pyx_INCREF(__pyx_t_4);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_5, function);
-          __pyx_t_10 = 1;
-        }
-      }
-      {
-        PyObject *__pyx_callargs[1] = {__pyx_t_4, };
-        __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_10, 0+__pyx_t_10);
-        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1703, __pyx_L4_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      }
-      __pyx_r = __pyx_t_1;
-      __pyx_t_1 = 0;
-      goto __pyx_L8_try_return;
-
-      /* "cy_docs/cy_docs_x.py":1702
- *             self._create_cursor()
- *             assert self._cursor is not None
- *         try:             # <<<<<<<<<<<<<<
- *             return self._cursor.next()
- *         except CursorNotFound:
- */
-    }
-    __pyx_L4_error:;
-    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1704
- *         try:
- *             return self._cursor.next()
- *         except CursorNotFound:             # <<<<<<<<<<<<<<
- *             self._cursor.close()
- *             self._create_cursor()
- */
-    __Pyx_ErrFetch(&__pyx_t_1, &__pyx_t_5, &__pyx_t_4);
-    __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_CursorNotFound); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1704, __pyx_L6_except_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_12 = __Pyx_PyErr_GivenExceptionMatches(__pyx_t_1, __pyx_t_11);
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __Pyx_ErrRestore(__pyx_t_1, __pyx_t_5, __pyx_t_4);
-    __pyx_t_1 = 0; __pyx_t_5 = 0; __pyx_t_4 = 0;
-    if (__pyx_t_12) {
-      __Pyx_AddTraceback("cy_docs.cy_docs_x.FS_GridOutChunkIterator._next_with_retry", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_5, &__pyx_t_1) < 0) __PYX_ERR(0, 1704, __pyx_L6_except_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_GOTREF(__pyx_t_1);
-
-      /* "cy_docs/cy_docs_x.py":1705
- *             return self._cursor.next()
- *         except CursorNotFound:
- *             self._cursor.close()             # <<<<<<<<<<<<<<
- *             self._create_cursor()
- *             return self._cursor.next()
- */
-      __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_cursor); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1705, __pyx_L6_except_error)
-      __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_close); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1705, __pyx_L6_except_error)
-      __Pyx_GOTREF(__pyx_t_14);
-      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __pyx_t_13 = NULL;
-      __pyx_t_12 = 0;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
-        __pyx_t_13 = PyMethod_GET_SELF(__pyx_t_14);
-        if (likely(__pyx_t_13)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
-          __Pyx_INCREF(__pyx_t_13);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_14, function);
-          __pyx_t_12 = 1;
-        }
-      }
-      {
-        PyObject *__pyx_callargs[1] = {__pyx_t_13, };
-        __pyx_t_11 = __Pyx_PyObject_FastCall(__pyx_t_14, __pyx_callargs+1-__pyx_t_12, 0+__pyx_t_12);
-        __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
-        if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1705, __pyx_L6_except_error)
-        __Pyx_GOTREF(__pyx_t_11);
-        __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      }
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-
-      /* "cy_docs/cy_docs_x.py":1706
- *         except CursorNotFound:
- *             self._cursor.close()
- *             self._create_cursor()             # <<<<<<<<<<<<<<
- *             return self._cursor.next()
- * 
- */
-      __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_create_cursor); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1706, __pyx_L6_except_error)
-      __Pyx_GOTREF(__pyx_t_14);
-      __pyx_t_13 = NULL;
-      __pyx_t_15 = 0;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
-        __pyx_t_13 = PyMethod_GET_SELF(__pyx_t_14);
-        if (likely(__pyx_t_13)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
-          __Pyx_INCREF(__pyx_t_13);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_14, function);
-          __pyx_t_15 = 1;
-        }
-      }
-      {
-        PyObject *__pyx_callargs[1] = {__pyx_t_13, };
-        __pyx_t_11 = __Pyx_PyObject_FastCall(__pyx_t_14, __pyx_callargs+1-__pyx_t_15, 0+__pyx_t_15);
-        __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
-        if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1706, __pyx_L6_except_error)
-        __Pyx_GOTREF(__pyx_t_11);
-        __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      }
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-
-      /* "cy_docs/cy_docs_x.py":1707
- *             self._cursor.close()
- *             self._create_cursor()
- *             return self._cursor.next()             # <<<<<<<<<<<<<<
- * 
- *     def next(self):
- */
-      __Pyx_XDECREF(__pyx_r);
-      __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_cursor); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1707, __pyx_L6_except_error)
-      __Pyx_GOTREF(__pyx_t_14);
-      __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_next); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1707, __pyx_L6_except_error)
-      __Pyx_GOTREF(__pyx_t_13);
-      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      __pyx_t_14 = NULL;
-      __pyx_t_16 = 0;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
-        __pyx_t_14 = PyMethod_GET_SELF(__pyx_t_13);
-        if (likely(__pyx_t_14)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-          __Pyx_INCREF(__pyx_t_14);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_13, function);
-          __pyx_t_16 = 1;
-        }
-      }
-      {
-        PyObject *__pyx_callargs[1] = {__pyx_t_14, };
-        __pyx_t_11 = __Pyx_PyObject_FastCall(__pyx_t_13, __pyx_callargs+1-__pyx_t_16, 0+__pyx_t_16);
-        __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
-        if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1707, __pyx_L6_except_error)
-        __Pyx_GOTREF(__pyx_t_11);
-        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      }
-      __pyx_r = __pyx_t_11;
-      __pyx_t_11 = 0;
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      goto __pyx_L7_except_return;
-    }
-    goto __pyx_L6_except_error;
-    __pyx_L6_except_error:;
-
-    /* "cy_docs/cy_docs_x.py":1702
- *             self._create_cursor()
- *             assert self._cursor is not None
- *         try:             # <<<<<<<<<<<<<<
- *             return self._cursor.next()
- *         except CursorNotFound:
- */
-    __Pyx_XGIVEREF(__pyx_t_7);
-    __Pyx_XGIVEREF(__pyx_t_8);
-    __Pyx_XGIVEREF(__pyx_t_9);
-    __Pyx_ExceptionReset(__pyx_t_7, __pyx_t_8, __pyx_t_9);
-    goto __pyx_L1_error;
-    __pyx_L8_try_return:;
-    __Pyx_XGIVEREF(__pyx_t_7);
-    __Pyx_XGIVEREF(__pyx_t_8);
-    __Pyx_XGIVEREF(__pyx_t_9);
-    __Pyx_ExceptionReset(__pyx_t_7, __pyx_t_8, __pyx_t_9);
-    goto __pyx_L0;
-    __pyx_L7_except_return:;
-    __Pyx_XGIVEREF(__pyx_t_7);
-    __Pyx_XGIVEREF(__pyx_t_8);
-    __Pyx_XGIVEREF(__pyx_t_9);
-    __Pyx_ExceptionReset(__pyx_t_7, __pyx_t_8, __pyx_t_9);
-    goto __pyx_L0;
-  }
-
-  /* "cy_docs/cy_docs_x.py":1692
- *         self._cursor = self._chunks.find(filter,skip=self._next_chunk)
- * 
- *     def _next_with_retry(self):             # <<<<<<<<<<<<<<
- *         """Return the next chunk and retry once on CursorNotFound.
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_XDECREF(__pyx_t_14);
-  __Pyx_AddTraceback("cy_docs.cy_docs_x.FS_GridOutChunkIterator._next_with_retry", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cy_docs/cy_docs_x.py":1709
- *             return self._cursor.next()
- * 
- *     def next(self):             # <<<<<<<<<<<<<<
- *         try:
- *             chunk = self._next_with_retry()
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_11next(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_11next = {"next", (PyCFunction)__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_11next, METH_O, 0};
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_11next(PyObject *__pyx_self, PyObject *__pyx_v_self) {
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("next (wrapper)", 0);
-  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_10next(__pyx_self, ((PyObject *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_10next(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
-  PyObject *__pyx_v_chunk = NULL;
-  PyObject *__pyx_v_expected_length = NULL;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6 = NULL;
-  int __pyx_t_7;
-  int __pyx_t_8;
-  PyObject *__pyx_t_9 = NULL;
-  PyObject *__pyx_t_10 = NULL;
-  PyObject *__pyx_t_11 = NULL;
-  int __pyx_t_12;
-  PyObject *__pyx_t_13 = NULL;
-  int __pyx_t_14;
-  int __pyx_t_15;
-  Py_ssize_t __pyx_t_16;
-  int __pyx_t_17;
-  int __pyx_t_18;
-  int __pyx_t_19;
-  int __pyx_t_20;
-  int __pyx_t_21;
-  __Pyx_RefNannySetupContext("next", 0);
-
-  /* "cy_docs/cy_docs_x.py":1710
- * 
- *     def next(self):
- *         try:             # <<<<<<<<<<<<<<
- *             chunk = self._next_with_retry()
- *         except StopIteration:
- */
-  {
-    __Pyx_PyThreadState_declare
-    __Pyx_PyThreadState_assign
-    __Pyx_ExceptionSave(&__pyx_t_1, &__pyx_t_2, &__pyx_t_3);
-    __Pyx_XGOTREF(__pyx_t_1);
-    __Pyx_XGOTREF(__pyx_t_2);
-    __Pyx_XGOTREF(__pyx_t_3);
-    /*try:*/ {
-
-      /* "cy_docs/cy_docs_x.py":1711
- *     def next(self):
- *         try:
- *             chunk = self._next_with_retry()             # <<<<<<<<<<<<<<
- *         except StopIteration:
- *             if self._next_chunk >= self._num_chunks:
- */
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_next_with_retry); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1711, __pyx_L3_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = NULL;
-      __pyx_t_7 = 0;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
-        __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
-        if (likely(__pyx_t_6)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-          __Pyx_INCREF(__pyx_t_6);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_5, function);
-          __pyx_t_7 = 1;
-        }
-      }
-      {
-        PyObject *__pyx_callargs[1] = {__pyx_t_6, };
-        __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_7, 0+__pyx_t_7);
-        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1711, __pyx_L3_error)
-        __Pyx_GOTREF(__pyx_t_4);
-        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      }
-      __pyx_v_chunk = __pyx_t_4;
-      __pyx_t_4 = 0;
-
-      /* "cy_docs/cy_docs_x.py":1710
- * 
- *     def next(self):
- *         try:             # <<<<<<<<<<<<<<
- *             chunk = self._next_with_retry()
- *         except StopIteration:
- */
-    }
-    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    goto __pyx_L8_try_end;
-    __pyx_L3_error:;
-    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1712
- *         try:
- *             chunk = self._next_with_retry()
- *         except StopIteration:             # <<<<<<<<<<<<<<
- *             if self._next_chunk >= self._num_chunks:
- *                 raise
- */
-    __pyx_t_8 = __Pyx_PyErr_ExceptionMatches(__pyx_builtin_StopIteration);
-    if (__pyx_t_8) {
-      __Pyx_AddTraceback("cy_docs.cy_docs_x.FS_GridOutChunkIterator.next", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_5, &__pyx_t_6) < 0) __PYX_ERR(0, 1712, __pyx_L5_except_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_GOTREF(__pyx_t_6);
-
-      /* "cy_docs/cy_docs_x.py":1713
- *             chunk = self._next_with_retry()
- *         except StopIteration:
- *             if self._next_chunk >= self._num_chunks:             # <<<<<<<<<<<<<<
- *                 raise
- *             raise CorruptGridFile("no chunk #%d" % self._next_chunk)
- */
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_next_chunk_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1713, __pyx_L5_except_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_num_chunks); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1713, __pyx_L5_except_error)
-      __Pyx_GOTREF(__pyx_t_10);
-      __pyx_t_11 = PyObject_RichCompare(__pyx_t_9, __pyx_t_10, Py_GE); __Pyx_XGOTREF(__pyx_t_11); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1713, __pyx_L5_except_error)
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_11); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 1713, __pyx_L5_except_error)
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      if (unlikely(__pyx_t_12)) {
-
-        /* "cy_docs/cy_docs_x.py":1714
- *         except StopIteration:
- *             if self._next_chunk >= self._num_chunks:
- *                 raise             # <<<<<<<<<<<<<<
- *             raise CorruptGridFile("no chunk #%d" % self._next_chunk)
- * 
- */
-        __Pyx_GIVEREF(__pyx_t_4);
-        __Pyx_GIVEREF(__pyx_t_5);
-        __Pyx_XGIVEREF(__pyx_t_6);
-        __Pyx_ErrRestoreWithState(__pyx_t_4, __pyx_t_5, __pyx_t_6);
-        __pyx_t_4 = 0; __pyx_t_5 = 0; __pyx_t_6 = 0; 
-        __PYX_ERR(0, 1714, __pyx_L5_except_error)
-
-        /* "cy_docs/cy_docs_x.py":1713
- *             chunk = self._next_with_retry()
- *         except StopIteration:
- *             if self._next_chunk >= self._num_chunks:             # <<<<<<<<<<<<<<
- *                 raise
- *             raise CorruptGridFile("no chunk #%d" % self._next_chunk)
- */
-      }
-
-      /* "cy_docs/cy_docs_x.py":1715
- *             if self._next_chunk >= self._num_chunks:
- *                 raise
- *             raise CorruptGridFile("no chunk #%d" % self._next_chunk)             # <<<<<<<<<<<<<<
- * 
- *         if chunk["n"] != self._next_chunk:
- */
-      __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_CorruptGridFile); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1715, __pyx_L5_except_error)
-      __Pyx_GOTREF(__pyx_t_10);
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_next_chunk_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1715, __pyx_L5_except_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_13 = __Pyx_PyString_FormatSafe(__pyx_kp_s_no_chunk_d, __pyx_t_9); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1715, __pyx_L5_except_error)
-      __Pyx_GOTREF(__pyx_t_13);
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = NULL;
-      __pyx_t_8 = 0;
-      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_10))) {
-        __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_10);
-        if (likely(__pyx_t_9)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_10);
-          __Pyx_INCREF(__pyx_t_9);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_10, function);
-          __pyx_t_8 = 1;
-        }
-      }
-      {
-        PyObject *__pyx_callargs[2] = {__pyx_t_9, __pyx_t_13};
-        __pyx_t_11 = __Pyx_PyObject_FastCall(__pyx_t_10, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
-        __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-        if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1715, __pyx_L5_except_error)
-        __Pyx_GOTREF(__pyx_t_11);
-        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      }
-      __Pyx_Raise(__pyx_t_11, 0, 0, 0);
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      __PYX_ERR(0, 1715, __pyx_L5_except_error)
-    }
-    goto __pyx_L5_except_error;
-    __pyx_L5_except_error:;
-
-    /* "cy_docs/cy_docs_x.py":1710
- * 
- *     def next(self):
- *         try:             # <<<<<<<<<<<<<<
- *             chunk = self._next_with_retry()
- *         except StopIteration:
- */
-    __Pyx_XGIVEREF(__pyx_t_1);
-    __Pyx_XGIVEREF(__pyx_t_2);
-    __Pyx_XGIVEREF(__pyx_t_3);
-    __Pyx_ExceptionReset(__pyx_t_1, __pyx_t_2, __pyx_t_3);
-    goto __pyx_L1_error;
-    __pyx_L8_try_end:;
-  }
-
-  /* "cy_docs/cy_docs_x.py":1717
- *             raise CorruptGridFile("no chunk #%d" % self._next_chunk)
- * 
- *         if chunk["n"] != self._next_chunk:             # <<<<<<<<<<<<<<
- *             self.close()
- *             raise CorruptGridFile(
- */
-  __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_v_chunk, __pyx_n_s_n); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1717, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_next_chunk_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1717, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = PyObject_RichCompare(__pyx_t_6, __pyx_t_5, Py_NE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1717, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 1717, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(__pyx_t_12)) {
-
-    /* "cy_docs/cy_docs_x.py":1718
- * 
- *         if chunk["n"] != self._next_chunk:
- *             self.close()             # <<<<<<<<<<<<<<
- *             raise CorruptGridFile(
- *                 "Missing chunk: expected chunk #%d but found "
- */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_close); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1718, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = NULL;
-    __pyx_t_14 = 0;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
-      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
-      if (likely(__pyx_t_6)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-        __Pyx_INCREF(__pyx_t_6);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_5, function);
-        __pyx_t_14 = 1;
-      }
-    }
-    {
-      PyObject *__pyx_callargs[1] = {__pyx_t_6, };
-      __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_14, 0+__pyx_t_14);
-      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1718, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    }
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1719
- *         if chunk["n"] != self._next_chunk:
- *             self.close()
- *             raise CorruptGridFile(             # <<<<<<<<<<<<<<
- *                 "Missing chunk: expected chunk #%d but found "
- *                 "chunk with n=%d" % (self._next_chunk, chunk["n"])
- */
-    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_CorruptGridFile); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1719, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-
-    /* "cy_docs/cy_docs_x.py":1721
- *             raise CorruptGridFile(
- *                 "Missing chunk: expected chunk #%d but found "
- *                 "chunk with n=%d" % (self._next_chunk, chunk["n"])             # <<<<<<<<<<<<<<
- *             )
- * 
- */
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_next_chunk_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1721, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_11 = __Pyx_PyObject_Dict_GetItem(__pyx_v_chunk, __pyx_n_s_n); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1721, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1721, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __Pyx_GIVEREF(__pyx_t_6);
-    PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_6);
-    __Pyx_GIVEREF(__pyx_t_11);
-    PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_t_11);
-    __pyx_t_6 = 0;
-    __pyx_t_11 = 0;
-    __pyx_t_11 = __Pyx_PyString_Format(__pyx_kp_s_Missing_chunk_expected_chunk_d_b, __pyx_t_10); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1721, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_10 = NULL;
-    __pyx_t_15 = 0;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
-      __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_5);
-      if (likely(__pyx_t_10)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-        __Pyx_INCREF(__pyx_t_10);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_5, function);
-        __pyx_t_15 = 1;
-      }
-    }
-    {
-      PyObject *__pyx_callargs[2] = {__pyx_t_10, __pyx_t_11};
-      __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_15, 1+__pyx_t_15);
-      __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1719, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    }
-    __Pyx_Raise(__pyx_t_4, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __PYX_ERR(0, 1719, __pyx_L1_error)
-
-    /* "cy_docs/cy_docs_x.py":1717
- *             raise CorruptGridFile("no chunk #%d" % self._next_chunk)
- * 
- *         if chunk["n"] != self._next_chunk:             # <<<<<<<<<<<<<<
- *             self.close()
- *             raise CorruptGridFile(
- */
-  }
-
-  /* "cy_docs/cy_docs_x.py":1724
- *             )
- * 
- *         if chunk["n"] >= self._num_chunks:             # <<<<<<<<<<<<<<
- *             # According to spec, ignore extra chunks if they are empty.
- *             if len(chunk["data"]):
- */
-  __pyx_t_4 = __Pyx_PyObject_Dict_GetItem(__pyx_v_chunk, __pyx_n_s_n); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1724, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_num_chunks); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1724, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_11 = PyObject_RichCompare(__pyx_t_4, __pyx_t_5, Py_GE); __Pyx_XGOTREF(__pyx_t_11); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1724, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_11); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 1724, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  if (__pyx_t_12) {
-
-    /* "cy_docs/cy_docs_x.py":1726
- *         if chunk["n"] >= self._num_chunks:
- *             # According to spec, ignore extra chunks if they are empty.
- *             if len(chunk["data"]):             # <<<<<<<<<<<<<<
- *                 self.close()
- *                 raise CorruptGridFile(
- */
-    __pyx_t_11 = __Pyx_PyObject_Dict_GetItem(__pyx_v_chunk, __pyx_n_s_data_2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1726, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_16 = PyObject_Length(__pyx_t_11); if (unlikely(__pyx_t_16 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1726, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_12 = (__pyx_t_16 != 0);
-    if (unlikely(__pyx_t_12)) {
-
-      /* "cy_docs/cy_docs_x.py":1727
- *             # According to spec, ignore extra chunks if they are empty.
- *             if len(chunk["data"]):
- *                 self.close()             # <<<<<<<<<<<<<<
- *                 raise CorruptGridFile(
- *                     "Extra chunk found: expected %d chunks but found "
- */
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_close); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1727, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_4 = NULL;
-      __pyx_t_17 = 0;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
-        __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_5);
-        if (likely(__pyx_t_4)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-          __Pyx_INCREF(__pyx_t_4);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_5, function);
-          __pyx_t_17 = 1;
-        }
-      }
-      {
-        PyObject *__pyx_callargs[1] = {__pyx_t_4, };
-        __pyx_t_11 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_17, 0+__pyx_t_17);
-        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1727, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_11);
-        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      }
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-
-      /* "cy_docs/cy_docs_x.py":1728
- *             if len(chunk["data"]):
- *                 self.close()
- *                 raise CorruptGridFile(             # <<<<<<<<<<<<<<
- *                     "Extra chunk found: expected %d chunks but found "
- *                     "chunk with n=%d" % (self._num_chunks, chunk["n"])
- */
-      __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_CorruptGridFile); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1728, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-
-      /* "cy_docs/cy_docs_x.py":1730
- *                 raise CorruptGridFile(
- *                     "Extra chunk found: expected %d chunks but found "
- *                     "chunk with n=%d" % (self._num_chunks, chunk["n"])             # <<<<<<<<<<<<<<
- *                 )
- * 
- */
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_num_chunks); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1730, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_10 = __Pyx_PyObject_Dict_GetItem(__pyx_v_chunk, __pyx_n_s_n); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1730, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_10);
-      __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1730, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_GIVEREF(__pyx_t_4);
-      PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4);
-      __Pyx_GIVEREF(__pyx_t_10);
-      PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_10);
-      __pyx_t_4 = 0;
-      __pyx_t_10 = 0;
-      __pyx_t_10 = __Pyx_PyString_Format(__pyx_kp_s_Extra_chunk_found_expected_d_chu, __pyx_t_6); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1730, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_10);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = NULL;
-      __pyx_t_18 = 0;
-      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
-        __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
-        if (likely(__pyx_t_6)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-          __Pyx_INCREF(__pyx_t_6);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_5, function);
-          __pyx_t_18 = 1;
-        }
-      }
-      {
-        PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_10};
-        __pyx_t_11 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_18, 1+__pyx_t_18);
-        __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-        if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1728, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_11);
-        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      }
-      __Pyx_Raise(__pyx_t_11, 0, 0, 0);
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      __PYX_ERR(0, 1728, __pyx_L1_error)
-
-      /* "cy_docs/cy_docs_x.py":1726
- *         if chunk["n"] >= self._num_chunks:
- *             # According to spec, ignore extra chunks if they are empty.
- *             if len(chunk["data"]):             # <<<<<<<<<<<<<<
- *                 self.close()
- *                 raise CorruptGridFile(
- */
-    }
-
-    /* "cy_docs/cy_docs_x.py":1724
- *             )
- * 
- *         if chunk["n"] >= self._num_chunks:             # <<<<<<<<<<<<<<
- *             # According to spec, ignore extra chunks if they are empty.
- *             if len(chunk["data"]):
- */
-  }
-
-  /* "cy_docs/cy_docs_x.py":1733
- *                 )
- * 
- *         expected_length = self.expected_chunk_length(chunk["n"])             # <<<<<<<<<<<<<<
- *         if len(chunk["data"]) != expected_length:
- *             self.close()
- */
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_expected_chunk_length); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1733, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_10 = __Pyx_PyObject_Dict_GetItem(__pyx_v_chunk, __pyx_n_s_n); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1733, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_6 = NULL;
-  __pyx_t_19 = 0;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
-    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
-    if (likely(__pyx_t_6)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-      __Pyx_INCREF(__pyx_t_6);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_5, function);
-      __pyx_t_19 = 1;
-    }
-  }
-  {
-    PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_10};
-    __pyx_t_11 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_19, 1+__pyx_t_19);
-    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1733, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  }
-  __pyx_v_expected_length = __pyx_t_11;
-  __pyx_t_11 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1734
- * 
- *         expected_length = self.expected_chunk_length(chunk["n"])
- *         if len(chunk["data"]) != expected_length:             # <<<<<<<<<<<<<<
- *             self.close()
- *             raise CorruptGridFile(
- */
-  __pyx_t_11 = __Pyx_PyObject_Dict_GetItem(__pyx_v_chunk, __pyx_n_s_data_2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1734, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_16 = PyObject_Length(__pyx_t_11); if (unlikely(__pyx_t_16 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1734, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = PyInt_FromSsize_t(__pyx_t_16); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1734, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_5 = PyObject_RichCompare(__pyx_t_11, __pyx_v_expected_length, Py_NE); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1734, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_12 < 0)) __PYX_ERR(0, 1734, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(__pyx_t_12)) {
-
-    /* "cy_docs/cy_docs_x.py":1735
- *         expected_length = self.expected_chunk_length(chunk["n"])
- *         if len(chunk["data"]) != expected_length:
- *             self.close()             # <<<<<<<<<<<<<<
- *             raise CorruptGridFile(
- *                 "truncated chunk #%d: expected chunk length to be %d but "
- */
-    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_close); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1735, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_10 = NULL;
-    __pyx_t_20 = 0;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_11))) {
-      __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_11);
-      if (likely(__pyx_t_10)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_11);
-        __Pyx_INCREF(__pyx_t_10);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_11, function);
-        __pyx_t_20 = 1;
-      }
-    }
-    {
-      PyObject *__pyx_callargs[1] = {__pyx_t_10, };
-      __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_11, __pyx_callargs+1-__pyx_t_20, 0+__pyx_t_20);
-      __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1735, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1736
- *         if len(chunk["data"]) != expected_length:
- *             self.close()
- *             raise CorruptGridFile(             # <<<<<<<<<<<<<<
- *                 "truncated chunk #%d: expected chunk length to be %d but "
- *                 "found chunk with length %d" % (chunk["n"], expected_length, len(chunk["data"]))
- */
-    __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_CorruptGridFile); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1736, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-
-    /* "cy_docs/cy_docs_x.py":1738
- *             raise CorruptGridFile(
- *                 "truncated chunk #%d: expected chunk length to be %d but "
- *                 "found chunk with length %d" % (chunk["n"], expected_length, len(chunk["data"]))             # <<<<<<<<<<<<<<
- *             )
- * 
- */
-    __pyx_t_10 = __Pyx_PyObject_Dict_GetItem(__pyx_v_chunk, __pyx_n_s_n); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1738, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_v_chunk, __pyx_n_s_data_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1738, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_16 = PyObject_Length(__pyx_t_6); if (unlikely(__pyx_t_16 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1738, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = PyInt_FromSsize_t(__pyx_t_16); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1738, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1738, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_GIVEREF(__pyx_t_10);
-    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_10);
-    __Pyx_INCREF(__pyx_v_expected_length);
-    __Pyx_GIVEREF(__pyx_v_expected_length);
-    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_v_expected_length);
-    __Pyx_GIVEREF(__pyx_t_6);
-    PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_t_6);
-    __pyx_t_10 = 0;
-    __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyString_Format(__pyx_kp_s_truncated_chunk_d_expected_chunk, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1738, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = NULL;
-    __pyx_t_21 = 0;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_11))) {
-      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_11);
-      if (likely(__pyx_t_4)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_11);
-        __Pyx_INCREF(__pyx_t_4);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_11, function);
-        __pyx_t_21 = 1;
-      }
-    }
-    {
-      PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_t_6};
-      __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_11, __pyx_callargs+1-__pyx_t_21, 1+__pyx_t_21);
-      __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1736, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    }
-    __Pyx_Raise(__pyx_t_5, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __PYX_ERR(0, 1736, __pyx_L1_error)
-
-    /* "cy_docs/cy_docs_x.py":1734
- * 
- *         expected_length = self.expected_chunk_length(chunk["n"])
- *         if len(chunk["data"]) != expected_length:             # <<<<<<<<<<<<<<
- *             self.close()
- *             raise CorruptGridFile(
- */
-  }
-
-  /* "cy_docs/cy_docs_x.py":1741
- *             )
- * 
- *         self._next_chunk += 1             # <<<<<<<<<<<<<<
- *         return chunk
- * 
- */
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_next_chunk_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1741, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_11 = __Pyx_PyInt_AddObjC(__pyx_t_5, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1741, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_next_chunk_2, __pyx_t_11) < 0) __PYX_ERR(0, 1741, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1742
- * 
- *         self._next_chunk += 1
- *         return chunk             # <<<<<<<<<<<<<<
- * 
- *     __next__ = next
- */
-  __Pyx_XDECREF(__pyx_r);
-  __Pyx_INCREF(__pyx_v_chunk);
-  __pyx_r = __pyx_v_chunk;
-  goto __pyx_L0;
-
-  /* "cy_docs/cy_docs_x.py":1709
- *             return self._cursor.next()
- * 
- *     def next(self):             # <<<<<<<<<<<<<<
- *         try:
- *             chunk = self._next_with_retry()
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_AddTraceback("cy_docs.cy_docs_x.FS_GridOutChunkIterator.next", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_chunk);
-  __Pyx_XDECREF(__pyx_v_expected_length);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cy_docs/cy_docs_x.py":1746
- *     __next__ = next
- * 
- *     def close(self) -> None:             # <<<<<<<<<<<<<<
- *         if self._cursor:
- *             self._cursor.close()
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_13close(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_13close = {"close", (PyCFunction)__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_13close, METH_O, 0};
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_13close(PyObject *__pyx_self, PyObject *__pyx_v_self) {
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("close (wrapper)", 0);
-  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_12close(__pyx_self, ((PyObject *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_12close(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_t_2;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  int __pyx_t_5;
-  __Pyx_RefNannySetupContext("close", 0);
-
-  /* "cy_docs/cy_docs_x.py":1747
- * 
- *     def close(self) -> None:
- *         if self._cursor:             # <<<<<<<<<<<<<<
- *             self._cursor.close()
- *             self._cursor = None
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_cursor); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1747, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 1747, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (__pyx_t_2) {
-
-    /* "cy_docs/cy_docs_x.py":1748
- *     def close(self) -> None:
- *         if self._cursor:
- *             self._cursor.close()             # <<<<<<<<<<<<<<
- *             self._cursor = None
- * def readchunk(db,fs: GridOut) -> bytes:
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_cursor); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1748, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_close); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1748, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = NULL;
-    __pyx_t_5 = 0;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_3)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_3);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-        __pyx_t_5 = 1;
-      }
-    }
-    {
-      PyObject *__pyx_callargs[1] = {__pyx_t_3, };
-      __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_5, 0+__pyx_t_5);
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1748, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    }
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1749
- *         if self._cursor:
- *             self._cursor.close()
- *             self._cursor = None             # <<<<<<<<<<<<<<
- * def readchunk(db,fs: GridOut) -> bytes:
- *     """Reads a chunk at a time. If the current position is within a
- */
-    if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_cursor, Py_None) < 0) __PYX_ERR(0, 1749, __pyx_L1_error)
-
-    /* "cy_docs/cy_docs_x.py":1747
- * 
- *     def close(self) -> None:
- *         if self._cursor:             # <<<<<<<<<<<<<<
- *             self._cursor.close()
- *             self._cursor = None
- */
-  }
-
-  /* "cy_docs/cy_docs_x.py":1746
- *     __next__ = next
- * 
- *     def close(self) -> None:             # <<<<<<<<<<<<<<
- *         if self._cursor:
- *             self._cursor.close()
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("cy_docs.cy_docs_x.FS_GridOutChunkIterator.close", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cy_docs/cy_docs_x.py":1750
- *             self._cursor.close()
- *             self._cursor = None
- * def readchunk(db,fs: GridOut) -> bytes:             # <<<<<<<<<<<<<<
- *     """Reads a chunk at a time. If the current position is within a
- *     chunk the remainder of the chunk is returned.
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_33readchunk(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-PyDoc_STRVAR(__pyx_doc_7cy_docs_9cy_docs_x_32readchunk, "Reads a chunk at a time. If the current position is within a\n    chunk the remainder of the chunk is returned.\n    ");
-static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_33readchunk = {"readchunk", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cy_docs_9cy_docs_x_33readchunk, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7cy_docs_9cy_docs_x_32readchunk};
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_33readchunk(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  PyObject *__pyx_v_db = 0;
-  PyObject *__pyx_v_fs = 0;
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED const Py_ssize_t __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("readchunk (wrapper)", 0);
-  {
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_db,&__pyx_n_s_fs,0};
-    #else
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_db,&__pyx_n_s_fs,0};
-    #endif
-    PyObject* values[2] = {0,0};
-    if (__pyx_kwds) {
-      Py_ssize_t kw_args;
-      switch (__pyx_nargs) {
-        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
-      switch (__pyx_nargs) {
-        case  0:
-        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_db)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1750, __pyx_L3_error)
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_fs)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1750, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("readchunk", 1, 2, 2, 1); __PYX_ERR(0, 1750, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "readchunk") < 0)) __PYX_ERR(0, 1750, __pyx_L3_error)
-      }
-    } else if (unlikely(__pyx_nargs != 2)) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-      values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-    }
-    __pyx_v_db = values[0];
-    __pyx_v_fs = values[1];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("readchunk", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 1750, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cy_docs.cy_docs_x.readchunk", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_32readchunk(__pyx_self, __pyx_v_db, __pyx_v_fs);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_32readchunk(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_db, PyObject *__pyx_v_fs) {
-  PyObject *__pyx_v_received = NULL;
-  PyObject *__pyx_v_chunk_data = NULL;
-  PyObject *__pyx_v_chunk_size = NULL;
-  PyObject *__pyx_v_chunk_number = NULL;
-  PyObject *__pyx_v_chunk = NULL;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  int __pyx_t_2;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  int __pyx_t_6;
-  int __pyx_t_7;
-  Py_ssize_t __pyx_t_8;
-  PyObject *__pyx_t_9 = NULL;
-  PyObject *__pyx_t_10 = NULL;
-  int __pyx_t_11;
-  int __pyx_t_12;
-  int __pyx_t_13;
-  __Pyx_RefNannySetupContext("readchunk", 0);
-
-  /* "cy_docs/cy_docs_x.py":1754
- *     chunk the remainder of the chunk is returned.
- *     """
- *     if not hasattr(fs,"__chunks"):             # <<<<<<<<<<<<<<
- *         setattr(fs, "__chunks",db.get_collection("fs.chunks"))
- * 
- */
-  __pyx_t_1 = __Pyx_HasAttr(__pyx_v_fs, __pyx_n_s_chunks_3); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 1754, __pyx_L1_error)
-  __pyx_t_2 = ((!(__pyx_t_1 != 0)) != 0);
-  if (__pyx_t_2) {
-
-    /* "cy_docs/cy_docs_x.py":1755
- *     """
- *     if not hasattr(fs,"__chunks"):
- *         setattr(fs, "__chunks",db.get_collection("fs.chunks"))             # <<<<<<<<<<<<<<
- * 
- *     if not hasattr(fs,"__buffer"):
- */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_db, __pyx_n_s_get_collection); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1755, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = NULL;
-    __pyx_t_6 = 0;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-        __pyx_t_6 = 1;
-      }
-    }
-    {
-      PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_kp_s_fs_chunks};
-      __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_6, 1+__pyx_t_6);
-      __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1755, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    }
-    __pyx_t_7 = PyObject_SetAttr(__pyx_v_fs, __pyx_n_s_chunks_3, __pyx_t_3); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 1755, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1754
- *     chunk the remainder of the chunk is returned.
- *     """
- *     if not hasattr(fs,"__chunks"):             # <<<<<<<<<<<<<<
- *         setattr(fs, "__chunks",db.get_collection("fs.chunks"))
- * 
- */
-  }
-
-  /* "cy_docs/cy_docs_x.py":1757
- *         setattr(fs, "__chunks",db.get_collection("fs.chunks"))
- * 
- *     if not hasattr(fs,"__buffer"):             # <<<<<<<<<<<<<<
- *         setattr(fs,"__buffer",b"")
- *     received = len(fs.__buffer)
- */
-  __pyx_t_2 = __Pyx_HasAttr(__pyx_v_fs, __pyx_n_s_buffer); if (unlikely(__pyx_t_2 == ((int)-1))) __PYX_ERR(0, 1757, __pyx_L1_error)
-  __pyx_t_1 = ((!(__pyx_t_2 != 0)) != 0);
-  if (__pyx_t_1) {
-
-    /* "cy_docs/cy_docs_x.py":1758
- * 
- *     if not hasattr(fs,"__buffer"):
- *         setattr(fs,"__buffer",b"")             # <<<<<<<<<<<<<<
- *     received = len(fs.__buffer)
- *     chunk_data = b""
- */
-    __pyx_t_7 = PyObject_SetAttr(__pyx_v_fs, __pyx_n_s_buffer, __pyx_kp_b__2); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 1758, __pyx_L1_error)
-
-    /* "cy_docs/cy_docs_x.py":1757
- *         setattr(fs, "__chunks",db.get_collection("fs.chunks"))
- * 
- *     if not hasattr(fs,"__buffer"):             # <<<<<<<<<<<<<<
- *         setattr(fs,"__buffer",b"")
- *     received = len(fs.__buffer)
- */
-  }
-
-  /* "cy_docs/cy_docs_x.py":1759
- *     if not hasattr(fs,"__buffer"):
- *         setattr(fs,"__buffer",b"")
- *     received = len(fs.__buffer)             # <<<<<<<<<<<<<<
- *     chunk_data = b""
- *     chunk_size = int(fs.chunk_size)
- */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_buffer); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1759, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_8 = PyObject_Length(__pyx_t_3); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1759, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyInt_FromSsize_t(__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1759, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_v_received = __pyx_t_3;
-  __pyx_t_3 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1760
- *         setattr(fs,"__buffer",b"")
- *     received = len(fs.__buffer)
- *     chunk_data = b""             # <<<<<<<<<<<<<<
- *     chunk_size = int(fs.chunk_size)
- * 
- */
-  __Pyx_INCREF(__pyx_kp_b__2);
-  __pyx_v_chunk_data = __pyx_kp_b__2;
-
-  /* "cy_docs/cy_docs_x.py":1761
- *     received = len(fs.__buffer)
- *     chunk_data = b""
- *     chunk_size = int(fs.chunk_size)             # <<<<<<<<<<<<<<
- * 
- *     if received > 0:
- */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_chunk_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1761, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyNumber_Int(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1761, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_v_chunk_size = __pyx_t_4;
-  __pyx_t_4 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1763
- *     chunk_size = int(fs.chunk_size)
- * 
- *     if received > 0:             # <<<<<<<<<<<<<<
- *         chunk_data = fs.__buffer
- *     elif fs.__position < int(fs.length):
- */
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_received, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1763, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 1763, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__pyx_t_1) {
-
-    /* "cy_docs/cy_docs_x.py":1764
- * 
- *     if received > 0:
- *         chunk_data = fs.__buffer             # <<<<<<<<<<<<<<
- *     elif fs.__position < int(fs.length):
- *         chunk_number = int((received + fs.__position) / chunk_size)
- */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_buffer); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1764, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF_SET(__pyx_v_chunk_data, __pyx_t_4);
-    __pyx_t_4 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1763
- *     chunk_size = int(fs.chunk_size)
- * 
- *     if received > 0:             # <<<<<<<<<<<<<<
- *         chunk_data = fs.__buffer
- *     elif fs.__position < int(fs.length):
- */
-    goto __pyx_L5;
-  }
-
-  /* "cy_docs/cy_docs_x.py":1765
- *     if received > 0:
- *         chunk_data = fs.__buffer
- *     elif fs.__position < int(fs.length):             # <<<<<<<<<<<<<<
- *         chunk_number = int((received + fs.__position) / chunk_size)
- *         if not hasattr(fs,"__chunk_iter"):
- */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_position); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1765, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_length); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1765, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = __Pyx_PyNumber_Int(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1765, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyObject_RichCompare(__pyx_t_4, __pyx_t_5, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1765, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 1765, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (__pyx_t_1) {
-
-    /* "cy_docs/cy_docs_x.py":1766
- *         chunk_data = fs.__buffer
- *     elif fs.__position < int(fs.length):
- *         chunk_number = int((received + fs.__position) / chunk_size)             # <<<<<<<<<<<<<<
- *         if not hasattr(fs,"__chunk_iter"):
- *             setattr(fs,"__chunk_iter",None)
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_position); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1766, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_5 = PyNumber_Add(__pyx_v_received, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1766, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_v_chunk_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1766, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyNumber_Int(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1766, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_v_chunk_number = __pyx_t_5;
-    __pyx_t_5 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1767
- *     elif fs.__position < int(fs.length):
- *         chunk_number = int((received + fs.__position) / chunk_size)
- *         if not hasattr(fs,"__chunk_iter"):             # <<<<<<<<<<<<<<
- *             setattr(fs,"__chunk_iter",None)
- *         if fs.__chunk_iter is None:
- */
-    __pyx_t_1 = __Pyx_HasAttr(__pyx_v_fs, __pyx_n_s_chunk_iter); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 1767, __pyx_L1_error)
-    __pyx_t_2 = ((!(__pyx_t_1 != 0)) != 0);
-    if (__pyx_t_2) {
-
-      /* "cy_docs/cy_docs_x.py":1768
- *         chunk_number = int((received + fs.__position) / chunk_size)
- *         if not hasattr(fs,"__chunk_iter"):
- *             setattr(fs,"__chunk_iter",None)             # <<<<<<<<<<<<<<
- *         if fs.__chunk_iter is None:
- *             fs.__chunk_iter = FS_GridOutChunkIterator(
- */
-      __pyx_t_7 = PyObject_SetAttr(__pyx_v_fs, __pyx_n_s_chunk_iter, Py_None); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 1768, __pyx_L1_error)
-
-      /* "cy_docs/cy_docs_x.py":1767
- *     elif fs.__position < int(fs.length):
- *         chunk_number = int((received + fs.__position) / chunk_size)
- *         if not hasattr(fs,"__chunk_iter"):             # <<<<<<<<<<<<<<
- *             setattr(fs,"__chunk_iter",None)
- *         if fs.__chunk_iter is None:
- */
-    }
-
-    /* "cy_docs/cy_docs_x.py":1769
- *         if not hasattr(fs,"__chunk_iter"):
- *             setattr(fs,"__chunk_iter",None)
- *         if fs.__chunk_iter is None:             # <<<<<<<<<<<<<<
- *             fs.__chunk_iter = FS_GridOutChunkIterator(
- *                 fs, fs.__chunks, fs._session, chunk_number
- */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_chunk_iter); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1769, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_2 = (__pyx_t_5 == Py_None);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_1 = (__pyx_t_2 != 0);
-    if (__pyx_t_1) {
-
-      /* "cy_docs/cy_docs_x.py":1770
- *             setattr(fs,"__chunk_iter",None)
- *         if fs.__chunk_iter is None:
- *             fs.__chunk_iter = FS_GridOutChunkIterator(             # <<<<<<<<<<<<<<
- *                 fs, fs.__chunks, fs._session, chunk_number
- *             )
- */
-      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_FS_GridOutChunkIterator); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1770, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-
-      /* "cy_docs/cy_docs_x.py":1771
- *         if fs.__chunk_iter is None:
- *             fs.__chunk_iter = FS_GridOutChunkIterator(
- *                 fs, fs.__chunks, fs._session, chunk_number             # <<<<<<<<<<<<<<
- *             )
- * 
- */
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_chunks_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1771, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_session_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1771, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_10 = NULL;
-      __pyx_t_11 = 0;
-      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-        __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_3);
-        if (likely(__pyx_t_10)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-          __Pyx_INCREF(__pyx_t_10);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_3, function);
-          __pyx_t_11 = 1;
-        }
-      }
-      {
-        PyObject *__pyx_callargs[5] = {__pyx_t_10, __pyx_v_fs, __pyx_t_4, __pyx_t_9, __pyx_v_chunk_number};
-        __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_11, 4+__pyx_t_11);
-        __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-        if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1770, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_5);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      }
-
-      /* "cy_docs/cy_docs_x.py":1770
- *             setattr(fs,"__chunk_iter",None)
- *         if fs.__chunk_iter is None:
- *             fs.__chunk_iter = FS_GridOutChunkIterator(             # <<<<<<<<<<<<<<
- *                 fs, fs.__chunks, fs._session, chunk_number
- *             )
- */
-      if (__Pyx_PyObject_SetAttrStr(__pyx_v_fs, __pyx_n_s_chunk_iter, __pyx_t_5) < 0) __PYX_ERR(0, 1770, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-      /* "cy_docs/cy_docs_x.py":1769
- *         if not hasattr(fs,"__chunk_iter"):
- *             setattr(fs,"__chunk_iter",None)
- *         if fs.__chunk_iter is None:             # <<<<<<<<<<<<<<
- *             fs.__chunk_iter = FS_GridOutChunkIterator(
- *                 fs, fs.__chunks, fs._session, chunk_number
- */
-    }
-
-    /* "cy_docs/cy_docs_x.py":1774
- *             )
- * 
- *         chunk = fs.__chunk_iter.next()             # <<<<<<<<<<<<<<
- *         chunk_data = chunk["data"][fs.__position % chunk_size:]
- * 
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_chunk_iter); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1774, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_next); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1774, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = NULL;
-    __pyx_t_12 = 0;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
-      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_9);
-      if (likely(__pyx_t_3)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
-        __Pyx_INCREF(__pyx_t_3);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_9, function);
-        __pyx_t_12 = 1;
-      }
-    }
-    {
-      PyObject *__pyx_callargs[1] = {__pyx_t_3, };
-      __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_9, __pyx_callargs+1-__pyx_t_12, 0+__pyx_t_12);
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1774, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    }
-    __pyx_v_chunk = __pyx_t_5;
-    __pyx_t_5 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1775
- * 
- *         chunk = fs.__chunk_iter.next()
- *         chunk_data = chunk["data"][fs.__position % chunk_size:]             # <<<<<<<<<<<<<<
- * 
- *         if not chunk_data:
- */
-    __pyx_t_5 = __Pyx_PyObject_Dict_GetItem(__pyx_v_chunk, __pyx_n_s_data_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1775, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_position); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1775, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_3 = PyNumber_Remainder(__pyx_t_9, __pyx_v_chunk_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1775, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = __Pyx_PyObject_GetSlice(__pyx_t_5, 0, 0, &__pyx_t_3, NULL, NULL, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1775, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF_SET(__pyx_v_chunk_data, __pyx_t_9);
-    __pyx_t_9 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1777
- *         chunk_data = chunk["data"][fs.__position % chunk_size:]
- * 
- *         if not chunk_data:             # <<<<<<<<<<<<<<
- *             raise CorruptGridFile("truncated chunk")
- * 
- */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_chunk_data); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 1777, __pyx_L1_error)
-    __pyx_t_2 = ((!__pyx_t_1) != 0);
-    if (unlikely(__pyx_t_2)) {
-
-      /* "cy_docs/cy_docs_x.py":1778
- * 
- *         if not chunk_data:
- *             raise CorruptGridFile("truncated chunk")             # <<<<<<<<<<<<<<
- * 
- *     fs.__position += len(chunk_data)
- */
-      __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_CorruptGridFile); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1778, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = NULL;
-      __pyx_t_13 = 0;
-      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-        __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_3);
-        if (likely(__pyx_t_5)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-          __Pyx_INCREF(__pyx_t_5);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_3, function);
-          __pyx_t_13 = 1;
-        }
-      }
-      {
-        PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_kp_s_truncated_chunk};
-        __pyx_t_9 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_13, 1+__pyx_t_13);
-        __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1778, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_9);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      }
-      __Pyx_Raise(__pyx_t_9, 0, 0, 0);
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __PYX_ERR(0, 1778, __pyx_L1_error)
-
-      /* "cy_docs/cy_docs_x.py":1777
- *         chunk_data = chunk["data"][fs.__position % chunk_size:]
- * 
- *         if not chunk_data:             # <<<<<<<<<<<<<<
- *             raise CorruptGridFile("truncated chunk")
- * 
- */
-    }
-
-    /* "cy_docs/cy_docs_x.py":1765
- *     if received > 0:
- *         chunk_data = fs.__buffer
- *     elif fs.__position < int(fs.length):             # <<<<<<<<<<<<<<
- *         chunk_number = int((received + fs.__position) / chunk_size)
- *         if not hasattr(fs,"__chunk_iter"):
- */
-  }
-  __pyx_L5:;
-
-  /* "cy_docs/cy_docs_x.py":1780
- *             raise CorruptGridFile("truncated chunk")
- * 
- *     fs.__position += len(chunk_data)             # <<<<<<<<<<<<<<
- *     fs.__buffer = b""
- *     return chunk_data
- */
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_position); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1780, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_8 = PyObject_Length(__pyx_v_chunk_data); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1780, __pyx_L1_error)
-  __pyx_t_3 = PyInt_FromSsize_t(__pyx_t_8); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1780, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = PyNumber_InPlaceAdd(__pyx_t_9, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1780, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_fs, __pyx_n_s_position, __pyx_t_5) < 0) __PYX_ERR(0, 1780, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1781
- * 
- *     fs.__position += len(chunk_data)
- *     fs.__buffer = b""             # <<<<<<<<<<<<<<
- *     return chunk_data
- * 
- */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_fs, __pyx_n_s_buffer, __pyx_kp_b__2) < 0) __PYX_ERR(0, 1781, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1782
- *     fs.__position += len(chunk_data)
- *     fs.__buffer = b""
- *     return chunk_data             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __Pyx_XDECREF(__pyx_r);
-  if (!(likely(PyBytes_CheckExact(__pyx_v_chunk_data))||((__pyx_v_chunk_data) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", __Pyx_PyType_Name(Py_TYPE(__pyx_v_chunk_data))), 0))) __PYX_ERR(0, 1782, __pyx_L1_error)
-  __Pyx_INCREF(__pyx_v_chunk_data);
-  __pyx_r = ((PyObject*)__pyx_v_chunk_data);
-  goto __pyx_L0;
-
-  /* "cy_docs/cy_docs_x.py":1750
- *             self._cursor.close()
- *             self._cursor = None
- * def readchunk(db,fs: GridOut) -> bytes:             # <<<<<<<<<<<<<<
- *     """Reads a chunk at a time. If the current position is within a
- *     chunk the remainder of the chunk is returned.
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_AddTraceback("cy_docs.cy_docs_x.readchunk", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_received);
-  __Pyx_XDECREF(__pyx_v_chunk_data);
-  __Pyx_XDECREF(__pyx_v_chunk_size);
-  __Pyx_XDECREF(__pyx_v_chunk_number);
-  __Pyx_XDECREF(__pyx_v_chunk);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cy_docs/cy_docs_x.py":1785
- * 
- * 
- * def read_grid_fs_file(db, fs: gridfs.GridOut, size: int = -1) -> bytes:             # <<<<<<<<<<<<<<
- *     """Read at most `size` bytes from the file (less if there
- *     isn't enough data).
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_35read_grid_fs_file(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-PyDoc_STRVAR(__pyx_doc_7cy_docs_9cy_docs_x_34read_grid_fs_file, "Read at most `size` bytes from the file (less if there\n    isn't enough data).\n\n    The bytes are returned as an instance of :class:`str` (:class:`bytes`\n    in python 3). If `size` is negative or omitted all data is read.\n\n    :Parameters:\n      - `size` (optional): the number of bytes to read\n\n    .. versionchanged:: 3.8\n       This method now only checks for extra chunks after reading the\n       entire file. Previously, this method would check for extra chunks\n       on every call.\n    ");
-static PyMethodDef __pyx_mdef_7cy_docs_9cy_docs_x_35read_grid_fs_file = {"read_grid_fs_file", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cy_docs_9cy_docs_x_35read_grid_fs_file, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7cy_docs_9cy_docs_x_34read_grid_fs_file};
-static PyObject *__pyx_pw_7cy_docs_9cy_docs_x_35read_grid_fs_file(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  PyObject *__pyx_v_db = 0;
-  PyObject *__pyx_v_fs = 0;
-  PyObject *__pyx_v_size = 0;
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED const Py_ssize_t __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("read_grid_fs_file (wrapper)", 0);
-  {
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_db,&__pyx_n_s_fs,&__pyx_n_s_size,0};
-    #else
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_db,&__pyx_n_s_fs,&__pyx_n_s_size,0};
-    #endif
-    PyObject* values[3] = {0,0,0};
-    values[2] = ((PyObject *)((PyObject *)__pyx_int_neg_1));
-    if (__pyx_kwds) {
-      Py_ssize_t kw_args;
-      switch (__pyx_nargs) {
-        case  3: values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
-      switch (__pyx_nargs) {
-        case  0:
-        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_db)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1785, __pyx_L3_error)
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_fs)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1785, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("read_grid_fs_file", 0, 2, 3, 1); __PYX_ERR(0, 1785, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_size);
-          if (value) { values[2] = value; kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1785, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "read_grid_fs_file") < 0)) __PYX_ERR(0, 1785, __pyx_L3_error)
-      }
-    } else {
-      switch (__pyx_nargs) {
-        case  3: values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-        values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-        break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-    }
-    __pyx_v_db = values[0];
-    __pyx_v_fs = values[1];
-    __pyx_v_size = values[2];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("read_grid_fs_file", 0, 2, 3, __pyx_nargs); __PYX_ERR(0, 1785, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cy_docs.cy_docs_x.read_grid_fs_file", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7cy_docs_9cy_docs_x_34read_grid_fs_file(__pyx_self, __pyx_v_db, __pyx_v_fs, __pyx_v_size);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_7cy_docs_9cy_docs_x_34read_grid_fs_file(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_db, PyObject *__pyx_v_fs, PyObject *__pyx_v_size) {
-  PyObject *__pyx_v_remainder = NULL;
-  PyObject *__pyx_v_received = NULL;
-  PyObject *__pyx_v_data = NULL;
-  PyObject *__pyx_v_chunk_data = NULL;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  int __pyx_t_2;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  int __pyx_t_6;
-  int __pyx_t_7;
-  int __pyx_t_8;
-  int __pyx_t_9;
-  Py_ssize_t __pyx_t_10;
-  int __pyx_t_11;
-  PyObject *__pyx_t_12 = NULL;
-  PyObject *__pyx_t_13 = NULL;
-  PyObject *__pyx_t_14 = NULL;
-  int __pyx_t_15;
-  int __pyx_t_16;
-  int __pyx_t_17;
-  int __pyx_t_18;
-  int __pyx_t_19;
-  __Pyx_RefNannySetupContext("read_grid_fs_file", 0);
-  __Pyx_INCREF(__pyx_v_size);
-
-  /* "cy_docs/cy_docs_x.py":1801
- *     """
- *     # fs._ensure_file()
- *     if not hasattr(fs,"__position"):             # <<<<<<<<<<<<<<
- *         setattr(fs,"__position",fs.tell())
- *     remainder = int(fs.length) - fs.__position
- */
-  __pyx_t_1 = __Pyx_HasAttr(__pyx_v_fs, __pyx_n_s_position); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 1801, __pyx_L1_error)
-  __pyx_t_2 = ((!(__pyx_t_1 != 0)) != 0);
-  if (__pyx_t_2) {
-
-    /* "cy_docs/cy_docs_x.py":1802
- *     # fs._ensure_file()
- *     if not hasattr(fs,"__position"):
- *         setattr(fs,"__position",fs.tell())             # <<<<<<<<<<<<<<
- *     remainder = int(fs.length) - fs.__position
- *     if size < 0 or size > remainder:
- */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_tell); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1802, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = NULL;
-    __pyx_t_6 = 0;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-        __pyx_t_6 = 1;
-      }
-    }
-    {
-      PyObject *__pyx_callargs[1] = {__pyx_t_5, };
-      __pyx_t_3 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_6, 0+__pyx_t_6);
-      __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1802, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    }
-    __pyx_t_7 = PyObject_SetAttr(__pyx_v_fs, __pyx_n_s_position, __pyx_t_3); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 1802, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1801
- *     """
- *     # fs._ensure_file()
- *     if not hasattr(fs,"__position"):             # <<<<<<<<<<<<<<
- *         setattr(fs,"__position",fs.tell())
- *     remainder = int(fs.length) - fs.__position
- */
-  }
-
-  /* "cy_docs/cy_docs_x.py":1803
- *     if not hasattr(fs,"__position"):
- *         setattr(fs,"__position",fs.tell())
- *     remainder = int(fs.length) - fs.__position             # <<<<<<<<<<<<<<
- *     if size < 0 or size > remainder:
- *         size = remainder
- */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_length); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1803, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyNumber_Int(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1803, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_position); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1803, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = PyNumber_Subtract(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1803, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_v_remainder = __pyx_t_5;
-  __pyx_t_5 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1804
- *         setattr(fs,"__position",fs.tell())
- *     remainder = int(fs.length) - fs.__position
- *     if size < 0 or size > remainder:             # <<<<<<<<<<<<<<
- *         size = remainder
- * 
- */
-  __pyx_t_5 = PyObject_RichCompare(__pyx_v_size, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1804, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 1804, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (!__pyx_t_1) {
-  } else {
-    __pyx_t_2 = __pyx_t_1;
-    goto __pyx_L5_bool_binop_done;
-  }
-  __pyx_t_5 = PyObject_RichCompare(__pyx_v_size, __pyx_v_remainder, Py_GT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1804, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 1804, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_2 = __pyx_t_1;
-  __pyx_L5_bool_binop_done:;
-  if (__pyx_t_2) {
-
-    /* "cy_docs/cy_docs_x.py":1805
- *     remainder = int(fs.length) - fs.__position
- *     if size < 0 or size > remainder:
- *         size = remainder             # <<<<<<<<<<<<<<
- * 
- *     if size == 0:
- */
-    __Pyx_INCREF(__pyx_v_remainder);
-    __Pyx_DECREF_SET(__pyx_v_size, __pyx_v_remainder);
-
-    /* "cy_docs/cy_docs_x.py":1804
- *         setattr(fs,"__position",fs.tell())
- *     remainder = int(fs.length) - fs.__position
- *     if size < 0 or size > remainder:             # <<<<<<<<<<<<<<
- *         size = remainder
- * 
- */
-  }
-
-  /* "cy_docs/cy_docs_x.py":1807
- *         size = remainder
- * 
- *     if size == 0:             # <<<<<<<<<<<<<<
- *         return b""
- * 
- */
-  __pyx_t_5 = __Pyx_PyInt_EqObjC(__pyx_v_size, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1807, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 1807, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (__pyx_t_2) {
-
-    /* "cy_docs/cy_docs_x.py":1808
- * 
- *     if size == 0:
- *         return b""             # <<<<<<<<<<<<<<
- * 
- *     received = 0
- */
-    __Pyx_XDECREF(__pyx_r);
-    __Pyx_INCREF(__pyx_kp_b__2);
-    __pyx_r = __pyx_kp_b__2;
-    goto __pyx_L0;
-
-    /* "cy_docs/cy_docs_x.py":1807
- *         size = remainder
- * 
- *     if size == 0:             # <<<<<<<<<<<<<<
- *         return b""
- * 
- */
-  }
-
-  /* "cy_docs/cy_docs_x.py":1810
- *         return b""
- * 
- *     received = 0             # <<<<<<<<<<<<<<
- *     data = io.BytesIO()
- *     while received < size:
- */
-  __Pyx_INCREF(__pyx_int_0);
-  __pyx_v_received = __pyx_int_0;
-
-  /* "cy_docs/cy_docs_x.py":1811
- * 
- *     received = 0
- *     data = io.BytesIO()             # <<<<<<<<<<<<<<
- *     while received < size:
- *         chunk_data = readchunk(db,fs)
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_io); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1811, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_BytesIO); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1811, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = NULL;
-  __pyx_t_8 = 0;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_4, function);
-      __pyx_t_8 = 1;
-    }
-  }
-  {
-    PyObject *__pyx_callargs[1] = {__pyx_t_3, };
-    __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_8, 0+__pyx_t_8);
-    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1811, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  }
-  __pyx_v_data = __pyx_t_5;
-  __pyx_t_5 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1812
- *     received = 0
- *     data = io.BytesIO()
- *     while received < size:             # <<<<<<<<<<<<<<
- *         chunk_data = readchunk(db,fs)
- *         received += len(chunk_data)
- */
-  while (1) {
-    __pyx_t_5 = PyObject_RichCompare(__pyx_v_received, __pyx_v_size, Py_LT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1812, __pyx_L1_error)
-    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 1812, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (!__pyx_t_2) break;
-
-    /* "cy_docs/cy_docs_x.py":1813
- *     data = io.BytesIO()
- *     while received < size:
- *         chunk_data = readchunk(db,fs)             # <<<<<<<<<<<<<<
- *         received += len(chunk_data)
- *         data.write(chunk_data)
- */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_readchunk); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1813, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = NULL;
-    __pyx_t_9 = 0;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_3)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_3);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-        __pyx_t_9 = 1;
-      }
-    }
-    {
-      PyObject *__pyx_callargs[3] = {__pyx_t_3, __pyx_v_db, __pyx_v_fs};
-      __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+1-__pyx_t_9, 2+__pyx_t_9);
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1813, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    }
-    __Pyx_XDECREF_SET(__pyx_v_chunk_data, __pyx_t_5);
-    __pyx_t_5 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1814
- *     while received < size:
- *         chunk_data = readchunk(db,fs)
- *         received += len(chunk_data)             # <<<<<<<<<<<<<<
- *         data.write(chunk_data)
- * 
- */
-    __pyx_t_10 = PyObject_Length(__pyx_v_chunk_data); if (unlikely(__pyx_t_10 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1814, __pyx_L1_error)
-    __pyx_t_5 = PyInt_FromSsize_t(__pyx_t_10); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1814, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = PyNumber_InPlaceAdd(__pyx_v_received, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1814, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __Pyx_DECREF_SET(__pyx_v_received, __pyx_t_4);
-    __pyx_t_4 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1815
- *         chunk_data = readchunk(db,fs)
- *         received += len(chunk_data)
- *         data.write(chunk_data)             # <<<<<<<<<<<<<<
- * 
- *     # Detect extra chunks after reading the entire file.
- */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_write); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1815, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_3 = NULL;
-    __pyx_t_11 = 0;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
-      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_5);
-      if (likely(__pyx_t_3)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-        __Pyx_INCREF(__pyx_t_3);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_5, function);
-        __pyx_t_11 = 1;
-      }
-    }
-    {
-      PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_v_chunk_data};
-      __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_11, 1+__pyx_t_11);
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1815, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    }
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  }
-
-  /* "cy_docs/cy_docs_x.py":1818
- * 
- *     # Detect extra chunks after reading the entire file.
- *     if size == remainder and fs.__chunk_iter:             # <<<<<<<<<<<<<<
- *         try:
- *             fs.__chunk_iter.next()
- */
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_size, __pyx_v_remainder, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1818, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 1818, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__pyx_t_1) {
-  } else {
-    __pyx_t_2 = __pyx_t_1;
-    goto __pyx_L11_bool_binop_done;
-  }
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_chunk_iter); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1818, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 1818, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_2 = __pyx_t_1;
-  __pyx_L11_bool_binop_done:;
-  if (__pyx_t_2) {
-
-    /* "cy_docs/cy_docs_x.py":1819
- *     # Detect extra chunks after reading the entire file.
- *     if size == remainder and fs.__chunk_iter:
- *         try:             # <<<<<<<<<<<<<<
- *             fs.__chunk_iter.next()
- *         except StopIteration:
- */
-    {
-      __Pyx_PyThreadState_declare
-      __Pyx_PyThreadState_assign
-      __Pyx_ExceptionSave(&__pyx_t_12, &__pyx_t_13, &__pyx_t_14);
-      __Pyx_XGOTREF(__pyx_t_12);
-      __Pyx_XGOTREF(__pyx_t_13);
-      __Pyx_XGOTREF(__pyx_t_14);
-      /*try:*/ {
-
-        /* "cy_docs/cy_docs_x.py":1820
- *     if size == remainder and fs.__chunk_iter:
- *         try:
- *             fs.__chunk_iter.next()             # <<<<<<<<<<<<<<
- *         except StopIteration:
- *             pass
- */
-        __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_chunk_iter); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1820, __pyx_L13_error)
-        __Pyx_GOTREF(__pyx_t_5);
-        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_next); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1820, __pyx_L13_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-        __pyx_t_5 = NULL;
-        __pyx_t_15 = 0;
-        if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-          __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_3);
-          if (likely(__pyx_t_5)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-            __Pyx_INCREF(__pyx_t_5);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_3, function);
-            __pyx_t_15 = 1;
-          }
-        }
-        {
-          PyObject *__pyx_callargs[1] = {__pyx_t_5, };
-          __pyx_t_4 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_15, 0+__pyx_t_15);
-          __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-          if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1820, __pyx_L13_error)
-          __Pyx_GOTREF(__pyx_t_4);
-          __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        }
-        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-        /* "cy_docs/cy_docs_x.py":1819
- *     # Detect extra chunks after reading the entire file.
- *     if size == remainder and fs.__chunk_iter:
- *         try:             # <<<<<<<<<<<<<<
- *             fs.__chunk_iter.next()
- *         except StopIteration:
- */
-      }
-      __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
-      goto __pyx_L18_try_end;
-      __pyx_L13_error:;
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-      /* "cy_docs/cy_docs_x.py":1821
- *         try:
- *             fs.__chunk_iter.next()
- *         except StopIteration:             # <<<<<<<<<<<<<<
- *             pass
- * 
- */
-      __pyx_t_16 = __Pyx_PyErr_ExceptionMatches(__pyx_builtin_StopIteration);
-      if (__pyx_t_16) {
-        __Pyx_ErrRestore(0,0,0);
-        goto __pyx_L14_exception_handled;
-      }
-      goto __pyx_L15_except_error;
-      __pyx_L15_except_error:;
-
-      /* "cy_docs/cy_docs_x.py":1819
- *     # Detect extra chunks after reading the entire file.
- *     if size == remainder and fs.__chunk_iter:
- *         try:             # <<<<<<<<<<<<<<
- *             fs.__chunk_iter.next()
- *         except StopIteration:
- */
-      __Pyx_XGIVEREF(__pyx_t_12);
-      __Pyx_XGIVEREF(__pyx_t_13);
-      __Pyx_XGIVEREF(__pyx_t_14);
-      __Pyx_ExceptionReset(__pyx_t_12, __pyx_t_13, __pyx_t_14);
-      goto __pyx_L1_error;
-      __pyx_L14_exception_handled:;
-      __Pyx_XGIVEREF(__pyx_t_12);
-      __Pyx_XGIVEREF(__pyx_t_13);
-      __Pyx_XGIVEREF(__pyx_t_14);
-      __Pyx_ExceptionReset(__pyx_t_12, __pyx_t_13, __pyx_t_14);
-      __pyx_L18_try_end:;
-    }
-
-    /* "cy_docs/cy_docs_x.py":1818
- * 
- *     # Detect extra chunks after reading the entire file.
- *     if size == remainder and fs.__chunk_iter:             # <<<<<<<<<<<<<<
- *         try:
- *             fs.__chunk_iter.next()
- */
-  }
-
-  /* "cy_docs/cy_docs_x.py":1824
- *             pass
- * 
- *     fs.__position -= received - size             # <<<<<<<<<<<<<<
- * 
- *     # Return 'size' bytes and store the rest.
- */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_fs, __pyx_n_s_position); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1824, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = PyNumber_Subtract(__pyx_v_received, __pyx_v_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1824, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = PyNumber_InPlaceSubtract(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1824, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_fs, __pyx_n_s_position, __pyx_t_5) < 0) __PYX_ERR(0, 1824, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1827
- * 
- *     # Return 'size' bytes and store the rest.
- *     data.seek(size)             # <<<<<<<<<<<<<<
- *     fs.__buffer = data.read()
- *     data.seek(0)
- */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_seek); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1827, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = NULL;
-  __pyx_t_16 = 0;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-    if (likely(__pyx_t_4)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-      __Pyx_INCREF(__pyx_t_4);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_3, function);
-      __pyx_t_16 = 1;
-    }
-  }
-  {
-    PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_v_size};
-    __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_16, 1+__pyx_t_16);
-    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1827, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1828
- *     # Return 'size' bytes and store the rest.
- *     data.seek(size)
- *     fs.__buffer = data.read()             # <<<<<<<<<<<<<<
- *     data.seek(0)
- *     return data.read(size)
- */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_read); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1828, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = NULL;
-  __pyx_t_17 = 0;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-    if (likely(__pyx_t_4)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-      __Pyx_INCREF(__pyx_t_4);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_3, function);
-      __pyx_t_17 = 1;
-    }
-  }
-  {
-    PyObject *__pyx_callargs[1] = {__pyx_t_4, };
-    __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_17, 0+__pyx_t_17);
-    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1828, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  }
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_fs, __pyx_n_s_buffer, __pyx_t_5) < 0) __PYX_ERR(0, 1828, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1829
- *     data.seek(size)
- *     fs.__buffer = data.read()
- *     data.seek(0)             # <<<<<<<<<<<<<<
- *     return data.read(size)
- */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_seek); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1829, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = NULL;
-  __pyx_t_18 = 0;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-    if (likely(__pyx_t_4)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-      __Pyx_INCREF(__pyx_t_4);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_3, function);
-      __pyx_t_18 = 1;
-    }
-  }
-  {
-    PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_int_0};
-    __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_18, 1+__pyx_t_18);
-    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1829, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-  /* "cy_docs/cy_docs_x.py":1830
- *     fs.__buffer = data.read()
- *     data.seek(0)
- *     return data.read(size)             # <<<<<<<<<<<<<<
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_read); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1830, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = NULL;
-  __pyx_t_19 = 0;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-    if (likely(__pyx_t_4)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-      __Pyx_INCREF(__pyx_t_4);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_3, function);
-      __pyx_t_19 = 1;
-    }
-  }
-  {
-    PyObject *__pyx_callargs[2] = {__pyx_t_4, __pyx_v_size};
-    __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_19, 1+__pyx_t_19);
-    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1830, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  }
-  if (!(likely(PyBytes_CheckExact(__pyx_t_5))||((__pyx_t_5) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", __Pyx_PyType_Name(Py_TYPE(__pyx_t_5))), 0))) __PYX_ERR(0, 1830, __pyx_L1_error)
-  __pyx_r = ((PyObject*)__pyx_t_5);
-  __pyx_t_5 = 0;
-  goto __pyx_L0;
-
-  /* "cy_docs/cy_docs_x.py":1785
- * 
- * 
- * def read_grid_fs_file(db, fs: gridfs.GridOut, size: int = -1) -> bytes:             # <<<<<<<<<<<<<<
- *     """Read at most `size` bytes from the file (less if there
- *     isn't enough data).
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("cy_docs.cy_docs_x.read_grid_fs_file", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_remainder);
-  __Pyx_XDECREF(__pyx_v_received);
-  __Pyx_XDECREF(__pyx_v_data);
-  __Pyx_XDECREF(__pyx_v_chunk_data);
-  __Pyx_XDECREF(__pyx_v_size);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
 static struct __pyx_obj_7cy_docs_9cy_docs_x___pyx_scope_struct____rshift__ *__pyx_freelist_7cy_docs_9cy_docs_x___pyx_scope_struct____rshift__[8];
 static int __pyx_freecount_7cy_docs_9cy_docs_x___pyx_scope_struct____rshift__ = 0;
 
@@ -50981,13 +47300,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_BaseField___to_mongo_db, sizeof(__pyx_k_BaseField___to_mongo_db), 0, 0, 1, 1},
   {0, __pyx_k_BaseField___to_mongo_db_expr, sizeof(__pyx_k_BaseField___to_mongo_db_expr), 0, 0, 1, 1},
   {0, __pyx_k_BaseModel, sizeof(__pyx_k_BaseModel), 0, 0, 1, 1},
-  {0, __pyx_k_BytesIO, sizeof(__pyx_k_BytesIO), 0, 0, 1, 1},
   {0, __pyx_k_Can_not_cast, sizeof(__pyx_k_Can_not_cast), 0, 1, 0, 0},
-  {0, __pyx_k_ClientSession, sizeof(__pyx_k_ClientSession), 0, 0, 1, 1},
-  {0, __pyx_k_Collection, sizeof(__pyx_k_Collection), 0, 0, 1, 1},
-  {0, __pyx_k_CorruptGridFile, sizeof(__pyx_k_CorruptGridFile), 0, 0, 1, 1},
-  {0, __pyx_k_Cursor, sizeof(__pyx_k_Cursor), 0, 0, 1, 1},
-  {0, __pyx_k_CursorNotFound, sizeof(__pyx_k_CursorNotFound), 0, 0, 1, 1},
   {0, __pyx_k_DBDocument, sizeof(__pyx_k_DBDocument), 0, 0, 1, 1},
   {0, __pyx_k_DBDocument___init, sizeof(__pyx_k_DBDocument___init), 0, 0, 1, 1},
   {0, __pyx_k_DBDocument___lshift, sizeof(__pyx_k_DBDocument___lshift), 0, 0, 1, 1},
@@ -51032,16 +47345,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_ExprBuilder___getattr, sizeof(__pyx_k_ExprBuilder___getattr), 0, 0, 1, 1},
   {0, __pyx_k_ExprBuilder___getitem, sizeof(__pyx_k_ExprBuilder___getitem), 0, 0, 1, 1},
   {0, __pyx_k_ExprBuilder___set_type, sizeof(__pyx_k_ExprBuilder___set_type), 0, 0, 1, 1},
-  {0, __pyx_k_Extra_chunk_found_expected_d_chu, sizeof(__pyx_k_Extra_chunk_found_expected_d_chu), 0, 0, 1, 0},
-  {0, __pyx_k_FS_GridOutChunkIterator, sizeof(__pyx_k_FS_GridOutChunkIterator), 0, 0, 1, 1},
-  {0, __pyx_k_FS_GridOutChunkIterator_2, sizeof(__pyx_k_FS_GridOutChunkIterator_2), 0, 0, 1, 0},
-  {0, __pyx_k_FS_GridOutChunkIterator___init, sizeof(__pyx_k_FS_GridOutChunkIterator___init), 0, 0, 1, 1},
-  {0, __pyx_k_FS_GridOutChunkIterator___iter, sizeof(__pyx_k_FS_GridOutChunkIterator___iter), 0, 0, 1, 1},
-  {0, __pyx_k_FS_GridOutChunkIterator__create, sizeof(__pyx_k_FS_GridOutChunkIterator__create), 0, 0, 1, 1},
-  {0, __pyx_k_FS_GridOutChunkIterator__next_wi, sizeof(__pyx_k_FS_GridOutChunkIterator__next_wi), 0, 0, 1, 1},
-  {0, __pyx_k_FS_GridOutChunkIterator_close, sizeof(__pyx_k_FS_GridOutChunkIterator_close), 0, 0, 1, 1},
-  {0, __pyx_k_FS_GridOutChunkIterator_expected, sizeof(__pyx_k_FS_GridOutChunkIterator_expected), 0, 0, 1, 1},
-  {0, __pyx_k_FS_GridOutChunkIterator_next, sizeof(__pyx_k_FS_GridOutChunkIterator_next), 0, 0, 1, 1},
   {0, __pyx_k_Field, sizeof(__pyx_k_Field), 0, 0, 1, 1},
   {0, __pyx_k_Field___add, sizeof(__pyx_k_Field___add), 0, 0, 1, 1},
   {0, __pyx_k_Field___and, sizeof(__pyx_k_Field___and), 0, 0, 1, 1},
@@ -51076,25 +47379,18 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_Funcs_not_exists, sizeof(__pyx_k_Funcs_not_exists), 0, 0, 1, 1},
   {0, __pyx_k_GridFS, sizeof(__pyx_k_GridFS), 0, 0, 1, 1},
   {0, __pyx_k_GridFSBucket, sizeof(__pyx_k_GridFSBucket), 0, 0, 1, 1},
-  {0, __pyx_k_GridOut, sizeof(__pyx_k_GridOut), 0, 0, 1, 1},
   {0, __pyx_k_IGNORECASE, sizeof(__pyx_k_IGNORECASE), 0, 0, 1, 1},
   {0, __pyx_k_Invalid_expression, sizeof(__pyx_k_Invalid_expression), 0, 0, 1, 0},
-  {0, __pyx_k_Iterates_over_a_file_s_chunks_us, sizeof(__pyx_k_Iterates_over_a_file_s_chunks_us), 0, 0, 1, 0},
   {0, __pyx_k_List, sizeof(__pyx_k_List), 0, 0, 1, 1},
   {0, __pyx_k_List_str, sizeof(__pyx_k_List_str), 0, 0, 1, 0},
   {0, __pyx_k_Lock, sizeof(__pyx_k_Lock), 0, 0, 1, 1},
-  {0, __pyx_k_Missing_chunk_expected_chunk_d_b, sizeof(__pyx_k_Missing_chunk_expected_chunk_d_b), 0, 0, 1, 0},
-  {0, __pyx_k_None, sizeof(__pyx_k_None), 0, 0, 1, 1},
   {0, __pyx_k_NoneType, sizeof(__pyx_k_NoneType), 0, 0, 1, 0},
   {0, __pyx_k_ObjectId, sizeof(__pyx_k_ObjectId), 0, 0, 1, 1},
   {0, __pyx_k_ObjectId_2, sizeof(__pyx_k_ObjectId_2), 0, 1, 0, 0},
-  {0, __pyx_k_Optional, sizeof(__pyx_k_Optional), 0, 0, 1, 1},
-  {0, __pyx_k_Optional_ClientSession, sizeof(__pyx_k_Optional_ClientSession), 0, 0, 1, 0},
   {0, __pyx_k_Param_in_Find_one_must_be_cy_doc, sizeof(__pyx_k_Param_in_Find_one_must_be_cy_doc), 0, 0, 1, 0},
   {0, __pyx_k_Pattern, sizeof(__pyx_k_Pattern), 0, 0, 1, 1},
   {0, __pyx_k_Please_set_value_for, sizeof(__pyx_k_Please_set_value_for), 0, 1, 0, 0},
   {0, __pyx_k_Preview_file, sizeof(__pyx_k_Preview_file), 0, 1, 0, 0},
-  {0, __pyx_k_StopIteration, sizeof(__pyx_k_StopIteration), 0, 0, 1, 1},
   {0, __pyx_k_These_below_fields_are_require, sizeof(__pyx_k_These_below_fields_are_require), 0, 1, 0, 0},
   {0, __pyx_k_Thous_can_not_alias_mongodb_expr, sizeof(__pyx_k_Thous_can_not_alias_mongodb_expr), 0, 1, 0, 0},
   {0, __pyx_k_Thous_can_not_sort_stage_with, sizeof(__pyx_k_Thous_can_not_sort_stage_with), 0, 1, 0, 0},
@@ -51111,7 +47407,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k__11, sizeof(__pyx_k__11), 0, 1, 0, 0},
   {0, __pyx_k__12, sizeof(__pyx_k__12), 0, 0, 1, 1},
   {0, __pyx_k__13, sizeof(__pyx_k__13), 0, 0, 1, 0},
-  {0, __pyx_k__2, sizeof(__pyx_k__2), 0, 0, 0, 0},
   {0, __pyx_k__2, sizeof(__pyx_k__2), 0, 0, 1, 0},
   {0, __pyx_k__3, sizeof(__pyx_k__3), 0, 1, 0, 1},
   {0, __pyx_k__30, sizeof(__pyx_k__30), 0, 0, 1, 0},
@@ -51142,7 +47437,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_background, sizeof(__pyx_k_background), 0, 0, 1, 1},
   {0, __pyx_k_bson, sizeof(__pyx_k_bson), 0, 0, 1, 1},
   {0, __pyx_k_bson_ObjectId, sizeof(__pyx_k_bson_ObjectId), 0, 0, 1, 0},
-  {0, __pyx_k_buffer, sizeof(__pyx_k_buffer), 0, 0, 1, 1},
   {0, __pyx_k_bytes, sizeof(__pyx_k_bytes), 0, 0, 1, 1},
   {0, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
   {0, __pyx_k_cache_index, sizeof(__pyx_k_cache_index), 0, 0, 1, 1},
@@ -51150,24 +47444,15 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_camel_cache, sizeof(__pyx_k_camel_cache), 0, 0, 1, 1},
   {0, __pyx_k_camel_dict, sizeof(__pyx_k_camel_dict), 0, 0, 1, 1},
   {0, __pyx_k_camel_lock, sizeof(__pyx_k_camel_lock), 0, 0, 1, 1},
-  {0, __pyx_k_ceil, sizeof(__pyx_k_ceil), 0, 0, 1, 1},
   {0, __pyx_k_check_constraint, sizeof(__pyx_k_check_constraint), 0, 0, 1, 1},
   {0, __pyx_k_check_map__module, sizeof(__pyx_k_check_map__module), 0, 0, 1, 1},
   {0, __pyx_k_check_map__name, sizeof(__pyx_k_check_map__name), 0, 0, 1, 1},
   {0, __pyx_k_check_name, sizeof(__pyx_k_check_name), 0, 0, 1, 1},
-  {0, __pyx_k_chunk, sizeof(__pyx_k_chunk), 0, 0, 1, 1},
   {0, __pyx_k_chunkSize, sizeof(__pyx_k_chunkSize), 0, 0, 1, 1},
   {0, __pyx_k_chunk_data, sizeof(__pyx_k_chunk_data), 0, 0, 1, 1},
   {0, __pyx_k_chunk_index, sizeof(__pyx_k_chunk_index), 0, 0, 1, 1},
-  {0, __pyx_k_chunk_iter, sizeof(__pyx_k_chunk_iter), 0, 0, 1, 1},
-  {0, __pyx_k_chunk_n, sizeof(__pyx_k_chunk_n), 0, 0, 1, 1},
-  {0, __pyx_k_chunk_number, sizeof(__pyx_k_chunk_number), 0, 0, 1, 1},
   {0, __pyx_k_chunk_size, sizeof(__pyx_k_chunk_size), 0, 0, 1, 1},
-  {0, __pyx_k_chunk_size_2, sizeof(__pyx_k_chunk_size_2), 0, 0, 1, 1},
   {0, __pyx_k_chunk_size_bytes, sizeof(__pyx_k_chunk_size_bytes), 0, 0, 1, 1},
-  {0, __pyx_k_chunks, sizeof(__pyx_k_chunks), 0, 0, 1, 1},
-  {0, __pyx_k_chunks_2, sizeof(__pyx_k_chunks_2), 0, 0, 1, 1},
-  {0, __pyx_k_chunks_3, sizeof(__pyx_k_chunks_3), 0, 0, 1, 1},
   {0, __pyx_k_client, sizeof(__pyx_k_client), 0, 0, 1, 1},
   {0, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {0, __pyx_k_close, sizeof(__pyx_k_close), 0, 0, 1, 1},
@@ -51186,10 +47471,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_count, sizeof(__pyx_k_count), 0, 0, 1, 1},
   {0, __pyx_k_count_async, sizeof(__pyx_k_count_async), 0, 0, 1, 1},
   {0, __pyx_k_count_documents, sizeof(__pyx_k_count_documents), 0, 0, 1, 1},
-  {0, __pyx_k_create_cursor, sizeof(__pyx_k_create_cursor), 0, 0, 1, 1},
   {0, __pyx_k_create_file, sizeof(__pyx_k_create_file), 0, 0, 1, 1},
   {0, __pyx_k_create_index, sizeof(__pyx_k_create_index), 0, 0, 1, 1},
-  {0, __pyx_k_cursor, sizeof(__pyx_k_cursor), 0, 0, 1, 1},
   {0, __pyx_k_cy_docs_cy_docs_x, sizeof(__pyx_k_cy_docs_cy_docs_x), 0, 0, 1, 1},
   {0, __pyx_k_cy_docs_cy_docs_x_py, sizeof(__pyx_k_cy_docs_cy_docs_x_py), 0, 0, 1, 0},
   {0, __pyx_k_d, sizeof(__pyx_k_d), 0, 0, 1, 1},
@@ -51229,8 +47512,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_exists_2, sizeof(__pyx_k_exists_2), 0, 0, 1, 1},
   {0, __pyx_k_exists_require_cy_docs_fields_fi, sizeof(__pyx_k_exists_require_cy_docs_fields_fi), 0, 1, 0, 0},
   {0, __pyx_k_exit, sizeof(__pyx_k_exit), 0, 0, 1, 1},
-  {0, __pyx_k_expected_chunk_length, sizeof(__pyx_k_expected_chunk_length), 0, 0, 1, 1},
-  {0, __pyx_k_expected_length, sizeof(__pyx_k_expected_length), 0, 0, 1, 1},
   {0, __pyx_k_expr, sizeof(__pyx_k_expr), 0, 0, 1, 1},
   {0, __pyx_k_expr_2, sizeof(__pyx_k_expr_2), 0, 0, 1, 1},
   {0, __pyx_k_f, sizeof(__pyx_k_f), 0, 1, 0, 1},
@@ -51277,10 +47558,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_getfile, sizeof(__pyx_k_getfile), 0, 0, 1, 1},
   {0, __pyx_k_getitem, sizeof(__pyx_k_getitem), 0, 0, 1, 1},
   {0, __pyx_k_gfs, sizeof(__pyx_k_gfs), 0, 0, 1, 1},
-  {0, __pyx_k_grid_out, sizeof(__pyx_k_grid_out), 0, 0, 1, 1},
   {0, __pyx_k_gridfs, sizeof(__pyx_k_gridfs), 0, 0, 1, 1},
-  {0, __pyx_k_gridfs_GridOut, sizeof(__pyx_k_gridfs_GridOut), 0, 0, 1, 0},
-  {0, __pyx_k_gridfs_errors, sizeof(__pyx_k_gridfs_errors), 0, 0, 1, 1},
   {0, __pyx_k_gt, sizeof(__pyx_k_gt), 0, 0, 1, 0},
   {0, __pyx_k_gt_2, sizeof(__pyx_k_gt_2), 0, 0, 1, 1},
   {0, __pyx_k_gte, sizeof(__pyx_k_gte), 0, 0, 1, 0},
@@ -51308,7 +47586,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_instance, sizeof(__pyx_k_instance), 0, 0, 1, 1},
   {0, __pyx_k_int, sizeof(__pyx_k_int), 0, 0, 1, 1},
   {0, __pyx_k_invert, sizeof(__pyx_k_invert), 0, 0, 1, 1},
-  {0, __pyx_k_io, sizeof(__pyx_k_io), 0, 0, 1, 1},
   {0, __pyx_k_is_not_null, sizeof(__pyx_k_is_not_null), 0, 0, 1, 1},
   {0, __pyx_k_is_null, sizeof(__pyx_k_is_null), 0, 0, 1, 1},
   {0, __pyx_k_isoformat, sizeof(__pyx_k_isoformat), 0, 0, 1, 1},
@@ -51326,7 +47603,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_len, sizeof(__pyx_k_len), 0, 0, 1, 1},
   {0, __pyx_k_len_2, sizeof(__pyx_k_len_2), 0, 0, 1, 1},
   {0, __pyx_k_length, sizeof(__pyx_k_length), 0, 0, 1, 1},
-  {0, __pyx_k_length_2, sizeof(__pyx_k_length_2), 0, 0, 1, 1},
   {0, __pyx_k_like, sizeof(__pyx_k_like), 0, 0, 1, 1},
   {0, __pyx_k_limit, sizeof(__pyx_k_limit), 0, 0, 1, 0},
   {0, __pyx_k_limit_2, sizeof(__pyx_k_limit_2), 0, 0, 1, 1},
@@ -51340,7 +47616,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {0, __pyx_k_match, sizeof(__pyx_k_match), 0, 0, 1, 0},
   {0, __pyx_k_match_2, sizeof(__pyx_k_match_2), 0, 0, 1, 1},
-  {0, __pyx_k_math, sizeof(__pyx_k_math), 0, 0, 1, 1},
   {0, __pyx_k_matmul, sizeof(__pyx_k_matmul), 0, 0, 1, 1},
   {0, __pyx_k_metaclass, sizeof(__pyx_k_metaclass), 0, 0, 1, 1},
   {0, __pyx_k_mod, sizeof(__pyx_k_mod), 0, 0, 1, 0},
@@ -51361,15 +47636,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_ne_3, sizeof(__pyx_k_ne_3), 0, 0, 1, 1},
   {0, __pyx_k_new, sizeof(__pyx_k_new), 0, 0, 1, 1},
   {0, __pyx_k_new_file, sizeof(__pyx_k_new_file), 0, 0, 1, 1},
-  {0, __pyx_k_next, sizeof(__pyx_k_next), 0, 0, 1, 1},
-  {0, __pyx_k_next_2, sizeof(__pyx_k_next_2), 0, 0, 1, 1},
-  {0, __pyx_k_next_chunk, sizeof(__pyx_k_next_chunk), 0, 0, 1, 1},
-  {0, __pyx_k_next_chunk_2, sizeof(__pyx_k_next_chunk_2), 0, 0, 1, 1},
-  {0, __pyx_k_next_with_retry, sizeof(__pyx_k_next_with_retry), 0, 0, 1, 1},
-  {0, __pyx_k_no_chunk_d, sizeof(__pyx_k_no_chunk_d), 0, 0, 1, 0},
   {0, __pyx_k_not, sizeof(__pyx_k_not), 0, 0, 1, 0},
   {0, __pyx_k_not_exists, sizeof(__pyx_k_not_exists), 0, 0, 1, 1},
-  {0, __pyx_k_num_chunks, sizeof(__pyx_k_num_chunks), 0, 0, 1, 1},
   {0, __pyx_k_obj, sizeof(__pyx_k_obj), 0, 0, 1, 1},
   {0, __pyx_k_object, sizeof(__pyx_k_object), 0, 0, 1, 1},
   {0, __pyx_k_objectid, sizeof(__pyx_k_objectid), 0, 0, 1, 1},
@@ -51386,7 +47654,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_pattern, sizeof(__pyx_k_pattern), 0, 0, 1, 1},
   {0, __pyx_k_pipeline, sizeof(__pyx_k_pipeline), 0, 0, 1, 1},
   {0, __pyx_k_pos, sizeof(__pyx_k_pos), 0, 0, 1, 1},
-  {0, __pyx_k_position, sizeof(__pyx_k_position), 0, 0, 1, 1},
   {0, __pyx_k_pow, sizeof(__pyx_k_pow), 0, 0, 1, 0},
   {0, __pyx_k_pow_2, sizeof(__pyx_k_pow_2), 0, 0, 1, 1},
   {0, __pyx_k_power, sizeof(__pyx_k_power), 0, 0, 1, 1},
@@ -51398,27 +47665,18 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_pydantic_BaseModel, sizeof(__pyx_k_pydantic_BaseModel), 0, 0, 1, 0},
   {0, __pyx_k_pymongo, sizeof(__pyx_k_pymongo), 0, 0, 1, 1},
   {0, __pyx_k_pymongo_MongoClient, sizeof(__pyx_k_pymongo_MongoClient), 0, 0, 1, 0},
-  {0, __pyx_k_pymongo_client_session, sizeof(__pyx_k_pymongo_client_session), 0, 0, 1, 1},
-  {0, __pyx_k_pymongo_collection, sizeof(__pyx_k_pymongo_collection), 0, 0, 1, 1},
   {0, __pyx_k_pymongo_collection_Collection, sizeof(__pyx_k_pymongo_collection_Collection), 0, 0, 1, 0},
-  {0, __pyx_k_pymongo_cursor, sizeof(__pyx_k_pymongo_cursor), 0, 0, 1, 1},
-  {0, __pyx_k_pymongo_errors, sizeof(__pyx_k_pymongo_errors), 0, 0, 1, 1},
   {0, __pyx_k_pymongo_mongo_client, sizeof(__pyx_k_pymongo_mongo_client), 0, 0, 1, 1},
   {0, __pyx_k_pymongo_mongo_client_MongoClient, sizeof(__pyx_k_pymongo_mongo_client_MongoClient), 0, 0, 1, 0},
   {0, __pyx_k_qualname, sizeof(__pyx_k_qualname), 0, 0, 1, 1},
   {0, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {0, __pyx_k_re, sizeof(__pyx_k_re), 0, 0, 1, 1},
-  {0, __pyx_k_read, sizeof(__pyx_k_read), 0, 0, 1, 1},
-  {0, __pyx_k_read_grid_fs_file, sizeof(__pyx_k_read_grid_fs_file), 0, 0, 1, 1},
-  {0, __pyx_k_readchunk, sizeof(__pyx_k_readchunk), 0, 0, 1, 1},
   {0, __pyx_k_real, sizeof(__pyx_k_real), 0, 0, 1, 1},
-  {0, __pyx_k_received, sizeof(__pyx_k_received), 0, 0, 1, 1},
   {0, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
   {0, __pyx_k_reduce_type, sizeof(__pyx_k_reduce_type), 0, 0, 1, 1},
   {0, __pyx_k_regex, sizeof(__pyx_k_regex), 0, 0, 1, 0},
   {0, __pyx_k_rel_file_path, sizeof(__pyx_k_rel_file_path), 0, 0, 1, 1},
   {0, __pyx_k_release, sizeof(__pyx_k_release), 0, 0, 1, 1},
-  {0, __pyx_k_remainder, sizeof(__pyx_k_remainder), 0, 0, 1, 1},
   {0, __pyx_k_repr, sizeof(__pyx_k_repr), 0, 0, 1, 1},
   {0, __pyx_k_require_fields, sizeof(__pyx_k_require_fields), 0, 0, 1, 1},
   {0, __pyx_k_ret, sizeof(__pyx_k_ret), 0, 0, 1, 1},
@@ -51427,17 +47685,13 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_ret_pipe, sizeof(__pyx_k_ret_pipe), 0, 0, 1, 1},
   {0, __pyx_k_return, sizeof(__pyx_k_return), 0, 0, 1, 1},
   {0, __pyx_k_rshift, sizeof(__pyx_k_rshift), 0, 0, 1, 1},
-  {0, __pyx_k_seek, sizeof(__pyx_k_seek), 0, 0, 1, 1},
   {0, __pyx_k_self, sizeof(__pyx_k_self), 0, 0, 1, 1},
   {0, __pyx_k_send, sizeof(__pyx_k_send), 0, 0, 1, 1},
-  {0, __pyx_k_session, sizeof(__pyx_k_session), 0, 0, 1, 1},
-  {0, __pyx_k_session_2, sizeof(__pyx_k_session_2), 0, 0, 1, 1},
   {0, __pyx_k_set, sizeof(__pyx_k_set), 0, 0, 1, 0},
   {0, __pyx_k_set_check, sizeof(__pyx_k_set_check), 0, 0, 1, 1},
   {0, __pyx_k_set_type, sizeof(__pyx_k_set_type), 0, 0, 1, 1},
   {0, __pyx_k_setattr, sizeof(__pyx_k_setattr), 0, 0, 1, 1},
   {0, __pyx_k_setitem, sizeof(__pyx_k_setitem), 0, 0, 1, 1},
-  {0, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
   {0, __pyx_k_skip, sizeof(__pyx_k_skip), 0, 0, 1, 0},
   {0, __pyx_k_skip_2, sizeof(__pyx_k_skip_2), 0, 0, 1, 1},
   {0, __pyx_k_sort, sizeof(__pyx_k_sort), 0, 0, 1, 1},
@@ -51455,7 +47709,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_sub, sizeof(__pyx_k_sub), 0, 0, 1, 0},
   {0, __pyx_k_sub_2, sizeof(__pyx_k_sub_2), 0, 0, 1, 1},
   {0, __pyx_k_super, sizeof(__pyx_k_super), 0, 0, 1, 1},
-  {0, __pyx_k_tell, sizeof(__pyx_k_tell), 0, 0, 1, 1},
   {0, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {0, __pyx_k_threading, sizeof(__pyx_k_threading), 0, 0, 1, 1},
   {0, __pyx_k_throw, sizeof(__pyx_k_throw), 0, 0, 1, 1},
@@ -51467,8 +47720,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_to_mongo_db_expr, sizeof(__pyx_k_to_mongo_db_expr), 0, 0, 1, 1},
   {0, __pyx_k_to_pydantic, sizeof(__pyx_k_to_pydantic), 0, 0, 1, 1},
   {0, __pyx_k_truediv, sizeof(__pyx_k_truediv), 0, 0, 1, 1},
-  {0, __pyx_k_truncated_chunk, sizeof(__pyx_k_truncated_chunk), 0, 0, 1, 0},
-  {0, __pyx_k_truncated_chunk_d_expected_chunk, sizeof(__pyx_k_truncated_chunk_d_expected_chunk), 0, 0, 1, 0},
   {0, __pyx_k_type, sizeof(__pyx_k_type), 0, 0, 1, 1},
   {0, __pyx_k_typing, sizeof(__pyx_k_typing), 0, 0, 1, 1},
   {0, __pyx_k_typing_Union, sizeof(__pyx_k_typing_Union), 0, 0, 1, 0},
@@ -51485,7 +47736,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_was_not_found_in, sizeof(__pyx_k_was_not_found_in), 0, 1, 0, 0},
   {0, __pyx_k_was_not_found_in_2, sizeof(__pyx_k_was_not_found_in_2), 0, 1, 0, 0},
   {0, __pyx_k_wrapper, sizeof(__pyx_k_wrapper), 0, 0, 1, 1},
-  {0, __pyx_k_write, sizeof(__pyx_k_write), 0, 0, 1, 1},
   {0, __pyx_k_x, sizeof(__pyx_k_x), 0, 0, 1, 1},
   {0, __pyx_k_y, sizeof(__pyx_k_y), 0, 0, 1, 1},
   #else
@@ -51516,13 +47766,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_BaseField___to_mongo_db, __pyx_k_BaseField___to_mongo_db, sizeof(__pyx_k_BaseField___to_mongo_db), 0, 0, 1, 1},
   {&__pyx_n_s_BaseField___to_mongo_db_expr, __pyx_k_BaseField___to_mongo_db_expr, sizeof(__pyx_k_BaseField___to_mongo_db_expr), 0, 0, 1, 1},
   {&__pyx_n_s_BaseModel, __pyx_k_BaseModel, sizeof(__pyx_k_BaseModel), 0, 0, 1, 1},
-  {&__pyx_n_s_BytesIO, __pyx_k_BytesIO, sizeof(__pyx_k_BytesIO), 0, 0, 1, 1},
   {&__pyx_kp_u_Can_not_cast, __pyx_k_Can_not_cast, sizeof(__pyx_k_Can_not_cast), 0, 1, 0, 0},
-  {&__pyx_n_s_ClientSession, __pyx_k_ClientSession, sizeof(__pyx_k_ClientSession), 0, 0, 1, 1},
-  {&__pyx_n_s_Collection, __pyx_k_Collection, sizeof(__pyx_k_Collection), 0, 0, 1, 1},
-  {&__pyx_n_s_CorruptGridFile, __pyx_k_CorruptGridFile, sizeof(__pyx_k_CorruptGridFile), 0, 0, 1, 1},
-  {&__pyx_n_s_Cursor, __pyx_k_Cursor, sizeof(__pyx_k_Cursor), 0, 0, 1, 1},
-  {&__pyx_n_s_CursorNotFound, __pyx_k_CursorNotFound, sizeof(__pyx_k_CursorNotFound), 0, 0, 1, 1},
   {&__pyx_n_s_DBDocument, __pyx_k_DBDocument, sizeof(__pyx_k_DBDocument), 0, 0, 1, 1},
   {&__pyx_n_s_DBDocument___init, __pyx_k_DBDocument___init, sizeof(__pyx_k_DBDocument___init), 0, 0, 1, 1},
   {&__pyx_n_s_DBDocument___lshift, __pyx_k_DBDocument___lshift, sizeof(__pyx_k_DBDocument___lshift), 0, 0, 1, 1},
@@ -51567,16 +47811,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_ExprBuilder___getattr, __pyx_k_ExprBuilder___getattr, sizeof(__pyx_k_ExprBuilder___getattr), 0, 0, 1, 1},
   {&__pyx_n_s_ExprBuilder___getitem, __pyx_k_ExprBuilder___getitem, sizeof(__pyx_k_ExprBuilder___getitem), 0, 0, 1, 1},
   {&__pyx_n_s_ExprBuilder___set_type, __pyx_k_ExprBuilder___set_type, sizeof(__pyx_k_ExprBuilder___set_type), 0, 0, 1, 1},
-  {&__pyx_kp_s_Extra_chunk_found_expected_d_chu, __pyx_k_Extra_chunk_found_expected_d_chu, sizeof(__pyx_k_Extra_chunk_found_expected_d_chu), 0, 0, 1, 0},
-  {&__pyx_n_s_FS_GridOutChunkIterator, __pyx_k_FS_GridOutChunkIterator, sizeof(__pyx_k_FS_GridOutChunkIterator), 0, 0, 1, 1},
-  {&__pyx_kp_s_FS_GridOutChunkIterator_2, __pyx_k_FS_GridOutChunkIterator_2, sizeof(__pyx_k_FS_GridOutChunkIterator_2), 0, 0, 1, 0},
-  {&__pyx_n_s_FS_GridOutChunkIterator___init, __pyx_k_FS_GridOutChunkIterator___init, sizeof(__pyx_k_FS_GridOutChunkIterator___init), 0, 0, 1, 1},
-  {&__pyx_n_s_FS_GridOutChunkIterator___iter, __pyx_k_FS_GridOutChunkIterator___iter, sizeof(__pyx_k_FS_GridOutChunkIterator___iter), 0, 0, 1, 1},
-  {&__pyx_n_s_FS_GridOutChunkIterator__create, __pyx_k_FS_GridOutChunkIterator__create, sizeof(__pyx_k_FS_GridOutChunkIterator__create), 0, 0, 1, 1},
-  {&__pyx_n_s_FS_GridOutChunkIterator__next_wi, __pyx_k_FS_GridOutChunkIterator__next_wi, sizeof(__pyx_k_FS_GridOutChunkIterator__next_wi), 0, 0, 1, 1},
-  {&__pyx_n_s_FS_GridOutChunkIterator_close, __pyx_k_FS_GridOutChunkIterator_close, sizeof(__pyx_k_FS_GridOutChunkIterator_close), 0, 0, 1, 1},
-  {&__pyx_n_s_FS_GridOutChunkIterator_expected, __pyx_k_FS_GridOutChunkIterator_expected, sizeof(__pyx_k_FS_GridOutChunkIterator_expected), 0, 0, 1, 1},
-  {&__pyx_n_s_FS_GridOutChunkIterator_next, __pyx_k_FS_GridOutChunkIterator_next, sizeof(__pyx_k_FS_GridOutChunkIterator_next), 0, 0, 1, 1},
   {&__pyx_n_s_Field, __pyx_k_Field, sizeof(__pyx_k_Field), 0, 0, 1, 1},
   {&__pyx_n_s_Field___add, __pyx_k_Field___add, sizeof(__pyx_k_Field___add), 0, 0, 1, 1},
   {&__pyx_n_s_Field___and, __pyx_k_Field___and, sizeof(__pyx_k_Field___and), 0, 0, 1, 1},
@@ -51611,25 +47845,18 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_Funcs_not_exists, __pyx_k_Funcs_not_exists, sizeof(__pyx_k_Funcs_not_exists), 0, 0, 1, 1},
   {&__pyx_n_s_GridFS, __pyx_k_GridFS, sizeof(__pyx_k_GridFS), 0, 0, 1, 1},
   {&__pyx_n_s_GridFSBucket, __pyx_k_GridFSBucket, sizeof(__pyx_k_GridFSBucket), 0, 0, 1, 1},
-  {&__pyx_n_s_GridOut, __pyx_k_GridOut, sizeof(__pyx_k_GridOut), 0, 0, 1, 1},
   {&__pyx_n_s_IGNORECASE, __pyx_k_IGNORECASE, sizeof(__pyx_k_IGNORECASE), 0, 0, 1, 1},
   {&__pyx_kp_s_Invalid_expression, __pyx_k_Invalid_expression, sizeof(__pyx_k_Invalid_expression), 0, 0, 1, 0},
-  {&__pyx_kp_s_Iterates_over_a_file_s_chunks_us, __pyx_k_Iterates_over_a_file_s_chunks_us, sizeof(__pyx_k_Iterates_over_a_file_s_chunks_us), 0, 0, 1, 0},
   {&__pyx_n_s_List, __pyx_k_List, sizeof(__pyx_k_List), 0, 0, 1, 1},
   {&__pyx_kp_s_List_str, __pyx_k_List_str, sizeof(__pyx_k_List_str), 0, 0, 1, 0},
   {&__pyx_n_s_Lock, __pyx_k_Lock, sizeof(__pyx_k_Lock), 0, 0, 1, 1},
-  {&__pyx_kp_s_Missing_chunk_expected_chunk_d_b, __pyx_k_Missing_chunk_expected_chunk_d_b, sizeof(__pyx_k_Missing_chunk_expected_chunk_d_b), 0, 0, 1, 0},
-  {&__pyx_n_s_None, __pyx_k_None, sizeof(__pyx_k_None), 0, 0, 1, 1},
   {&__pyx_kp_s_NoneType, __pyx_k_NoneType, sizeof(__pyx_k_NoneType), 0, 0, 1, 0},
   {&__pyx_n_s_ObjectId, __pyx_k_ObjectId, sizeof(__pyx_k_ObjectId), 0, 0, 1, 1},
   {&__pyx_kp_u_ObjectId_2, __pyx_k_ObjectId_2, sizeof(__pyx_k_ObjectId_2), 0, 1, 0, 0},
-  {&__pyx_n_s_Optional, __pyx_k_Optional, sizeof(__pyx_k_Optional), 0, 0, 1, 1},
-  {&__pyx_kp_s_Optional_ClientSession, __pyx_k_Optional_ClientSession, sizeof(__pyx_k_Optional_ClientSession), 0, 0, 1, 0},
   {&__pyx_kp_s_Param_in_Find_one_must_be_cy_doc, __pyx_k_Param_in_Find_one_must_be_cy_doc, sizeof(__pyx_k_Param_in_Find_one_must_be_cy_doc), 0, 0, 1, 0},
   {&__pyx_n_s_Pattern, __pyx_k_Pattern, sizeof(__pyx_k_Pattern), 0, 0, 1, 1},
   {&__pyx_kp_u_Please_set_value_for, __pyx_k_Please_set_value_for, sizeof(__pyx_k_Please_set_value_for), 0, 1, 0, 0},
   {&__pyx_kp_u_Preview_file, __pyx_k_Preview_file, sizeof(__pyx_k_Preview_file), 0, 1, 0, 0},
-  {&__pyx_n_s_StopIteration, __pyx_k_StopIteration, sizeof(__pyx_k_StopIteration), 0, 0, 1, 1},
   {&__pyx_kp_u_These_below_fields_are_require, __pyx_k_These_below_fields_are_require, sizeof(__pyx_k_These_below_fields_are_require), 0, 1, 0, 0},
   {&__pyx_kp_u_Thous_can_not_alias_mongodb_expr, __pyx_k_Thous_can_not_alias_mongodb_expr, sizeof(__pyx_k_Thous_can_not_alias_mongodb_expr), 0, 1, 0, 0},
   {&__pyx_kp_u_Thous_can_not_sort_stage_with, __pyx_k_Thous_can_not_sort_stage_with, sizeof(__pyx_k_Thous_can_not_sort_stage_with), 0, 1, 0, 0},
@@ -51646,7 +47873,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u__11, __pyx_k__11, sizeof(__pyx_k__11), 0, 1, 0, 0},
   {&__pyx_n_s__12, __pyx_k__12, sizeof(__pyx_k__12), 0, 0, 1, 1},
   {&__pyx_kp_s__13, __pyx_k__13, sizeof(__pyx_k__13), 0, 0, 1, 0},
-  {&__pyx_kp_b__2, __pyx_k__2, sizeof(__pyx_k__2), 0, 0, 0, 0},
   {&__pyx_kp_s__2, __pyx_k__2, sizeof(__pyx_k__2), 0, 0, 1, 0},
   {&__pyx_n_u__3, __pyx_k__3, sizeof(__pyx_k__3), 0, 1, 0, 1},
   {&__pyx_kp_s__30, __pyx_k__30, sizeof(__pyx_k__30), 0, 0, 1, 0},
@@ -51677,7 +47903,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_background, __pyx_k_background, sizeof(__pyx_k_background), 0, 0, 1, 1},
   {&__pyx_n_s_bson, __pyx_k_bson, sizeof(__pyx_k_bson), 0, 0, 1, 1},
   {&__pyx_kp_s_bson_ObjectId, __pyx_k_bson_ObjectId, sizeof(__pyx_k_bson_ObjectId), 0, 0, 1, 0},
-  {&__pyx_n_s_buffer, __pyx_k_buffer, sizeof(__pyx_k_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_bytes, __pyx_k_bytes, sizeof(__pyx_k_bytes), 0, 0, 1, 1},
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
   {&__pyx_n_s_cache_index, __pyx_k_cache_index, sizeof(__pyx_k_cache_index), 0, 0, 1, 1},
@@ -51685,24 +47910,15 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_camel_cache, __pyx_k_camel_cache, sizeof(__pyx_k_camel_cache), 0, 0, 1, 1},
   {&__pyx_n_s_camel_dict, __pyx_k_camel_dict, sizeof(__pyx_k_camel_dict), 0, 0, 1, 1},
   {&__pyx_n_s_camel_lock, __pyx_k_camel_lock, sizeof(__pyx_k_camel_lock), 0, 0, 1, 1},
-  {&__pyx_n_s_ceil, __pyx_k_ceil, sizeof(__pyx_k_ceil), 0, 0, 1, 1},
   {&__pyx_n_s_check_constraint, __pyx_k_check_constraint, sizeof(__pyx_k_check_constraint), 0, 0, 1, 1},
   {&__pyx_n_s_check_map__module, __pyx_k_check_map__module, sizeof(__pyx_k_check_map__module), 0, 0, 1, 1},
   {&__pyx_n_s_check_map__name, __pyx_k_check_map__name, sizeof(__pyx_k_check_map__name), 0, 0, 1, 1},
   {&__pyx_n_s_check_name, __pyx_k_check_name, sizeof(__pyx_k_check_name), 0, 0, 1, 1},
-  {&__pyx_n_s_chunk, __pyx_k_chunk, sizeof(__pyx_k_chunk), 0, 0, 1, 1},
   {&__pyx_n_s_chunkSize, __pyx_k_chunkSize, sizeof(__pyx_k_chunkSize), 0, 0, 1, 1},
   {&__pyx_n_s_chunk_data, __pyx_k_chunk_data, sizeof(__pyx_k_chunk_data), 0, 0, 1, 1},
   {&__pyx_n_s_chunk_index, __pyx_k_chunk_index, sizeof(__pyx_k_chunk_index), 0, 0, 1, 1},
-  {&__pyx_n_s_chunk_iter, __pyx_k_chunk_iter, sizeof(__pyx_k_chunk_iter), 0, 0, 1, 1},
-  {&__pyx_n_s_chunk_n, __pyx_k_chunk_n, sizeof(__pyx_k_chunk_n), 0, 0, 1, 1},
-  {&__pyx_n_s_chunk_number, __pyx_k_chunk_number, sizeof(__pyx_k_chunk_number), 0, 0, 1, 1},
   {&__pyx_n_s_chunk_size, __pyx_k_chunk_size, sizeof(__pyx_k_chunk_size), 0, 0, 1, 1},
-  {&__pyx_n_s_chunk_size_2, __pyx_k_chunk_size_2, sizeof(__pyx_k_chunk_size_2), 0, 0, 1, 1},
   {&__pyx_n_s_chunk_size_bytes, __pyx_k_chunk_size_bytes, sizeof(__pyx_k_chunk_size_bytes), 0, 0, 1, 1},
-  {&__pyx_n_s_chunks, __pyx_k_chunks, sizeof(__pyx_k_chunks), 0, 0, 1, 1},
-  {&__pyx_n_s_chunks_2, __pyx_k_chunks_2, sizeof(__pyx_k_chunks_2), 0, 0, 1, 1},
-  {&__pyx_n_s_chunks_3, __pyx_k_chunks_3, sizeof(__pyx_k_chunks_3), 0, 0, 1, 1},
   {&__pyx_n_s_client, __pyx_k_client, sizeof(__pyx_k_client), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_close, __pyx_k_close, sizeof(__pyx_k_close), 0, 0, 1, 1},
@@ -51721,10 +47937,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_count, __pyx_k_count, sizeof(__pyx_k_count), 0, 0, 1, 1},
   {&__pyx_n_s_count_async, __pyx_k_count_async, sizeof(__pyx_k_count_async), 0, 0, 1, 1},
   {&__pyx_n_s_count_documents, __pyx_k_count_documents, sizeof(__pyx_k_count_documents), 0, 0, 1, 1},
-  {&__pyx_n_s_create_cursor, __pyx_k_create_cursor, sizeof(__pyx_k_create_cursor), 0, 0, 1, 1},
   {&__pyx_n_s_create_file, __pyx_k_create_file, sizeof(__pyx_k_create_file), 0, 0, 1, 1},
   {&__pyx_n_s_create_index, __pyx_k_create_index, sizeof(__pyx_k_create_index), 0, 0, 1, 1},
-  {&__pyx_n_s_cursor, __pyx_k_cursor, sizeof(__pyx_k_cursor), 0, 0, 1, 1},
   {&__pyx_n_s_cy_docs_cy_docs_x, __pyx_k_cy_docs_cy_docs_x, sizeof(__pyx_k_cy_docs_cy_docs_x), 0, 0, 1, 1},
   {&__pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_k_cy_docs_cy_docs_x_py, sizeof(__pyx_k_cy_docs_cy_docs_x_py), 0, 0, 1, 0},
   {&__pyx_n_s_d, __pyx_k_d, sizeof(__pyx_k_d), 0, 0, 1, 1},
@@ -51764,8 +47978,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_exists_2, __pyx_k_exists_2, sizeof(__pyx_k_exists_2), 0, 0, 1, 1},
   {&__pyx_kp_u_exists_require_cy_docs_fields_fi, __pyx_k_exists_require_cy_docs_fields_fi, sizeof(__pyx_k_exists_require_cy_docs_fields_fi), 0, 1, 0, 0},
   {&__pyx_n_s_exit, __pyx_k_exit, sizeof(__pyx_k_exit), 0, 0, 1, 1},
-  {&__pyx_n_s_expected_chunk_length, __pyx_k_expected_chunk_length, sizeof(__pyx_k_expected_chunk_length), 0, 0, 1, 1},
-  {&__pyx_n_s_expected_length, __pyx_k_expected_length, sizeof(__pyx_k_expected_length), 0, 0, 1, 1},
   {&__pyx_n_s_expr, __pyx_k_expr, sizeof(__pyx_k_expr), 0, 0, 1, 1},
   {&__pyx_n_s_expr_2, __pyx_k_expr_2, sizeof(__pyx_k_expr_2), 0, 0, 1, 1},
   {&__pyx_n_u_f, __pyx_k_f, sizeof(__pyx_k_f), 0, 1, 0, 1},
@@ -51812,10 +48024,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_getfile, __pyx_k_getfile, sizeof(__pyx_k_getfile), 0, 0, 1, 1},
   {&__pyx_n_s_getitem, __pyx_k_getitem, sizeof(__pyx_k_getitem), 0, 0, 1, 1},
   {&__pyx_n_s_gfs, __pyx_k_gfs, sizeof(__pyx_k_gfs), 0, 0, 1, 1},
-  {&__pyx_n_s_grid_out, __pyx_k_grid_out, sizeof(__pyx_k_grid_out), 0, 0, 1, 1},
   {&__pyx_n_s_gridfs, __pyx_k_gridfs, sizeof(__pyx_k_gridfs), 0, 0, 1, 1},
-  {&__pyx_kp_s_gridfs_GridOut, __pyx_k_gridfs_GridOut, sizeof(__pyx_k_gridfs_GridOut), 0, 0, 1, 0},
-  {&__pyx_n_s_gridfs_errors, __pyx_k_gridfs_errors, sizeof(__pyx_k_gridfs_errors), 0, 0, 1, 1},
   {&__pyx_kp_s_gt, __pyx_k_gt, sizeof(__pyx_k_gt), 0, 0, 1, 0},
   {&__pyx_n_s_gt_2, __pyx_k_gt_2, sizeof(__pyx_k_gt_2), 0, 0, 1, 1},
   {&__pyx_kp_s_gte, __pyx_k_gte, sizeof(__pyx_k_gte), 0, 0, 1, 0},
@@ -51843,7 +48052,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_instance, __pyx_k_instance, sizeof(__pyx_k_instance), 0, 0, 1, 1},
   {&__pyx_n_s_int, __pyx_k_int, sizeof(__pyx_k_int), 0, 0, 1, 1},
   {&__pyx_n_s_invert, __pyx_k_invert, sizeof(__pyx_k_invert), 0, 0, 1, 1},
-  {&__pyx_n_s_io, __pyx_k_io, sizeof(__pyx_k_io), 0, 0, 1, 1},
   {&__pyx_n_s_is_not_null, __pyx_k_is_not_null, sizeof(__pyx_k_is_not_null), 0, 0, 1, 1},
   {&__pyx_n_s_is_null, __pyx_k_is_null, sizeof(__pyx_k_is_null), 0, 0, 1, 1},
   {&__pyx_n_s_isoformat, __pyx_k_isoformat, sizeof(__pyx_k_isoformat), 0, 0, 1, 1},
@@ -51861,7 +48069,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_len, __pyx_k_len, sizeof(__pyx_k_len), 0, 0, 1, 1},
   {&__pyx_n_s_len_2, __pyx_k_len_2, sizeof(__pyx_k_len_2), 0, 0, 1, 1},
   {&__pyx_n_s_length, __pyx_k_length, sizeof(__pyx_k_length), 0, 0, 1, 1},
-  {&__pyx_n_s_length_2, __pyx_k_length_2, sizeof(__pyx_k_length_2), 0, 0, 1, 1},
   {&__pyx_n_s_like, __pyx_k_like, sizeof(__pyx_k_like), 0, 0, 1, 1},
   {&__pyx_kp_s_limit, __pyx_k_limit, sizeof(__pyx_k_limit), 0, 0, 1, 0},
   {&__pyx_n_s_limit_2, __pyx_k_limit_2, sizeof(__pyx_k_limit_2), 0, 0, 1, 1},
@@ -51875,7 +48082,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_kp_s_match, __pyx_k_match, sizeof(__pyx_k_match), 0, 0, 1, 0},
   {&__pyx_n_s_match_2, __pyx_k_match_2, sizeof(__pyx_k_match_2), 0, 0, 1, 1},
-  {&__pyx_n_s_math, __pyx_k_math, sizeof(__pyx_k_math), 0, 0, 1, 1},
   {&__pyx_n_s_matmul, __pyx_k_matmul, sizeof(__pyx_k_matmul), 0, 0, 1, 1},
   {&__pyx_n_s_metaclass, __pyx_k_metaclass, sizeof(__pyx_k_metaclass), 0, 0, 1, 1},
   {&__pyx_kp_s_mod, __pyx_k_mod, sizeof(__pyx_k_mod), 0, 0, 1, 0},
@@ -51896,15 +48102,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_ne_3, __pyx_k_ne_3, sizeof(__pyx_k_ne_3), 0, 0, 1, 1},
   {&__pyx_n_s_new, __pyx_k_new, sizeof(__pyx_k_new), 0, 0, 1, 1},
   {&__pyx_n_s_new_file, __pyx_k_new_file, sizeof(__pyx_k_new_file), 0, 0, 1, 1},
-  {&__pyx_n_s_next, __pyx_k_next, sizeof(__pyx_k_next), 0, 0, 1, 1},
-  {&__pyx_n_s_next_2, __pyx_k_next_2, sizeof(__pyx_k_next_2), 0, 0, 1, 1},
-  {&__pyx_n_s_next_chunk, __pyx_k_next_chunk, sizeof(__pyx_k_next_chunk), 0, 0, 1, 1},
-  {&__pyx_n_s_next_chunk_2, __pyx_k_next_chunk_2, sizeof(__pyx_k_next_chunk_2), 0, 0, 1, 1},
-  {&__pyx_n_s_next_with_retry, __pyx_k_next_with_retry, sizeof(__pyx_k_next_with_retry), 0, 0, 1, 1},
-  {&__pyx_kp_s_no_chunk_d, __pyx_k_no_chunk_d, sizeof(__pyx_k_no_chunk_d), 0, 0, 1, 0},
   {&__pyx_kp_s_not, __pyx_k_not, sizeof(__pyx_k_not), 0, 0, 1, 0},
   {&__pyx_n_s_not_exists, __pyx_k_not_exists, sizeof(__pyx_k_not_exists), 0, 0, 1, 1},
-  {&__pyx_n_s_num_chunks, __pyx_k_num_chunks, sizeof(__pyx_k_num_chunks), 0, 0, 1, 1},
   {&__pyx_n_s_obj, __pyx_k_obj, sizeof(__pyx_k_obj), 0, 0, 1, 1},
   {&__pyx_n_s_object, __pyx_k_object, sizeof(__pyx_k_object), 0, 0, 1, 1},
   {&__pyx_n_s_objectid, __pyx_k_objectid, sizeof(__pyx_k_objectid), 0, 0, 1, 1},
@@ -51921,7 +48120,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_pattern, __pyx_k_pattern, sizeof(__pyx_k_pattern), 0, 0, 1, 1},
   {&__pyx_n_s_pipeline, __pyx_k_pipeline, sizeof(__pyx_k_pipeline), 0, 0, 1, 1},
   {&__pyx_n_s_pos, __pyx_k_pos, sizeof(__pyx_k_pos), 0, 0, 1, 1},
-  {&__pyx_n_s_position, __pyx_k_position, sizeof(__pyx_k_position), 0, 0, 1, 1},
   {&__pyx_kp_s_pow, __pyx_k_pow, sizeof(__pyx_k_pow), 0, 0, 1, 0},
   {&__pyx_n_s_pow_2, __pyx_k_pow_2, sizeof(__pyx_k_pow_2), 0, 0, 1, 1},
   {&__pyx_n_s_power, __pyx_k_power, sizeof(__pyx_k_power), 0, 0, 1, 1},
@@ -51933,27 +48131,18 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_pydantic_BaseModel, __pyx_k_pydantic_BaseModel, sizeof(__pyx_k_pydantic_BaseModel), 0, 0, 1, 0},
   {&__pyx_n_s_pymongo, __pyx_k_pymongo, sizeof(__pyx_k_pymongo), 0, 0, 1, 1},
   {&__pyx_kp_s_pymongo_MongoClient, __pyx_k_pymongo_MongoClient, sizeof(__pyx_k_pymongo_MongoClient), 0, 0, 1, 0},
-  {&__pyx_n_s_pymongo_client_session, __pyx_k_pymongo_client_session, sizeof(__pyx_k_pymongo_client_session), 0, 0, 1, 1},
-  {&__pyx_n_s_pymongo_collection, __pyx_k_pymongo_collection, sizeof(__pyx_k_pymongo_collection), 0, 0, 1, 1},
   {&__pyx_kp_s_pymongo_collection_Collection, __pyx_k_pymongo_collection_Collection, sizeof(__pyx_k_pymongo_collection_Collection), 0, 0, 1, 0},
-  {&__pyx_n_s_pymongo_cursor, __pyx_k_pymongo_cursor, sizeof(__pyx_k_pymongo_cursor), 0, 0, 1, 1},
-  {&__pyx_n_s_pymongo_errors, __pyx_k_pymongo_errors, sizeof(__pyx_k_pymongo_errors), 0, 0, 1, 1},
   {&__pyx_n_s_pymongo_mongo_client, __pyx_k_pymongo_mongo_client, sizeof(__pyx_k_pymongo_mongo_client), 0, 0, 1, 1},
   {&__pyx_kp_s_pymongo_mongo_client_MongoClient, __pyx_k_pymongo_mongo_client_MongoClient, sizeof(__pyx_k_pymongo_mongo_client_MongoClient), 0, 0, 1, 0},
   {&__pyx_n_s_qualname, __pyx_k_qualname, sizeof(__pyx_k_qualname), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_re, __pyx_k_re, sizeof(__pyx_k_re), 0, 0, 1, 1},
-  {&__pyx_n_s_read, __pyx_k_read, sizeof(__pyx_k_read), 0, 0, 1, 1},
-  {&__pyx_n_s_read_grid_fs_file, __pyx_k_read_grid_fs_file, sizeof(__pyx_k_read_grid_fs_file), 0, 0, 1, 1},
-  {&__pyx_n_s_readchunk, __pyx_k_readchunk, sizeof(__pyx_k_readchunk), 0, 0, 1, 1},
   {&__pyx_n_s_real, __pyx_k_real, sizeof(__pyx_k_real), 0, 0, 1, 1},
-  {&__pyx_n_s_received, __pyx_k_received, sizeof(__pyx_k_received), 0, 0, 1, 1},
   {&__pyx_n_s_reduce, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_type, __pyx_k_reduce_type, sizeof(__pyx_k_reduce_type), 0, 0, 1, 1},
   {&__pyx_kp_s_regex, __pyx_k_regex, sizeof(__pyx_k_regex), 0, 0, 1, 0},
   {&__pyx_n_s_rel_file_path, __pyx_k_rel_file_path, sizeof(__pyx_k_rel_file_path), 0, 0, 1, 1},
   {&__pyx_n_s_release, __pyx_k_release, sizeof(__pyx_k_release), 0, 0, 1, 1},
-  {&__pyx_n_s_remainder, __pyx_k_remainder, sizeof(__pyx_k_remainder), 0, 0, 1, 1},
   {&__pyx_n_s_repr, __pyx_k_repr, sizeof(__pyx_k_repr), 0, 0, 1, 1},
   {&__pyx_n_s_require_fields, __pyx_k_require_fields, sizeof(__pyx_k_require_fields), 0, 0, 1, 1},
   {&__pyx_n_s_ret, __pyx_k_ret, sizeof(__pyx_k_ret), 0, 0, 1, 1},
@@ -51962,17 +48151,13 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_ret_pipe, __pyx_k_ret_pipe, sizeof(__pyx_k_ret_pipe), 0, 0, 1, 1},
   {&__pyx_n_s_return, __pyx_k_return, sizeof(__pyx_k_return), 0, 0, 1, 1},
   {&__pyx_n_s_rshift, __pyx_k_rshift, sizeof(__pyx_k_rshift), 0, 0, 1, 1},
-  {&__pyx_n_s_seek, __pyx_k_seek, sizeof(__pyx_k_seek), 0, 0, 1, 1},
   {&__pyx_n_s_self, __pyx_k_self, sizeof(__pyx_k_self), 0, 0, 1, 1},
   {&__pyx_n_s_send, __pyx_k_send, sizeof(__pyx_k_send), 0, 0, 1, 1},
-  {&__pyx_n_s_session, __pyx_k_session, sizeof(__pyx_k_session), 0, 0, 1, 1},
-  {&__pyx_n_s_session_2, __pyx_k_session_2, sizeof(__pyx_k_session_2), 0, 0, 1, 1},
   {&__pyx_kp_s_set, __pyx_k_set, sizeof(__pyx_k_set), 0, 0, 1, 0},
   {&__pyx_n_s_set_check, __pyx_k_set_check, sizeof(__pyx_k_set_check), 0, 0, 1, 1},
   {&__pyx_n_s_set_type, __pyx_k_set_type, sizeof(__pyx_k_set_type), 0, 0, 1, 1},
   {&__pyx_n_s_setattr, __pyx_k_setattr, sizeof(__pyx_k_setattr), 0, 0, 1, 1},
   {&__pyx_n_s_setitem, __pyx_k_setitem, sizeof(__pyx_k_setitem), 0, 0, 1, 1},
-  {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
   {&__pyx_kp_s_skip, __pyx_k_skip, sizeof(__pyx_k_skip), 0, 0, 1, 0},
   {&__pyx_n_s_skip_2, __pyx_k_skip_2, sizeof(__pyx_k_skip_2), 0, 0, 1, 1},
   {&__pyx_n_s_sort, __pyx_k_sort, sizeof(__pyx_k_sort), 0, 0, 1, 1},
@@ -51990,7 +48175,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_sub, __pyx_k_sub, sizeof(__pyx_k_sub), 0, 0, 1, 0},
   {&__pyx_n_s_sub_2, __pyx_k_sub_2, sizeof(__pyx_k_sub_2), 0, 0, 1, 1},
   {&__pyx_n_s_super, __pyx_k_super, sizeof(__pyx_k_super), 0, 0, 1, 1},
-  {&__pyx_n_s_tell, __pyx_k_tell, sizeof(__pyx_k_tell), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_n_s_threading, __pyx_k_threading, sizeof(__pyx_k_threading), 0, 0, 1, 1},
   {&__pyx_n_s_throw, __pyx_k_throw, sizeof(__pyx_k_throw), 0, 0, 1, 1},
@@ -52002,8 +48186,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_to_mongo_db_expr, __pyx_k_to_mongo_db_expr, sizeof(__pyx_k_to_mongo_db_expr), 0, 0, 1, 1},
   {&__pyx_n_s_to_pydantic, __pyx_k_to_pydantic, sizeof(__pyx_k_to_pydantic), 0, 0, 1, 1},
   {&__pyx_n_s_truediv, __pyx_k_truediv, sizeof(__pyx_k_truediv), 0, 0, 1, 1},
-  {&__pyx_kp_s_truncated_chunk, __pyx_k_truncated_chunk, sizeof(__pyx_k_truncated_chunk), 0, 0, 1, 0},
-  {&__pyx_kp_s_truncated_chunk_d_expected_chunk, __pyx_k_truncated_chunk_d_expected_chunk, sizeof(__pyx_k_truncated_chunk_d_expected_chunk), 0, 0, 1, 0},
   {&__pyx_n_s_type, __pyx_k_type, sizeof(__pyx_k_type), 0, 0, 1, 1},
   {&__pyx_n_s_typing, __pyx_k_typing, sizeof(__pyx_k_typing), 0, 0, 1, 1},
   {&__pyx_kp_s_typing_Union, __pyx_k_typing_Union, sizeof(__pyx_k_typing_Union), 0, 0, 1, 0},
@@ -52020,7 +48202,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_was_not_found_in, __pyx_k_was_not_found_in, sizeof(__pyx_k_was_not_found_in), 0, 1, 0, 0},
   {&__pyx_kp_u_was_not_found_in_2, __pyx_k_was_not_found_in_2, sizeof(__pyx_k_was_not_found_in_2), 0, 1, 0, 0},
   {&__pyx_n_s_wrapper, __pyx_k_wrapper, sizeof(__pyx_k_wrapper), 0, 0, 1, 1},
-  {&__pyx_n_s_write, __pyx_k_write, sizeof(__pyx_k_write), 0, 0, 1, 1},
   {&__pyx_n_s_x, __pyx_k_x, sizeof(__pyx_k_x), 0, 0, 1, 1},
   {&__pyx_n_s_y, __pyx_k_y, sizeof(__pyx_k_y), 0, 0, 1, 1},
   #endif
@@ -52032,7 +48213,6 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_AttributeError = __Pyx_GetBuiltinName(__pyx_n_s_AttributeError); if (!__pyx_builtin_AttributeError) __PYX_ERR(0, 190, __pyx_L1_error)
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 835, __pyx_L1_error)
   __pyx_builtin_super = __Pyx_GetBuiltinName(__pyx_n_s_super); if (!__pyx_builtin_super) __PYX_ERR(0, 1492, __pyx_L1_error)
-  __pyx_builtin_StopIteration = __Pyx_GetBuiltinName(__pyx_n_s_StopIteration); if (!__pyx_builtin_StopIteration) __PYX_ERR(0, 1712, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -53356,128 +49536,6 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__223);
   __Pyx_GIVEREF(__pyx_tuple__223);
   __pyx_codeobj__42 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__223, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_find_file_async, 1630, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__42)) __PYX_ERR(0, 1630, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1653
- * 
- * 
- * class FS_GridOutChunkIterator(object):             # <<<<<<<<<<<<<<
- *     """Iterates over a file's chunks using a single cursor.
- * 
- */
-  __pyx_tuple__224 = PyTuple_Pack(1, __pyx_builtin_object); if (unlikely(!__pyx_tuple__224)) __PYX_ERR(0, 1653, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__224);
-  __Pyx_GIVEREF(__pyx_tuple__224);
-
-  /* "cy_docs/cy_docs_x.py":1660
- *     """
- * 
- *     def __init__(             # <<<<<<<<<<<<<<
- *             self,
- *             grid_out: GridOut,
- */
-  __pyx_tuple__225 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_grid_out, __pyx_n_s_chunks, __pyx_n_s_session, __pyx_n_s_next_chunk); if (unlikely(!__pyx_tuple__225)) __PYX_ERR(0, 1660, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__225);
-  __Pyx_GIVEREF(__pyx_tuple__225);
-  __pyx_codeobj__226 = (PyObject*)__Pyx_PyCode_New(5, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__225, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_init, 1660, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__226)) __PYX_ERR(0, 1660, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1678
- *     _cursor: Optional[Cursor]
- * 
- *     def expected_chunk_length(self, chunk_n: int) -> int:             # <<<<<<<<<<<<<<
- *         if chunk_n < self._num_chunks - 1:
- *             return self._chunk_size
- */
-  __pyx_tuple__227 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_chunk_n); if (unlikely(!__pyx_tuple__227)) __PYX_ERR(0, 1678, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__227);
-  __Pyx_GIVEREF(__pyx_tuple__227);
-  __pyx_codeobj__228 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__227, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_expected_chunk_length, 1678, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__228)) __PYX_ERR(0, 1678, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1683
- *         return self._length - (self._chunk_size * (self._num_chunks - 1))
- * 
- *     def __iter__(self) -> "FS_GridOutChunkIterator":             # <<<<<<<<<<<<<<
- *         return self
- * 
- */
-  __pyx_tuple__229 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__229)) __PYX_ERR(0, 1683, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__229);
-  __Pyx_GIVEREF(__pyx_tuple__229);
-  __pyx_codeobj__230 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__229, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_iter, 1683, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__230)) __PYX_ERR(0, 1683, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1686
- *         return self
- * 
- *     def _create_cursor(self) -> None:             # <<<<<<<<<<<<<<
- *         filter = {"files_id": self._id}
- *         # if self._next_chunk > 0:
- */
-  __pyx_tuple__231 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_filter); if (unlikely(!__pyx_tuple__231)) __PYX_ERR(0, 1686, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__231);
-  __Pyx_GIVEREF(__pyx_tuple__231);
-  __pyx_codeobj__232 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__231, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_create_cursor, 1686, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__232)) __PYX_ERR(0, 1686, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1692
- *         self._cursor = self._chunks.find(filter,skip=self._next_chunk)
- * 
- *     def _next_with_retry(self):             # <<<<<<<<<<<<<<
- *         """Return the next chunk and retry once on CursorNotFound.
- * 
- */
-  __pyx_tuple__233 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__233)) __PYX_ERR(0, 1692, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__233);
-  __Pyx_GIVEREF(__pyx_tuple__233);
-  __pyx_codeobj__234 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__233, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_next_with_retry, 1692, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__234)) __PYX_ERR(0, 1692, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1709
- *             return self._cursor.next()
- * 
- *     def next(self):             # <<<<<<<<<<<<<<
- *         try:
- *             chunk = self._next_with_retry()
- */
-  __pyx_tuple__235 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_chunk, __pyx_n_s_expected_length); if (unlikely(!__pyx_tuple__235)) __PYX_ERR(0, 1709, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__235);
-  __Pyx_GIVEREF(__pyx_tuple__235);
-  __pyx_codeobj__236 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__235, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_next, 1709, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__236)) __PYX_ERR(0, 1709, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1746
- *     __next__ = next
- * 
- *     def close(self) -> None:             # <<<<<<<<<<<<<<
- *         if self._cursor:
- *             self._cursor.close()
- */
-  __pyx_tuple__237 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__237)) __PYX_ERR(0, 1746, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__237);
-  __Pyx_GIVEREF(__pyx_tuple__237);
-  __pyx_codeobj__238 = (PyObject*)__Pyx_PyCode_New(1, 0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__237, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_close, 1746, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__238)) __PYX_ERR(0, 1746, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1750
- *             self._cursor.close()
- *             self._cursor = None
- * def readchunk(db,fs: GridOut) -> bytes:             # <<<<<<<<<<<<<<
- *     """Reads a chunk at a time. If the current position is within a
- *     chunk the remainder of the chunk is returned.
- */
-  __pyx_tuple__239 = PyTuple_Pack(7, __pyx_n_s_db, __pyx_n_s_fs, __pyx_n_s_received, __pyx_n_s_chunk_data, __pyx_n_s_chunk_size, __pyx_n_s_chunk_number, __pyx_n_s_chunk); if (unlikely(!__pyx_tuple__239)) __PYX_ERR(0, 1750, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__239);
-  __Pyx_GIVEREF(__pyx_tuple__239);
-  __pyx_codeobj__240 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__239, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_readchunk, 1750, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__240)) __PYX_ERR(0, 1750, __pyx_L1_error)
-
-  /* "cy_docs/cy_docs_x.py":1785
- * 
- * 
- * def read_grid_fs_file(db, fs: gridfs.GridOut, size: int = -1) -> bytes:             # <<<<<<<<<<<<<<
- *     """Read at most `size` bytes from the file (less if there
- *     isn't enough data).
- */
-  __pyx_tuple__241 = PyTuple_Pack(7, __pyx_n_s_db, __pyx_n_s_fs, __pyx_n_s_size, __pyx_n_s_remainder, __pyx_n_s_received, __pyx_n_s_data_2, __pyx_n_s_chunk_data); if (unlikely(!__pyx_tuple__241)) __PYX_ERR(0, 1785, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__241);
-  __Pyx_GIVEREF(__pyx_tuple__241);
-  __pyx_codeobj__242 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__241, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cy_docs_cy_docs_x_py, __pyx_n_s_read_grid_fs_file, 1785, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__242)) __PYX_ERR(0, 1785, __pyx_L1_error)
-  __pyx_tuple__243 = PyTuple_Pack(1, ((PyObject *)__pyx_int_neg_1)); if (unlikely(!__pyx_tuple__243)) __PYX_ERR(0, 1785, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__243);
-  __Pyx_GIVEREF(__pyx_tuple__243);
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -53524,513 +49582,444 @@ static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   if (__Pyx_InitString(__pyx_string_tab[24], &__pyx_n_s_BaseField___to_mongo_db) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[25], &__pyx_n_s_BaseField___to_mongo_db_expr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[26], &__pyx_n_s_BaseModel) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[27], &__pyx_n_s_BytesIO) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[28], &__pyx_kp_u_Can_not_cast) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[29], &__pyx_n_s_ClientSession) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[30], &__pyx_n_s_Collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[31], &__pyx_n_s_CorruptGridFile) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[32], &__pyx_n_s_Cursor) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[33], &__pyx_n_s_CursorNotFound) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[34], &__pyx_n_s_DBDocument) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[35], &__pyx_n_s_DBDocument___init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[36], &__pyx_n_s_DBDocument___lshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[37], &__pyx_n_s_DBDocument___matmul) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[38], &__pyx_n_s_DBDocument___rshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[39], &__pyx_n_s_DBDocument_aggregate) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[40], &__pyx_n_s_DBDocument_count) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[41], &__pyx_n_s_DBDocument_count_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[42], &__pyx_n_s_DBDocument_delete) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[43], &__pyx_n_s_DBDocument_delete_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[44], &__pyx_n_s_DBDocument_find) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[45], &__pyx_n_s_DBDocument_find_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[46], &__pyx_n_s_DBDocument_find_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[47], &__pyx_n_s_DBDocument_find_one_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[48], &__pyx_n_s_DBDocument_find_to_json_converta) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[49], &__pyx_n_s_DBDocument_insert_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[50], &__pyx_n_s_DBDocument_insert_one_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[51], &__pyx_n_s_DBDocument_update) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[52], &__pyx_n_s_DBDocument_update_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[53], &__pyx_n_s_DbContext) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[54], &__pyx_n_s_DbContext___new) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[55], &__pyx_n_s_DbContext___new___locals_empty) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[56], &__pyx_n_s_DbContext__cache) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[57], &__pyx_n_s_DbContext__cache__lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[58], &__pyx_n_s_Document) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[59], &__pyx_n_s_DocumentObject) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[60], &__pyx_n_s_DocumentObject___delitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[61], &__pyx_n_s_DocumentObject___getattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[62], &__pyx_n_s_DocumentObject___getitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[63], &__pyx_n_s_DocumentObject___init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[64], &__pyx_n_s_DocumentObject___setattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[65], &__pyx_n_s_DocumentObject___setitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[66], &__pyx_n_s_DocumentObject_get) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[67], &__pyx_n_s_DocumentObject_to_json_convertab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[68], &__pyx_n_s_DocumentObject_to_pydantic) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[69], &__pyx_n_s_Document___getitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[70], &__pyx_n_s_Document___init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[71], &__pyx_kp_u_Example) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[72], &__pyx_kp_u_Example_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[73], &__pyx_kp_u_Exmaple) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[74], &__pyx_n_s_ExprBuilder) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[75], &__pyx_n_s_ExprBuilder___getattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[76], &__pyx_n_s_ExprBuilder___getitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[77], &__pyx_n_s_ExprBuilder___set_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[78], &__pyx_kp_s_Extra_chunk_found_expected_d_chu) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[79], &__pyx_n_s_FS_GridOutChunkIterator) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[80], &__pyx_kp_s_FS_GridOutChunkIterator_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[81], &__pyx_n_s_FS_GridOutChunkIterator___init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[82], &__pyx_n_s_FS_GridOutChunkIterator___iter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[83], &__pyx_n_s_FS_GridOutChunkIterator__create) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[84], &__pyx_n_s_FS_GridOutChunkIterator__next_wi) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[85], &__pyx_n_s_FS_GridOutChunkIterator_close) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[86], &__pyx_n_s_FS_GridOutChunkIterator_expected) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[87], &__pyx_n_s_FS_GridOutChunkIterator_next) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[88], &__pyx_n_s_Field) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[89], &__pyx_n_s_Field___add) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[90], &__pyx_n_s_Field___and) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[91], &__pyx_n_s_Field___eq) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[92], &__pyx_n_s_Field___floordiv) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[93], &__pyx_n_s_Field___ge) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[94], &__pyx_n_s_Field___getattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[95], &__pyx_n_s_Field___gt) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[96], &__pyx_n_s_Field___init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[97], &__pyx_n_s_Field___invert) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[98], &__pyx_n_s_Field___le) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[99], &__pyx_n_s_Field___lshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[100], &__pyx_n_s_Field___lt) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[101], &__pyx_n_s_Field___mod) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[102], &__pyx_n_s_Field___mul) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[103], &__pyx_n_s_Field___ne) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[104], &__pyx_n_s_Field___or) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[105], &__pyx_n_s_Field___pow) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[106], &__pyx_n_s_Field___repr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[107], &__pyx_n_s_Field___rshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[108], &__pyx_n_s_Field___sub) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[109], &__pyx_n_s_Field___truediv) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[110], &__pyx_n_s_Field_asc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[111], &__pyx_n_s_Field_desc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[112], &__pyx_n_s_Field_like) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[113], &__pyx_n_s_Field_reduce) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[114], &__pyx_n_s_Funcs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[115], &__pyx_n_s_Funcs_concat) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[116], &__pyx_n_s_Funcs_exists) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[117], &__pyx_n_s_Funcs_is_not_null) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[118], &__pyx_n_s_Funcs_is_null) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[119], &__pyx_n_s_Funcs_not_exists) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[120], &__pyx_n_s_GridFS) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[121], &__pyx_n_s_GridFSBucket) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[122], &__pyx_n_s_GridOut) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[123], &__pyx_n_s_IGNORECASE) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[124], &__pyx_kp_s_Invalid_expression) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[125], &__pyx_kp_s_Iterates_over_a_file_s_chunks_us) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[126], &__pyx_n_s_List) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[127], &__pyx_kp_s_List_str) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[128], &__pyx_n_s_Lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[129], &__pyx_kp_s_Missing_chunk_expected_chunk_d_b) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[130], &__pyx_n_s_None) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[131], &__pyx_kp_s_NoneType) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[132], &__pyx_n_s_ObjectId) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[133], &__pyx_kp_u_ObjectId_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[134], &__pyx_n_s_Optional) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[135], &__pyx_kp_s_Optional_ClientSession) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[136], &__pyx_kp_s_Param_in_Find_one_must_be_cy_doc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[137], &__pyx_n_s_Pattern) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[138], &__pyx_kp_u_Please_set_value_for) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[139], &__pyx_kp_u_Preview_file) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[140], &__pyx_n_s_StopIteration) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[141], &__pyx_kp_u_These_below_fields_are_require) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[142], &__pyx_kp_u_Thous_can_not_alias_mongodb_expr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[143], &__pyx_kp_u_Thous_can_not_sort_stage_with) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[144], &__pyx_kp_u_Thous_can_not_use_project_stage) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[145], &__pyx_kp_u_Thous_can_not_use_sort_stage_wit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[146], &__pyx_kp_u_Thous_must_set) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[147], &__pyx_n_s_UUID) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[148], &__pyx_n_s_Union) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[149], &__pyx_kp_s_Union_str_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[150], &__pyx_kp_s_Union_str_dict_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[151], &__pyx_kp_s__10) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[152], &__pyx_kp_u__10) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[153], &__pyx_kp_s__11) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[154], &__pyx_kp_u__11) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[155], &__pyx_n_s__12) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[156], &__pyx_kp_s__13) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[157], &__pyx_kp_b__2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[158], &__pyx_kp_s__2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[159], &__pyx_n_u__3) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[160], &__pyx_kp_s__30) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[161], &__pyx_kp_u__32) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[162], &__pyx_kp_s__35) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[163], &__pyx_n_s__6) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[164], &__pyx_kp_u__9) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[165], &__pyx_n_s_a) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[166], &__pyx_kp_u_a_value_Exmaple) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[167], &__pyx_n_s_acquire) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[168], &__pyx_kp_s_add) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[169], &__pyx_n_s_add_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[170], &__pyx_kp_u_aggregate) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[171], &__pyx_n_s_aggregate_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[172], &__pyx_n_s_alias) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[173], &__pyx_kp_s_and) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[174], &__pyx_n_s_and_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[175], &__pyx_kp_u_and_operation_require_2_Field) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[176], &__pyx_kp_u_and_operation_require_2_Field_Wh) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[177], &__pyx_n_s_annotations) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[178], &__pyx_n_s_args) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[179], &__pyx_n_s_args_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[180], &__pyx_n_s_asc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[181], &__pyx_n_s_async_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[182], &__pyx_kp_u_at) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[183], &__pyx_n_s_await) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[184], &__pyx_n_s_b) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[185], &__pyx_n_s_background) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[186], &__pyx_n_s_bson) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[187], &__pyx_kp_s_bson_ObjectId) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[188], &__pyx_n_s_buffer) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[189], &__pyx_n_s_bytes) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[190], &__pyx_n_s_c) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[191], &__pyx_n_s_cache_index) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[192], &__pyx_n_s_cache_unique) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[193], &__pyx_n_s_camel_cache) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[194], &__pyx_n_s_camel_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[195], &__pyx_n_s_camel_lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[196], &__pyx_n_s_ceil) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[197], &__pyx_n_s_check_constraint) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[198], &__pyx_n_s_check_map__module) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[199], &__pyx_n_s_check_map__name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[200], &__pyx_n_s_check_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[201], &__pyx_n_s_chunk) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[202], &__pyx_n_s_chunkSize) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[203], &__pyx_n_s_chunk_data) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[204], &__pyx_n_s_chunk_index) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[205], &__pyx_n_s_chunk_iter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[206], &__pyx_n_s_chunk_n) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[207], &__pyx_n_s_chunk_number) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[208], &__pyx_n_s_chunk_size) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[209], &__pyx_n_s_chunk_size_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[210], &__pyx_n_s_chunk_size_bytes) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[211], &__pyx_n_s_chunks) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[212], &__pyx_n_s_chunks_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[213], &__pyx_n_s_chunks_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[214], &__pyx_n_s_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[215], &__pyx_n_s_cline_in_traceback) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[216], &__pyx_n_s_close) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[217], &__pyx_n_s_cls) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[218], &__pyx_n_s_cls_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[219], &__pyx_n_s_coll) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[220], &__pyx_n_s_collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[221], &__pyx_n_s_collection_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[222], &__pyx_n_s_compile) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[223], &__pyx_kp_s_concat) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[224], &__pyx_n_s_concat_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[225], &__pyx_n_s_contentType) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[226], &__pyx_n_s_content_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[227], &__pyx_n_s_context) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[228], &__pyx_n_s_convention_get) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[229], &__pyx_n_s_count) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[230], &__pyx_n_s_count_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[231], &__pyx_n_s_count_documents) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[232], &__pyx_n_s_create_cursor) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[233], &__pyx_n_s_create_file) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[234], &__pyx_n_s_create_index) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[235], &__pyx_n_s_cursor) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[236], &__pyx_n_s_cy_docs_cy_docs_x) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[237], &__pyx_kp_s_cy_docs_cy_docs_x_py) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[238], &__pyx_n_s_d) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[239], &__pyx_n_s_data) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[240], &__pyx_n_s_data_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[241], &__pyx_n_s_database) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[242], &__pyx_n_s_datetime) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[243], &__pyx_n_s_db) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[244], &__pyx_kp_u_db_getCollection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[245], &__pyx_n_s_db_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[246], &__pyx_n_s_delegate) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[247], &__pyx_n_s_delegate_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[248], &__pyx_n_s_delete) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[249], &__pyx_n_s_delete_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[250], &__pyx_n_s_delete_many) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[251], &__pyx_n_s_delitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[252], &__pyx_n_s_desc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[253], &__pyx_n_s_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[254], &__pyx_n_s_dict_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[255], &__pyx_kp_s_divide) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[256], &__pyx_n_s_doc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[257], &__pyx_n_s_document) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[258], &__pyx_n_s_document_define) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[259], &__pyx_n_s_document_define_locals_wrapper) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[260], &__pyx_n_s_document_indexes) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[261], &__pyx_n_s_document_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[262], &__pyx_n_s_document_unique_keys) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[263], &__pyx_n_s_dumps) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[264], &__pyx_n_s_e) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[265], &__pyx_n_s_ele_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[266], &__pyx_n_s_empty) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[267], &__pyx_n_s_endswith) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[268], &__pyx_n_s_enter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[269], &__pyx_kp_s_eq) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[270], &__pyx_n_s_eq_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[271], &__pyx_kp_s_exists) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[272], &__pyx_n_s_exists_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[273], &__pyx_kp_u_exists_require_cy_docs_fields_fi) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[274], &__pyx_n_s_exit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[275], &__pyx_n_s_expected_chunk_length) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[276], &__pyx_n_s_expected_length) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[277], &__pyx_n_s_expr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[278], &__pyx_n_s_expr_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[279], &__pyx_n_u_f) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[280], &__pyx_n_s_field) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[281], &__pyx_n_s_fields) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[282], &__pyx_n_s_file_add_chunk) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[283], &__pyx_n_s_file_get) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[284], &__pyx_n_s_file_get_by_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[285], &__pyx_n_s_file_id) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[286], &__pyx_n_s_file_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[287], &__pyx_n_s_file_size) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[288], &__pyx_n_s_filename) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[289], &__pyx_n_s_files_id) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[290], &__pyx_kp_s_files_id_n) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[291], &__pyx_n_s_filter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[292], &__pyx_n_s_filter_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[293], &__pyx_n_s_find) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[294], &__pyx_n_s_find_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[295], &__pyx_n_s_find_file_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[296], &__pyx_n_s_find_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[297], &__pyx_n_s_find_one_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[298], &__pyx_n_s_find_to_json_convertable) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[299], &__pyx_n_s_first_item) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[300], &__pyx_n_s_flags) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[301], &__pyx_kp_s_floor) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[302], &__pyx_n_s_floordiv) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[303], &__pyx_n_s_fn) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[304], &__pyx_n_s_fs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[305], &__pyx_kp_s_fs_chunks) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[306], &__pyx_n_s_fs_files) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[307], &__pyx_kp_s_fs_files_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[308], &__pyx_n_s_fs_files_chunks) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[309], &__pyx_n_s_fx) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[310], &__pyx_n_s_fx_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[311], &__pyx_n_s_ge) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[312], &__pyx_n_s_get) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[313], &__pyx_n_s_get_collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[314], &__pyx_n_s_get_database) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[315], &__pyx_n_s_get_doc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[316], &__pyx_n_s_get_file_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[317], &__pyx_n_s_get_mongodb_text) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[318], &__pyx_n_s_get_version) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[319], &__pyx_n_s_getattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[320], &__pyx_n_s_getfile) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[321], &__pyx_n_s_getitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[322], &__pyx_n_s_gfs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[323], &__pyx_n_s_grid_out) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[324], &__pyx_n_s_gridfs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[325], &__pyx_kp_s_gridfs_GridOut) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[326], &__pyx_n_s_gridfs_errors) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[327], &__pyx_kp_s_gt) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[328], &__pyx_n_s_gt_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[329], &__pyx_kp_s_gte) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[330], &__pyx_n_s_has_set_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[331], &__pyx_n_s_hash_check_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[332], &__pyx_n_s_hash_check_dict_lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[333], &__pyx_n_s_hash_key) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[334], &__pyx_kp_u_i) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[335], &__pyx_n_s_i_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[336], &__pyx_n_s_id) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[337], &__pyx_n_s_id_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[338], &__pyx_kp_s_id_files_id_n) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[339], &__pyx_n_s_imag) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[340], &__pyx_n_s_import) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[341], &__pyx_n_s_indexes) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[342], &__pyx_n_s_init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[343], &__pyx_n_s_init_data) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[344], &__pyx_n_s_init_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[345], &__pyx_kp_s_init_value_must_be_str_or_ditc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[346], &__pyx_n_s_initializing) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[347], &__pyx_n_s_insert_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[348], &__pyx_n_s_insert_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[349], &__pyx_n_s_insert_one_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[350], &__pyx_n_s_inspect) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[351], &__pyx_n_s_instance) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[352], &__pyx_n_s_int) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[353], &__pyx_n_s_invert) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[354], &__pyx_n_s_io) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[355], &__pyx_n_s_is_not_null) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[356], &__pyx_n_s_is_null) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[357], &__pyx_n_s_isoformat) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[358], &__pyx_n_s_isupper) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[359], &__pyx_n_s_item) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[360], &__pyx_n_s_items) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[361], &__pyx_n_s_iter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[362], &__pyx_n_s_join) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[363], &__pyx_n_s_json) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[364], &__pyx_n_s_k) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[365], &__pyx_n_s_key) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[366], &__pyx_n_s_kw) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[367], &__pyx_n_s_kwargs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[368], &__pyx_n_s_le) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[369], &__pyx_n_s_len) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[370], &__pyx_n_s_len_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[371], &__pyx_n_s_length) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[372], &__pyx_n_s_length_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[373], &__pyx_n_s_like) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[374], &__pyx_kp_s_limit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[375], &__pyx_n_s_limit_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[376], &__pyx_n_s_linmit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[377], &__pyx_n_s_lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[378], &__pyx_n_s_lower) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[379], &__pyx_n_s_lshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[380], &__pyx_kp_s_lt) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[381], &__pyx_n_s_lt_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[382], &__pyx_kp_s_lte) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[383], &__pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[384], &__pyx_kp_s_match) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[385], &__pyx_n_s_match_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[386], &__pyx_n_s_math) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[387], &__pyx_n_s_matmul) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[388], &__pyx_n_s_metaclass) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[389], &__pyx_kp_s_mod) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[390], &__pyx_n_s_mod_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[391], &__pyx_n_s_module) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[392], &__pyx_n_s_modulo) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[393], &__pyx_n_s_mongo_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[394], &__pyx_n_s_motor) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[395], &__pyx_n_s_motor_motor_asyncio) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[396], &__pyx_n_s_mul) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[397], &__pyx_kp_s_multiply) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[398], &__pyx_kp_u_my_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[399], &__pyx_n_s_n) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[400], &__pyx_n_s_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[401], &__pyx_n_s_name_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[402], &__pyx_kp_s_ne) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[403], &__pyx_kp_s_ne_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[404], &__pyx_n_s_ne_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[405], &__pyx_n_s_new) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[406], &__pyx_n_s_new_file) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[407], &__pyx_n_s_next) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[408], &__pyx_n_s_next_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[409], &__pyx_n_s_next_chunk) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[410], &__pyx_n_s_next_chunk_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[411], &__pyx_n_s_next_with_retry) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[412], &__pyx_kp_s_no_chunk_d) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[413], &__pyx_kp_s_not) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[414], &__pyx_n_s_not_exists) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[415], &__pyx_n_s_num_chunks) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[416], &__pyx_n_s_obj) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[417], &__pyx_n_s_object) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[418], &__pyx_n_s_objectid) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[419], &__pyx_n_s_op) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[420], &__pyx_n_s_open_download_stream) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[421], &__pyx_n_s_oprator) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[422], &__pyx_n_s_oprator_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[423], &__pyx_kp_s_or) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[424], &__pyx_n_s_or_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[425], &__pyx_n_s_orig) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[426], &__pyx_n_s_origin) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[427], &__pyx_n_s_other) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[428], &__pyx_n_s_owner) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[429], &__pyx_n_s_pattern) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[430], &__pyx_n_s_pipeline) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[431], &__pyx_n_s_pos) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[432], &__pyx_n_s_position) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[433], &__pyx_kp_s_pow) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[434], &__pyx_n_s_pow_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[435], &__pyx_n_s_power) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[436], &__pyx_n_s_prepare) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[437], &__pyx_kp_s_project) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[438], &__pyx_n_s_project_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[439], &__pyx_kp_u_property) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[440], &__pyx_n_s_pydantic) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[441], &__pyx_kp_s_pydantic_BaseModel) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[442], &__pyx_n_s_pymongo) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[443], &__pyx_kp_s_pymongo_MongoClient) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[444], &__pyx_n_s_pymongo_client_session) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[445], &__pyx_n_s_pymongo_collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[446], &__pyx_kp_s_pymongo_collection_Collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[447], &__pyx_n_s_pymongo_cursor) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[448], &__pyx_n_s_pymongo_errors) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[449], &__pyx_n_s_pymongo_mongo_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[450], &__pyx_kp_s_pymongo_mongo_client_MongoClient) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[451], &__pyx_n_s_qualname) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[452], &__pyx_n_s_range) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[453], &__pyx_n_s_re) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[454], &__pyx_n_s_read) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[455], &__pyx_n_s_read_grid_fs_file) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[456], &__pyx_n_s_readchunk) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[457], &__pyx_n_s_real) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[458], &__pyx_n_s_received) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[459], &__pyx_n_s_reduce) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[460], &__pyx_n_s_reduce_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[461], &__pyx_kp_s_regex) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[462], &__pyx_n_s_rel_file_path) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[463], &__pyx_n_s_release) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[464], &__pyx_n_s_remainder) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[465], &__pyx_n_s_repr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[466], &__pyx_n_s_require_fields) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[467], &__pyx_n_s_ret) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[468], &__pyx_n_s_ret_item) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[469], &__pyx_n_s_ret_items) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[470], &__pyx_n_s_ret_pipe) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[471], &__pyx_n_s_return) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[472], &__pyx_n_s_rshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[473], &__pyx_n_s_seek) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[474], &__pyx_n_s_self) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[475], &__pyx_n_s_send) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[476], &__pyx_n_s_session) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[477], &__pyx_n_s_session_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[478], &__pyx_kp_s_set) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[479], &__pyx_n_s_set_check) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[480], &__pyx_n_s_set_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[481], &__pyx_n_s_setattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[482], &__pyx_n_s_setitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[483], &__pyx_n_s_size) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[484], &__pyx_kp_s_skip) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[485], &__pyx_n_s_skip_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[486], &__pyx_n_s_sort) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[487], &__pyx_kp_s_sort_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[488], &__pyx_n_s_sort_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[489], &__pyx_n_s_sparse) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[490], &__pyx_n_s_spec) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[491], &__pyx_n_s_split) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[492], &__pyx_n_s_stage) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[493], &__pyx_n_s_startswith) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[494], &__pyx_n_s_staticmethod) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[495], &__pyx_n_s_str) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[496], &__pyx_n_s_str_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[497], &__pyx_n_s_str_require_fields_list) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[498], &__pyx_kp_s_sub) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[499], &__pyx_n_s_sub_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[500], &__pyx_n_s_super) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[501], &__pyx_n_s_tell) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[502], &__pyx_n_s_test) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[503], &__pyx_n_s_threading) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[504], &__pyx_n_s_throw) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[505], &__pyx_kp_u_to) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[506], &__pyx_n_s_to_camel) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[507], &__pyx_n_s_to_json_convertable) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[508], &__pyx_n_s_to_list) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[509], &__pyx_n_s_to_mongo_db) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[510], &__pyx_n_s_to_mongo_db_expr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[511], &__pyx_n_s_to_pydantic) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[512], &__pyx_n_s_truediv) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[513], &__pyx_kp_s_truncated_chunk) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[514], &__pyx_kp_s_truncated_chunk_d_expected_chunk) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[515], &__pyx_n_s_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[516], &__pyx_n_s_typing) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[517], &__pyx_kp_s_typing_Union) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[518], &__pyx_n_s_unique) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[519], &__pyx_n_s_unique_keys) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[520], &__pyx_n_s_update) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[521], &__pyx_n_s_update_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[522], &__pyx_n_s_update_many) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[523], &__pyx_n_s_updater) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[524], &__pyx_n_s_uuid) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[525], &__pyx_n_s_v) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[526], &__pyx_n_s_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[527], &__pyx_n_s_value_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[528], &__pyx_kp_u_was_not_found_in) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[529], &__pyx_kp_u_was_not_found_in_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[530], &__pyx_n_s_wrapper) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[531], &__pyx_n_s_write) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[532], &__pyx_n_s_x) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[533], &__pyx_n_s_y) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[27], &__pyx_kp_u_Can_not_cast) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[28], &__pyx_n_s_DBDocument) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[29], &__pyx_n_s_DBDocument___init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[30], &__pyx_n_s_DBDocument___lshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[31], &__pyx_n_s_DBDocument___matmul) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[32], &__pyx_n_s_DBDocument___rshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[33], &__pyx_n_s_DBDocument_aggregate) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[34], &__pyx_n_s_DBDocument_count) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[35], &__pyx_n_s_DBDocument_count_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[36], &__pyx_n_s_DBDocument_delete) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[37], &__pyx_n_s_DBDocument_delete_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[38], &__pyx_n_s_DBDocument_find) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[39], &__pyx_n_s_DBDocument_find_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[40], &__pyx_n_s_DBDocument_find_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[41], &__pyx_n_s_DBDocument_find_one_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[42], &__pyx_n_s_DBDocument_find_to_json_converta) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[43], &__pyx_n_s_DBDocument_insert_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[44], &__pyx_n_s_DBDocument_insert_one_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[45], &__pyx_n_s_DBDocument_update) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[46], &__pyx_n_s_DBDocument_update_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[47], &__pyx_n_s_DbContext) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[48], &__pyx_n_s_DbContext___new) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[49], &__pyx_n_s_DbContext___new___locals_empty) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[50], &__pyx_n_s_DbContext__cache) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[51], &__pyx_n_s_DbContext__cache__lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[52], &__pyx_n_s_Document) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[53], &__pyx_n_s_DocumentObject) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[54], &__pyx_n_s_DocumentObject___delitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[55], &__pyx_n_s_DocumentObject___getattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[56], &__pyx_n_s_DocumentObject___getitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[57], &__pyx_n_s_DocumentObject___init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[58], &__pyx_n_s_DocumentObject___setattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[59], &__pyx_n_s_DocumentObject___setitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[60], &__pyx_n_s_DocumentObject_get) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[61], &__pyx_n_s_DocumentObject_to_json_convertab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[62], &__pyx_n_s_DocumentObject_to_pydantic) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[63], &__pyx_n_s_Document___getitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[64], &__pyx_n_s_Document___init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[65], &__pyx_kp_u_Example) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[66], &__pyx_kp_u_Example_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[67], &__pyx_kp_u_Exmaple) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[68], &__pyx_n_s_ExprBuilder) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[69], &__pyx_n_s_ExprBuilder___getattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[70], &__pyx_n_s_ExprBuilder___getitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[71], &__pyx_n_s_ExprBuilder___set_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[72], &__pyx_n_s_Field) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[73], &__pyx_n_s_Field___add) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[74], &__pyx_n_s_Field___and) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[75], &__pyx_n_s_Field___eq) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[76], &__pyx_n_s_Field___floordiv) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[77], &__pyx_n_s_Field___ge) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[78], &__pyx_n_s_Field___getattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[79], &__pyx_n_s_Field___gt) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[80], &__pyx_n_s_Field___init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[81], &__pyx_n_s_Field___invert) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[82], &__pyx_n_s_Field___le) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[83], &__pyx_n_s_Field___lshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[84], &__pyx_n_s_Field___lt) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[85], &__pyx_n_s_Field___mod) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[86], &__pyx_n_s_Field___mul) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[87], &__pyx_n_s_Field___ne) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[88], &__pyx_n_s_Field___or) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[89], &__pyx_n_s_Field___pow) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[90], &__pyx_n_s_Field___repr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[91], &__pyx_n_s_Field___rshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[92], &__pyx_n_s_Field___sub) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[93], &__pyx_n_s_Field___truediv) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[94], &__pyx_n_s_Field_asc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[95], &__pyx_n_s_Field_desc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[96], &__pyx_n_s_Field_like) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[97], &__pyx_n_s_Field_reduce) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[98], &__pyx_n_s_Funcs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[99], &__pyx_n_s_Funcs_concat) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[100], &__pyx_n_s_Funcs_exists) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[101], &__pyx_n_s_Funcs_is_not_null) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[102], &__pyx_n_s_Funcs_is_null) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[103], &__pyx_n_s_Funcs_not_exists) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[104], &__pyx_n_s_GridFS) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[105], &__pyx_n_s_GridFSBucket) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[106], &__pyx_n_s_IGNORECASE) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[107], &__pyx_kp_s_Invalid_expression) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[108], &__pyx_n_s_List) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[109], &__pyx_kp_s_List_str) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[110], &__pyx_n_s_Lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[111], &__pyx_kp_s_NoneType) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[112], &__pyx_n_s_ObjectId) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[113], &__pyx_kp_u_ObjectId_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[114], &__pyx_kp_s_Param_in_Find_one_must_be_cy_doc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[115], &__pyx_n_s_Pattern) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[116], &__pyx_kp_u_Please_set_value_for) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[117], &__pyx_kp_u_Preview_file) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[118], &__pyx_kp_u_These_below_fields_are_require) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[119], &__pyx_kp_u_Thous_can_not_alias_mongodb_expr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[120], &__pyx_kp_u_Thous_can_not_sort_stage_with) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[121], &__pyx_kp_u_Thous_can_not_use_project_stage) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[122], &__pyx_kp_u_Thous_can_not_use_sort_stage_wit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[123], &__pyx_kp_u_Thous_must_set) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[124], &__pyx_n_s_UUID) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[125], &__pyx_n_s_Union) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[126], &__pyx_kp_s_Union_str_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[127], &__pyx_kp_s_Union_str_dict_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[128], &__pyx_kp_s__10) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[129], &__pyx_kp_u__10) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[130], &__pyx_kp_s__11) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[131], &__pyx_kp_u__11) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[132], &__pyx_n_s__12) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[133], &__pyx_kp_s__13) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[134], &__pyx_kp_s__2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[135], &__pyx_n_u__3) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[136], &__pyx_kp_s__30) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[137], &__pyx_kp_u__32) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[138], &__pyx_kp_s__35) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[139], &__pyx_n_s__6) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[140], &__pyx_kp_u__9) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[141], &__pyx_n_s_a) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[142], &__pyx_kp_u_a_value_Exmaple) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[143], &__pyx_n_s_acquire) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[144], &__pyx_kp_s_add) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[145], &__pyx_n_s_add_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[146], &__pyx_kp_u_aggregate) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[147], &__pyx_n_s_aggregate_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[148], &__pyx_n_s_alias) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[149], &__pyx_kp_s_and) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[150], &__pyx_n_s_and_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[151], &__pyx_kp_u_and_operation_require_2_Field) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[152], &__pyx_kp_u_and_operation_require_2_Field_Wh) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[153], &__pyx_n_s_annotations) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[154], &__pyx_n_s_args) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[155], &__pyx_n_s_args_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[156], &__pyx_n_s_asc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[157], &__pyx_n_s_async_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[158], &__pyx_kp_u_at) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[159], &__pyx_n_s_await) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[160], &__pyx_n_s_b) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[161], &__pyx_n_s_background) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[162], &__pyx_n_s_bson) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[163], &__pyx_kp_s_bson_ObjectId) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[164], &__pyx_n_s_bytes) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[165], &__pyx_n_s_c) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[166], &__pyx_n_s_cache_index) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[167], &__pyx_n_s_cache_unique) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[168], &__pyx_n_s_camel_cache) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[169], &__pyx_n_s_camel_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[170], &__pyx_n_s_camel_lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[171], &__pyx_n_s_check_constraint) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[172], &__pyx_n_s_check_map__module) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[173], &__pyx_n_s_check_map__name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[174], &__pyx_n_s_check_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[175], &__pyx_n_s_chunkSize) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[176], &__pyx_n_s_chunk_data) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[177], &__pyx_n_s_chunk_index) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[178], &__pyx_n_s_chunk_size) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[179], &__pyx_n_s_chunk_size_bytes) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[180], &__pyx_n_s_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[181], &__pyx_n_s_cline_in_traceback) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[182], &__pyx_n_s_close) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[183], &__pyx_n_s_cls) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[184], &__pyx_n_s_cls_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[185], &__pyx_n_s_coll) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[186], &__pyx_n_s_collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[187], &__pyx_n_s_collection_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[188], &__pyx_n_s_compile) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[189], &__pyx_kp_s_concat) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[190], &__pyx_n_s_concat_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[191], &__pyx_n_s_contentType) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[192], &__pyx_n_s_content_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[193], &__pyx_n_s_context) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[194], &__pyx_n_s_convention_get) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[195], &__pyx_n_s_count) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[196], &__pyx_n_s_count_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[197], &__pyx_n_s_count_documents) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[198], &__pyx_n_s_create_file) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[199], &__pyx_n_s_create_index) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[200], &__pyx_n_s_cy_docs_cy_docs_x) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[201], &__pyx_kp_s_cy_docs_cy_docs_x_py) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[202], &__pyx_n_s_d) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[203], &__pyx_n_s_data) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[204], &__pyx_n_s_data_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[205], &__pyx_n_s_database) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[206], &__pyx_n_s_datetime) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[207], &__pyx_n_s_db) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[208], &__pyx_kp_u_db_getCollection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[209], &__pyx_n_s_db_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[210], &__pyx_n_s_delegate) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[211], &__pyx_n_s_delegate_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[212], &__pyx_n_s_delete) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[213], &__pyx_n_s_delete_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[214], &__pyx_n_s_delete_many) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[215], &__pyx_n_s_delitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[216], &__pyx_n_s_desc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[217], &__pyx_n_s_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[218], &__pyx_n_s_dict_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[219], &__pyx_kp_s_divide) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[220], &__pyx_n_s_doc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[221], &__pyx_n_s_document) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[222], &__pyx_n_s_document_define) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[223], &__pyx_n_s_document_define_locals_wrapper) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[224], &__pyx_n_s_document_indexes) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[225], &__pyx_n_s_document_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[226], &__pyx_n_s_document_unique_keys) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[227], &__pyx_n_s_dumps) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[228], &__pyx_n_s_e) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[229], &__pyx_n_s_ele_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[230], &__pyx_n_s_empty) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[231], &__pyx_n_s_endswith) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[232], &__pyx_n_s_enter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[233], &__pyx_kp_s_eq) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[234], &__pyx_n_s_eq_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[235], &__pyx_kp_s_exists) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[236], &__pyx_n_s_exists_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[237], &__pyx_kp_u_exists_require_cy_docs_fields_fi) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[238], &__pyx_n_s_exit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[239], &__pyx_n_s_expr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[240], &__pyx_n_s_expr_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[241], &__pyx_n_u_f) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[242], &__pyx_n_s_field) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[243], &__pyx_n_s_fields) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[244], &__pyx_n_s_file_add_chunk) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[245], &__pyx_n_s_file_get) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[246], &__pyx_n_s_file_get_by_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[247], &__pyx_n_s_file_id) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[248], &__pyx_n_s_file_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[249], &__pyx_n_s_file_size) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[250], &__pyx_n_s_filename) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[251], &__pyx_n_s_files_id) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[252], &__pyx_kp_s_files_id_n) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[253], &__pyx_n_s_filter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[254], &__pyx_n_s_filter_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[255], &__pyx_n_s_find) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[256], &__pyx_n_s_find_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[257], &__pyx_n_s_find_file_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[258], &__pyx_n_s_find_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[259], &__pyx_n_s_find_one_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[260], &__pyx_n_s_find_to_json_convertable) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[261], &__pyx_n_s_first_item) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[262], &__pyx_n_s_flags) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[263], &__pyx_kp_s_floor) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[264], &__pyx_n_s_floordiv) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[265], &__pyx_n_s_fn) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[266], &__pyx_n_s_fs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[267], &__pyx_kp_s_fs_chunks) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[268], &__pyx_n_s_fs_files) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[269], &__pyx_kp_s_fs_files_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[270], &__pyx_n_s_fs_files_chunks) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[271], &__pyx_n_s_fx) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[272], &__pyx_n_s_fx_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[273], &__pyx_n_s_ge) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[274], &__pyx_n_s_get) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[275], &__pyx_n_s_get_collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[276], &__pyx_n_s_get_database) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[277], &__pyx_n_s_get_doc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[278], &__pyx_n_s_get_file_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[279], &__pyx_n_s_get_mongodb_text) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[280], &__pyx_n_s_get_version) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[281], &__pyx_n_s_getattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[282], &__pyx_n_s_getfile) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[283], &__pyx_n_s_getitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[284], &__pyx_n_s_gfs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[285], &__pyx_n_s_gridfs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[286], &__pyx_kp_s_gt) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[287], &__pyx_n_s_gt_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[288], &__pyx_kp_s_gte) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[289], &__pyx_n_s_has_set_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[290], &__pyx_n_s_hash_check_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[291], &__pyx_n_s_hash_check_dict_lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[292], &__pyx_n_s_hash_key) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[293], &__pyx_kp_u_i) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[294], &__pyx_n_s_i_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[295], &__pyx_n_s_id) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[296], &__pyx_n_s_id_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[297], &__pyx_kp_s_id_files_id_n) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[298], &__pyx_n_s_imag) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[299], &__pyx_n_s_import) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[300], &__pyx_n_s_indexes) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[301], &__pyx_n_s_init) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[302], &__pyx_n_s_init_data) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[303], &__pyx_n_s_init_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[304], &__pyx_kp_s_init_value_must_be_str_or_ditc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[305], &__pyx_n_s_initializing) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[306], &__pyx_n_s_insert_dict) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[307], &__pyx_n_s_insert_one) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[308], &__pyx_n_s_insert_one_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[309], &__pyx_n_s_inspect) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[310], &__pyx_n_s_instance) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[311], &__pyx_n_s_int) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[312], &__pyx_n_s_invert) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[313], &__pyx_n_s_is_not_null) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[314], &__pyx_n_s_is_null) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[315], &__pyx_n_s_isoformat) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[316], &__pyx_n_s_isupper) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[317], &__pyx_n_s_item) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[318], &__pyx_n_s_items) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[319], &__pyx_n_s_iter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[320], &__pyx_n_s_join) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[321], &__pyx_n_s_json) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[322], &__pyx_n_s_k) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[323], &__pyx_n_s_key) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[324], &__pyx_n_s_kw) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[325], &__pyx_n_s_kwargs) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[326], &__pyx_n_s_le) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[327], &__pyx_n_s_len) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[328], &__pyx_n_s_len_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[329], &__pyx_n_s_length) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[330], &__pyx_n_s_like) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[331], &__pyx_kp_s_limit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[332], &__pyx_n_s_limit_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[333], &__pyx_n_s_linmit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[334], &__pyx_n_s_lock) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[335], &__pyx_n_s_lower) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[336], &__pyx_n_s_lshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[337], &__pyx_kp_s_lt) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[338], &__pyx_n_s_lt_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[339], &__pyx_kp_s_lte) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[340], &__pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[341], &__pyx_kp_s_match) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[342], &__pyx_n_s_match_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[343], &__pyx_n_s_matmul) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[344], &__pyx_n_s_metaclass) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[345], &__pyx_kp_s_mod) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[346], &__pyx_n_s_mod_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[347], &__pyx_n_s_module) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[348], &__pyx_n_s_modulo) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[349], &__pyx_n_s_mongo_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[350], &__pyx_n_s_motor) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[351], &__pyx_n_s_motor_motor_asyncio) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[352], &__pyx_n_s_mul) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[353], &__pyx_kp_s_multiply) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[354], &__pyx_kp_u_my_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[355], &__pyx_n_s_n) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[356], &__pyx_n_s_name) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[357], &__pyx_n_s_name_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[358], &__pyx_kp_s_ne) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[359], &__pyx_kp_s_ne_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[360], &__pyx_n_s_ne_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[361], &__pyx_n_s_new) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[362], &__pyx_n_s_new_file) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[363], &__pyx_kp_s_not) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[364], &__pyx_n_s_not_exists) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[365], &__pyx_n_s_obj) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[366], &__pyx_n_s_object) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[367], &__pyx_n_s_objectid) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[368], &__pyx_n_s_op) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[369], &__pyx_n_s_open_download_stream) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[370], &__pyx_n_s_oprator) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[371], &__pyx_n_s_oprator_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[372], &__pyx_kp_s_or) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[373], &__pyx_n_s_or_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[374], &__pyx_n_s_orig) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[375], &__pyx_n_s_origin) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[376], &__pyx_n_s_other) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[377], &__pyx_n_s_owner) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[378], &__pyx_n_s_pattern) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[379], &__pyx_n_s_pipeline) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[380], &__pyx_n_s_pos) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[381], &__pyx_kp_s_pow) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[382], &__pyx_n_s_pow_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[383], &__pyx_n_s_power) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[384], &__pyx_n_s_prepare) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[385], &__pyx_kp_s_project) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[386], &__pyx_n_s_project_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[387], &__pyx_kp_u_property) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[388], &__pyx_n_s_pydantic) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[389], &__pyx_kp_s_pydantic_BaseModel) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[390], &__pyx_n_s_pymongo) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[391], &__pyx_kp_s_pymongo_MongoClient) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[392], &__pyx_kp_s_pymongo_collection_Collection) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[393], &__pyx_n_s_pymongo_mongo_client) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[394], &__pyx_kp_s_pymongo_mongo_client_MongoClient) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[395], &__pyx_n_s_qualname) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[396], &__pyx_n_s_range) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[397], &__pyx_n_s_re) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[398], &__pyx_n_s_real) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[399], &__pyx_n_s_reduce) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[400], &__pyx_n_s_reduce_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[401], &__pyx_kp_s_regex) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[402], &__pyx_n_s_rel_file_path) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[403], &__pyx_n_s_release) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[404], &__pyx_n_s_repr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[405], &__pyx_n_s_require_fields) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[406], &__pyx_n_s_ret) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[407], &__pyx_n_s_ret_item) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[408], &__pyx_n_s_ret_items) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[409], &__pyx_n_s_ret_pipe) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[410], &__pyx_n_s_return) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[411], &__pyx_n_s_rshift) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[412], &__pyx_n_s_self) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[413], &__pyx_n_s_send) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[414], &__pyx_kp_s_set) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[415], &__pyx_n_s_set_check) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[416], &__pyx_n_s_set_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[417], &__pyx_n_s_setattr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[418], &__pyx_n_s_setitem) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[419], &__pyx_kp_s_skip) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[420], &__pyx_n_s_skip_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[421], &__pyx_n_s_sort) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[422], &__pyx_kp_s_sort_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[423], &__pyx_n_s_sort_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[424], &__pyx_n_s_sparse) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[425], &__pyx_n_s_spec) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[426], &__pyx_n_s_split) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[427], &__pyx_n_s_stage) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[428], &__pyx_n_s_startswith) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[429], &__pyx_n_s_staticmethod) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[430], &__pyx_n_s_str) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[431], &__pyx_n_s_str_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[432], &__pyx_n_s_str_require_fields_list) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[433], &__pyx_kp_s_sub) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[434], &__pyx_n_s_sub_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[435], &__pyx_n_s_super) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[436], &__pyx_n_s_test) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[437], &__pyx_n_s_threading) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[438], &__pyx_n_s_throw) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[439], &__pyx_kp_u_to) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[440], &__pyx_n_s_to_camel) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[441], &__pyx_n_s_to_json_convertable) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[442], &__pyx_n_s_to_list) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[443], &__pyx_n_s_to_mongo_db) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[444], &__pyx_n_s_to_mongo_db_expr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[445], &__pyx_n_s_to_pydantic) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[446], &__pyx_n_s_truediv) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[447], &__pyx_n_s_type) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[448], &__pyx_n_s_typing) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[449], &__pyx_kp_s_typing_Union) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[450], &__pyx_n_s_unique) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[451], &__pyx_n_s_unique_keys) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[452], &__pyx_n_s_update) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[453], &__pyx_n_s_update_async) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[454], &__pyx_n_s_update_many) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[455], &__pyx_n_s_updater) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[456], &__pyx_n_s_uuid) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[457], &__pyx_n_s_v) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[458], &__pyx_n_s_value) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[459], &__pyx_n_s_value_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[460], &__pyx_kp_u_was_not_found_in) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[461], &__pyx_kp_u_was_not_found_in_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[462], &__pyx_n_s_wrapper) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[463], &__pyx_n_s_x) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[464], &__pyx_n_s_y) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
@@ -57131,7 +53120,7 @@ if (!__Pyx_RefNanny) {
     __Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_t_2)->__pyx_arg_unique_keys = __pyx_t_4;
     __Pyx_GIVEREF(__pyx_t_4);
     __pyx_t_4 = 0;
-    __Pyx_CyFunction_SetDefaultsGetter(__pyx_t_2, __pyx_pf_7cy_docs_9cy_docs_x_36__defaults__);
+    __Pyx_CyFunction_SetDefaultsGetter(__pyx_t_2, __pyx_pf_7cy_docs_9cy_docs_x_32__defaults__);
     __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     #if CYTHON_COMPILING_IN_LIMITED_API
@@ -57226,7 +53215,7 @@ if (!__Pyx_RefNanny) {
     __Pyx_CyFunction_Defaults(__pyx_defaults1, __pyx_t_2)->__pyx_arg_unique_keys = __pyx_t_3;
     __Pyx_GIVEREF(__pyx_t_3);
     __pyx_t_3 = 0;
-    __Pyx_CyFunction_SetDefaultsGetter(__pyx_t_2, __pyx_pf_7cy_docs_9cy_docs_x_38__defaults__);
+    __Pyx_CyFunction_SetDefaultsGetter(__pyx_t_2, __pyx_pf_7cy_docs_9cy_docs_x_34__defaults__);
     __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     #if CYTHON_COMPILING_IN_LIMITED_API
@@ -57977,548 +53966,20 @@ if (!__Pyx_RefNanny) {
     #endif
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "cy_docs/cy_docs_x.py":1641
- * 
- * 
- * import io             # <<<<<<<<<<<<<<
- * 
- * from gridfs import GridOut
- */
-    __pyx_t_3 = __Pyx_ImportDottedModule(__pyx_n_s_io, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1641, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_3);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_io, __pyx_t_3) < 0) __PYX_ERR(0, 1641, __pyx_L1_error)
-    #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_io, __pyx_t_3) < 0) __PYX_ERR(0, 1641, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1643
- * import io
- * 
- * from gridfs import GridOut             # <<<<<<<<<<<<<<
- * from pymongo.collection import Collection
- * from pymongo.client_session import ClientSession
- */
-    __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1643, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_INCREF(__pyx_n_s_GridOut);
-    __Pyx_GIVEREF(__pyx_n_s_GridOut);
-    PyList_SET_ITEM(__pyx_t_3, 0, __pyx_n_s_GridOut);
-    __pyx_t_2 = __Pyx_Import(__pyx_n_s_gridfs, __pyx_t_3, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1643, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_GridOut); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1643, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_3);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_GridOut, __pyx_t_3) < 0) __PYX_ERR(0, 1643, __pyx_L1_error)
-    #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_GridOut, __pyx_t_3) < 0) __PYX_ERR(0, 1643, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1644
- * 
- * from gridfs import GridOut
- * from pymongo.collection import Collection             # <<<<<<<<<<<<<<
- * from pymongo.client_session import ClientSession
- * from typing import Optional
- */
-    __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1644, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_INCREF(__pyx_n_s_Collection);
-    __Pyx_GIVEREF(__pyx_n_s_Collection);
-    PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_Collection);
-    __pyx_t_3 = __Pyx_Import(__pyx_n_s_pymongo_collection, __pyx_t_2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1644, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_Collection); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1644, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_2);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_Collection, __pyx_t_2) < 0) __PYX_ERR(0, 1644, __pyx_L1_error)
-    #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_Collection, __pyx_t_2) < 0) __PYX_ERR(0, 1644, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1645
- * from gridfs import GridOut
- * from pymongo.collection import Collection
- * from pymongo.client_session import ClientSession             # <<<<<<<<<<<<<<
- * from typing import Optional
- * import math
- */
-    __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1645, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_INCREF(__pyx_n_s_ClientSession);
-    __Pyx_GIVEREF(__pyx_n_s_ClientSession);
-    PyList_SET_ITEM(__pyx_t_3, 0, __pyx_n_s_ClientSession);
-    __pyx_t_2 = __Pyx_Import(__pyx_n_s_pymongo_client_session, __pyx_t_3, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1645, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_ClientSession); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1645, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_3);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_ClientSession, __pyx_t_3) < 0) __PYX_ERR(0, 1645, __pyx_L1_error)
-    #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_ClientSession, __pyx_t_3) < 0) __PYX_ERR(0, 1645, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1646
- * from pymongo.collection import Collection
- * from pymongo.client_session import ClientSession
- * from typing import Optional             # <<<<<<<<<<<<<<
- * import math
- * from pymongo.cursor import Cursor
- */
-    __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1646, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_INCREF(__pyx_n_s_Optional);
-    __Pyx_GIVEREF(__pyx_n_s_Optional);
-    PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_Optional);
-    __pyx_t_3 = __Pyx_Import(__pyx_n_s_typing, __pyx_t_2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1646, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_Optional); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1646, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_2);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_Optional, __pyx_t_2) < 0) __PYX_ERR(0, 1646, __pyx_L1_error)
-    #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_Optional, __pyx_t_2) < 0) __PYX_ERR(0, 1646, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1647
- * from pymongo.client_session import ClientSession
- * from typing import Optional
- * import math             # <<<<<<<<<<<<<<
- * from pymongo.cursor import Cursor
- * from pymongo.errors import CursorNotFound
- */
-    __pyx_t_3 = __Pyx_ImportDottedModule(__pyx_n_s_math, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1647, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_3);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_math, __pyx_t_3) < 0) __PYX_ERR(0, 1647, __pyx_L1_error)
-    #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_math, __pyx_t_3) < 0) __PYX_ERR(0, 1647, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1648
- * from typing import Optional
- * import math
- * from pymongo.cursor import Cursor             # <<<<<<<<<<<<<<
- * from pymongo.errors import CursorNotFound
- * from gridfs.errors import CorruptGridFile
- */
-    __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1648, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_INCREF(__pyx_n_s_Cursor);
-    __Pyx_GIVEREF(__pyx_n_s_Cursor);
-    PyList_SET_ITEM(__pyx_t_3, 0, __pyx_n_s_Cursor);
-    __pyx_t_2 = __Pyx_Import(__pyx_n_s_pymongo_cursor, __pyx_t_3, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1648, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_Cursor); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1648, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_3);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_Cursor, __pyx_t_3) < 0) __PYX_ERR(0, 1648, __pyx_L1_error)
-    #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_Cursor, __pyx_t_3) < 0) __PYX_ERR(0, 1648, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1649
- * import math
- * from pymongo.cursor import Cursor
- * from pymongo.errors import CursorNotFound             # <<<<<<<<<<<<<<
- * from gridfs.errors import CorruptGridFile
- * 
- */
-    __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1649, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_INCREF(__pyx_n_s_CursorNotFound);
-    __Pyx_GIVEREF(__pyx_n_s_CursorNotFound);
-    PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_CursorNotFound);
-    __pyx_t_3 = __Pyx_Import(__pyx_n_s_pymongo_errors, __pyx_t_2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1649, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_CursorNotFound); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1649, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_2);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_CursorNotFound, __pyx_t_2) < 0) __PYX_ERR(0, 1649, __pyx_L1_error)
-    #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_CursorNotFound, __pyx_t_2) < 0) __PYX_ERR(0, 1649, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1650
- * from pymongo.cursor import Cursor
- * from pymongo.errors import CursorNotFound
- * from gridfs.errors import CorruptGridFile             # <<<<<<<<<<<<<<
- * 
- * 
- */
-    __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1650, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_INCREF(__pyx_n_s_CorruptGridFile);
-    __Pyx_GIVEREF(__pyx_n_s_CorruptGridFile);
-    PyList_SET_ITEM(__pyx_t_3, 0, __pyx_n_s_CorruptGridFile);
-    __pyx_t_2 = __Pyx_Import(__pyx_n_s_gridfs_errors, __pyx_t_3, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1650, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_CorruptGridFile); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1650, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_3);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_CorruptGridFile, __pyx_t_3) < 0) __PYX_ERR(0, 1650, __pyx_L1_error)
-    #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_CorruptGridFile, __pyx_t_3) < 0) __PYX_ERR(0, 1650, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1653
- * 
- * 
- * class FS_GridOutChunkIterator(object):             # <<<<<<<<<<<<<<
- *     """Iterates over a file's chunks using a single cursor.
- * 
- */
-    __pyx_t_2 = __Pyx_CalculateMetaclass(NULL, __pyx_tuple__224); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1653, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_2, __pyx_tuple__224, __pyx_n_s_FS_GridOutChunkIterator, __pyx_n_s_FS_GridOutChunkIterator, (PyObject *) NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_kp_s_Iterates_over_a_file_s_chunks_us); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1653, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-
-    /* "cy_docs/cy_docs_x.py":1660
- *     """
- * 
- *     def __init__(             # <<<<<<<<<<<<<<
- *             self,
- *             grid_out: GridOut,
- */
-    __pyx_t_1 = __Pyx_PyDict_NewPresized(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1660, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_grid_out, __pyx_n_s_GridOut) < 0) __PYX_ERR(0, 1660, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_chunks, __pyx_n_s_Collection) < 0) __PYX_ERR(0, 1660, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_session, __pyx_kp_s_Optional_ClientSession) < 0) __PYX_ERR(0, 1660, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_return, __pyx_n_s_None) < 0) __PYX_ERR(0, 1660, __pyx_L1_error)
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1660, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_1__init__, 0, __pyx_n_s_FS_GridOutChunkIterator___init, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_5, ((PyObject *)__pyx_codeobj__226)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1660, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    #else
-    __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_1__init__, 0, __pyx_n_s_FS_GridOutChunkIterator___init, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__226)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1660, __pyx_L1_error)
-    #endif
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_1);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_4);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_init, __pyx_t_4) < 0) __PYX_ERR(0, 1660, __pyx_L1_error)
-    #else
-    if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_init, __pyx_t_4) < 0) __PYX_ERR(0, 1660, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1678
- *     _cursor: Optional[Cursor]
- * 
- *     def expected_chunk_length(self, chunk_n: int) -> int:             # <<<<<<<<<<<<<<
- *         if chunk_n < self._num_chunks - 1:
- *             return self._chunk_size
- */
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1678, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_chunk_n, __pyx_n_s_int) < 0) __PYX_ERR(0, 1678, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_return, __pyx_n_s_int) < 0) __PYX_ERR(0, 1678, __pyx_L1_error)
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1678, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_3expected_chunk_length, 0, __pyx_n_s_FS_GridOutChunkIterator_expected, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_5, ((PyObject *)__pyx_codeobj__228)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1678, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    #else
-    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_3expected_chunk_length, 0, __pyx_n_s_FS_GridOutChunkIterator_expected, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__228)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1678, __pyx_L1_error)
-    #endif
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_4);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_1);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_expected_chunk_length, __pyx_t_1) < 0) __PYX_ERR(0, 1678, __pyx_L1_error)
-    #else
-    if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_expected_chunk_length, __pyx_t_1) < 0) __PYX_ERR(0, 1678, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1683
- *         return self._length - (self._chunk_size * (self._num_chunks - 1))
- * 
- *     def __iter__(self) -> "FS_GridOutChunkIterator":             # <<<<<<<<<<<<<<
- *         return self
- * 
- */
-    __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1683, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_return, __pyx_kp_s_FS_GridOutChunkIterator_2) < 0) __PYX_ERR(0, 1683, __pyx_L1_error)
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1683, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_5__iter__, 0, __pyx_n_s_FS_GridOutChunkIterator___iter, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_5, ((PyObject *)__pyx_codeobj__230)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1683, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    #else
-    __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_5__iter__, 0, __pyx_n_s_FS_GridOutChunkIterator___iter, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__230)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1683, __pyx_L1_error)
-    #endif
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_1);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_4);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_iter, __pyx_t_4) < 0) __PYX_ERR(0, 1683, __pyx_L1_error)
-    #else
-    if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_iter, __pyx_t_4) < 0) __PYX_ERR(0, 1683, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1686
- *         return self
- * 
- *     def _create_cursor(self) -> None:             # <<<<<<<<<<<<<<
- *         filter = {"files_id": self._id}
- *         # if self._next_chunk > 0:
- */
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1686, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_return, __pyx_n_s_None) < 0) __PYX_ERR(0, 1686, __pyx_L1_error)
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1686, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_7_create_cursor, 0, __pyx_n_s_FS_GridOutChunkIterator__create, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_5, ((PyObject *)__pyx_codeobj__232)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1686, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    #else
-    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_7_create_cursor, 0, __pyx_n_s_FS_GridOutChunkIterator__create, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__232)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1686, __pyx_L1_error)
-    #endif
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_1, __pyx_t_4);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_1);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_create_cursor, __pyx_t_1) < 0) __PYX_ERR(0, 1686, __pyx_L1_error)
-    #else
-    if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_create_cursor, __pyx_t_1) < 0) __PYX_ERR(0, 1686, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1692
- *         self._cursor = self._chunks.find(filter,skip=self._next_chunk)
- * 
- *     def _next_with_retry(self):             # <<<<<<<<<<<<<<
- *         """Return the next chunk and retry once on CursorNotFound.
- * 
- */
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1692, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_9_next_with_retry, 0, __pyx_n_s_FS_GridOutChunkIterator__next_wi, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_4, ((PyObject *)__pyx_codeobj__234)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1692, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    #else
-    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_9_next_with_retry, 0, __pyx_n_s_FS_GridOutChunkIterator__next_wi, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__234)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1692, __pyx_L1_error)
-    #endif
-    __Pyx_GOTREF(__pyx_t_1);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_1);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_next_with_retry, __pyx_t_1) < 0) __PYX_ERR(0, 1692, __pyx_L1_error)
-    #else
-    if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_next_with_retry, __pyx_t_1) < 0) __PYX_ERR(0, 1692, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1709
- *             return self._cursor.next()
- * 
- *     def next(self):             # <<<<<<<<<<<<<<
- *         try:
- *             chunk = self._next_with_retry()
- */
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1709, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_11next, 0, __pyx_n_s_FS_GridOutChunkIterator_next, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_4, ((PyObject *)__pyx_codeobj__236)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1709, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    #else
-    __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_11next, 0, __pyx_n_s_FS_GridOutChunkIterator_next, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__236)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1709, __pyx_L1_error)
-    #endif
-    __Pyx_GOTREF(__pyx_t_1);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_1);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_next, __pyx_t_1) < 0) __PYX_ERR(0, 1709, __pyx_L1_error)
-    #else
-    if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_next, __pyx_t_1) < 0) __PYX_ERR(0, 1709, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1744
- *         return chunk
- * 
- *     __next__ = next             # <<<<<<<<<<<<<<
- * 
- *     def close(self) -> None:
- */
-    __pyx_t_1 = PyObject_GetItem(__pyx_t_3, __pyx_n_s_next);
-    if (unlikely(!__pyx_t_1)) {
-      PyErr_Clear();
-      __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_next);
-    }
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1744, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_1);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_next_2, __pyx_t_1) < 0) __PYX_ERR(0, 1744, __pyx_L1_error)
-    #else
-    if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_next_2, __pyx_t_1) < 0) __PYX_ERR(0, 1744, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1746
- *     __next__ = next
- * 
- *     def close(self) -> None:             # <<<<<<<<<<<<<<
- *         if self._cursor:
- *             self._cursor.close()
- */
-    __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1746, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_return, __pyx_n_s_None) < 0) __PYX_ERR(0, 1746, __pyx_L1_error)
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1746, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_13close, 0, __pyx_n_s_FS_GridOutChunkIterator_close, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_5, ((PyObject *)__pyx_codeobj__238)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1746, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    #else
-    __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_23FS_GridOutChunkIterator_13close, 0, __pyx_n_s_FS_GridOutChunkIterator_close, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__238)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1746, __pyx_L1_error)
-    #endif
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_1);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_4);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_close, __pyx_t_4) < 0) __PYX_ERR(0, 1746, __pyx_L1_error)
-    #else
-    if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_close, __pyx_t_4) < 0) __PYX_ERR(0, 1746, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1653
- * 
- * 
- * class FS_GridOutChunkIterator(object):             # <<<<<<<<<<<<<<
- *     """Iterates over a file's chunks using a single cursor.
- * 
- */
-    __pyx_t_4 = __Pyx_Py3ClassCreate(__pyx_t_2, __pyx_n_s_FS_GridOutChunkIterator, __pyx_tuple__224, __pyx_t_3, NULL, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1653, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_4);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_FS_GridOutChunkIterator, __pyx_t_4) < 0) __PYX_ERR(0, 1653, __pyx_L1_error)
-    #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_FS_GridOutChunkIterator, __pyx_t_4) < 0) __PYX_ERR(0, 1653, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1750
- *             self._cursor.close()
- *             self._cursor = None
- * def readchunk(db,fs: GridOut) -> bytes:             # <<<<<<<<<<<<<<
- *     """Reads a chunk at a time. If the current position is within a
- *     chunk the remainder of the chunk is returned.
- */
-    __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1750, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_fs, __pyx_n_s_GridOut) < 0) __PYX_ERR(0, 1750, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_return, __pyx_n_s_bytes) < 0) __PYX_ERR(0, 1750, __pyx_L1_error)
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1750, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_33readchunk, 0, __pyx_n_s_readchunk, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_4, ((PyObject *)__pyx_codeobj__240)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1750, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    #else
-    __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_33readchunk, 0, __pyx_n_s_readchunk, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__240)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1750, __pyx_L1_error)
-    #endif
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_3, __pyx_t_2);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_3);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_readchunk, __pyx_t_3) < 0) __PYX_ERR(0, 1750, __pyx_L1_error)
-    #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_readchunk, __pyx_t_3) < 0) __PYX_ERR(0, 1750, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "cy_docs/cy_docs_x.py":1785
- * 
- * 
- * def read_grid_fs_file(db, fs: gridfs.GridOut, size: int = -1) -> bytes:             # <<<<<<<<<<<<<<
- *     """Read at most `size` bytes from the file (less if there
- *     isn't enough data).
- */
-    __pyx_t_3 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1785, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_fs, __pyx_kp_s_gridfs_GridOut) < 0) __PYX_ERR(0, 1785, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_size, __pyx_n_s_int) < 0) __PYX_ERR(0, 1785, __pyx_L1_error)
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_return, __pyx_n_s_bytes) < 0) __PYX_ERR(0, 1785, __pyx_L1_error)
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1785, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_35read_grid_fs_file, 0, __pyx_n_s_read_grid_fs_file, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_t_4, ((PyObject *)__pyx_codeobj__242)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1785, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    #else
-    __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_7cy_docs_9cy_docs_x_35read_grid_fs_file, 0, __pyx_n_s_read_grid_fs_file, NULL, __pyx_n_s_cy_docs_cy_docs_x, __pyx_d, ((PyObject *)__pyx_codeobj__242)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1785, __pyx_L1_error)
-    #endif
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_tuple__243);
-    __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_3);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_2);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_read_grid_fs_file, __pyx_t_2) < 0) __PYX_ERR(0, 1785, __pyx_L1_error)
-    #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_read_grid_fs_file, __pyx_t_2) < 0) __PYX_ERR(0, 1785, __pyx_L1_error)
-    #endif
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
     /* "cy_docs/cy_docs_x.py":1
  * """             # <<<<<<<<<<<<<<
  * cy_docs is library for mongodb document manipulating such as:
  * 1-binary mongodb expression builder:
  */
-    __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_3 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
     #if CYTHON_COMPILING_IN_LIMITED_API
-    __Pyx_INCREF(__pyx_t_2);
-    if (PyModule_AddObject(__pyx_m, __pyx_k_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+    __Pyx_INCREF(__pyx_t_3);
+    if (PyModule_AddObject(__pyx_m, __pyx_k_test, __pyx_t_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
     #else
-    if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
     #endif
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
     /*--- Wrapped vars code ---*/
 
@@ -63730,106 +59191,6 @@ static CYTHON_INLINE void __Pyx_RaiseClosureNameError(const char *varname) {
     PyErr_Format(PyExc_NameError, "free variable '%s' referenced before assignment in enclosing scope", varname);
 }
 
-/* FastTypeChecks */
-#if CYTHON_COMPILING_IN_CPYTHON
-static int __Pyx_InBases(PyTypeObject *a, PyTypeObject *b) {
-    while (a) {
-        a = a->tp_base;
-        if (a == b)
-            return 1;
-    }
-    return b == &PyBaseObject_Type;
-}
-static CYTHON_INLINE int __Pyx_IsSubtype(PyTypeObject *a, PyTypeObject *b) {
-    PyObject *mro;
-    if (a == b) return 1;
-    mro = a->tp_mro;
-    if (likely(mro)) {
-        Py_ssize_t i, n;
-        n = PyTuple_GET_SIZE(mro);
-        for (i = 0; i < n; i++) {
-            if (PyTuple_GET_ITEM(mro, i) == (PyObject *)b)
-                return 1;
-        }
-        return 0;
-    }
-    return __Pyx_InBases(a, b);
-}
-#if PY_MAJOR_VERSION == 2
-static int __Pyx_inner_PyErr_GivenExceptionMatches2(PyObject *err, PyObject* exc_type1, PyObject* exc_type2) {
-    PyObject *exception, *value, *tb;
-    int res;
-    __Pyx_PyThreadState_declare
-    __Pyx_PyThreadState_assign
-    __Pyx_ErrFetch(&exception, &value, &tb);
-    res = exc_type1 ? PyObject_IsSubclass(err, exc_type1) : 0;
-    if (unlikely(res == -1)) {
-        PyErr_WriteUnraisable(err);
-        res = 0;
-    }
-    if (!res) {
-        res = PyObject_IsSubclass(err, exc_type2);
-        if (unlikely(res == -1)) {
-            PyErr_WriteUnraisable(err);
-            res = 0;
-        }
-    }
-    __Pyx_ErrRestore(exception, value, tb);
-    return res;
-}
-#else
-static CYTHON_INLINE int __Pyx_inner_PyErr_GivenExceptionMatches2(PyObject *err, PyObject* exc_type1, PyObject *exc_type2) {
-    int res = exc_type1 ? __Pyx_IsSubtype((PyTypeObject*)err, (PyTypeObject*)exc_type1) : 0;
-    if (!res) {
-        res = __Pyx_IsSubtype((PyTypeObject*)err, (PyTypeObject*)exc_type2);
-    }
-    return res;
-}
-#endif
-static int __Pyx_PyErr_GivenExceptionMatchesTuple(PyObject *exc_type, PyObject *tuple) {
-    Py_ssize_t i, n;
-    assert(PyExceptionClass_Check(exc_type));
-    n = PyTuple_GET_SIZE(tuple);
-#if PY_MAJOR_VERSION >= 3
-    for (i=0; i<n; i++) {
-        if (exc_type == PyTuple_GET_ITEM(tuple, i)) return 1;
-    }
-#endif
-    for (i=0; i<n; i++) {
-        PyObject *t = PyTuple_GET_ITEM(tuple, i);
-        #if PY_MAJOR_VERSION < 3
-        if (likely(exc_type == t)) return 1;
-        #endif
-        if (likely(PyExceptionClass_Check(t))) {
-            if (__Pyx_inner_PyErr_GivenExceptionMatches2(exc_type, NULL, t)) return 1;
-        } else {
-        }
-    }
-    return 0;
-}
-static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches(PyObject *err, PyObject* exc_type) {
-    if (likely(err == exc_type)) return 1;
-    if (likely(PyExceptionClass_Check(err))) {
-        if (likely(PyExceptionClass_Check(exc_type))) {
-            return __Pyx_inner_PyErr_GivenExceptionMatches2(err, NULL, exc_type);
-        } else if (likely(PyTuple_Check(exc_type))) {
-            return __Pyx_PyErr_GivenExceptionMatchesTuple(err, exc_type);
-        } else {
-        }
-    }
-    return PyErr_GivenExceptionMatches(err, exc_type);
-}
-static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObject *exc_type1, PyObject *exc_type2) {
-    assert(PyExceptionClass_Check(exc_type1));
-    assert(PyExceptionClass_Check(exc_type2));
-    if (likely(err == exc_type1 || err == exc_type2)) return 1;
-    if (likely(PyExceptionClass_Check(err))) {
-        return __Pyx_inner_PyErr_GivenExceptionMatches2(err, exc_type1, exc_type2);
-    }
-    return (PyErr_GivenExceptionMatches(err, exc_type1) || PyErr_GivenExceptionMatches(err, exc_type2));
-}
-#endif
-
 /* CalculateMetaclass */
 static PyObject *__Pyx_CalculateMetaclass(PyTypeObject *metaclass, PyObject *bases) {
     Py_ssize_t i, nbases = PyTuple_GET_SIZE(bases);
@@ -64604,6 +59965,106 @@ raise_neg_overflow:
         "can't convert negative value to int");
     return (int) -1;
 }
+
+/* FastTypeChecks */
+#if CYTHON_COMPILING_IN_CPYTHON
+static int __Pyx_InBases(PyTypeObject *a, PyTypeObject *b) {
+    while (a) {
+        a = a->tp_base;
+        if (a == b)
+            return 1;
+    }
+    return b == &PyBaseObject_Type;
+}
+static CYTHON_INLINE int __Pyx_IsSubtype(PyTypeObject *a, PyTypeObject *b) {
+    PyObject *mro;
+    if (a == b) return 1;
+    mro = a->tp_mro;
+    if (likely(mro)) {
+        Py_ssize_t i, n;
+        n = PyTuple_GET_SIZE(mro);
+        for (i = 0; i < n; i++) {
+            if (PyTuple_GET_ITEM(mro, i) == (PyObject *)b)
+                return 1;
+        }
+        return 0;
+    }
+    return __Pyx_InBases(a, b);
+}
+#if PY_MAJOR_VERSION == 2
+static int __Pyx_inner_PyErr_GivenExceptionMatches2(PyObject *err, PyObject* exc_type1, PyObject* exc_type2) {
+    PyObject *exception, *value, *tb;
+    int res;
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&exception, &value, &tb);
+    res = exc_type1 ? PyObject_IsSubclass(err, exc_type1) : 0;
+    if (unlikely(res == -1)) {
+        PyErr_WriteUnraisable(err);
+        res = 0;
+    }
+    if (!res) {
+        res = PyObject_IsSubclass(err, exc_type2);
+        if (unlikely(res == -1)) {
+            PyErr_WriteUnraisable(err);
+            res = 0;
+        }
+    }
+    __Pyx_ErrRestore(exception, value, tb);
+    return res;
+}
+#else
+static CYTHON_INLINE int __Pyx_inner_PyErr_GivenExceptionMatches2(PyObject *err, PyObject* exc_type1, PyObject *exc_type2) {
+    int res = exc_type1 ? __Pyx_IsSubtype((PyTypeObject*)err, (PyTypeObject*)exc_type1) : 0;
+    if (!res) {
+        res = __Pyx_IsSubtype((PyTypeObject*)err, (PyTypeObject*)exc_type2);
+    }
+    return res;
+}
+#endif
+static int __Pyx_PyErr_GivenExceptionMatchesTuple(PyObject *exc_type, PyObject *tuple) {
+    Py_ssize_t i, n;
+    assert(PyExceptionClass_Check(exc_type));
+    n = PyTuple_GET_SIZE(tuple);
+#if PY_MAJOR_VERSION >= 3
+    for (i=0; i<n; i++) {
+        if (exc_type == PyTuple_GET_ITEM(tuple, i)) return 1;
+    }
+#endif
+    for (i=0; i<n; i++) {
+        PyObject *t = PyTuple_GET_ITEM(tuple, i);
+        #if PY_MAJOR_VERSION < 3
+        if (likely(exc_type == t)) return 1;
+        #endif
+        if (likely(PyExceptionClass_Check(t))) {
+            if (__Pyx_inner_PyErr_GivenExceptionMatches2(exc_type, NULL, t)) return 1;
+        } else {
+        }
+    }
+    return 0;
+}
+static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches(PyObject *err, PyObject* exc_type) {
+    if (likely(err == exc_type)) return 1;
+    if (likely(PyExceptionClass_Check(err))) {
+        if (likely(PyExceptionClass_Check(exc_type))) {
+            return __Pyx_inner_PyErr_GivenExceptionMatches2(err, NULL, exc_type);
+        } else if (likely(PyTuple_Check(exc_type))) {
+            return __Pyx_PyErr_GivenExceptionMatchesTuple(err, exc_type);
+        } else {
+        }
+    }
+    return PyErr_GivenExceptionMatches(err, exc_type);
+}
+static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObject *exc_type1, PyObject *exc_type2) {
+    assert(PyExceptionClass_Check(exc_type1));
+    assert(PyExceptionClass_Check(exc_type2));
+    if (likely(err == exc_type1 || err == exc_type2)) return 1;
+    if (likely(PyExceptionClass_Check(err))) {
+        return __Pyx_inner_PyErr_GivenExceptionMatches2(err, exc_type1, exc_type2);
+    }
+    return (PyErr_GivenExceptionMatches(err, exc_type1) || PyErr_GivenExceptionMatches(err, exc_type2));
+}
+#endif
 
 /* Generator */
 static PyMethodDef __pyx_Generator_methods[] = {

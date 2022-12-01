@@ -2,6 +2,7 @@ import datetime
 import mimetypes
 import os
 import threading
+import time
 import typing
 
 import gridfs
@@ -12,7 +13,8 @@ import cy_kit
 from cyx.common.base import Base
 from gridfs import GridIn
 import bson
-
+from  pymongo.read_preferences import ReadPreference
+from pymongo.read_concern import ReadConcern
 from cyx.common.file_storage import FileStorageService, FileStorageObject
 
 
@@ -26,22 +28,29 @@ class MongoDbFileStorage:
         self.chunk_index =0
         self.chunk_size = fs.chunk_size
         self.remain = 0
+
+        self.num_of_chunks, m = divmod(fs.length,fs.chunk_size)
+
+        if m>0:
+            self.num_of_chunks+=1
+        self.cursor_len = 8
         self.collection = db.get_collection("fs.chunks")
 
-    def read_chunks(self,start:int,end:int):
-        chunk_index ,remain = divmod(start,self.chunk_size)
-        cursor = self.collection.find({
-            "files_id":self.fs._id
-        },skip=chunk_index)
-        size_read =0
-        while size_read< (end-start):
-            data = cursor.next()["data"]
-            if size_read ==0 and remain>0:
-                data =data [remain:]
-            size_read+=data.__len__()
-            if size_read>end-start+1:
-                data = data[:end-size_read]
-            yield data
+    def get_cursor(self,from_index ,num_of_element):
+
+        return self.collection.find({
+                "files_id": self.fs._id,
+                "n":{
+                    "$gte":from_index
+                }
+            },
+                batch_size=0,
+                # cursor_type = pymongo.CursorType.EXHAUST,
+                # no_cursor_timeout = True,
+                max_scan=0,
+                limit=num_of_element
+            ).sort("n",pymongo.ASCENDING)
+
     def seek(self, position: int):
         # self.position = position
         # a,b = divmod(self.position,self.chunk_size)
@@ -58,53 +67,9 @@ class MongoDbFileStorage:
         return self.fs.tell()
 
     def read(self, size: int) -> bytes:
-        t = datetime.datetime.utcnow()
-        # fs:gridfs.GridOut
-        # fs.read()
-        # self.fs.read(size)
-        data = cy_docs.cy_docs_x.read_grid_fs_file(self.db, self.fs,size)
-        n = (datetime.datetime.utcnow() - t).total_seconds()*1000
-        print(f"{n}:{size}")
-        return data
-        # t= datetime.datetime.utcnow()
-        # data =self.fs.readchunk()
-        # print(data.__len__())
-        # n = (datetime.datetime.utcnow() - t).total_seconds()
-        # print(f"{self.chunk_index}, {n}")
-        # gfs= gridfs.GridFS(self.db).get(self.fs._id)
-        # gfs.readchunk()
-        # tst = gfs.readline(size)
-        # data_item  =self.db.get_collection("fs.chunks").find_one(
-        #     filter= {
-        #         "files_id":self.fs._id,
-        #         "n":self.chunk_index
-        #     }
-        # )
-        # n = (datetime.datetime.utcnow() - t).total_seconds()
-        # print(f"{self.chunk_index}, {n}")
-        # data = data_item["data"]
-        #
-        # start = self.remain
-        # end = self.remain+size
-        # if end-start>data.__len__():
-        #     ret= data[start:]
-        #     next_data: bytes = self.db.get_collection("fs.chunks").find_one(
-        #         filter={
-        #             "files_id": self.fs._id,
-        #             "n": self.chunk_index
-        #         }
-        #     )
-        #     ret+= next_data[:end]
-        #
-        # else:
-        #     ret = data[start:end]
-        #
-        # self.seek(self.position+ size)
-        # return ret
+        return self.fs.read(size)
 
 
-
-        # return self.fs.read(size)
 
 
     def get_id(self) -> str:
