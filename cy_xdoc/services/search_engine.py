@@ -1,6 +1,8 @@
 import pathlib
 
 import elasticsearch
+
+import cy_docs
 import cy_kit
 import cy_es
 import cyx.common
@@ -171,4 +173,40 @@ class SearchEngine:
             index = self.get_index(app_name),
             id=id
         )
+
+    def update_content(self, app_name:str, id:str, content:str, meta:dict, data_item):
+        if data_item is None:
+            return
+        is_exist = self.is_exist(app_name, id=id)
+
+
+        if is_exist:
+            if isinstance(data_item, cy_docs.DocumentObject):
+                json_data_item = data_item.to_json_convertable()
+            elif isinstance(data_item, dict):
+                json_data_item = cy_docs.to_json_convertable(data_item)
+            return cy_es.update_doc_by_id(
+                client=self.client,
+                index=self.get_index(app_name),
+                id= id,
+                data=(
+                        cy_es.buiders.privileges << data_item.Privileges,
+                        cy_es.buiders.content << content,
+                        cy_es.buiders.meta_info << meta,
+                        cy_es.buiders.data_item << json_data_item,
+
+                )
+            )
+        else:
+            self.make_index_content(
+                id=id,
+                app_name=app_name,
+                privileges=data_item.Privileges,
+                upload_id=id,
+                data_item=data_item,
+                content = content,
+                meta_info = meta,
+                mark_delete = data_item.mark_delete or False
+
+            )
 

@@ -12,7 +12,7 @@ import concurrent.futures
 from cyx.file_sync import FilesSync
 from cyx.media.image_extractor import ImageExtractorService
 from cyx.file_content_process import FileContentProcessService
-
+from cy_xdoc.services.files import FileServices
 message_service: MessageService = cy_kit.singleton(
     MessageService
 )
@@ -20,6 +20,7 @@ config = cyx.common.config
 file_content_process_service = cy_kit.singleton(FileContentProcessService)
 
 file_sync_service = cy_kit.singleton(FilesSync)
+file_services = cy_kit.singleton(FileServices)
 
 message_type = 'files.upload'
 
@@ -43,12 +44,19 @@ def run(use_thread=True):
                 )
                 output = {}
 
-                def run(x):
+                def run(x:MessageInfo):
                     if message_service.is_lock(x):
                         return
                     message_service.lock(x)
                     try:
                         upload_item = cy_docs.DocumentObject(x.Data)
+                        real_upload = file_services.get_upload_register(
+                            app_name= x.AppName,
+                            upload_id= x.Data.get("_id")
+                        )
+                        if not real_upload:
+                            message_service.delete(x)
+                            return
                         app_name = x.AppName
                         file_ext = upload_item.FileExt
 
@@ -61,8 +69,8 @@ def run(use_thread=True):
                             handler_service= file_content_process_service,
 
                         )
-                        print(f"{upload_item['_id']}.{file_ext}")
-                        print(output)
+                        message_service.delete(x)
+                        os.remove(full_file_path)
 
                     except Exception as e:
                         watcher_log.exception(e)

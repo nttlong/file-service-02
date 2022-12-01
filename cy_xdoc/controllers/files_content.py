@@ -22,7 +22,11 @@ async def get_content_of_files(app_name: str, directory: str, request: fastapi.R
     upload = file_service.get_upload_register(app_name,upload_id)
     runtime_file_reader = None
     if upload and upload.FileModuleController:
-        runtime_file_reader = cy_kit.singleton_from_path(upload.FileModuleController)
+        try:
+            runtime_file_reader = cy_kit.singleton_from_path(upload.FileModuleController)
+        except ModuleNotFoundError as e:
+            runtime_file_reader = None
+
     fs = file_service.get_main_file_of_upload_by_rel_file_path(
         app_name=app_name,
         rel_file_path=directory,
@@ -48,9 +52,3 @@ async def get_content_of_files(app_name: str, directory: str, request: fastapi.R
         fs, request, mime_type,streaming_buffering=1024*4*3*8
     )
     return ret
-    # ret= cy_web.cy_web_x.FileObjectResponse(
-    #     file=fs,
-    #     status_code=206,
-    #     media_type= mime_type
-    # )
-    # return ret

@@ -545,9 +545,9 @@ def singleton_from_path(injector_path: str):
     module_name, class_name = injector_path.split(':')
     import sys
     if sys.modules.get(module_name) is None:
-        raise Exception(f"{module_name} was not found")
+        raise ModuleNotFoundError(f"{module_name} was not found")
     if hasattr(sys.modules[module_name], class_name):
         cls_type = getattr(sys.modules[module_name], class_name)
         return singleton(cls_type)
     else:
-        raise Exception(f"{class_name} was not found in {module_name}")
+        raise ModuleNotFoundError(f"{class_name} was not found in {module_name}")

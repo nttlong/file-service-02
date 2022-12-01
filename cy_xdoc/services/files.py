@@ -450,9 +450,21 @@ class FileServices:
             doc_context.fields.HasThumb << True
         )
 
-    def update_available_thumbs(self, upload_id:str, app_name:str, available_thumbs:typing.List[str]):
+    def update_available_thumbs(self, upload_id:str, app_name:str, available_thumbs: typing.List[str]):
         doc_context = self.db_connect.db(app_name).doc(DocUploadRegister)
         doc_context.context.update(
             doc_context.fields.id == upload_id,
             doc_context.fields.AvailableThumbs << available_thumbs
         )
+
+    def update_ocr_info(self, app_name:str, upload_id:str, ocr_file_id:typing.Union[str,bson.ObjectId]):
+        if isinstance(ocr_file_id,str):
+            ocr_file_id = bson.ObjectId(ocr_file_id)
+        doc_context = self.db_connect.db(app_name).doc(DocUploadRegister)
+        doc_context.context.update(
+            doc_context.fields.id == upload_id,
+            doc_context.fields.OCRFileId << ocr_file_id
+
+        )
+
+

@@ -1,7 +1,7 @@
 import cy_kit
 from cyx.images import ImageServices
-from cyx.base import Base,Config
-from cyx.contents import Contents
+from cyx.base import Config
+from cyx.media.contents import Contents
 img_service = cy_kit.singleton(
     ImageServices
 )

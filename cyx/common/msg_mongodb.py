@@ -108,11 +108,11 @@ class MessageServiceMongodb:
             return item.IsLock == True
 
     def delete(self, item:MessageInfo):
-        raise NotImplemented
-        # docs = self.db_connect.db('admin').doc(SysMessage)
-        # docs.context.delete(
-        #     docs.fields.MsgId ==item.Id
-        # )
+
+        docs = self.db_connect.db('admin').doc(SysMessage)
+        docs.context.delete(
+            docs.fields.MsgId ==item.Id
+        )
 
     def reset_status(self, message_type: str):
         """

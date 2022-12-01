@@ -77,3 +77,7 @@ def file_add_chunk(client :pymongo.MongoClient, db_name: str, file_id: bson.Obje
         chunk_index=chunk_index,
         chunk_data=chunk_data
     )
+
+
+def to_json_convertable(data):
+    return cy_docs_x.to_json_convertable(data)
