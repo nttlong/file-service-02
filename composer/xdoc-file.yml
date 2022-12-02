@@ -11,7 +11,7 @@ services:
 #      dockerfile: ./composer/files-dockerfile
 #  restart: on-failure
   file-processing:
-    image: nttlong/lv-file:rc.0.1.8
+    image: nttlong/lv-file:rc.0.1.9
     container_name: xdoc-file
 
     volumes:

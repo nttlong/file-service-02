@@ -10,7 +10,7 @@ services:
 #      context: ./..
 #      dockerfile: ./composer/files-dockerfile
   web:
-    image: nttlong/lv-file:rc.0.1.8
+    image: nttlong/lv-file:rc.0.1.9
     container_name: xdoc-web
     volumes:
 
