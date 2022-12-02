@@ -201,25 +201,35 @@ def yaml_config(full_path_to_yaml_file: str, apply_sys_args: bool = True):
     return __cache_yam_dict__.get(full_path_to_yaml_file)
 
 
-def convert_to_dict(str_path: str, value):
-    if isinstance(value,str) and value.lower() in ["true","false"]:
-        value = bool(value)
-    elif isinstance(value,str) and "." in value:
-        try:
-            value = float(value)
-        except Exception as e:
-            value =value
-    elif isinstance(value,str)  and value.isnumeric():
-        try:
-            value = int(value)
-        except Exception as e:
-            value =value
+def convert_to_dict(str_path: str, value,ignore_cast = False):
+    if not ignore_cast:
+        if isinstance(value,str) and value [0:1]=="'" and value[:1]=="'":
+            value = value[1:-1]
+            ignore_cast = True
+        elif isinstance(value,str) and value.lower() in ["true","false"]:
+            value = bool(value)
+            ignore_cast = True
+        elif isinstance(value,str) and "." in value:
+            try:
+                value = float(value)
+                ignore_cast = True
+            except Exception as e:
+                value =value
+                ignore_cast = True
+        elif isinstance(value,str)  and value.isnumeric():
+            try:
+                value = int(value)
+                ignore_cast = True
+            except Exception as e:
+                value =value
+                ignore_cast = True
 
     items = str_path.split('.')
     if items.__len__() == 1:
         return {items[0]: value}
+
     else:
-        return {items[0]: convert_to_dict(str_path[items[0].__len__() + 1:], value)}
+        return {items[0]: convert_to_dict(str_path[items[0].__len__() + 1:], value,ignore_cast)}
 
 
 def __dict_of_dicts_merge__(x, y):
