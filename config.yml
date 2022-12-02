@@ -66,7 +66,7 @@ _host_name: 192.168.1.11
 # just serve for UI. For API the setting is not crucial
 host_url: http://172.16.13.72:8012
 bind: 0.0.0.0:8012
-workers: 4
+workers: 2
 jwt:
   secret_key: 09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
   algorithm: HS256

@@ -202,6 +202,19 @@ def yaml_config(full_path_to_yaml_file: str, apply_sys_args: bool = True):
 
 
 def convert_to_dict(str_path: str, value):
+    if isinstance(value,str) and value.lower() in ["true","false"]:
+        value = bool(value)
+    elif isinstance(value,str) and "." in value:
+        try:
+            value = float(value)
+        except Exception as e:
+            value =value
+    elif isinstance(value,str)  and value.isnumeric():
+        try:
+            value = int(value)
+        except Exception as e:
+            value =value
+
     items = str_path.split('.')
     if items.__len__() == 1:
         return {items[0]: value}

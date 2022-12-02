@@ -34,6 +34,8 @@ class DbConnect:
     def __init__(self):
         self.connect_config= config.db
         self.admin_db_name = config.admin_db_name
+
+
         self.client = MongoClient(**self.connect_config.to_dict())
         print("load connect is ok")
     def db(self,app_name):

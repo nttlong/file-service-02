@@ -10,15 +10,15 @@ services:
 #      context: ./..
 #      dockerfile: ./composer/files-dockerfile
   web:
-    image: nttlong/lv-file:rc.0.1.1
-    container_name: lv-file-web
-    hostname: web
+    image: nttlong/lv-file:rc.0.1.5
+    container_name: xdoc
+    hostname: xdoc
     volumes:
 
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
 #    command: python3 /app/test_cy_docs.py
-    command: python3 /app/uvicorn_start.py host_name=172.16.13.72 host_port=8011 host_dir= binding_port=80 db.host=192.168.18.36 db.port=27018 db.username=admin-doc db.password=123456 db.authSource=lv-docs admin_db_name=lv-docs elastic_search.server=http://192.168.18.36:9200 elastic_search.prefix_index=lv-codx  w:4 interface=asgi3 timeout_keep_alive=3600
+    command: python3 /app/cy_xdoc/server.py host_url=http://172.16.13.72:8014/v-02 bind=0.0.0.0:80 db.host=192.168.18.36 db.port=27018 db.username=admin-doc db.password=123456 db.authSource=lv-docs admin_db_name=lv-docs elastic_search.server=http://192.168.18.36:9200 elastic_search.prefix_index=lv-codx  w:4 interface=asgi3 timeout_keep_alive=3600
 #    command: ls /app/enig_frames/services/ext_libs
 #    command: python3 /app/test_tika.py
 #    command: ls /app
@@ -33,21 +33,7 @@ services:
 
     ports:
       - ${API_PORT}:80
-    environment:
-      - config.db.host=172.16.7.25
-      - config.db.port=27017
-      - file_server_use_os_config='true'
-      - file_server_db_host=192.168.18.36
-      - file_server_db_port=27018
-      - file_server_db_auth_source=lv-docs
-      - file_server_db_replica_set=
-      - file_server_db_username=admin-doc
-      - file_server_db_password=123456
-      - file_server_bind_port=80
-      - file_server_bind_ip=0.0.0.0
-      - file_server_root_url=http://${HOST_IP}:${API_PORT}
-      - file_server_api_url=http://${HOST_IP}:${API_PORT}/api
-      - file_server_es_url=http://${ES_URL},
+
 #      - jinja_templates_dir=./app/templates
 #  thumb-video:
 #    image: lv-file
