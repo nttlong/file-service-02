@@ -10,7 +10,7 @@ import datetime
 import cy_kit
 
 import cy_web
-
+print(config)
 cy_web.create_web_app(
     working_dir=pathlib.Path(__file__).parent.__str__(),
     static_dir="./../resource/static",

@@ -11,3 +11,4 @@ docker system prune -a
 docker compose -f lv-file.yml build
 docker compose -f lv-file.yml up -d
 
+

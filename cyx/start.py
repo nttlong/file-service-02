@@ -1,13 +1,16 @@
+import sys
+import pathlib
+working_dir = pathlib.Path(__file__).parent.parent.__str__()
+sys.path.append(working_dir)
 import datetime
 import os
-import pathlib
-import sys
+
+
 
 import cy_kit
 from cyx.common.msg import MessageService
 from cyx.common.msg_mongodb import MessageServiceMongodb
-working_dir = pathlib.Path(__file__).parent.parent.__str__()
-sys.path.append(working_dir)
+
 log_start = cy_kit.create_logs(os.path.join(working_dir,"logs","file-process"),"start")
 log_start.info(f"start at {datetime.datetime.utcnow()}")
 cy_kit.config_provider(

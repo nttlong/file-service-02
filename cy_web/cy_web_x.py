@@ -606,7 +606,13 @@ class RequestHandler:
                         embed=True,
                         title=k
                     )]
-
+                if hasattr(v, "__module__") and v.__module__ == "typing" and v.__str__().startswith(
+                        "typing.Optional["):
+                    __defaults__ += [fastapi.Body(
+                        default=None,
+                        embed=True,
+                        title=k
+                    )]
                     # handler.__annotations__[k]=v.__args__[0]
 
 
@@ -979,7 +985,7 @@ class WebApp(BaseWebApp):
             app=run_path,
             loop="asyncio",
             host=self.bind_ip,
-            port=self.host_port,
+            port=self.bind_port,
             log_level="info",
             lifespan='on',
             # ws_max_size=8*8 * 1024*1024,

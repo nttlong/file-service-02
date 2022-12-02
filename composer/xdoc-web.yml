@@ -10,15 +10,14 @@ services:
 #      context: ./..
 #      dockerfile: ./composer/files-dockerfile
   web:
-    image: nttlong/lv-file:rc.0.1.7
-    container_name: xdoc
-    hostname: xdoc
+    image: nttlong/lv-file:rc.0.1.8
+    container_name: xdoc-web
     volumes:
 
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
       - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
 #    command: python3 /app/test_cy_docs.py
-    command: python3 /app/cy_xdoc/server.py host_url=http://172.16.13.72:8014/v-02 bind=0.0.0.0:80 db.host=192.168.18.36 db.port=27018 db.username=admin-doc db.password='123456' db.authSource=lv-docs admin_db_name=lv-docs elastic_search.server=http://192.168.18.36:9200 elastic_search.prefix_index=lv-codx
+    command: python3 /app/cy_xdoc/server.py host_url=http://172.16.13.72:8011 bind=0.0.0.0:80 db.host=192.168.18.36 db.port=27018 db.username=admin-doc db.password="'123456'" db.authSource=lv-docs admin_db_name=lv-docs elastic_search.server=http://192.168.18.36:9200 elastic_search.prefix_index=lv-codx
 #    command: ls /app/enig_frames/services/ext_libs
 #    command: python3 /app/test_tika.py
 #    command: ls /app
@@ -32,7 +31,7 @@ services:
 
 
     ports:
-      - ${API_PORT}:80
+      - 8011:80
 
 #      - jinja_templates_dir=./app/templates
 #  thumb-video:
