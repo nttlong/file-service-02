@@ -64,16 +64,14 @@ base_api_url: # http://172.16.13.72:8011/lv-file/api
 _host_name: 192.168.1.11
 # Below setting is the real hostname when end user who'd like to reach UI of website
 # just serve for UI. For API the setting is not crucial
-host_name: 172.16.13.72
-#This is important when thous use SSL
-host_schema: http
-# Thous could change below setting by using args when start app just set host_port=<new desire port>
-host_port: 8011
+host_url: http://172.16.13.72:8012
+bind: 0.0.0.0:8012
 jwt:
   secret_key: 09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
   algorithm: HS256
   access_token_expire_minutes: 480
 tmp_upload_dir: ./tmp
+
 elastic_search:
   server:
     - http://192.168.18.36:9200

@@ -6,15 +6,15 @@ import fastapi
 import datetime
 import cy_kit
 import cyx.common
-
+from cyx.common import config
 import cy_web
 
 cy_web.create_web_app(
     working_dir=pathlib.Path(__file__).parent.__str__(),
     static_dir="./../resource/static",
     template_dir="./../resource/html",
-    host_url="http://172.16.13.72:8011",
-    bind="0.0.0.0:8011",
+    host_url=config.host_url,
+    bind=config.bind,
     cache_folder="./cache",
     dev_mode= cyx.common.config.debug,
 
