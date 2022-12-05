@@ -64,8 +64,8 @@ class FilesSync:
             while current_chunk_index < num_of_chunks:
                 chunk = chunk_context.context @ ((chunk_context.fields.files_id == _file_id) & (
                             chunk_context.fields.n == current_chunk_index))
-                data = chunk.data
-                if timeout_count > 100:
+
+                if timeout_count > 1000:
                     self.logs.info(f"sync file {full_file_path} fail, timeout {timeout_count / 2} senconds")
                     os.remove(full_file_path)
 
@@ -75,6 +75,7 @@ class FilesSync:
                     timeout_count += 1
 
                 else:
+                    data = chunk.data
                     if not os.path.isfile(full_file_path):
                         with open(full_file_path, "wb") as f:
                             f.write(data)

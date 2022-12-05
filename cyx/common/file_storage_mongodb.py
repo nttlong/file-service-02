@@ -20,36 +20,37 @@ from cyx.common.file_storage import FileStorageService, FileStorageObject
 
 # @cy_kit.must_imlement(FileStorageObject)
 class MongoDbFileStorage:
-    def __init__(self, fs: GridIn,db:pymongo.database.Database):
+    def __init__(self, fs: GridIn,db:pymongo.database.Database,logical_chunk_size:int=None):
+        if logical_chunk_size is None:
+            logical_chunk_size =fs.chunk_size
         self.fs = fs
-        self.db =db
+        self.db = db
         self.is_dirty=False
         self.position = 0
         self.chunk_index =0
         self.chunk_size = fs.chunk_size
         self.remain = 0
+        self.logical_chunk_size = logical_chunk_size
 
         self.num_of_chunks, m = divmod(fs.length,fs.chunk_size)
 
         if m>0:
             self.num_of_chunks+=1
-        self.cursor_len = 8
+        self.cursor_len = 4
         self.collection = db.get_collection("fs.chunks")
 
-    def get_cursor(self,from_index ,num_of_element):
+    def get_cursor(self,from_index ,num_of_element,cursor=None):
 
-        return self.collection.find({
-                "files_id": self.fs._id,
-                "n":{
-                    "$gte":from_index
-                }
-            },
-                batch_size=0,
-                # cursor_type = pymongo.CursorType.EXHAUST,
-                # no_cursor_timeout = True,
-                max_scan=0,
-                limit=num_of_element
-            ).sort("n",pymongo.ASCENDING)
+        return cy_docs.file_get_iter_contents(
+            client = self.db.client,
+            db_name = self.db.name,
+            files_id = self.fs._id,
+            from_chunk_index=from_index,
+            num_of_chunks = num_of_element
+        )
+
+
+
 
     def seek(self, position: int):
         # self.position = position
@@ -76,14 +77,14 @@ class MongoDbFileStorage:
         return str(self.fs._id)
 
     def push(self, content: bytes, chunk_index: int):
-        cy_docs.file_add_chunk(
+        cy_docs.file_add_chunks(
             client= self.db.client,
-            db_name = self.db.name,
-            file_id= self.fs._id,
-            chunk_index=chunk_index,
-            chunk_data = content
-
+            db_name=self.db.name,
+            file_id=self.fs._id,
+            data= content
         )
+
+
 
     def close(self):
         """
@@ -96,16 +97,24 @@ class MongoDbFileStorage:
 
 class MongoDbFileService(Base):
     def create(self, app_name: str, rel_file_path: str,content_type:str, chunk_size: int, size: int) -> MongoDbFileStorage:
+        mongo_db_chunk_size = chunk_size
+        logical_chunk_size=1
+        if chunk_size>=1024*1024*2:
+            a,b = divmod(chunk_size,1024*64)
+            if b==0:
+                mongo_db_chunk_size = 1024*32
+                logical_chunk_size = a
+
         fs = cy_docs.create_file(
             client=self.client,
             db_name=self.db_name(app_name),
             file_name=rel_file_path,
-            chunk_size=chunk_size,
+            chunk_size=mongo_db_chunk_size,
             file_size=size,
             content_type = content_type
 
         )
-        return MongoDbFileStorage(fs,self.client.get_database(self.db_name(app_name)))
+        return MongoDbFileStorage(fs,self.client.get_database(self.db_name(app_name)),logical_chunk_size = logical_chunk_size)
 
     def store_file(self, app_name:str, source_file:str, rel_file_store_path:str)-> MongoDbFileStorage:
         ret = self.get_file_by_name(

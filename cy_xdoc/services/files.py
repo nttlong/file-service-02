@@ -195,9 +195,9 @@ class FileServices:
             UploadId=id,
             ServerFilePath=f"{id}{os.path.splitext(server_file_name_only)[1]}",
             MimeType=mime_type,
-            RelUrlOfServerPath=f"api/{app_name}/file/register/{id}/{pathlib.Path(server_file_name_only).stem.lower()}",
+            RelUrlOfServerPath=f"api/{app_name}/file/{id}/{pathlib.Path(server_file_name_only).stem.lower()}",
             SizeInHumanReadable=humanize.filesize.naturalsize(file_size),
-            UrlOfServerPath=f"{web_host_root_url}/api/{app_name}/file/register/{id}/{pathlib.Path(server_file_name_only).stem.lower()}",
+            UrlOfServerPath=f"{web_host_root_url}/api/{app_name}/file/{id}/{pathlib.Path(server_file_name_only).stem.lower()}",
             RelUrlThumb=f"api/{app_name}/thumb/{id}/{pathlib.Path(server_file_name_only).stem.lower()}.webp",
             FileSize=file_size,
             UrlThumb=f"{web_host_root_url}/api/{app_name}/thumb/{id}/{pathlib.Path(server_file_name_only).stem.lower()}.webp",
@@ -250,8 +250,8 @@ class FileServices:
             run_in_thread=True
         )
         item[document_context.fields.MainFileId] = bson.ObjectId(new_fsg.get_id())
-        item.RelUrl = f"api/{app_name}/thumb/{item.id}/{item.FileName.lower()}"
-        item.FullUrl = f"{cy_web.get_host_url()}/api/{app_name}/thumb/{item.UploadId}/{item.FileName.lower()}"
+        item.RelUrl = f"api/{app_name}/{item.id}/{item.FileName.lower()}"
+        item.FullUrl = f"{cy_web.get_host_url()}/api/{app_name}/{item.UploadId}/{item.FileName.lower()}"
         if item.HasThumb:
             thumb_file_id = item.ThumbFileId
             if thumb_file_id is not None:

@@ -68,7 +68,12 @@ def create_file(client:pymongo.MongoClient,db_name, file_name,content_type:str, 
         content_type=content_type
     )
 
-
+def file_chunk_count(client :pymongo.MongoClient, db_name: str, file_id: bson.ObjectId)->int:
+    return cy_docs_x.file_chunk_count(
+        client=client,
+        db_name=db_name,
+        file_id=file_id
+    )
 def file_add_chunk(client :pymongo.MongoClient, db_name: str, file_id: bson.ObjectId,chunk_index:int, chunk_data: bytes):
     return cy_docs_x.file_add_chunk(
         client=client,
@@ -77,7 +82,23 @@ def file_add_chunk(client :pymongo.MongoClient, db_name: str, file_id: bson.Obje
         chunk_index=chunk_index,
         chunk_data=chunk_data
     )
-
+def file_add_chunks(client :pymongo.MongoClient, db_name: str, file_id: bson.ObjectId, data: bytes):
+    return cy_docs_x.file_add_chunks(
+        client=client,
+        db_name=db_name,
+        file_id=file_id,
+        data=data
+    )
 
 def to_json_convertable(data):
     return cy_docs_x.to_json_convertable(data)
+
+
+def file_get_iter_contents(client:pymongo.MongoClient, db_name:str, files_id:bson.ObjectId, from_chunk_index:int, num_of_chunks:int):
+    return cy_docs_x.file_get_iter_contents(
+        client=client,
+        db_name=db_name,
+        files_id=files_id,
+        from_chunk_index_index= from_chunk_index,
+        num_of_chunks=num_of_chunks
+    )

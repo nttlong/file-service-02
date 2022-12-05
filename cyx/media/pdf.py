@@ -69,8 +69,8 @@ class PDFService:
                         :param out_put_file_path:
                         :return:
                         """
-        file_name_only = self.file_system_utils.get_file_name_only(pdf_file)
-        out_put_file_path = os.path.join(self.output_dir, f"{file_name_only}.pdf")
+        file_name_only = pathlib.Path(pdf_file).stem
+        out_put_file_path = os.path.join(self.processing_folder, f"{file_name_only}.pdf")
         fx = ocrmypdf.ocr(
             input_file=pdf_file,
             output_file=out_put_file_path,

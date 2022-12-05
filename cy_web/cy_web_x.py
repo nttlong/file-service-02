@@ -983,21 +983,21 @@ class WebApp(BaseWebApp):
         # if self.dev_mode:
         uvicorn.run(
             app=run_path,
-            loop="asyncio",
+            # loop="asyncio",
             host=self.bind_ip,
             port=self.bind_port,
-            log_level="info",
-            lifespan='on',
+            log_level="debug",
+            # lifespan='on',
             # ws_max_size=8*8 * 1024*1024,
             reload=self.dev_mode,
             reload_dirs=self.working_dir,
             workers=worker,
-            ws='websockets',
-            backlog=1000,
-            interface='asgi3',
-            timeout_keep_alive=True,
-            h11_max_incomplete_event_size=1024 * 1024 * 8,
-            http="httptools",
+            # ws='websockets',
+            # backlog=1000,
+            # interface='asgi3',
+            # timeout_keep_alive=True,
+            # h11_max_incomplete_event_size=1024 * 1024 * 8,
+            # http="httptools",
         )
         # else:
         #     uvicorn.run(
@@ -1544,12 +1544,15 @@ def __read_chunks_iter__(gfs,start:int,end:int):
                 if size_read + data.__len__()>end-start+1:
                     data = data[:end-size_read]
                 size_read += data.__len__()
+                time.sleep(0.001)
                 yield data
+
             except StopIteration as e:
-                time.sleep(0.01)
+
                 chunk_index +=segment_run
                 segment_run =segment_len
                 cursor.close()
+
                 cursor = gfs.get_cursor(chunk_index,segment_run)
         cursor.close()
 async def streaming_async(fsg, request, content_type, streaming_buffering=1024 * 8 * 8, segment_size=None):
@@ -1616,7 +1619,8 @@ async def streaming_async(fsg, request, content_type, streaming_buffering=1024 *
             status_code=status_code,
             headers=headers
         )
-
+    if content_type.startswith("video/") or content_type.startswith("audio/"):
+        return res
     res.headers.append("Cache-Control", "max-age=86400")
     res.headers.append("Content-Type", content_type)
 

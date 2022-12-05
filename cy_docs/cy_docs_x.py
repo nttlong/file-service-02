@@ -1572,7 +1572,16 @@ class __fs_files_chunks__:
     n: int
     data: bytes
 
+def file_chunk_count(client: pymongo.MongoClient, db_name: str, file_id: bson.ObjectId)->int:
+    if isinstance(file_id, str):
+        file_id = bson.ObjectId(file_id)
+    ret =context(client, __fs_files_chunks__)[db_name].count(
+        {
+            "files_id": file_id
+        }
+    )
 
+    return ret
 def file_add_chunk(client: pymongo.MongoClient, db_name: str, file_id: bson.ObjectId, chunk_index: int,
                    chunk_data: bytes):
     if isinstance(file_id, str):
@@ -1585,15 +1594,48 @@ def file_add_chunk(client: pymongo.MongoClient, db_name: str, file_id: bson.Obje
             "data": chunk_data
         }
     )
-    # fs_chunks = self.db.get_collection("fs.chunks")
-    # fs_chunks.insert_one({
-    #     "_id": bson.objectid.ObjectId(),
-    #     "files_id": self.fs._id,
-    #     "n": chunk_index,
-    #     "data": content
-    # })
-    del chunk_data
 
+    del chunk_data
+def file_add_chunks(client: pymongo.MongoClient, db_name:str, file_id:bson.ObjectId, data:bytes):
+    gfs = gridfs.GridFS(client.get_database(db_name))
+    fs = gfs.get(file_id)
+    db_context = context(client, __fs_files_chunks__)[db_name]
+    start_chunk_index = db_context.count(
+        {
+            "files_id": file_id
+        }
+    )
+    num_of_chunks ,m = divmod(data.__len__(),fs.chunk_size)
+    if m>0: num_of_chunks+=1
+    remain = data.__len__()
+    start = 0
+    for i in range(0,num_of_chunks):
+        end = start+min(fs.chunk_size,remain)
+        remain = remain -fs.chunk_size
+        chunk_data = data[start:end]
+        start=end
+        print(start_chunk_index+i)
+        db_context.insert_one(
+            {
+                "_id": bson.objectid.ObjectId(),
+                "files_id": file_id,
+                "n": start_chunk_index+i,
+                "data": chunk_data
+            }
+        )
+
+def file_get_iter_contents(client, db_name, files_id, from_chunk_index_index, num_of_chunks):
+
+    collection = client.get_database(db_name).get_collection("fs.chunks")
+    return collection.find({
+        "files_id": files_id,
+        "n": {
+            "$gte": from_chunk_index_index
+        }
+    },
+
+        limit=num_of_chunks
+    ).sort("n", pymongo.ASCENDING)
 
 def create_file(client, db_name: str, file_name: str, content_type: str, file_size: int, chunk_size: int):
     db = client.get_database(db_name)
@@ -1603,6 +1645,7 @@ def create_file(client, db_name: str, file_name: str, content_type: str, file_si
     fs.name = file_name
     fs.filename = file_name
     fs.close()
+
     context(client, __fs_files__)[db_name].update(
         fields._id == fs._id,
         fields.chunkSize << chunk_size,
@@ -1610,8 +1653,8 @@ def create_file(client, db_name: str, file_name: str, content_type: str, file_si
         fields.rel_file_path << file_name,
         fields.contentType << content_type
     )
-
-    return fs
+    ret= gfs.get(fs._id)
+    return ret
 
 
 async def get_file_async(client, db_name: str, file_id):
@@ -1636,6 +1679,5 @@ async def find_file_async(client, db_name: str, rel_file_path: str):
 
     # ret = gridfs.GridFS(__client__.get_database(__db_name__)).get(file_id)
     return ret
-
 
 

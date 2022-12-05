@@ -45,6 +45,8 @@ def run(use_thread=True):
                 output = {}
 
                 def run(x:MessageInfo):
+                    print("---new msg ------")
+                    print(x)
                     if message_service.is_lock(x):
                         return
                     message_service.lock(x)

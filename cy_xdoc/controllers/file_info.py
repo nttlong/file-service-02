@@ -54,8 +54,8 @@ def get_info(app_name: str, UploadId: str, token=Depends(cy_xdoc.auths.Authentic
         return None
     upload_info.UploadId = upload_info._id
     upload_info.HasOCR = upload_info.OCRFileId is not None
-    upload_info.RelUrl = f"api/{app_name}/thumb/{upload_info.UploadId}/{upload_info.FileName.lower()}"
-    upload_info.FullUrl = f"{cy_web.get_host_url()}/{app_name}/thumb/{upload_info.UploadId}/{upload_info.FileName.lower()}"
+    upload_info.RelUrl = f"api/{app_name}/file/{upload_info.UploadId}/{upload_info.FileName.lower()}"
+    upload_info.FullUrl = f"{cy_web.get_host_url()}/api/{app_name}/file/{upload_info.UploadId}/{upload_info.FileName.lower()}"
     upload_info.HasThumb = upload_info.ThumbFileId is not None
     available_thumbs = upload_info.AvailableThumbs or []
     upload_info.AvailableThumbs = []
@@ -66,13 +66,13 @@ def get_info(app_name: str, UploadId: str, token=Depends(cy_xdoc.auths.Authentic
         http://172.16.7.25:8011/api/lv-docs/thumb/c4eade3a-63cb-428d-ac63-34aadd412f00/search.png.png
         """
         upload_info.RelUrlThumb = f"api/{app_name}/thumb/{upload_info.UploadId}/{upload_info.FileName.lower()}.webp"
-        upload_info.UrlThumb = f"{cy_web.get_host_url()}/{app_name}/thumb/{upload_info.UploadId}/{upload_info.FileName.lower()}.webp"
+        upload_info.UrlThumb = f"{cy_web.get_host_url()}/api/{app_name}/thumb/{upload_info.UploadId}/{upload_info.FileName.lower()}.webp"
     if upload_info.HasOCR:
         """
         http://172.16.7.25:8011/api/lv-docs/file-ocr/cc5728d0-c216-43f9-8475-72e84b6365fd/im-003.pdf
         """
         upload_info.RelUrlOCR = f"api/{app_name}/file-ocr/{upload_info.UploadId}/{upload_info.FileName.lower()}.pdf"
-        upload_info.UrlOCR = f"{cy_web.get_host_url()}/{app_name}/file-ocr/{upload_info.UploadId}/{upload_info.FileName.lower()}.pdf"
+        upload_info.UrlOCR = f"{cy_web.get_host_url()}/api/{app_name}/file-ocr/{upload_info.UploadId}/{upload_info.FileName.lower()}.pdf"
     if upload_info.VideoResolutionWidth:
         upload_info.VideoInfo = cy_docs.DocumentObject()
         upload_info.VideoInfo.Width = upload_info.VideoResolutionWidth
