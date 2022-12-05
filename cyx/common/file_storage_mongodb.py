@@ -268,4 +268,12 @@ class MongoDbFileService(Base):
         process(source,dest).start()
         return dest
 
+    def get_file_info_by_id(self, app_name, id):
+        return cy_docs.get_file_info_by_id(
+            client = self.client,
+            db_name = self.db_name(app_name),
+            files_id=id
+        )
+
+
 

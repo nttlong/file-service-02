@@ -8,6 +8,7 @@ import cy_docs
 import cy_kit
 from cyx.common.msg import MessageInfo, MessageService
 from cyx.common.base import DbConnect
+from cyx.common.file_storage_mongodb import MongoDbFileService
 from cyx.models import FsFile, FsChunks
 from cyx.media.image_extractor import ImageExtractorService
 import bson
@@ -19,9 +20,10 @@ class FilesSync:
             self,
             db_connect: DbConnect = cy_kit.singleton(DbConnect),
 
-            message_service: MessageService = cy_kit.singleton(MessageService)
+            message_service: MessageService = cy_kit.singleton(MessageService),
+            file_storage_service:MongoDbFileService = cy_kit.singleton(MongoDbFileService)
     ):
-
+        self.file_storage_service =file_storage_service
         self.message_service = message_service
         self.db_connect: DbConnect = db_connect
         self.working_dir = pathlib.Path(__file__).parent.parent.__str__()
@@ -47,9 +49,18 @@ class FilesSync:
         if os.path.isfile(full_file_path):
             return full_file_path
         file_id = upload_item.MainFileId
+        file_info = self.file_storage_service.get_file_info_by_id(
+            app_name=item.AppName,
+            id=file_id
+        )
+        num_of_chunks = upload_item.NumOfChunks
+        if file_info and  file_info.get("numOfChunks"):
+            num_of_chunks = file_info.numOfChunks
+
+
 
         current_chunk_index = 0
-        num_of_chunks = upload_item.NumOfChunks
+
 
         start_time = datetime.datetime.utcnow()
 

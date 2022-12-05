@@ -1638,25 +1638,33 @@ def file_get_iter_contents(client, db_name, files_id, from_chunk_index_index, nu
     ).sort("n", pymongo.ASCENDING)
 
 def create_file(client, db_name: str, file_name: str, content_type: str, file_size: int, chunk_size: int):
-    db = client.get_database(db_name)
+
     gfs = gridfs.GridFS(client.get_database(db_name))  # gridfs.GridFSBucket(__client__.get_database(__db_name__))
 
     fs = gfs.new_file()
     fs.name = file_name
     fs.filename = file_name
     fs.close()
+    num_of_chunks,m =divmod(file_size,chunk_size)
+    if m>0: num_of_chunks+=1
 
     context(client, __fs_files__)[db_name].update(
         fields._id == fs._id,
         fields.chunkSize << chunk_size,
         fields.length << file_size,
         fields.rel_file_path << file_name,
-        fields.contentType << content_type
+        fields.contentType << content_type,
+        fields.numOfChunks <<num_of_chunks
     )
     ret= gfs.get(fs._id)
     return ret
-
-
+def get_file_info_by_id(client, db_name, files_id):
+    if isinstance(files_id,str):
+        files_id = bson.ObjectId(files_id)
+    ret = context(client, __fs_files__)[db_name].find_one(
+        fields._id == files_id
+    )
+    return ret
 async def get_file_async(client, db_name: str, file_id):
     from motor.motor_asyncio import AsyncIOMotorClient
     async_client = AsyncIOMotorClient()

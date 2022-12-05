@@ -102,3 +102,11 @@ def file_get_iter_contents(client:pymongo.MongoClient, db_name:str, files_id:bso
         from_chunk_index_index= from_chunk_index,
         num_of_chunks=num_of_chunks
     )
+
+
+def get_file_info_by_id(client, db_name, files_id):
+    return cy_docs_x.get_file_info_by_id(
+        client=client,
+        db_name=db_name,
+        files_id = files_id
+    )
