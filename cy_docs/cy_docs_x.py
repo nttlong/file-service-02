@@ -1559,6 +1559,7 @@ class __fs_files__:
     length: int
     rel_file_path: str
     filename: str
+    currentChunkIndex:int
 
 
 @document_define(
@@ -1596,33 +1597,53 @@ def file_add_chunk(client: pymongo.MongoClient, db_name: str, file_id: bson.Obje
     )
 
     del chunk_data
+from pymongo import InsertOne
+import pymongo.errors
 def file_add_chunks(client: pymongo.MongoClient, db_name:str, file_id:bson.ObjectId, data:bytes):
-    gfs = gridfs.GridFS(client.get_database(db_name))
-    fs = gfs.get(file_id)
-    db_context = context(client, __fs_files_chunks__)[db_name]
-    start_chunk_index = db_context.count(
-        {
-            "files_id": file_id
-        }
-    )
-    num_of_chunks ,m = divmod(data.__len__(),fs.chunk_size)
-    if m>0: num_of_chunks+=1
-    remain = data.__len__()
-    start = 0
-    for i in range(0,num_of_chunks):
-        end = start+min(fs.chunk_size,remain)
-        remain = remain -fs.chunk_size
-        chunk_data = data[start:end]
-        start=end
-        print(start_chunk_index+i)
-        db_context.insert_one(
+
+        files_context = context(client, __fs_files__)[db_name]
+        fs = files_context.find_one(
             {
-                "_id": bson.objectid.ObjectId(),
-                "files_id": file_id,
-                "n": start_chunk_index+i,
-                "data": chunk_data
+                "_id": file_id
             }
         )
+        if fs is None:
+            raise pymongo.errors.CursorNotFound("File was not found")
+        # db_context = context(client, __fs_files_chunks__)[db_name]
+        start_chunk_index = fs.get("currentChunkIndex") or 0
+
+        num_of_chunks ,m = divmod(data.__len__(),fs.chunkSize)
+        if m>0: num_of_chunks+=1
+        remain = data.__len__()
+        start = 0
+        requests =[]
+        bulk_collection = client.get_database(db_name).get_collection("fs.chunks")
+        t= datetime.datetime.utcnow()
+        for i in range(0,num_of_chunks):
+            end = start+min(fs.chunkSize,remain)
+            remain = remain -fs.chunkSize
+            chunk_data = data[start:end]
+            start=end
+
+
+            requests+=[InsertOne(
+                {
+                    "_id": bson.objectid.ObjectId(),
+                    "files_id": file_id,
+                    "n": start_chunk_index + i,
+                    "data": chunk_data
+                }
+            )]
+
+        ret = bulk_collection.bulk_write(requests=requests,ordered=False)
+
+        files_context.update(
+            fields._id==file_id,
+            fields.currentChunkIndex << (start_chunk_index+num_of_chunks)
+        )
+        n=(datetime.datetime.utcnow()-t).total_seconds()*1000
+
+        print(f"{start_chunk_index} in {n}")
 
 def file_get_iter_contents(client, db_name, files_id, from_chunk_index_index, num_of_chunks):
 
