@@ -1635,7 +1635,7 @@ def file_add_chunks(client: pymongo.MongoClient, db_name:str, file_id:bson.Objec
                 }
             )]
 
-        ret = bulk_collection.bulk_write(requests=requests,ordered=False)
+        ret = bulk_collection.bulk_write(requests=requests,ordered=True)
 
         files_context.update(
             fields._id==file_id,
