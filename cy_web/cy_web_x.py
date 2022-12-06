@@ -580,7 +580,7 @@ class RequestHandler:
         for k, v in __annotations__.items():
             if hasattr(v, "__module__") and v.__module__ == "typing" and hasattr(v,
                                                                                  "__origin__") and v.__origin__ == list and hasattr(
-                    v, "__args__") and isinstance(v.__args__, tuple):
+                v, "__args__") and isinstance(v.__args__, tuple):
                 arg_type = v.__args__[0]
                 if inspect.isclass(arg_type) and issubclass(arg_type, fastapi.UploadFile):
                     method = "form"
@@ -629,7 +629,7 @@ class RequestHandler:
                 elif (not (hasattr(v, "__module__") and v.__module__ == "typing")) and v not in [str, int, bool,
                                                                                                  datetime,
                                                                                                  float] and issubclass(
-                        v, pydantic.BaseModel) and k != "return":
+                    v, pydantic.BaseModel) and k != "return":
                     __defaults__ += [fastapi.Body(embed=True)]
                 elif v in [str, int, bool, datetime, float] and k != "return" and f"{k}" not in path:
                     __defaults__ += [fastapi.Body(embed=True)]
@@ -689,8 +689,6 @@ from fastapi.templating import Jinja2Templates
 
 # wellknown_app: FastAPI = None
 # __instance__ = None
-
-
 
 
 class BaseWebApp:
@@ -962,21 +960,18 @@ class WebApp(BaseWebApp):
 
         self.app.post("/" + self.url_get_token)(login_for_access_token)
 
-
-    def gunicorn_start(self,start_path):
+    def gunicorn_start(self, start_path):
         global web_application
         from gunicorn.app import wsgiapp
         wsgiapp.run()
-
-
 
     def unvicorn_start(self, start_path, worker=4):
         global web_application
         # for k,v in self.web_app_module.__dict__.items():
         #     if v==self:
         #        self.web_app_name=k
-        if not isinstance(web_application,WebApp):
-            raise  Exception("Web application can not start")
+        if not isinstance(web_application, WebApp):
+            raise Exception("Web application can not start")
         run_path = f"{start_path}:web_application.app"
         # if not self.dev_mode:
         #     run_path=web_application.app
@@ -1045,6 +1040,7 @@ async def windows_fxi_javascript_resource(request: Request, call_next):
 
     return res
 
+
 def start_with_guicorn(worker):
     global web_application
     if isinstance(web_application, WebApp):
@@ -1054,6 +1050,8 @@ def start_with_guicorn(worker):
         )
         print("web run on:")
         print(web_application.host_url)
+
+
 def start_with_uvicorn(worker=4):
     global web_application
     if isinstance(web_application, WebApp):
@@ -1065,6 +1063,8 @@ def start_with_uvicorn(worker=4):
         print(web_application.host_url)
     # run_path=path.replace(os.sep,"/").replace('/','.')
     # web_app.unvicorn_start(run_path)
+
+
 def start_with_gunicorn(worker=4):
     global web_application
     if isinstance(web_application, WebApp):
@@ -1074,6 +1074,7 @@ def start_with_gunicorn(worker=4):
         )
         print("web run on:")
         print(web_application.host_url)
+
 
 def load_controller_from_dir(prefix, controller_path):
     global web_application
@@ -1387,8 +1388,8 @@ def __send_bytes_range_requests__(
 
         `start` and `end` parameters are inclusive due to specification
         """
-    if hasattr(file_obj,"read_chunks") and callable(file_obj.read_chunks):
-        ret = file_obj.read_chunks(start,end)
+    if hasattr(file_obj, "read_chunks") and callable(file_obj.read_chunks):
+        ret = file_obj.read_chunks(start, end)
         for x in ret:
             yield x
     else:
@@ -1417,50 +1418,55 @@ async def __send_bytes_range_requests_async__(
         data = await file_obj.read(read_size)
 
         yield data
+
+
 from functools import partial
 import anyio
 import os
 import stat
 import sys
 import typing
-from starlette.types import Receive, Send,Scope
+from starlette.types import Receive, Send, Scope
 from fastapi import Response
 from starlette.background import BackgroundTask
-from  starlette.concurrency import iterate_in_threadpool
+from starlette.concurrency import iterate_in_threadpool
+
 Content = typing.Union[str, bytes]
 SyncContentStream = typing.Iterator[Content]
 AsyncContentStream = typing.AsyncIterable[Content]
 ContentStream = typing.Union[AsyncContentStream, SyncContentStream]
+
+
 class AsyncStreamingResponse(Response):
     body_iterator: AsyncContentStream
 
     def __init__(
-        self,
-        file_Stream,
-        start,
-        end,
-        segment_size,
-        buffering_size,
-        content: ContentStream,
-        status_code: int = 200,
-        headers: typing.Optional[typing.Mapping[str, str]] = None,
-        media_type: typing.Optional[str] = None,
-        background: typing.Optional[BackgroundTask] = None,
+            self,
+            file_Stream,
+            start,
+            end,
+            segment_size,
+            buffering_size,
+            content: ContentStream,
+            status_code: int = 200,
+            headers: typing.Optional[typing.Mapping[str, str]] = None,
+            media_type: typing.Optional[str] = None,
+            background: typing.Optional[BackgroundTask] = None,
     ) -> None:
 
         self.start = start
         self.end = end
         size = self.end - self.start
-        self.segment_size=segment_size
-        self.buffering_size=buffering_size
+        self.segment_size = segment_size
+        self.buffering_size = buffering_size
 
         self.file_Stream = file_Stream
         self.content_reader = content
         self.status_code = status_code
         self.media_type = self.media_type if media_type is None else media_type
         self.background = background
-        x=self.start
-        y=min(self.end, self.start + self.segment_size-1)
+        x = self.start
+        y = min(self.end, self.start + self.segment_size - 1)
         headers[
             'content-range'] = f"bytes {x}-{y}/{self.file_Stream.get_size()}"
         self.init_headers(headers)
@@ -1484,21 +1490,18 @@ class AsyncStreamingResponse(Response):
         self.file_Stream.seek(self.start)
         data = [1]
         pos = self.file_Stream.tell()
-        b_size=0
+        b_size = 0
         while len(data) > 0:
             read_size = min(self.buffering_size, self.end + 1 - pos)
             data = self.file_Stream.read(read_size)
-            if data.__len__()>0:
+            if data.__len__() > 0:
                 await send({"type": "http.response.body", "body": data, "more_body": True})
             else:
                 await send({"type": "http.response.body", "body": data, "more_body": True})
                 break
-            b_size+=read_size
-
+            b_size += read_size
 
         # self.file_Stream.seek(self.start)
-
-
 
         # begin = self.file_Stream.tell()
         #
@@ -1511,11 +1514,10 @@ class AsyncStreamingResponse(Response):
         #     #
         #     #     end = begin+data.__len__()
 
-        #await send({"type": "http.response.body", "body": b"", "more_body": False})
+        # await send({"type": "http.response.body", "body": b"", "more_body": False})
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         async with anyio.create_task_group() as task_group:
-
             async def wrap(func: "typing.Callable[[], typing.Awaitable[None]]") -> None:
                 await func()
                 task_group.cancel_scope.cancel()
@@ -1525,36 +1527,40 @@ class AsyncStreamingResponse(Response):
 
         if self.background is not None:
             await self.background()
-def __read_chunks_iter__(gfs,start:int,end:int):
-        segment_len = gfs.cursor_len
-        chunk_index ,remain = divmod(start,gfs.chunk_size)
-        segment_run =1
-        cursor = gfs.get_cursor(chunk_index, segment_run)
-        size_read =0
 
-        total,m = divmod(end-start,gfs.chunk_size)
-        if m >0:
-            total += 1
-        while size_read < (end-start):
-            try:
-                data = cursor.next()["data"]
-                if size_read ==0 and remain>0:
-                    data =data[remain:]
 
-                if size_read + data.__len__()>end-start+1:
-                    data = data[:end-size_read]
-                size_read += data.__len__()
-                time.sleep(0.001)
-                yield data
+def __read_chunks_iter__(gfs, start: int, end: int):
+    segment_len = gfs.cursor_len
+    chunk_index, remain = divmod(start, gfs.chunk_size)
+    segment_run = 1
+    cursor = gfs.get_cursor(chunk_index, segment_run)
+    size_read = 0
 
-            except StopIteration as e:
+    total, m = divmod(end - start, gfs.chunk_size)
+    if m > 0:
+        total += 1
+    while size_read < (end - start):
+        try:
+            data = cursor.next()["data"]
+            if size_read == 0 and remain > 0:
+                data = data[remain:]
 
-                chunk_index +=segment_run
-                segment_run =segment_len
-                cursor.close()
+            if size_read + data.__len__() > end - start + 1:
+                data = data[:end - size_read]
+            size_read += data.__len__()
+            time.sleep(0.000001)
+            yield data
 
-                cursor = gfs.get_cursor(chunk_index,segment_run)
-        cursor.close()
+        except StopIteration as e:
+
+            chunk_index += segment_run
+            segment_run = segment_len
+            cursor.close()
+
+            cursor = gfs.get_cursor(chunk_index, segment_run)
+    cursor.close()
+
+
 async def streaming_async(fsg, request, content_type, streaming_buffering=1024 * 8 * 8, segment_size=None):
     """
     Streaming content
@@ -1580,7 +1586,6 @@ async def streaming_async(fsg, request, content_type, streaming_buffering=1024 *
     start = 0
     end = file_size - 1
 
-
     status_code = 200
 
     if range_header is not None:
@@ -1594,7 +1599,7 @@ async def streaming_async(fsg, request, content_type, streaming_buffering=1024 *
         status_code = status.HTTP_206_PARTIAL_CONTENT
     if segment_size:
         res = AsyncStreamingResponse(
-            file_Stream = fsg,
+            file_Stream=fsg,
             start=start,
             end=end,
             segment_size=segment_size,
@@ -1608,8 +1613,8 @@ async def streaming_async(fsg, request, content_type, streaming_buffering=1024 *
     else:
         if hasattr(fsg, "delegate"):
             content = __send_bytes_range_requests_async__(fsg, start, end, streaming_buffering)
-        elif hasattr(fsg,"get_cursor") and callable(fsg.get_cursor):
-            content = __read_chunks_iter__(fsg,start,end)
+        elif hasattr(fsg, "get_cursor") and callable(fsg.get_cursor):
+            content = __read_chunks_iter__(fsg, start, end)
         else:
             content = __send_bytes_range_requests__(fsg, start, end, streaming_buffering)
 
@@ -1625,5 +1630,3 @@ async def streaming_async(fsg, request, content_type, streaming_buffering=1024 *
     res.headers.append("Content-Type", content_type)
 
     return res
-
-

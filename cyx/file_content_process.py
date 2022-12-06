@@ -132,7 +132,7 @@ class FileContentProcessService:
                     data_item = upload_item
                 )
 
-        if file_ext.lower() in self.ext_office_file:
+        if file_ext.lower() in self.ext_office_file and file_ext.lower()!="pdf":
             content, info = self.contents_services.get_text(full_file_path)
             upload_item = self.file_services.get_upload_register(
                 app_name=msg.AppName,

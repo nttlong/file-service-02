@@ -1559,7 +1559,7 @@ class __fs_files__:
     length: int
     rel_file_path: str
     filename: str
-    currentChunkIndex:int
+    currentChunkIndex: int
 
 
 @document_define(
@@ -1573,16 +1573,19 @@ class __fs_files_chunks__:
     n: int
     data: bytes
 
-def file_chunk_count(client: pymongo.MongoClient, db_name: str, file_id: bson.ObjectId)->int:
+
+def file_chunk_count(client: pymongo.MongoClient, db_name: str, file_id: bson.ObjectId) -> int:
     if isinstance(file_id, str):
         file_id = bson.ObjectId(file_id)
-    ret =context(client, __fs_files_chunks__)[db_name].count(
+    ret = context(client, __fs_files_chunks__)[db_name].count(
         {
             "files_id": file_id
         }
     )
 
     return ret
+
+
 def file_add_chunk(client: pymongo.MongoClient, db_name: str, file_id: bson.ObjectId, chunk_index: int,
                    chunk_data: bytes):
     if isinstance(file_id, str):
@@ -1597,56 +1600,62 @@ def file_add_chunk(client: pymongo.MongoClient, db_name: str, file_id: bson.Obje
     )
 
     del chunk_data
+
+
 from pymongo import InsertOne
 import pymongo.errors
-def file_add_chunks(client: pymongo.MongoClient, db_name:str, file_id:bson.ObjectId, data:bytes):
 
-        files_context = context(client, __fs_files__)[db_name]
-        fs = files_context.find_one(
+
+def file_add_chunks(client: pymongo.MongoClient, db_name: str, file_id: bson.ObjectId, data: bytes):
+    files_context = context(client, __fs_files__)[db_name]
+    fs = files_context.find_one(
+        {
+            "_id": file_id
+        }
+    )
+    if fs is None:
+        raise pymongo.errors.CursorNotFound("File was not found")
+    # db_context = context(client, __fs_files_chunks__)[db_name]
+    start_chunk_index = fs.get("currentChunkIndex") or 0
+
+    num_of_chunks, m = divmod(data.__len__(), fs.chunkSize)
+    if m > 0: num_of_chunks += 1
+    remain = data.__len__()
+    start = 0
+    requests = []
+    bulk_collection = client.get_database(db_name).get_collection("fs.chunks")
+    t = datetime.datetime.utcnow()
+    for i in range(0, num_of_chunks):
+        end = start + min(fs.chunkSize, remain)
+        remain = remain - fs.chunkSize
+        chunk_data = data[start:end]
+        start = end
+
+        requests += [InsertOne(
             {
-                "_id": file_id
+                "_id": bson.objectid.ObjectId(),
+                "files_id": file_id,
+                "n": start_chunk_index + i,
+                "data": chunk_data
             }
-        )
-        if fs is None:
-            raise pymongo.errors.CursorNotFound("File was not found")
-        # db_context = context(client, __fs_files_chunks__)[db_name]
-        start_chunk_index = fs.get("currentChunkIndex") or 0
+        )]
 
-        num_of_chunks ,m = divmod(data.__len__(),fs.chunkSize)
-        if m>0: num_of_chunks+=1
-        remain = data.__len__()
-        start = 0
-        requests =[]
-        bulk_collection = client.get_database(db_name).get_collection("fs.chunks")
-        t= datetime.datetime.utcnow()
-        for i in range(0,num_of_chunks):
-            end = start+min(fs.chunkSize,remain)
-            remain = remain -fs.chunkSize
-            chunk_data = data[start:end]
-            start=end
+    ret = bulk_collection.bulk_write(
+        requests=requests,
+        ordered=True,
+        bypass_document_validation=True
+    )
 
+    files_context.update(
+        fields._id == file_id,
+        fields.currentChunkIndex << (start_chunk_index + num_of_chunks)
+    )
+    n = (datetime.datetime.utcnow() - t).total_seconds() * 1000
 
-            requests+=[InsertOne(
-                {
-                    "_id": bson.objectid.ObjectId(),
-                    "files_id": file_id,
-                    "n": start_chunk_index + i,
-                    "data": chunk_data
-                }
-            )]
+    print(f"{start_chunk_index} in {n}")
 
-        ret = bulk_collection.bulk_write(requests=requests,ordered=True)
-
-        files_context.update(
-            fields._id==file_id,
-            fields.currentChunkIndex << (start_chunk_index+num_of_chunks)
-        )
-        n=(datetime.datetime.utcnow()-t).total_seconds()*1000
-
-        print(f"{start_chunk_index} in {n}")
 
 def file_get_iter_contents(client, db_name, files_id, from_chunk_index_index, num_of_chunks):
-
     collection = client.get_database(db_name).get_collection("fs.chunks")
     return collection.find({
         "files_id": files_id,
@@ -1658,16 +1667,16 @@ def file_get_iter_contents(client, db_name, files_id, from_chunk_index_index, nu
         limit=num_of_chunks
     ).sort("n", pymongo.ASCENDING)
 
-def create_file(client, db_name: str, file_name: str, content_type: str, file_size: int, chunk_size: int):
 
+def create_file(client, db_name: str, file_name: str, content_type: str, file_size: int, chunk_size: int):
     gfs = gridfs.GridFS(client.get_database(db_name))  # gridfs.GridFSBucket(__client__.get_database(__db_name__))
 
     fs = gfs.new_file()
     fs.name = file_name
     fs.filename = file_name
     fs.close()
-    num_of_chunks,m =divmod(file_size,chunk_size)
-    if m>0: num_of_chunks+=1
+    num_of_chunks, m = divmod(file_size, chunk_size)
+    if m > 0: num_of_chunks += 1
 
     context(client, __fs_files__)[db_name].update(
         fields._id == fs._id,
@@ -1675,17 +1684,21 @@ def create_file(client, db_name: str, file_name: str, content_type: str, file_si
         fields.length << file_size,
         fields.rel_file_path << file_name,
         fields.contentType << content_type,
-        fields.numOfChunks <<num_of_chunks
+        fields.numOfChunks << num_of_chunks
     )
-    ret= gfs.get(fs._id)
+    ret = gfs.get(fs._id)
     return ret
+
+
 def get_file_info_by_id(client, db_name, files_id):
-    if isinstance(files_id,str):
+    if isinstance(files_id, str):
         files_id = bson.ObjectId(files_id)
     ret = context(client, __fs_files__)[db_name].find_one(
         fields._id == files_id
     )
     return ret
+
+
 async def get_file_async(client, db_name: str, file_id):
     from motor.motor_asyncio import AsyncIOMotorClient
     async_client = AsyncIOMotorClient()
@@ -1708,5 +1721,3 @@ async def find_file_async(client, db_name: str, rel_file_path: str):
 
     # ret = gridfs.GridFS(__client__.get_database(__db_name__)).get(file_id)
     return ret
-
-

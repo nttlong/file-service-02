@@ -8,7 +8,7 @@ import cy_xdoc
 import cy_xdoc.services.files
 import cy_xdoc.auths
 
-
+from  cyx.common.base import config
 @cy_web.hanlder(method="get", path="{app_name}/file/{directory:path}")
 async def get_content_of_files(app_name: str, directory: str, request: fastapi.Request):
     mime_type, _ = mimetypes.guess_type(directory)
@@ -48,6 +48,8 @@ async def get_content_of_files(app_name: str, directory: str, request: fastapi.R
         cy_web.cache_content(app_name, directory.replace('/', '_'), content)
         del content
     mime_type, _ = mimetypes.guess_type(directory)
+    if hasattr(fs,"cursor_len"):
+        setattr(fs,"cursor_len",config.content_segment_len)
     ret = await cy_web.cy_web_x.streaming_async(
         fs, request, mime_type,streaming_buffering=1024*4*3*8
     )

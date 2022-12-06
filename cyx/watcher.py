@@ -36,11 +36,12 @@ watcher_log = cy_kit.create_logs(
 
 def run(use_thread=True):
     try:
-        message_service.reset_status(message_type)
+
         while True:
             try:
                 items = message_service.get_message(
-                    message_type='files.upload'
+                    message_type='files.upload',
+                    max_items=1
                 )
                 output = {}
 

@@ -12,6 +12,7 @@
 # python hypercorn_start.py db.host=172.16.7.25 db.port=27018 db.username= db.password= db.authSource= db.authMechanism= admin_db_name=enigma-media
 version: rc.0.0.15
 debug: false
+content_segment_len: 9
 message:
   type: mongodb
   config:

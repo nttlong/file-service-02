@@ -20,7 +20,7 @@ from cyx.common.file_storage import FileStorageService, FileStorageObject
 
 # @cy_kit.must_imlement(FileStorageObject)
 class MongoDbFileStorage:
-    def __init__(self, fs: GridIn,db:pymongo.database.Database,logical_chunk_size:int=None):
+    def __init__(self, fs: GridIn,db:pymongo.database.Database,buffering_len:int=9,logical_chunk_size:int=None):
         if logical_chunk_size is None:
             logical_chunk_size =fs.chunk_size
         self.fs = fs
@@ -32,11 +32,12 @@ class MongoDbFileStorage:
         self.remain = 0
         self.logical_chunk_size = logical_chunk_size
 
+
         self.num_of_chunks, m = divmod(fs.length,fs.chunk_size)
 
         if m>0:
             self.num_of_chunks+=1
-        self.cursor_len = 4
+        self.cursor_len = buffering_len
         self.collection = db.get_collection("fs.chunks")
 
     def get_cursor(self,from_index ,num_of_element,cursor=None):
