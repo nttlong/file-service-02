@@ -17,8 +17,18 @@ from  pymongo.read_preferences import ReadPreference
 from pymongo.read_concern import ReadConcern
 from cyx.common.file_storage import FileStorageService, FileStorageObject
 
-
+import pymongo.errors
 # @cy_kit.must_imlement(FileStorageObject)
+class MongoDbFileReader:
+    def __init__(self,fs_cursor):
+        self.fs_cursor=fs_cursor
+    def next(self)->bytes:
+        try:
+            ret = self.fs_cursor.next()["data"]
+            return ret
+        except StopIteration as e:
+            return b""
+
 class MongoDbFileStorage:
     def __init__(self, fs: GridIn,db:pymongo.database.Database,buffering_len:int=9,logical_chunk_size:int=None):
         if logical_chunk_size is None:
@@ -275,6 +285,21 @@ class MongoDbFileService(Base):
             db_name = self.db_name(app_name),
             files_id=id
         )
+
+    def get_reader_of_file(self, app_name:str,from_chunk, id)->MongoDbFileReader:
+        if isinstance(id,str):
+            id = bson.ObjectId(id)
+        cursor = self.client.get_database(
+            self.db_name(app_name)
+        ).get_collection("fs.chunks").find(
+            {
+                "files_id":id,
+                "n":{
+                    "$gte":from_chunk
+                }
+            }
+        )
+        return MongoDbFileReader(cursor)
 
 
 

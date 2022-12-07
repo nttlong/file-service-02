@@ -540,11 +540,6 @@ def get_local_host_ip():
 def create_logs(logs_dir, name: str) -> logging.Logger:
     import logging
     from logging.handlers import RotatingFileHandler
-
-    logger = logging.getLogger('my_logger')
-    handler = RotatingFileHandler('my_log.log', maxBytes=2000, backupCount=10)
-    logger.addHandler(handler)
-
     full_dir = os.path.abspath(
         os.path.join(
             logs_dir, name
@@ -552,6 +547,12 @@ def create_logs(logs_dir, name: str) -> logging.Logger:
     )
     if not os.path.isdir(full_dir):
         os.makedirs(full_dir, exist_ok=True)
+    logger = logging.getLogger(name)
+    handler = RotatingFileHandler(os.path.join(full_dir, f'{name}.log'), maxBytes=2000, backupCount=10)
+    logger.addHandler(handler)
+
+
+
 
 
     _logs = logging.Logger("name")

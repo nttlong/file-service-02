@@ -1668,7 +1668,7 @@ def file_get_iter_contents(client, db_name, files_id, from_chunk_index_index, nu
     ).sort("n", pymongo.ASCENDING)
 
 
-def create_file(client, db_name: str, file_name: str, content_type: str, file_size: int, chunk_size: int):
+def create_file(client, db_name: str, file_name: str, content_type: str, file_size, chunk_size):
     gfs = gridfs.GridFS(client.get_database(db_name))  # gridfs.GridFSBucket(__client__.get_database(__db_name__))
 
     fs = gfs.new_file()

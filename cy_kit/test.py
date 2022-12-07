@@ -7,7 +7,7 @@ def test(a,b):
 test(1,2).start()
 log = cy_kit_x.create_logs(
     pathlib.Path(__file__).parent.__str__(),
-    "test"
+    "test-001"
 )
 try:
     raise Exception("test")

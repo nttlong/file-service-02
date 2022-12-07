@@ -72,8 +72,7 @@ def run(use_thread=True):
                             handler_service= file_content_process_service,
 
                         )
-                        message_service.delete(x)
-                        os.remove(full_file_path)
+
 
                     except Exception as e:
                         watcher_log.exception(e)

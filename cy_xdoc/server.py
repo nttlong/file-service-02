@@ -10,6 +10,10 @@ import datetime
 import cy_kit
 
 import cy_web
+logger = cy_kit.create_logs(
+    pathlib.Path(__file__).parent.parent.__str__(),
+    "web"
+)
 print(config)
 cy_web.create_web_app(
     working_dir=pathlib.Path(__file__).parent.__str__(),
@@ -25,13 +29,18 @@ import asyncio
 cy_web.add_cors(["*"])
 @cy_web.middleware()
 async def estimate_time(request:fastapi.Request,next):
-    start_time= datetime.datetime.utcnow()
-    res = await next(request)
-    end_time = datetime.datetime.utcnow()
-    res.headers["time:start"] = start_time.strftime("%H:%M:%S")
-    res.headers["time:end"] = end_time.strftime("%H:%M:%S")
-    res.headers["time:total(second)"] = (end_time-start_time).total_seconds().__str__()
-    res.headers["Server-Timing"] =f"total;dur={(end_time - start_time).total_seconds()*1000}"
+    try:
+        start_time= datetime.datetime.utcnow()
+        res = await next(request)
+        end_time = datetime.datetime.utcnow()
+        res.headers["time:start"] = start_time.strftime("%H:%M:%S")
+        res.headers["time:end"] = end_time.strftime("%H:%M:%S")
+        res.headers["time:total(second)"] = (end_time-start_time).total_seconds().__str__()
+        res.headers["Server-Timing"] =f"total;dur={(end_time - start_time).total_seconds()*1000}"
+    except Exception as e:
+        logger.exception(e)
+        raise  e
+
     """HTTP/1.1 200 OK
 
 Server-Timing: miss, db;dur=53, app;dur=47.2"""

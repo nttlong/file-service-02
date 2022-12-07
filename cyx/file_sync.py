@@ -1,6 +1,7 @@
 import datetime
 import os.path
 import pathlib
+import shutil
 import threading
 import time
 
@@ -46,6 +47,11 @@ class FilesSync:
             return
         file_ext = upload_item.FileExt
         full_file_path = os.path.join(self.file_dir, f"{upload_id}.{file_ext}")
+        log_dir = os.path.join(self.file_dir,"logs",pathlib.Path(full_file_path).stem)
+        log_sync_file = cy_kit.create_logs(
+            log_dir,
+            name="log-info"
+        )
         if os.path.isfile(full_file_path):
             return full_file_path
         file_id = upload_item.MainFileId
@@ -53,55 +59,69 @@ class FilesSync:
             app_name=item.AppName,
             id=file_id
         )
-        num_of_chunks = upload_item.NumOfChunks
-        if file_info and  file_info.get("numOfChunks"):
-            num_of_chunks = file_info.numOfChunks
+        sync_chunks = 0
+
+        num_of_chunks = file_info.numOfChunks
+        log_sync_file.info(
+            f"start_sync at {datetime.datetime.utcnow()}"
+        )
+        timeout_in_seconds = 0
+        while sync_chunks<num_of_chunks:
+            try:
+                reader = self.file_storage_service.get_reader_of_file(
+                    app_name=item.AppName,
+                    id=file_info.id,
+                    from_chunk=sync_chunks
+                )
+                t = datetime.datetime.utcnow()
+                chunk_data = reader.next()
+                while chunk_data.__len__()>0:
+                    try:
+                        if not os.path.isfile(full_file_path):
+                            with open(full_file_path, "wb") as f:
+                                f.write(chunk_data)
+
+                        else:
+                            with open(full_file_path, "ab") as f:
+                                f.write(chunk_data)
+
+                        n = (datetime.datetime.utcnow()-t).total_seconds()*1000
+                        log_sync_file.info(
+                            f"sync chunks {sync_chunks} size {chunk_data.__len__()} in {n} ms"
+                        )
+                        del chunk_data
+                        t = datetime.datetime.utcnow()
+                        chunk_data = reader.next()
+                        sync_chunks +=1
+
+                    except Exception as e:
+                        log_sync_file.info(
+                            f"sync chunks {sync_chunks} is error"
+                        )
+                        log_sync_file.exception(e)
+            except Exception as e:
+                log_sync_file.info(
+                    f"sync chunks {sync_chunks} is error"
+                )
+                log_sync_file.exception(e)
+                return None
 
 
 
-        current_chunk_index = 0
+            time.sleep(0.5)
+            timeout_in_seconds+=0.5
+            if timeout_in_seconds>3*60*60:
+                log_sync_file.info(
+                    f"sync chunks {sync_chunks} is timeout"
+                )
+                return None
+        shutil.rmtree(log_dir)
+        return full_file_path
 
 
-        start_time = datetime.datetime.utcnow()
 
-        self.logs.info(f"start sync file {full_file_path} at {datetime.datetime.utcnow()}")
 
-        try:
-            timeout_count = 0
-            _file_id = file_id
-            if isinstance(file_id, str):
-                _file_id = bson.ObjectId(file_id)
-            chunk_context = self.db_connect.db(app_name=item.AppName).doc(FsChunks)
-            while current_chunk_index < num_of_chunks:
-                chunk = chunk_context.context @ ((chunk_context.fields.files_id == _file_id) & (
-                            chunk_context.fields.n == current_chunk_index))
 
-                if timeout_count > 1000:
-                    self.logs.info(f"sync file {full_file_path} fail, timeout {timeout_count / 2} senconds")
-                    os.remove(full_file_path)
-
-                    return
-                if chunk is None:
-                    time.sleep(0.5)
-                    timeout_count += 1
-
-                else:
-                    data = chunk.data
-                    if not os.path.isfile(full_file_path):
-                        with open(full_file_path, "wb") as f:
-                            f.write(data)
-                        del data
-                    else:
-                        with open(full_file_path, "ab") as f:
-                            f.write(data)
-                        del data
-                    current_chunk_index += 1
-                time.sleep(0.001)
-            total_seconds = (datetime.datetime.utcnow() - start_time).total_seconds()
-            self.logs.info(f"sync file {full_file_path} complete in {total_seconds} second")
-            return full_file_path
-        except Exception as e:
-            self.logs.exception(e)
 
     def sync_file_in_thread(self, item: MessageInfo, handler_service, output: dict, use_thread = True):
         output = dict()
@@ -110,7 +130,8 @@ class FilesSync:
             try:
                 full_file_path = self.sync_file(item)
                 handler_service.resolve(item,full_file_path)
-
+                self.message_service.delete(item)
+                os.remove(full_file_path)
 
 
             except Exception as e:

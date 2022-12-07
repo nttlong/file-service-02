@@ -1359,7 +1359,7 @@ from fastapi.responses import StreamingResponse, FileResponse
 import mimetypes
 
 
-def __get_range_header__(range_header: str, file_size: int):
+def __get_range_header__(range_header: str, file_size):
     def _invalid_range():
         return HTTPException(
             status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE,
@@ -1532,7 +1532,7 @@ class AsyncStreamingResponse(Response):
 def __read_chunks_iter__(gfs, start: int, end: int):
     segment_len = gfs.cursor_len
     chunk_index, remain = divmod(start, gfs.chunk_size)
-    segment_run = 1
+    segment_run = segment_len
     cursor = gfs.get_cursor(chunk_index, segment_run)
     size_read = 0
 
