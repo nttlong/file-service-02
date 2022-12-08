@@ -20,6 +20,7 @@ class SysMessage:
     IsLock: bool
     InstancesLock: dict
     RunInsLock: str
+    LockedBy: dict
 
 @cy_docs.define(
     name="fs.files",

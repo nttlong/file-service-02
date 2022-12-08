@@ -39,7 +39,7 @@ class FilesSync:
             f"start service {FilesSync.__name__}"
         )
 
-    def sync_file(self, item: MessageInfo):
+    def sync_file(self, item: MessageInfo,delete_if_exist=False):
         upload_id = item.Data.get("_id")
         upload_item = cy_docs.DocumentObject(item.Data)
 
@@ -47,6 +47,9 @@ class FilesSync:
             return
         file_ext = upload_item.FileExt
         full_file_path = os.path.join(self.file_dir, f"{upload_id}.{file_ext}")
+        if delete_if_exist:
+            if os.path.isfile(full_file_path):
+                os.remove(full_file_path)
         log_dir = os.path.join(self.file_dir,"logs",pathlib.Path(full_file_path).stem)
         log_sync_file = cy_kit.create_logs(
             log_dir,
@@ -104,6 +107,7 @@ class FilesSync:
                     f"sync chunks {sync_chunks} is error"
                 )
                 log_sync_file.exception(e)
+                self.message_service.delete(item)
                 return None
 
 
@@ -128,15 +132,14 @@ class FilesSync:
         def run(_output: dict):
             _output = {}
             try:
-                full_file_path = self.sync_file(item)
+                full_file_path = self.sync_file(item,delete_if_exist=True)
                 handler_service.resolve(item,full_file_path)
                 self.message_service.delete(item)
                 os.remove(full_file_path)
-
-
             except Exception as e:
                 output["error"] =e
                 self.logs.exception(e)
+                self.message_service.delete(item)
 
         if use_thread:
             th_run = threading.Thread(target=run, args=(output,)).start()

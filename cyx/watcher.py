@@ -86,7 +86,9 @@ def run(use_thread=True):
                 else:
                     for x in items:
                         run(x)
-                time.sleep(0.05)
+                        print(x.AppName)
+                        print(x.Data)
+                time.sleep(0.07)
             except Exception as e:
                 watcher_log.exception(e)
     except Exception as e:

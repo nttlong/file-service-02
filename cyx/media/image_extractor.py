@@ -73,6 +73,7 @@ class ImageExtractorService:
             return thumb_file_path
         except Exception as e:
             self.logs.exception(e)
+            raise e
 
     def convert_to_pdf(self, file_path):
         pdf_file = os.path.join(

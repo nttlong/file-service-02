@@ -55,10 +55,11 @@ class MessageServiceMongodb:
 
         doc_context = self.db_connect.db('admin').doc(SysMessage)
         filter = doc_context.fields.MsgType==message_type
-        filter_1 = cy_docs.not_exists(doc_context.fields.RunInsLock)|(doc_context.fields.RunInsLock!=self.instance_id)
+        filter_not_exist_locked = cy_docs.not_exists(doc_context.fields.LockedBy)
+        filter_not_is_lock = getattr(doc_context.fields.LockedBy,self.instance_id)==False
 
-        filter_2 = (doc_context.fields.IsLock == False)|cy_docs.not_exists(doc_context.fields.IsLock)
-        filter=filter & (filter_2 | filter_1)
+
+        filter=filter & (filter_not_exist_locked | filter_not_is_lock)
         ret_list = doc_context.context.aggregate().match(
             filter=filter
         ).sort(
@@ -73,11 +74,12 @@ class MessageServiceMongodb:
             fx.AppName = x.AppName
             fx.CreatedOn = x.CreatedOn
             fx.Id = x.MsgId
+            self.lock(fx)
             ret += [fx]
-            doc_context.context.update(
-                doc_context.fields.MsgId == x.MsgId,
-                doc_context.fields.RunInsLock << self.instance_id
-            )
+            # doc_context.context.update(
+            #     doc_context.fields.MsgId == x.MsgId,
+            #     doc_context.fields.IsLock <<True
+            # )
 
 
         return ret
@@ -89,14 +91,18 @@ class MessageServiceMongodb:
         docs = self.db_connect.db('admin').doc(SysMessage)
         docs.context.update(
             docs.fields.MsgId == item.Id,
-            docs.fields.IsLock << False
+            docs.fields.LockedBy << {
+                self.instance_id: False
+            }
         )
 
     def lock(self,  item:MessageInfo):
         docs = self.db_connect.db('admin').doc(SysMessage)
         docs.context.update(
             docs.fields.MsgId == item.Id,
-            docs.fields.IsLock << True
+            docs.fields.LockedBy<<{
+                self.instance_id:True
+            }
         )
 
     def is_lock(self,  item:MessageInfo):
@@ -104,8 +110,14 @@ class MessageServiceMongodb:
         item = docs.context @ (docs.fields.MsgId==item.Id)
         if not item:
             return False
+        elif item.get("LockedBy") is None:
+            return False
         else:
-            return item.IsLock == True
+            keys = item.LockedBy.keys()
+            if keys.__len__()>0:
+                return self.instance_id not in item.LockedBy.keys()
+            else:
+                return False
 
     def delete(self, item:MessageInfo):
 
