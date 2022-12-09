@@ -26,6 +26,7 @@ import threading
 import motor
 import pydantic
 from motor.motor_asyncio import AsyncIOMotorGridFSBucket
+from pydantic.validators import datetime
 
 
 def get_version() -> str:
@@ -1657,15 +1658,18 @@ def file_add_chunks(client: pymongo.MongoClient, db_name: str, file_id: bson.Obj
 
 def file_get_iter_contents(client, db_name, files_id, from_chunk_index_index, num_of_chunks):
     collection = client.get_database(db_name).get_collection("fs.chunks")
-    return collection.find({
+    ret = collection.find({
         "files_id": files_id,
         "n": {
-            "$gte": from_chunk_index_index
+            "$gte": from_chunk_index_index,
+
         }
     },
 
         limit=num_of_chunks
     ).sort("n", pymongo.ASCENDING)
+
+    return ret
 
 
 def create_file(client, db_name: str, file_name: str, content_type: str, file_size, chunk_size):

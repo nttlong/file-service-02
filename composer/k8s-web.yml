@@ -1,0 +1,67 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: xdoc-web
+  labels:
+    name: xdoc-web
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: xdoc-api
+  namespace: xdoc-web
+spec:
+  selector:
+    app: xdoc-api
+#  portForward:
+#    - protocol: "TCP"
+#      port: 8011
+#      localPort: 9000
+  ports:
+    - protocol: "TCP"
+      port: 80
+#      targetPort: 8080
+      name: xdoc-api
+#      nodePort: 30000
+  type: LoadBalancer
+#  type: NodePort
+  loadBalancerIP: 172.16.7.241
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: xdoc-api
+  name: xdoc-api
+  namespace: xdoc-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xdoc-api
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: xdoc-api
+    spec:
+      containers:
+        - args:
+            - python3
+            - /app/cy_xdoc/server.py
+            - bind=0.0.0.0:8012
+            - content_segment_len=9
+            - host_url=http://172.16.7.94:8012
+            - elastic_search.server=http://192.168.18.36:9200
+            - elastic_search.prefix_index=lv-codx
+            - db.host=192.168.18.36
+            - db.port=27018
+          image: nttlong/lv-file:rc.0.5.2
+          name: xdoc-web
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8012
+          resources: { }

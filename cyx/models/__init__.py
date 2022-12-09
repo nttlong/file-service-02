@@ -21,6 +21,7 @@ class SysMessage:
     InstancesLock: dict
     RunInsLock: str
     LockedBy: dict
+    UnlockCount:int
 
 @cy_docs.define(
     name="fs.files",

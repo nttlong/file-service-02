@@ -39,20 +39,20 @@ metadata:
   labels:
     app: xdoc-web
 spec:
-  hostNetwork: true
+  hostNetwork: true # Su dung hostNetwork thi ports.containerPrt va hostPort phai giong nhau
   containers:
     - args:
         - python3
         - /app/cy_xdoc/server.py
         - bind=0.0.0.0:8012
         - content_segment_len=9
-        - host_url=http://172.16.7.92:8012
-        - elastic_search.server=http://192.168.18.36:9200,
+        - host_url=http://172.16.7.94:8012
+        - elastic_search.server=http://192.168.18.36:9200
         - elastic_search.prefix_index=lv-codx
         - db.host=192.168.18.36
         - db.port=27018
-      image: nttlong/lv-file:rc.0.4.9
-      name: file-services-api
+      image: nttlong/lv-file:rc.0.5.2
+      name: xdoc-web
       imagePullPolicy: Always
       ports:
         - containerPort: 8012

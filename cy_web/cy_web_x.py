@@ -1532,7 +1532,7 @@ class AsyncStreamingResponse(Response):
 def __read_chunks_iter__(gfs, start: int, end: int):
     segment_len = gfs.cursor_len
     chunk_index, remain = divmod(start, gfs.chunk_size)
-    segment_run = segment_len
+    segment_run =segment_len
     cursor = gfs.get_cursor(chunk_index, segment_run)
     size_read = 0
 
@@ -1541,18 +1541,20 @@ def __read_chunks_iter__(gfs, start: int, end: int):
         total += 1
     while size_read < (end - start):
         try:
+            t = datetime.utcnow()
             data = cursor.next()["data"]
+            n=(datetime.utcnow()-t).total_seconds()*1000
+            print(f"start {start} {end} {n}")
             if size_read == 0 and remain > 0:
                 data = data[remain:]
 
             if size_read + data.__len__() > end - start + 1:
                 data = data[:end - size_read]
             size_read += data.__len__()
-            time.sleep(0.000001)
+            # time.sleep(0.000001)
             yield data
 
         except StopIteration as e:
-
             chunk_index += segment_run
             segment_run = segment_len
             cursor.close()

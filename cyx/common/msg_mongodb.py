@@ -3,7 +3,7 @@ import uuid
 
 import cy_docs
 import cy_kit
-from cyx.common.msg import MessageService,MessageInfo
+from cyx.common.msg import MessageService, MessageInfo
 from typing import List
 from cyx.common.base import Base
 from cyx.models import SysMessage
@@ -12,12 +12,13 @@ import os
 import re
 import cyx.common.base
 
+
 @cy_kit.must_imlement(MessageService)
 class MessageServiceMongodb:
     def __init__(self,
                  db_connect=cy_kit.inject(cyx.common.base.DbConnect)
                  ):
-        self.db_connect:cyx.common.base.DbConnect =db_connect
+        self.db_connect: cyx.common.base.DbConnect = db_connect
         self.instance_id = str(uuid.uuid4())
         self.working_dir = pathlib.Path(__file__).parent.parent.parent.__str__()
         self.lock_dir = os.path.join(self.working_dir, "background_service_files", "msg_lock")
@@ -40,12 +41,12 @@ class MessageServiceMongodb:
     def emit(self, app_name: str, message_type: str, data: dict):
         doc_context = self.db_connect.db('admin').doc(SysMessage)
         doc_context.context.insert_one(
-            doc_context.fields.Data <<data,
-            doc_context.fields.MsgType <<message_type,
-            doc_context.fields.CreatedOn <<datetime.datetime.utcnow(),
-            doc_context.fields.MsgId <<str(uuid.uuid4()),
+            doc_context.fields.Data << data,
+            doc_context.fields.MsgType << message_type,
+            doc_context.fields.CreatedOn << datetime.datetime.utcnow(),
+            doc_context.fields.MsgId << str(uuid.uuid4()),
             doc_context.fields.IsLock << False,
-            doc_context.fields.AppName <<app_name,
+            doc_context.fields.AppName << app_name,
             doc_context.fields.InstancesLock << {
                 self.instance_id: True
             }
@@ -54,16 +55,15 @@ class MessageServiceMongodb:
     def get_message(self, message_type: str, max_items: int = 1000) -> List[MessageInfo]:
 
         doc_context = self.db_connect.db('admin').doc(SysMessage)
-        filter = doc_context.fields.MsgType==message_type
+        filter = doc_context.fields.MsgType == message_type
         filter_not_exist_locked = cy_docs.not_exists(doc_context.fields.LockedBy)
-        filter_not_is_lock = getattr(doc_context.fields.LockedBy,self.instance_id)==False
+        filter_not_is_lock = getattr(doc_context.fields.LockedBy, self.instance_id) == False
 
-
-        filter=filter & (filter_not_exist_locked | filter_not_is_lock)
+        filter = filter & (filter_not_exist_locked | filter_not_is_lock)
         ret_list = doc_context.context.aggregate().match(
             filter=filter
         ).sort(
-           doc_context.fields.CreatedOn.asc()
+            doc_context.fields.CreatedOn.asc()
         ).limit(max_items)
 
         ret = []
@@ -81,49 +81,53 @@ class MessageServiceMongodb:
             #     doc_context.fields.IsLock <<True
             # )
 
-
         return ret
 
-    def unlock(self, item: MessageInfo):
+    def unlock(self, item: MessageInfo, limit_unlock_count=10):
         """
         somehow to implement thy source here ...
         """
         docs = self.db_connect.db('admin').doc(SysMessage)
+        unlock_count = item.get("UnlockCount") or 0
+        if unlock_count>limit_unlock_count:
+            self.delete(item)
+        else:
+            docs.context.update(
+                docs.fields.MsgId == item.Id,
+                docs.fields.LockedBy << {
+                    self.instance_id: False
+                },
+                docs.fields.UnlockCount<< (unlock_count+1)
+            )
+
+    def lock(self, item: MessageInfo):
+        docs = self.db_connect.db('admin').doc(SysMessage)
         docs.context.update(
             docs.fields.MsgId == item.Id,
             docs.fields.LockedBy << {
-                self.instance_id: False
+                self.instance_id: True
             }
         )
 
-    def lock(self,  item:MessageInfo):
+    def is_lock(self, item: MessageInfo):
         docs = self.db_connect.db('admin').doc(SysMessage)
-        docs.context.update(
-            docs.fields.MsgId == item.Id,
-            docs.fields.LockedBy<<{
-                self.instance_id:True
-            }
-        )
-
-    def is_lock(self,  item:MessageInfo):
-        docs = self.db_connect.db('admin').doc(SysMessage)
-        item = docs.context @ (docs.fields.MsgId==item.Id)
+        item = docs.context @ (docs.fields.MsgId == item.Id)
         if not item:
             return False
         elif item.get("LockedBy") is None:
             return False
         else:
             keys = item.LockedBy.keys()
-            if keys.__len__()>0:
+            if keys.__len__() > 0:
                 return self.instance_id not in item.LockedBy.keys()
             else:
                 return False
 
-    def delete(self, item:MessageInfo):
+    def delete(self, item: MessageInfo):
 
         docs = self.db_connect.db('admin').doc(SysMessage)
         docs.context.delete(
-            docs.fields.MsgId ==item.Id
+            docs.fields.MsgId == item.Id
         )
 
     def reset_status(self, message_type: str):

@@ -132,14 +132,17 @@ class FilesSync:
         def run(_output: dict):
             _output = {}
             try:
-                full_file_path = self.sync_file(item,delete_if_exist=True)
+                full_file_path = self.sync_file(item)
                 handler_service.resolve(item,full_file_path)
                 self.message_service.delete(item)
                 os.remove(full_file_path)
             except Exception as e:
                 output["error"] =e
                 self.logs.exception(e)
-                self.message_service.delete(item)
+                self.message_service.unlock(item)
+                if os.path.isfile(full_file_path):
+                    os.remove(full_file_path)
+
 
         if use_thread:
             th_run = threading.Thread(target=run, args=(output,)).start()
