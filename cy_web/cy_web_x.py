@@ -929,9 +929,15 @@ class WebApp(BaseWebApp):
         if remain.split('/')[0].split(':').__len__() == 2:
             self.host_port = int(remain.split('/')[0].split(':')[1])
             remain = remain[self.host_name.__len__() + str(self.host_port).__len__() + 1:]
+        else:
+            remain = remain[self.host_name.__len__() + 1:]
+
+
         self.host_dir = None
         if remain != "":
             self.host_dir = remain
+        if not self.host_dir.startswith('/'):
+            self.host_dir= '/'+ self.api_host_dir
 
         if self.static_dir is not None:
             from fastapi.staticfiles import StaticFiles
