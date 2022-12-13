@@ -73,8 +73,8 @@ class FilesSync:
         )
         timeout_in_seconds = 0
         fail_count =0
-        delay_insecond_if_fail = 5
-        max_fail_count, _ =divmod(3600,delay_insecond_if_fail)
+        delay_insecond_if_fail = 0.5
+        max_fail_count, _ =divmod(30,delay_insecond_if_fail)
         while sync_chunks<num_of_chunks:
             try:
                 reader = self.file_storage_service.get_reader_of_file(
@@ -84,6 +84,22 @@ class FilesSync:
                 )
                 t = datetime.datetime.utcnow()
                 chunk_data = reader.next()
+                if chunk_data.__len__() ==0:
+                    if isinstance(item.Data.get("RegisterOn"),datetime.datetime):
+                        fx = (datetime.datetime.utcnow() - item.Data["RegisterOn"])
+                        if fx>4*60*60:
+                            self.message_service.delete(item)
+                            return None
+                    time.sleep(delay_insecond_if_fail)
+                    fail_count = fail_count + 1
+                    print(f"sync file {item.AppName} {item.Data.get('FullFileNameLower')} {fail_count}")
+                    if fail_count > max_fail_count:
+                        log_sync_file.info(
+                            f"sync chunks {sync_chunks} is error"
+                        )
+                        log_sync_file.exception(e)
+                        self.message_service.delete(item)
+                        return None
                 while chunk_data.__len__()>0:
                     try:
                         if not os.path.isfile(full_file_path):
@@ -143,7 +159,7 @@ class FilesSync:
 
             time.sleep(0.5)
             timeout_in_seconds+=0.5
-            if timeout_in_seconds>3*60*60:
+            if timeout_in_seconds>3*60:
                 log_sync_file.info(
                     f"sync chunks {sync_chunks} is timeout"
                 )
