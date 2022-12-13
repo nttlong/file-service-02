@@ -35,6 +35,7 @@ class FileContentProcessService:
         self.ext_office_file = self.config.ext_office_file
 
     def resolve(self, msg: MessageInfo, full_file_path: str):
+        if full_file_path is None: return
         mime_type, _ = mimetypes.guess_type(full_file_path)
         file_ext = os.path.splitext(full_file_path)[1][1:]
         file_name_only = pathlib.Path(full_file_path).stem

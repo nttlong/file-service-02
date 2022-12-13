@@ -62,6 +62,9 @@ class FilesSync:
             app_name=item.AppName,
             id=file_id
         )
+        if file_info is None:
+            self.message_service.delete(item)
+            return None
         sync_chunks = 0
 
         num_of_chunks = file_info.numOfChunks
@@ -69,6 +72,9 @@ class FilesSync:
             f"start_sync at {datetime.datetime.utcnow()}"
         )
         timeout_in_seconds = 0
+        fail_count =0
+        delay_insecond_if_fail = 5
+        max_fail_count, _ =divmod(3600,delay_insecond_if_fail)
         while sync_chunks<num_of_chunks:
             try:
                 reader = self.file_storage_service.get_reader_of_file(
@@ -96,12 +102,35 @@ class FilesSync:
                         t = datetime.datetime.utcnow()
                         chunk_data = reader.next()
                         sync_chunks +=1
+                    except TimeoutError as e:
+                        time.sleep(delay_insecond_if_fail)
+                        fail_count = fail_count + 1
+                        if fail_count > max_fail_count:
+                            log_sync_file.info(
+                                f"sync chunks {sync_chunks} is error"
+                            )
+                            log_sync_file.exception(e)
+                            self.message_service.delete(item)
+                            return None
 
                     except Exception as e:
                         log_sync_file.info(
                             f"sync chunks {sync_chunks} is error"
                         )
                         log_sync_file.exception(e)
+                        time.sleep(delay_insecond_if_fail)
+                        chunk_data = reader.next()
+            except TimeoutError as e:
+                time.sleep(delay_insecond_if_fail)
+                fail_count =fail_count+1
+                if fail_count>max_fail_count:
+                    log_sync_file.info(
+                        f"sync chunks {sync_chunks} is error"
+                    )
+                    log_sync_file.exception(e)
+                    self.message_service.delete(item)
+                    return None
+
             except Exception as e:
                 log_sync_file.info(
                     f"sync chunks {sync_chunks} is error"
