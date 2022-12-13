@@ -810,7 +810,8 @@ class BaseWebApp:
                                         f"Error msg\n"
                                         f"\t{e}")
                 else:
-
+                    while "//" in _path:
+                        _path = _path.replace("//","/")
                     getattr(self.app, v.method)(_path)(v.handler)
                 self.request_handlers[v.path] = v
         if __cy_web_has_load_controller__:
@@ -936,9 +937,10 @@ class WebApp(BaseWebApp):
         self.host_dir = None
         if remain != "":
             self.host_dir = remain
-        if not self.host_dir.startswith('/'):
-            self.host_dir= '/'+ self.api_host_dir
-
+        if self.host_dir and not self.host_dir.startswith('/'):
+            self.host_dir= '/'+ self.host_dir
+        while self.host_dir  and "//" in self.host_dir:
+            self.host_dir = self.host_dir.replace('//','/')
         if self.static_dir is not None:
             from fastapi.staticfiles import StaticFiles
             if self.host_dir is not None and self.host_dir != "":
@@ -963,7 +965,7 @@ class WebApp(BaseWebApp):
             self.load_controller_from_dir(x)
         if self.host_dir is not None and self.host_dir != "":
             self.url_get_token = self.host_dir + "/" + self.url_get_token
-
+        self.url_get_token = self.url_get_token.lstrip('/')
         self.app.post("/" + self.url_get_token)(login_for_access_token)
 
     def gunicorn_start(self, start_path):
