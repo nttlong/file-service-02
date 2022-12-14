@@ -44,19 +44,19 @@ spec:
     - args:
         - python3
         - /app/cy_xdoc/server.py
-        - bind=0.0.0.0:8012
+        - bind=0.0.0.0:8011
         - content_segment_len=9
-        - host_url=http://172.16.7.94:8012
+        - host_url=http://172.16.7.92:8011
         - elastic_search.server=http://192.168.18.36:9200
         - elastic_search.prefix_index=lv-codx
         - db.host=192.168.18.36
         - db.port=27018
-      image: nttlong/lv-file:rc.0.5.2
+      image: nttlong/lv-file:rc.0.6.0
       name: xdoc-web
       imagePullPolicy: Always
       ports:
-        - containerPort: 8012
-          hostPort: 8012
+        - containerPort: 8011
+          hostPort: 8011
       resources: { }
 
 

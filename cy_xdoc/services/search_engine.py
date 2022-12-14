@@ -1,4 +1,5 @@
 import pathlib
+import typing
 
 import elasticsearch
 
@@ -53,7 +54,8 @@ class SearchEngine:
                          page_size: int,
                          page_index: int,
                          highlight: bool,
-                         privileges:dict):
+                         privileges:dict,
+                         sort:typing.List[str]=["data_item.RegisterOn:desc"]):
 
         search_expr = cy_es.buiders.mark_delete == False
         if privileges is not None and privileges != {}:
@@ -85,7 +87,8 @@ class SearchEngine:
             index=self.get_index(app_name),
             highlight=highlight_expr,
             filter=search_expr,
-            skip=skip
+            skip=skip,
+            sort = sort
 
         )
         return ret

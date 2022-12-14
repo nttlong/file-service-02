@@ -17,7 +17,8 @@ def search(client: Elasticsearch,
            excludes: typing.List[DocumentFields] = [],
            skip: int = 0,
            limit: int = 50,
-           highlight: DocumentFields = None):
+           highlight: DocumentFields = None,
+           sort=None):
     return cy_es_x.search(
         client=client,
         index=index,
@@ -25,7 +26,8 @@ def search(client: Elasticsearch,
         skip=skip,
         limit=limit,
         highlight=highlight,
-        filter=filter
+        filter=filter,
+        sort = sort
     )
 
 

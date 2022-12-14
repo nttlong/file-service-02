@@ -335,7 +335,8 @@ def search(client: Elasticsearch,
            excludes: typing.List[DocumentFields] = [],
            skip: int = 0,
            limit: int = 50,
-           highlight: DocumentFields = None) -> SearchResult:
+           highlight: DocumentFields = None,
+           sort=None) -> SearchResult:
     if isinstance(filter, dict):
         body = dict(query=filter)
 
@@ -365,7 +366,18 @@ def search(client: Elasticsearch,
             }
         }
         body["highlight"] = __highlight
-    ret = client.search(index=index, doc_type="_doc", body=body)
+    _sort="_score:desc,"
+    if sort is not None:
+        if isinstance(sort,list):
+            for x in sort:
+                if isinstance(x,DocumentFields):
+                    _sort += x.__get_expr__() +","
+                elif isinstance(x,str):
+                    _sort += x + ","
+
+
+    _sort = _sort[:-1]
+    ret = client.search(index=index, doc_type="_doc", body=body, sort=_sort)
     return SearchResult(ret)
 
 
