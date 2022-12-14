@@ -328,7 +328,18 @@ class SearchResult(dict):
         for x in self.hits.hits:
             yield ESDocumentObject(x)
 
-
+def get_docs(client:Elasticsearch, index:str, doc_type:str ="_doc",limit=100):
+    res = client.search(index=index, doc_type="_doc", body={
+        'size': limit,
+        'query': {
+            'match_all': {}
+        }
+    })
+    if res.get("hits"):
+        if res["hits"].get("hits"):
+            for x in res["hits"]["hits"]:
+                yield ESDocumentObject(x)
+    return []
 def search(client: Elasticsearch,
            index: str,
            filter,
@@ -642,3 +653,5 @@ def create_filter_from_dict(expr: dict, owner_caller=None):
 
 def is_exist(client: Elasticsearch, index: str, id: str, doc_type: str = "_doc") -> bool:
     return client.exists(index=index, id=id, doc_type=doc_type)
+
+

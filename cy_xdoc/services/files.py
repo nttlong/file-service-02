@@ -195,12 +195,12 @@ class FileServices:
             UploadId=id,
             ServerFilePath=f"{id}{os.path.splitext(server_file_name_only)[1]}",
             MimeType=mime_type,
-            RelUrlOfServerPath=f"api/{app_name}/file/{id}/{pathlib.Path(server_file_name_only).stem.lower()}",
+            RelUrlOfServerPath=f"api/{app_name}/file/{id}/{pathlib.Path(server_file_name_only).name.lower()}",
             SizeInHumanReadable=humanize.filesize.naturalsize(file_size),
-            UrlOfServerPath=f"{web_host_root_url}/api/{app_name}/file/{id}/{pathlib.Path(server_file_name_only).stem.lower()}",
-            RelUrlThumb=f"api/{app_name}/thumb/{id}/{pathlib.Path(server_file_name_only).stem.lower()}.webp",
+            UrlOfServerPath=f"{web_host_root_url}/api/{app_name}/file/{id}/{pathlib.Path(server_file_name_only).name.lower()}",
+            RelUrlThumb=f"api/{app_name}/thumb/{id}/{pathlib.Path(server_file_name_only).name.lower()}.webp",
             FileSize=file_size,
-            UrlThumb=f"{web_host_root_url}/api/{app_name}/thumb/{id}/{pathlib.Path(server_file_name_only).stem.lower()}.webp",
+            UrlThumb=f"{web_host_root_url}/api/{app_name}/thumb/{id}/{pathlib.Path(server_file_name_only).name.lower()}.webp",
             OriginalFileName=client_file_name
         )
 

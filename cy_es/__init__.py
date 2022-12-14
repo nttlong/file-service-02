@@ -78,3 +78,11 @@ def is_exist(client:Elasticsearch, index:str, id:str,doc_type:str ="_doc")->bool
         id=id,
         doc_type=doc_type
     )
+
+
+def get_docs(client:Elasticsearch, index:str, doc_type:str ="_doc"):
+    return cy_es_x.get_docs(
+        client=client,
+        index = index,
+        doc_type = doc_type
+    )
