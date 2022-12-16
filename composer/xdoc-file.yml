@@ -11,7 +11,7 @@ services:
 #      dockerfile: ./composer/files-dockerfile
 #  restart: on-failure
   xdoc-file-1:
-    image: nttlong/lv-file:rc.0.6.5
+    image: nttlong/lv-file:rc.0.7.0
     container_name: xdoc-file-1
     volumes:
       - ${MAP}/xdoc-file-1:/app/background_service_files

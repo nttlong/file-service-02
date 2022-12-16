@@ -169,7 +169,7 @@ class PDFService:
                         deskew= True,
 
                         jobs=50,
-                        optimize=3,
+                        # optimize=3,
                         keep_temporary_files=False
                     )
                     if os.path.isfile(output_ocr):
@@ -205,7 +205,7 @@ class PDFService:
             ocrmypdf.ocr(
                 input_file= pdf_file,
                 output_file=out_put_file_path,
-                progress_bar=True,
+                progress_bar=False,
                 language="vie+eng",
                 use_threads=False,
                 skip_text=False,
@@ -213,7 +213,7 @@ class PDFService:
                 deskew=True,
 
                 jobs=50,
-                optimize=3,
+                # optimize=3,
                 keep_temporary_files=False
             )
             return out_put_file_path
