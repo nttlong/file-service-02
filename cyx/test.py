@@ -12,8 +12,9 @@ r3=f"/home/vmadmin/python/v6/file-service-02/test-res/image_2.pdf"
 r4="/home/vmadmin/python/v6/file-service-02/test-res/Image_2.png"
 r5=f"/home/vmadmin/python/v6/file-service-02/test-res/tailieu2.pdf"
 r6=f"/home/vmadmin/python/v6/file-service-02/test-res/test001.pdf"
+r7="/home/vmadmin/python/v6/file-service-02/test-res/test004.pdf"
 # pdf_file = img.convert_to_pdf(r5)
-ret=  svc.ocr(r6)
+ret=  svc.ocr(r7)
 print(ret)
 fx = svc.get_text(ret)
 print(fx)

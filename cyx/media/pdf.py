@@ -7,8 +7,8 @@ import pdfplumber
 import fitz
 import glob
 import ocrmypdf
-
-
+from PyPDF2 import PdfFileWriter, PdfFileReader, PdfMerger
+import PyPDF2.errors
 class PDFService:
     def __init__(self):
         self.processing_folder = os.path.abspath(
@@ -137,69 +137,87 @@ class PDFService:
         split_dir = os.path.join(self.processing_folder,"spliter")
         file_name_only = pathlib.Path(pdf_file).stem
         out_put_file_path = os.path.join(self.processing_folder, f"{file_name_only}.pdf")
-        if not os.path.isdir(split_dir):
-            os.makedirs(split_dir,exist_ok=True)
-        from PyPDF2 import PdfFileWriter, PdfFileReader, PdfMerger
+        try:
+            if not os.path.isdir(split_dir):
+                os.makedirs(split_dir,exist_ok=True)
 
-        inputpdf = PdfFileReader(open(pdf_file, "rb"))
-        pdfs = []
-        pdfs_files =[]
-        searchable,non_searchable = self.get_pdf_searchable_pages(pdf_file)
-        for i in range(inputpdf.numPages):
-            output = PdfFileWriter()
-            inputpdf.getPage(i).scale(sx=scale,sy=scale)
-            output.addPage(inputpdf.getPage(i))
-            output_page = os.path.join(split_dir,f"{file_name_only}.{i}.pdf")
-            output_ocr =  os.path.join(split_dir,f"{file_name_only}.ocr.{i}.pdf")
-            start = datetime.datetime.utcnow()
-            with open(output_page, "wb") as outputStream:
-                output.write(outputStream)
-            print(f"orc start  {output_page} {start}")
 
-            if i in non_searchable:
-                ocrmypdf.ocr(
-                    input_file=output_page,
-                    output_file=output_ocr,
-                    progress_bar=False,
-                    language="vie+eng",
-                    use_threads=False,
-                    skip_text=False,
-                    force_ocr=True,
-                    deskew= True,
+            inputpdf = PdfFileReader(open(pdf_file, "rb"))
+            pdfs = []
+            pdfs_files =[]
+            searchable,non_searchable = self.get_pdf_searchable_pages(pdf_file)
+            for i in range(inputpdf.numPages):
+                output = PdfFileWriter()
+                inputpdf.getPage(i).scale(sx=scale,sy=scale)
+                output.addPage(inputpdf.getPage(i))
+                output_page = os.path.join(split_dir,f"{file_name_only}.{i}.pdf")
+                output_ocr =  os.path.join(split_dir,f"{file_name_only}.ocr.{i}.pdf")
+                start = datetime.datetime.utcnow()
+                with open(output_page, "wb") as outputStream:
+                    output.write(outputStream)
+                print(f"orc start  {output_page} {start}")
 
-                    jobs=50,
-                    optimize=3,
-                    keep_temporary_files=False
-                )
-                if os.path.isfile(output_ocr):
-                    pdfs += [output_ocr]
+                if i in non_searchable:
+                    ocrmypdf.ocr(
+                        input_file=output_page,
+                        output_file=output_ocr,
+                        progress_bar=False,
+                        language="vie+eng",
+                        use_threads=False,
+                        skip_text=False,
+                        force_ocr=True,
+                        deskew= True,
+
+                        jobs=50,
+                        optimize=3,
+                        keep_temporary_files=False
+                    )
+                    if os.path.isfile(output_ocr):
+                        pdfs += [output_ocr]
+                    else:
+                        pdfs += [output_page]
+                    pdfs_files += [output_page]
+                    time.sleep(0.01)
+
                 else:
                     pdfs += [output_page]
-                pdfs_files += [output_page]
-                time.sleep(0.01)
-
-            else:
-                pdfs += [output_page]
-                pdfs_files += [output_page]
-            n = (datetime.datetime.utcnow()-start).total_seconds()*1000
-            print(f"orc time of  {output_page} {(n)} millisecond")
+                    pdfs_files += [output_page]
+                n = (datetime.datetime.utcnow()-start).total_seconds()*1000
+                print(f"orc time of  {output_page} {(n)} millisecond")
 
 
-        merger = PdfMerger()
+            merger = PdfMerger()
 
-        for pdf in pdfs:
-            merger.append(pdf)
+            for pdf in pdfs:
+                merger.append(pdf)
 
-        merger.write(out_put_file_path)
-        merger.close()
-        for pdf in pdfs:
-            if os.path.isfile(pdf):
-                os.remove(pdf)
-        for pdf in pdfs_files:
-            if os.path.isfile(pdf):
-                os.remove(pdf)
+            merger.write(out_put_file_path)
+            merger.close()
+            for pdf in pdfs:
+                if os.path.isfile(pdf):
+                    os.remove(pdf)
+            for pdf in pdfs_files:
+                if os.path.isfile(pdf):
+                    os.remove(pdf)
 
-        return out_put_file_path
+            return out_put_file_path
+        except PyPDF2.errors.PdfReadError as e:
+            ocrmypdf.ocr(
+                input_file= pdf_file,
+                output_file=out_put_file_path,
+                progress_bar=True,
+                language="vie+eng",
+                use_threads=False,
+                skip_text=False,
+                force_ocr=True,
+                deskew=True,
+
+                jobs=50,
+                optimize=3,
+                keep_temporary_files=False
+            )
+            return out_put_file_path
+
     def ocr_depriciate(self, pdf_file):
         """
                         Thuc hien ocr pdf file trong tien tring rieng biet
