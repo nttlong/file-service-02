@@ -5,6 +5,9 @@ import shutil
 import threading
 import time
 
+import PIL
+from fitz import fitz
+
 import cy_docs
 import cy_kit
 from cyx.common.msg import MessageInfo, MessageService
@@ -181,6 +184,18 @@ class FilesSync:
                 handler_service.resolve(item,full_file_path)
                 self.message_service.delete(item)
                 os.remove(full_file_path)
+            except PIL.UnidentifiedImageError as e:
+                output["error"] = e
+                self.logs.exception(e)
+                self.message_service.delete(item)
+                if os.path.isfile(full_file_path):
+                    os.remove(full_file_path)
+            except fitz.fitz.FileDataError as e:
+                output["error"] = e
+                self.logs.exception(e)
+                self.message_service.delete(item)
+                if os.path.isfile(full_file_path):
+                    os.remove(full_file_path)
             except Exception as e:
                 output["error"] =e
                 self.logs.exception(e)

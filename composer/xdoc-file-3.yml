@@ -9,15 +9,13 @@ services:
 #    build:
 #      context: ./..
 #      dockerfile: ./composer/files-dockerfile
-#  restart: on-failure
-  xdoc-file-3:
-    image: nttlong/lv-file:rc.0.5.6
-    container_name: xdoc-file-3
 
-#    volumes:
-#
-#      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
-#      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/tmp-upload/:/app/tmp
+  xdoc-file-3:
+    image: nttlong/lv-file:rc.0.6.3
+    container_name: xdoc-file-3
+    restart: on-failure
+    volumes:
+      - ${MAP}/xdoc-file-3:/app/background_service_files
     command: python3 /app/cyx/start.py db.host=192.168.18.36 db.port=27018 db.username=admin-doc db.password="'123456'" db.authSource=lv-docs admin_db_name=lv-docs elastic_search.server=http://192.168.18.36:9200 elastic_search.prefix_index=lv-codx
 
 
