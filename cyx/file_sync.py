@@ -181,9 +181,10 @@ class FilesSync:
             _output = {}
             try:
                 full_file_path = self.sync_file(item)
-                handler_service.resolve(item,full_file_path)
-                self.message_service.delete(item)
-                os.remove(full_file_path)
+                if full_file_path is not None:
+                    handler_service.resolve(item,full_file_path)
+                    self.message_service.delete(item)
+                    os.remove(full_file_path)
             except PIL.UnidentifiedImageError as e:
                 output["error"] = e
                 self.logs.exception(e)
