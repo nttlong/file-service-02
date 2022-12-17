@@ -89,7 +89,7 @@ class FilesSync:
                 chunk_data = reader.next()
                 if chunk_data.__len__() ==0:
                     if isinstance(item.Data.get("RegisterOn"),datetime.datetime):
-                        fx = (datetime.datetime.utcnow() - item.Data["RegisterOn"])
+                        fx = (datetime.datetime.utcnow() - item.Data["RegisterOn"]).total_seconds()
                         if fx>4*60*60:
                             self.message_service.delete(item)
                             return None

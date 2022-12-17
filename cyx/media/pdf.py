@@ -129,7 +129,7 @@ class PDFService:
             return False
     def ocr(self, pdf_file,scale=1):
         """
-                        Thuc hien ocr pdf file trong tien tring rieng biet
+                        Thuc hien ocr pdf file trong tien tring rieng biet skip if all pages are searchable
                         :param file_path:
                         :param out_put_file_path:
                         :return:
@@ -146,6 +146,9 @@ class PDFService:
             pdfs = []
             pdfs_files =[]
             searchable,non_searchable = self.get_pdf_searchable_pages(pdf_file)
+            if non_searchable.__len__()==0:
+                return None
+
             for i in range(inputpdf.numPages):
                 output = PdfFileWriter()
                 inputpdf.getPage(i).scale(sx=scale,sy=scale)

@@ -110,44 +110,32 @@ class FileContentProcessService:
             # try:
             print(f"OCR file {full_file_path}")
             ocr_file = self.pdf_services.ocr(full_file_path)
-            print(f"OCR file {full_file_path} is ok")
-            server_orc_file_path = f"file-ocr/{doc_data.id}/{file_name_only}.pdf"
-            fs = self.file_storage_services.store_file(
-                app_name=msg.AppName,
-                source_file=ocr_file,
-                rel_file_store_path=server_orc_file_path,
-            )
-            self.file_services.update_ocr_info(
-                app_name=msg.AppName,
-                upload_id=doc_data.id,
-                ocr_file_id=fs.get_id()
-            )
-            content, info = self.contents_services.get_text(ocr_file)
-            upload_item = self.file_services.get_upload_register(
-                app_name=msg.AppName,
-                upload_id= doc_data.id
-            )
-            self.search_engine.update_content(
-                app_name= msg.AppName,
-                id = doc_data.id,
-                content = content,
-                meta = info,
-                data_item = upload_item
-            )
-            # except Exception as e:
-            #     print(f"OCR file {full_file_path} is fail")
-            #     content, info = self.contents_services.get_text(full_file_path)
-            #     upload_item = self.file_services.get_upload_register(
-            #         app_name=msg.AppName,
-            #         upload_id=doc_data.id
-            #     )
-            #     self.search_engine.update_content(
-            #         app_name=msg.AppName,
-            #         id=doc_data.id,
-            #         content=content,
-            #         meta=info,
-            #         data_item=upload_item
-            #     )
+            if ocr_file is not None:
+                print(f"OCR file {full_file_path} is ok")
+                server_orc_file_path = f"file-ocr/{doc_data.id}/{file_name_only}.pdf"
+                fs = self.file_storage_services.store_file(
+                    app_name=msg.AppName,
+                    source_file=ocr_file,
+                    rel_file_store_path=server_orc_file_path,
+                )
+                self.file_services.update_ocr_info(
+                    app_name=msg.AppName,
+                    upload_id=doc_data.id,
+                    ocr_file_id=fs.get_id()
+                )
+                content, info = self.contents_services.get_text(ocr_file)
+                upload_item = self.file_services.get_upload_register(
+                    app_name=msg.AppName,
+                    upload_id= doc_data.id
+                )
+                self.search_engine.update_content(
+                    app_name= msg.AppName,
+                    id = doc_data.id,
+                    content = content,
+                    meta = info,
+                    data_item = upload_item
+                )
+
 
 
         if file_ext.lower() in self.ext_office_file and file_ext.lower()!="pdf":

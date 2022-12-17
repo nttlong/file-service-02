@@ -10,11 +10,15 @@ services:
 #      context: ./..
 #      dockerfile: ./composer/files-dockerfile
 #  restart: on-failure
-  xdoc-file-1:
-    image: nttlong/lv-file:rc.0.7.0
-    container_name: xdoc-file-1
+  xdoc-file-2:
+    image: nttlong/lv-file:rc.0.7.1
+    cpus: 0.125
+    mem_reservation: "50M"
+    mem_limit: "300M"
+    container_name: xdoc-file-3
+    restart: on-failure
     volumes:
-      - ${MAP}/xdoc-file-1:/app/background_service_files
+      - ${MAP}/xdoc-file-3:/app/background_service_files
 #    volumes:
 #
 #      - ${PATH_LOCAL_DIR_IN_HOST}/web-api/logs/:/app/logs
