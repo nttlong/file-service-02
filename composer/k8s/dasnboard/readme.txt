@@ -1,6 +1,8 @@
-1- kubectl -f service-account.yml apply
-2- kubectl -f ClusterRoleBinding.yml apply
-3- get token by uisng: kubectl -n lv-stats create token admin-user
+
+1- kubectl -f node-port-20036.yml apply
+2- kubectl -f service-account.yml apply
+3- get token by using: kubectl -n kubernetes-dashboard create token admin-user
 -----------------------------------------------------------------------------------
-eyJhbGciOiJSUzI1NiIsImtpZCI6Il9JajBGdkd2ZXduNGUtZFRZRGd1Qmg0b3EyOGk4b3ZGNE55aWZzNzFGOHcifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNjcxNTA2MzU0LCJpYXQiOjE2NzE1MDI3NTQsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJsdi1zdGF0cyIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJhZG1pbi11c2VyIiwidWlkIjoiMzg4NWE3MjItY2YzNi00YTVjLWE2ZjctMzgzODhmY2RlMGFiIn19LCJuYmYiOjE2NzE1MDI3NTQsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpsdi1zdGF0czphZG1pbi11c2VyIn0.ugNcTKrvVk10c_HX_a5VC-K3_t_3auF7qg8YQ1QlUzui39jWtbqwMdcIhiN_oWWZuXNzpxmyKPtfmdODaCjT1xcpKJ-qe25LF1y3NkYD9prgPaF7susrY2JAk2oCKkfp0-uB5L79czKsR-ZRpv5uVp0_ENyG60yr-QotaZYcPPbCaoqVJSVg5WBztSXBA3eM41LSxbKBB7kU_zzofCXSVZUx7vgGHIwbf4N_VVcAtQ8DIrXHDWd700UA78nnIiLAK3Kg54YU1W84_Wv02PDws44eDsn8MvZztd6QOM0SkOO4hpb9oNn7qkAXXx_dDON8EHqGZE_yePHnUVBhswWx6w
+eyJhbGciOiJSUzI1NiIsImtpZCI6Il9JajBGdkd2ZXduNGUtZFRZRGd1Qmg0b3EyOGk4b3ZGNE55aWZzNzFGOHcifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNjcyNTIwNDExLCJpYXQiOjE2NzE1MjA0MTEsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJhZG1pbi11c2VyIiwidWlkIjoiYzQwOGUyMzItYjU0Mi00ODMyLWE5Y2ItZDViYmVlNWRjZDRjIn19LCJuYmYiOjE2NzE1MjA0MTEsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDphZG1pbi11c2VyIn0.rzMPBX-6eCUeocQo5KCPBVg_0ZgQZJqRBMqA4LWErZUmxV-x8tWpYu0ovBhjmFDd1IFD2B6l4yl2aPZhaUYUX6vqrsK9hLNB5U9VidlLXi-guDbfzsXH1AoAvOqrJhVpUdXboIpbKBZ2UPkJr5jzoW-pICDvu6URTuCtedJ5H8WTAr46RzX5KPmlcM9P_YFi7rGG73v5pw6UbDSjDccAptqk2CWYGJwxZPX4wm9DOpQb_mCOr7B18K5o2NF9ghdqELGzKwC8fMxo6O6-ENPc-6v1KhVOl-Y4zcuvuTnlrwejAK3VUQlqUVVX7J-q5FS5kkTO8te2k8JMM0VaE3txNg
+
 ------------------------------------------------------------------------

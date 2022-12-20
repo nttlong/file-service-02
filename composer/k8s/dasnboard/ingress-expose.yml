@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: nginx #nginx or lv-file-ingress
   rules:
-    - http:
+    - https:
         paths:
           - pathType: Prefix
             path: "/lv-stats"
@@ -19,6 +19,6 @@ spec:
               service:
                 name: kubernetes-dashboard
                 port:
-                  number: 8000
+                  number: 443
 
 #The Ingress  is invalid: spec.rules[0].host: Invalid value: "172.16.7.91": must be a DNS name, not an IP address

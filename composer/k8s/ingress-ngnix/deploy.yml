@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
-  name: re-in
+  name: lv-ingress
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -17,7 +17,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx
-  namespace: re-in
+  namespace: lv-ingress
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -29,7 +29,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx-admission
-  namespace: re-in
+  namespace: lv-ingress
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -41,7 +41,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx
-  namespace: re-in
+  namespace: lv-ingress
 rules:
 - apiGroups:
   - ""
@@ -146,7 +146,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx-admission
-  namespace: re-in
+  namespace: lv-ingress
 rules:
 - apiGroups:
   - ""
@@ -266,7 +266,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx
-  namespace: re-in
+  namespace: lv-ingress
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -274,7 +274,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ingress-nginx
-  namespace: re-in
+  namespace: lv-ingress
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -286,7 +286,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx-admission
-  namespace: re-in
+  namespace: lv-ingress
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -294,7 +294,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ingress-nginx-admission
-  namespace: re-in
+  namespace: lv-ingress
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -312,7 +312,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ingress-nginx
-  namespace: re-in
+  namespace: lv-ingress
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -331,7 +331,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ingress-nginx-admission
-  namespace: re-in
+  namespace: lv-ingress
 ---
 apiVersion: v1
 data:
@@ -345,7 +345,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx-controller
-  namespace: re-in
+  namespace: lv-ingress
 ---
 apiVersion: v1
 kind: Service
@@ -357,7 +357,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx-controller
-  namespace: re-in
+  namespace: lv-ingress
 spec:
   externalTrafficPolicy: Cluster #Local or Cluster
   ipFamilies:
@@ -366,7 +366,7 @@ spec:
   ports:
   - appProtocol: http
     name: http
-    port: 81 #Quan trong
+    port: 80 #Quan trong
     protocol: TCP
     targetPort: http
   - appProtocol: https
@@ -390,7 +390,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx-controller-admission
-  namespace: re-in
+  namespace: lv-ingress
 spec:
   ports:
   - appProtocol: https
@@ -413,7 +413,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx-controller
-  namespace: re-in
+  namespace: lv-ingress
 spec:
   minReadySeconds: 0
   revisionHistoryLimit: 10
@@ -525,7 +525,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx-admission-create
-  namespace: re-in
+  namespace: lv-ingress
 spec:
   template:
     metadata:
@@ -572,7 +572,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx-admission-patch
-  namespace: re-in
+  namespace: lv-ingress
 spec:
   template:
     metadata:
@@ -640,7 +640,7 @@ webhooks:
   clientConfig:
     service:
       name: ingress-nginx-controller-admission
-      namespace: re-in
+      namespace: lv-ingress
       path: /networking/v1/ingresses
   failurePolicy: Fail
   matchPolicy: Equivalent
@@ -657,5 +657,5 @@ webhooks:
     - ingresses
   sideEffects: None
 #---------------------------------------------
-# kubectl wait --namespace re-in --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
+# kubectl wait --namespace lv-ingress --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
 #-----------------------
