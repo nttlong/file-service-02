@@ -1,1 +1,0 @@
-kubectl port-forward -n fs-svc service/file-services-api-svc  10444:8011 --address 0.0.0.0

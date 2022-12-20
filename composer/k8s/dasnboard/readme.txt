@@ -1,0 +1,6 @@
+1- kubectl -f service-account.yml apply
+2- kubectl -f ClusterRoleBinding.yml apply
+3- get token by uisng: kubectl -n lv-stats create token admin-user
+-----------------------------------------------------------------------------------
+eyJhbGciOiJSUzI1NiIsImtpZCI6Il9JajBGdkd2ZXduNGUtZFRZRGd1Qmg0b3EyOGk4b3ZGNE55aWZzNzFGOHcifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNjcxNTA2MzU0LCJpYXQiOjE2NzE1MDI3NTQsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJsdi1zdGF0cyIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJhZG1pbi11c2VyIiwidWlkIjoiMzg4NWE3MjItY2YzNi00YTVjLWE2ZjctMzgzODhmY2RlMGFiIn19LCJuYmYiOjE2NzE1MDI3NTQsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpsdi1zdGF0czphZG1pbi11c2VyIn0.ugNcTKrvVk10c_HX_a5VC-K3_t_3auF7qg8YQ1QlUzui39jWtbqwMdcIhiN_oWWZuXNzpxmyKPtfmdODaCjT1xcpKJ-qe25LF1y3NkYD9prgPaF7susrY2JAk2oCKkfp0-uB5L79czKsR-ZRpv5uVp0_ENyG60yr-QotaZYcPPbCaoqVJSVg5WBztSXBA3eM41LSxbKBB7kU_zzofCXSVZUx7vgGHIwbf4N_VVcAtQ8DIrXHDWd700UA78nnIiLAK3Kg54YU1W84_Wv02PDws44eDsn8MvZztd6QOM0SkOO4hpb9oNn7qkAXXx_dDON8EHqGZE_yePHnUVBhswWx6w
+------------------------------------------------------------------------
