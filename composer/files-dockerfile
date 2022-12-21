@@ -22,4 +22,4 @@ RUN python3 cy_web/setup.py  build_ext  --inplace
 
 
 
-#docker buildx   build -t nttlong/lv-file:rc.0.7.4  --platform=linux/amd64,linux/arm64  ./.. -f files-dockerfile  --push=true --output type=registry
+#docker buildx   build -t nttlong/lv-file:rc.0.7.5  --platform=linux/amd64,linux/arm64  ./.. -f files-dockerfile  --push=true --output type=registry

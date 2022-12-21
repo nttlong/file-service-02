@@ -1,0 +1,41 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: xdoc-job
+  labels:
+    name: xdoc-job
+---
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xdoc-job
+  namespace: xdoc-job
+spec:
+  selector:
+    matchLabels:
+      app: xdoc-job
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: xdoc-job
+    spec:
+      containers:
+        - args:
+            - python3
+            - /app/cyx/start.py
+            - elastic_search.server=http://192.168.18.36:9200
+            - elastic_search.prefix_index=lv-codx
+            - db.host=192.168.18.36
+            - db.port=27018
+            - db.username=
+            - db.password=
+            - db.authSource=
+          image: nttlong/lv-file:rc.0.7.4
+          name: xdoc-job
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources: { }
+

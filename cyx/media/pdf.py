@@ -147,7 +147,7 @@ class PDFService:
             pdfs_files =[]
             searchable,non_searchable = self.get_pdf_searchable_pages(pdf_file)
             if non_searchable.__len__()==0:
-                return None
+                return pdf_file
 
             for i in range(inputpdf.numPages):
                 output = PdfFileWriter()
