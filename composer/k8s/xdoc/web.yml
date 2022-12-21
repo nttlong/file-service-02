@@ -1,4 +1,10 @@
 #----------------------------------------------------------
+# The file use for deployment of file-svc into k8s
+# Thou notice that 4 sections:
+# 1- Namespace
+# 2- Deploy app with name of xdoc-web run in container
+# 3- Create service point to xdoc-web app with name xdoc-web-service
+# 4- Expose xdoc-web-service via ingress
 #----------------------------------------------------------
 apiVersion: v1
 kind: Namespace
@@ -89,4 +95,3 @@ spec:
 #                port:
 #                  number: 8017
 
-#The Ingress  is invalid: spec.rules[0].host: Invalid value: "172.16.7.91": must be a DNS name, not an IP address
