@@ -336,6 +336,9 @@ subjects:
 apiVersion: v1
 data:
   allow-snippet-annotations: "true"
+  proxy-connect-timeout: "10s"
+  proxy-read-timeout: "10s"
+  client-max-body-size: "50m"
 kind: ConfigMap
 metadata:
   labels:
@@ -346,6 +349,8 @@ metadata:
     app.kubernetes.io/version: 1.5.1
   name: ingress-nginx-controller
   namespace: lv-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 50m
 ---
 apiVersion: v1
 kind: Service

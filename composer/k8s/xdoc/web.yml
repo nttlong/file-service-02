@@ -68,6 +68,7 @@ metadata:
   namespace: xdoc-web
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
 #    nginx.ingress.kubernetes.io/use-regex: "true"
 #    nginx.ingress.kubernetes.io/rewrite-target: /$1
 
