@@ -82,7 +82,7 @@ class FileContentProcessService:
             os.remove(main_thumb_path)
         if mime_type.startswith("image/"):
             pdf_file_path = self.image_extractor_service.convert_to_pdf(file_path=full_file_path)
-            ocr_file = self.pdf_services.ocr(pdf_file_path)
+            ocr_file = self.pdf_services.ocr(pdf_file_path,deskew=False)
             server_orc_file_path = f"file-ocr/{doc_data.id}/{file_name_only}.pdf"
             fs = self.file_storage_services.store_file(
                 app_name=msg.AppName,

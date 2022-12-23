@@ -32,7 +32,7 @@ spec:
             - db.username=
             - db.password=
             - db.authSource=
-          image: nttlong/lv-file:rc.0.7.4
+          image: nttlong/lv-file:rc.0.7.62
           name: xdoc-job
           imagePullPolicy: IfNotPresent
           ports:

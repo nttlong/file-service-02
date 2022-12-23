@@ -13,4 +13,5 @@ docker run -d \
 -p 8042:8042 \
 -p 2181:2181 \
 apachekylin/apache-kylin-standalone:4.0.0
+kubectl rollout restart -n xdoc-web deployment xdoc-web
 ------------------------------------------------------------------------

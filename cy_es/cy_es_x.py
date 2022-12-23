@@ -244,7 +244,7 @@ match_phraseBody = {
 """
 
 
-def match(field: DocumentFields, content: str, boost: float = None, slop = None):
+def match(field: DocumentFields, content: str, boost = None, slop = None):
     """
 
     :return:
@@ -261,14 +261,14 @@ def match(field: DocumentFields, content: str, boost: float = None, slop = None)
     }
 
     if boost is not None:
-        __match_content__["match"][field.__name__]["boost"] = boost
+        __match_content__["match"][field.__name__]["boost"] =boost
     # if slop is not None:
     #     __match_content__["match"][field.__name__]["slop"] = slop
     ret.__es_expr__ = __match_content__
     return ret
 
 
-def match_phrase(field: DocumentFields, content: str, boost: float = None, slop=None,
+def match_phrase(field: DocumentFields, content: str, boost = None, slop=None,
                  analyzer="standard") -> DocumentFields:
     ret = DocumentFields()
     __match_phrase__ = {

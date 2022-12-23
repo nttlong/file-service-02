@@ -127,7 +127,7 @@ class PDFService:
                 if text.__len__() > 0:
                     return True
             return False
-    def ocr(self, pdf_file,scale=1):
+    def ocr(self, pdf_file,scale=1,deskew = True):
         """
                         Thuc hien ocr pdf file trong tien tring rieng biet skip if all pages are searchable
                         :param file_path:
@@ -169,7 +169,7 @@ class PDFService:
                         use_threads=False,
                         skip_text=False,
                         force_ocr=True,
-                        deskew= True,
+                        deskew= deskew,
 
                         jobs=50,
                         # optimize=3,
