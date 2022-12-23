@@ -32,7 +32,7 @@ spec:
             - /app/cy_xdoc/server.py
             - bind=0.0.0.0:80
             - content_segment_len=9
-            - host_url=https://172.16.7.91/lvfile
+            - host_url=http://172.16.7.91/lvfile
             - elastic_search.server=http://192.168.18.36:9200
             - elastic_search.prefix_index=lv-codx
             - db.host=192.168.18.36
@@ -49,6 +49,14 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "250m"
+#          volumeMounts:
+#            - mountPath: /app/cy_xdoc/cache
+#              name: web-cache
+#      volumes:
+#        - name: web-cache
+#          persistentVolumeClaim:
+#            claimName: lv-storage-claim
+
 ---
 apiVersion: v1
 kind: Service

@@ -67,12 +67,25 @@ class SearchEngine:
                 )
             )
         if content is not None and  content!="":
-            search_expr= search_expr & cy_es.match(
+            content_search = cy_es.match_phrase(
                 field=cy_es.buiders.content,
-                content=content
+                content=content,
+                boost=10,
+                slop=1,
+                analyzer="stop"
+
+            )
+            content_search = content_search | cy_es.match(
+                field=cy_es.buiders.content,
+                content=content,
+                boost=5,
+                slop=1
+
 
             )
 
+            search_expr = search_expr & content_search
+            # search_expr.set_minimum_should_match(1)
         skip = page_index * page_size
         highlight_expr = None
         if highlight:

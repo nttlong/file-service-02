@@ -86,7 +86,17 @@ class DocumentFields:
         self.__is_bool__ = False
         self.__value__ = None
         self.__has_set_value__ = None
+        self.__minimum_number_should_match__ = None
         # self.is_equal = False
+
+    def set_minimum_should_match(self, value):
+        self.__minimum_number_should_match__ = value
+        self.__es_expr__["minimum_should_match"] = value
+
+
+
+
+        return self
 
     def __neg__(self):
         ret = DocumentFields()
@@ -129,10 +139,12 @@ class DocumentFields:
         ret = DocumentFields()
         if isinstance(other, DocumentFields):
             if self.__is_bool__:
+
                 left = {"bool": self.__es_expr__}
             else:
                 left = self.__es_expr__
             if other.__is_bool__:
+
                 rigt = {"bool": other.__es_expr__}
             else:
                 rigt = other.__es_expr__
@@ -151,6 +163,8 @@ class DocumentFields:
         ret = DocumentFields()
         if isinstance(other, DocumentFields):
             if self.__is_bool__:
+
+
                 left = {"bool": self.__es_expr__}
             else:
                 left = self.__es_expr__
@@ -209,6 +223,8 @@ class DocumentFields:
                 ret = {
                     "bool": ret
                 }
+
+
             return dict(query=ret)
         return self.__name__
 
@@ -228,7 +244,7 @@ match_phraseBody = {
 """
 
 
-def match(field: DocumentFields, content: str, boost: float = None):
+def match(field: DocumentFields, content: str, boost: float = None, slop = None):
     """
 
     :return:
@@ -245,8 +261,9 @@ def match(field: DocumentFields, content: str, boost: float = None):
     }
 
     if boost is not None:
-        __match_content__["boost"] = boost
-
+        __match_content__["match"][field.__name__]["boost"] = boost
+    # if slop is not None:
+    #     __match_content__["match"][field.__name__]["slop"] = slop
     ret.__es_expr__ = __match_content__
     return ret
 
@@ -262,12 +279,15 @@ def match_phrase(field: DocumentFields, content: str, boost: float = None, slop=
         }
     }
     if boost is not None:
-        __match_phrase__["boost"] = boost
+        __match_phrase__[field.__name__]["boost"] = boost
     if slop is not None:
-        __match_phrase__["slop"] = slop
+        __match_phrase__[field.__name__]["slop"] = slop
     ret.__es_expr__ = {
         "match_phrase": __match_phrase__
     }
+
+
+        # ret.__es_expr__["boost"] = boost
     return ret
 
 
@@ -328,7 +348,8 @@ class SearchResult(dict):
         for x in self.hits.hits:
             yield ESDocumentObject(x)
 
-def get_docs(client:Elasticsearch, index:str, doc_type:str ="_doc",limit=100):
+
+def get_docs(client: Elasticsearch, index: str, doc_type: str = "_doc", limit=100):
     res = client.search(index=index, doc_type="_doc", body={
         'size': limit,
         'query': {
@@ -340,6 +361,8 @@ def get_docs(client:Elasticsearch, index:str, doc_type:str ="_doc",limit=100):
             for x in res["hits"]["hits"]:
                 yield ESDocumentObject(x)
     return []
+
+
 def search(client: Elasticsearch,
            index: str,
            filter,
@@ -377,17 +400,26 @@ def search(client: Elasticsearch,
             }
         }
         body["highlight"] = __highlight
-    _sort="_score:desc,"
+    _sort = "_score:desc,"
     if sort is not None:
-        if isinstance(sort,list):
+        if isinstance(sort, list):
             for x in sort:
-                if isinstance(x,DocumentFields):
-                    _sort += x.__get_expr__() +","
-                elif isinstance(x,str):
+                if isinstance(x, DocumentFields):
+                    _sort += x.__get_expr__() + ","
+                elif isinstance(x, str):
                     _sort += x + ","
 
-
     _sort = _sort[:-1]
+    #
+    # body["aggs"]= {
+    #     "keywords" : {
+    #         "significant_text" : {
+    #             "field" : "content",
+    #             "filter_duplicate_text": True,
+    #             "min_doc_count":1
+    #             }
+    #         }
+    # }
     ret = client.search(index=index, doc_type="_doc", body=body, sort=_sort)
     return SearchResult(ret)
 
@@ -579,9 +611,6 @@ def __all_primitive__(x):
         return True
 
 
-
-
-
 def nested(prefix: str, filter):
     ret = {}
     if isinstance(filter, dict):
@@ -653,5 +682,3 @@ def create_filter_from_dict(expr: dict, owner_caller=None):
 
 def is_exist(client: Elasticsearch, index: str, id: str, doc_type: str = "_doc") -> bool:
     return client.exists(index=index, id=id, doc_type=doc_type)
-
-
