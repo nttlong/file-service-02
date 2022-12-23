@@ -12,14 +12,14 @@ app_name = "hps-file-test"
 context = fs.db_connect.db(app_name).doc(DocUploadRegister)
 
 lst = context.context.aggregate().match(
-    {}
-    # context.fields.id=="27444660-5fdd-40a0-a710-ad7f9ca107ce"
+
+     context.fields.id=="a176177c-0f06-49bc-b914-43d756757fca"
     # ((context.fields.FileExt == "png")|(context.fields.FileExt == "jpg")) & (context.fields.OCRFileId==None) &(context.fields.Status==1)
 
 
 ).sort(
     context.fields.RegisterOn.desc()
-).skip(50).limit(50)
+).limit(50)
 
 for x in lst:
     msg.emit(
