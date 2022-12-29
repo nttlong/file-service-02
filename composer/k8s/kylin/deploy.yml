@@ -11,6 +11,7 @@ kind: Namespace
 metadata:
   name: kylin
 ---
+#docker run -d -m 8G -p 7070:7070 -p 8088:8088 -p 50070:50070 -p 8032:8032 -p 8042:8042 -p 2181:2181 apachekylin/apache-kylin-standalone:5.0.0
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,13 +29,18 @@ spec:
     spec:
       containers:
         - args:
-            - sh
-            - /admin/entrypoint.sh
+            - /home/admin/entrypoint.sh
           image: apachekylin/apache-kylin-standalone:4.0.0
           name: apache-kylin-standalone
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 7070
+            - containerPort: 8088
+            - containerPort: 50070
+            - containerPort: 8032
+            - containerPort: 8042
+            - containerPort: 2181
+
           resources: { }
 ---
 apiVersion: v1
@@ -49,7 +55,7 @@ spec:
   selector:
     app: kylin-app
   ports:
-  - port: 8082
+  - port: 7070
     targetPort: 7070
     protocol: TCP
     nodePort: 31300

@@ -1,49 +1,25 @@
-from kafka import KafkaProducer
-from kafka.errors import KafkaError
+from confluent_kafka import Producer
 
-producer = KafkaProducer(bootstrap_servers=['172.16.7.91:30092'])
+p = Producer({'bootstrap.servers': '172.16.7.91:30992'})
+p.produce('long-test-2022-12-29', "Chi la test".encode('utf-8'))
+from confluent_kafka import Consumer
+c = Consumer({
+    'bootstrap.servers': '172.16.7.91:30992',
+    'group.id': 'mygroup',
+    'auto.offset.reset': 'earliest'
+})
 
-# Asynchronous by default
-future = producer.send('my-topic', b'raw_bytes')
+c.subscribe(['long-test-2022-12-29'])
 
-# Block for 'synchronous' sends
-record_metadata = future.get(timeout=10)
+while True:
+    msg = c.poll(1.0)
 
+    if msg is None:
+        continue
+    if msg.error():
+        print("Consumer error: {}".format(msg.error()))
+        continue
 
-# Successful result returns assigned partition and offset
-print (record_metadata.topic)
-print (record_metadata.partition)
-print (record_metadata.offset)
+    print('Received message: {}'.format(msg.value().decode('utf-8')))
 
-# produce keyed messages to enable hashed partitioning
-producer.send('my-topic', key=b'foo', value=b'bar')
-
-# encode objects via msgpack
-producer = KafkaProducer(value_serializer=msgpack.dumps)
-producer.send('msgpack-topic', {'key': 'value'})
-
-# produce json messages
-producer = KafkaProducer(value_serializer=lambda m: json.dumps(m).encode('ascii'))
-producer.send('json-topic', {'key': 'value'})
-
-# produce asynchronously
-for _ in range(100):
-    producer.send('my-topic', b'msg')
-
-def on_send_success(record_metadata):
-    print(record_metadata.topic)
-    print(record_metadata.partition)
-    print(record_metadata.offset)
-
-def on_send_error(excp):
-    log.error('I am an errback', exc_info=excp)
-    # handle exception
-
-# produce asynchronously with callbacks
-producer.send('my-topic', b'raw_bytes').add_callback(on_send_success).add_errback(on_send_error)
-
-# block until all async messages are sent
-producer.flush()
-
-# configure multiple retries
-producer = KafkaProducer(retries=5)
+c.close()
