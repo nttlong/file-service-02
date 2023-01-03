@@ -100,7 +100,7 @@ class FilesSync:
                         log_sync_file.info(
                             f"sync chunks {sync_chunks} is error"
                         )
-                        log_sync_file.exception(e)
+
                         self.message_service.delete(item)
                         return None
                 while chunk_data.__len__()>0:
