@@ -90,7 +90,7 @@ spec:
               value: /tmp/es/data
             - name: path.logs
               value: /tmp/es/logs
-          image: docker.elastic.co/elasticsearch/elasticsearch:7.8.1
+          image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
           name: lv-es
           ports:
             - containerPort: 9200
