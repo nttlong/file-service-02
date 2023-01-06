@@ -25,6 +25,10 @@ async def get_thumb_of_files(app_name: str, directory: str,request:Request):
         rel_file_path=f"thumbs/{directory}"
     )
     if fs is None:
+        """
+        Allow original thumb if custom size thumb not avalaable
+        Modified on: 01-05-2023
+        """
         thumb_dir_cache = os.path.join(app_name, "custom_thumbs")
         cache_thumb_path = cy_web.cache_content_check(thumb_dir_cache, directory.lower().replace("/", "_"))
         if cache_thumb_path:
