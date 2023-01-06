@@ -34,6 +34,8 @@ spec:
             #advertised.listeners=EXTERNAL://[External_IP]:19092,INTERNAL://[Internal_IP]:9092
             #inter.broker.listener.name=INTERNAL
 
+
+
             - name: KAFKA_LISTENERS
               value: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19092
             - name: KAFKA_ADVERTISED_LISTENERS
@@ -42,8 +44,24 @@ spec:
               value: INTERNAL
             - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
               value: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-            - name: KAFKA_BROKER_ID
+            #offsets.topic.replication.factor=1
+            #transaction.state.log.replication.factor=1
+            #transaction.state.log.min.isr=1
+            #num.partitions=1
+
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
               value: "1"
+            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+              value: "1"
+            - name: KAFKA_NUM_PARTITIONS
+              value: "1"
+#            - name: KAFKA_OFFSET_TOPIC_REPLICATION_FACTOR
+#              value: 1
+
+            - name: KAFKA_BROKER_ID
+              value: "0"
 #              KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
 #              KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094
 #              KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://localhost:9094
@@ -58,10 +76,10 @@ spec:
 
 #            - name: KAFKA_INTER_BROKER_LISTENER_NAME
 #              value: INTERNAL
-#            - name: KAFKA_JMX_HOSTNAME
-#              value: $(MY_POD_IP)
-#            - name: KAFKA_JMX_PORT
-#              value: "9999"
+            - name: KAFKA_JMX_HOSTNAME
+              value: $(MY_POD_IP)
+            - name: KAFKA_JMX_PORT
+              value: "9999"
 
 
 #            - name: KAFKA_LOG4J_LOGGERS
@@ -72,9 +90,16 @@ spec:
 #              value: "1"
 #            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
 #              value: "1"
-            - name: KAFKA_ZOOKEEPER_CONNECT
+#            - name: KAFKA_ZOOKEEPER_CONNECT
+#              value: kafka-zookeeper:2181
+            - name: ALLOW_PLAINTEXT_LISTENER
+              value: "yes"
+            - name: KAFKA_CFG_ZOOKEEPER_CONNECT
               value: kafka-zookeeper:2181
-          image: confluentinc/cp-kafka:7.3.0
+
+
+          #image: confluentinc/cp-kafka:7.3.0
+          image: bitnami/kafka:latest
           name: kafka-broker
           ports:
             - containerPort: 9092

@@ -76,8 +76,8 @@ class FilesSync:
         )
         timeout_in_seconds = 0
         fail_count =0
-        delay_insecond_if_fail = 0.5
-        max_fail_count, _ =divmod(30,delay_insecond_if_fail)
+        delay_insecond_if_fail = 1
+        max_fail_count, _ =divmod(30*60,delay_insecond_if_fail)
         while sync_chunks<num_of_chunks:
             try:
                 reader = self.file_storage_service.get_reader_of_file(

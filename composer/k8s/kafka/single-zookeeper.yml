@@ -27,11 +27,20 @@ spec:
         - env:
             - name: ZOOKEEPER_CLIENT_PORT
               value: "2181"
-            - name: ZOOKEEPER_SERVERS
-              value: kafka-zookeeper:2888:3888
+#            - name: ZOOKEEPER_SERVERS
+#              value: kafka-zookeeper:2888:3888
             - name: ZOOKEEPER_SERVER_ID
               value: "1"
-          image: confluentinc/cp-zookeeper:7.3.0
+            - name: ZOOKEEPER_ADMIN_ENABLE_SERVER #admin.enableServer
+              value: "true"
+            - name: ZOOKEEPER_ADMIN_SERVER_PORT
+              value: "9876"
+            - name: ZOOKEEPER_ALLOW_ANONYMOUS_LOGIN
+              value: "true"
+
+
+#          image: confluentinc/cp-zookeeper:7.3.0
+          image:  bitnami/zookeeper:latest
           name: kafka-zoo-keeper
           ports:
             - containerPort: 2181
