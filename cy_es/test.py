@@ -15,8 +15,8 @@ import cy_kit
 import cy_xdoc.services.search_engine
 search_services:cy_xdoc.services.search_engine.SearchEngine = cy_kit.singleton(cy_xdoc.services.search_engine.SearchEngine)
 filter1 = {
-    "departments": {
-        "$contains" :['dcs']
+    "1": {
+        "$contains" :['admin']
     }
 }
 json_filter = {
@@ -32,13 +32,13 @@ json_filter = {
             }
     ]
 }
-
+doc = search_services.get_doc("hps-file-test",id="c4f5cc64-7163-4155-bd6f-8f1a05442173")
 # filter1=None
 ret = search_services.full_text_search(
-    app_name="codx-aws",
+    app_name="hps-file-test",
     privileges= filter1,
     page_index=0,
-    content=r"writing this letter",
+    content="",
     page_size=10,
     highlight=False
 
@@ -46,7 +46,7 @@ ret = search_services.full_text_search(
 hits = ret.hits
 total = hits.total
 for x in ret.items:
-    print(x.id)
+    print(x)
 print(ret)
 
 

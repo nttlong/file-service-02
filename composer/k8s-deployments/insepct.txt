@@ -1,1 +1,0 @@
-kubectl exec -it -n=fs-svc file-services-thumb-image-84b78b7b48-4zm22  -- bash
