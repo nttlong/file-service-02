@@ -38,7 +38,7 @@ ret = search_services.full_text_search(
     app_name="hps-file-test",
     privileges= filter1,
     page_index=0,
-    content="",
+    content="long test",
     page_size=10,
     highlight=False
 

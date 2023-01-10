@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}-deployment
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}-web
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}-web
+    spec:
+      containers:
+        - args:
+            - python3
+            - /app/cy_xdoc/server.py
+            - bind=0.0.0.0:80
+            - content_segment_len=9
+            - host_url={{.Values.host_url}}:{{.Values.service.nodePort}}/lvfile
+            - elastic_search.server=http://192.168.18.36:9200
+            - elastic_search.prefix_index=lv-codx
+            - db.host=192.168.18.36
+            - db.port=27018
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          name: {{ .Values.name }}-web
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.service.containerPort }}
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "250m"

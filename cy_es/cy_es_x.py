@@ -87,14 +87,44 @@ class DocumentFields:
         self.__value__ = None
         self.__has_set_value__ = None
         self.__minimum_number_should_match__ = None
+        self.__norm__ = None
+        self.__type__ = None
         # self.is_equal = False
+
+    def set_type(self, str_type: str):
+        self.__type__ = str_type
+        return self
+
+    def set_norms(self, enable: bool):
+        """
+
+        :param enable:
+        :return:
+        """
+        """
+        "properties": {
+    "title": {
+      "type": "text",
+      "norms": false
+    }
+  }
+        """
+        self.__norm__ = enable
+        return self
+
+    def get_mapping(self):
+        return {
+            self.__name__:
+                dict(
+
+                    type=self.__type__,
+                    norms=self.__norm__
+                )
+        }
 
     def set_minimum_should_match(self, value):
         self.__minimum_number_should_match__ = value
         self.__es_expr__["minimum_should_match"] = value
-
-
-
 
         return self
 
@@ -164,7 +194,6 @@ class DocumentFields:
         if isinstance(other, DocumentFields):
             if self.__is_bool__:
 
-
                 left = {"bool": self.__es_expr__}
             else:
                 left = self.__es_expr__
@@ -224,9 +253,25 @@ class DocumentFields:
                     "bool": ret
                 }
 
-
             return dict(query=ret)
         return self.__name__
+
+
+def set_norms(field: DocumentFields, field_type: str, enable: bool) -> DocumentFields:
+    return field.set_type(field_type).set_norms(enable)
+
+
+def create_mapping(fields):
+    properties = dict()
+    for x in fields:
+        if isinstance(x,DocumentFields):
+            for k,v in x.get_mapping().items():
+                properties[k] = v
+    return dict(
+        mappings=dict(
+            properties=properties
+        )
+    )
 
 
 """
@@ -244,7 +289,7 @@ match_phraseBody = {
 """
 
 
-def match(field: DocumentFields, content: str, boost = None, slop = None):
+def match(field: DocumentFields, content: str, boost=None, slop=None):
     """
 
     :return:
@@ -261,14 +306,14 @@ def match(field: DocumentFields, content: str, boost = None, slop = None):
     }
 
     if boost is not None:
-        __match_content__["match"][field.__name__]["boost"] =boost
+        __match_content__["match"][field.__name__]["boost"] = boost
     # if slop is not None:
     #     __match_content__["match"][field.__name__]["slop"] = slop
     ret.__es_expr__ = __match_content__
     return ret
 
 
-def match_phrase(field: DocumentFields, content: str, boost = None, slop=None,
+def match_phrase(field: DocumentFields, content: str, boost=None, slop=None,
                  analyzer="standard") -> DocumentFields:
     ret = DocumentFields()
     __match_phrase__ = {
@@ -286,8 +331,7 @@ def match_phrase(field: DocumentFields, content: str, boost = None, slop=None,
         "match_phrase": __match_phrase__
     }
 
-
-        # ret.__es_expr__["boost"] = boost
+    # ret.__es_expr__["boost"] = boost
     return ret
 
 
@@ -349,9 +393,10 @@ class SearchResult(dict):
             yield ESDocumentObject(x)
 
 
-def get_docs(client: Elasticsearch, index: str, doc_type: str = "_doc", limit=100):
+def get_docs(client: Elasticsearch, index: str, doc_type: str = "_doc", limit=100, _from = 0):
     res = client.search(index=index, doc_type="_doc", body={
         'size': limit,
+        'from':_from,
         'query': {
             'match_all': {}
         }
@@ -563,6 +608,8 @@ def update_doc_by_id(client: Elasticsearch, index: str, id: str, data, doc_type:
 
 
 def create_index(client: Elasticsearch, index: str, body: typing.Union[dict, type]):
+    if client.indices.exists(index=index):
+        return
     if inspect.isclass(body) and body not in [str, datetime.datetime, int, bool, float, int]:
         ret = client.indices.create(index=index, body=get_map(body))
     else:
@@ -682,3 +729,35 @@ def create_filter_from_dict(expr: dict, owner_caller=None):
 
 def is_exist(client: Elasticsearch, index: str, id: str, doc_type: str = "_doc") -> bool:
     return client.exists(index=index, id=id, doc_type=doc_type)
+
+def count(client: Elasticsearch,index:str):
+    ret = client.count(index=index)
+    return ret.get('count',0)
+def clone_index(client: Elasticsearch, from_index, to_index,segment_size=100):
+
+    total_docs = count(client=client,index= from_index)
+
+    i = 0
+    while i<total_docs:
+        ret_docs = get_docs(client,from_index,limit=segment_size,_from= i)
+        for x in ret_docs:
+            i+=1
+            if not is_exist(client = client, index= to_index, id = x._id, doc_type=x._type):
+                create_doc(
+                    client=client,
+                    index= to_index,
+                    body= x._source,
+                    id = x._id,
+                    doc_type= x._type
+
+                )
+
+        print(f"{i}/{total_docs}")
+    print("xong")
+
+
+def put_mapping(client: Elasticsearch, index, body):
+    return client.indices.put_mapping(
+        index = index,
+        body =body['mappings']
+    )

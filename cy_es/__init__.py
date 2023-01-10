@@ -1,6 +1,8 @@
 import pathlib
 import sys
 
+import cy_es
+
 sys.path.append(
     pathlib.Path(__file__).parent.__str__()
 )
@@ -11,7 +13,12 @@ import cy_es_x
 DocumentFields = cy_es_x.DocumentFields
 buiders = cy_es_x.docs
 
-
+def create_index(client:Elasticsearch,index:str,body=None):
+    return cy_es_x.create_index(
+        index==index,
+        body=body,
+        client=client
+    )
 def search(client: Elasticsearch,
            index: str, filter,
            excludes: typing.List[DocumentFields] = [],
@@ -86,3 +93,24 @@ def get_docs(client:Elasticsearch, index:str, doc_type:str ="_doc"):
         index = index,
         doc_type = doc_type
     )
+
+
+def create_mapping(fields:typing.List[cy_es_x.DocumentFields]):
+    return cy_es_x.create_mapping(fields)
+
+
+def set_norms(field:cy_es.buiders, field_type:str, enable:bool):
+    return cy_es_x.set_norms(
+        field=field,
+        enable=enable,
+        field_type =field_type
+    )
+
+
+def put_mapping(client: Elasticsearch, index: str, body):
+    ret = cy_es_x.put_mapping(
+        client=client,
+        index=index,
+        body=body
+    )
+    client.indices.refresh(index = index)

@@ -1,0 +1,7 @@
+apiVersion: v1
+appVersion: "1.5"
+description: A Helm chart for Kubernetes
+home: https://github.com/tsadimas/fastapi-helm-chart
+
+name: xdoc
+version: "1.5"

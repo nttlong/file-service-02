@@ -10,7 +10,7 @@ c = Consumer({
     'group.id': 'mygroup',
     'auto.offset.reset': 'earliest'
 })
-shutil.copy("etc/dasd.txt","dasdas")
+
 c.subscribe(['topic-001'])
 
 while True:
@@ -23,5 +23,5 @@ while True:
         continue
 
     print('Received message: {}'.format(msg.value().decode('utf-8')))
-
+#10.244.33.243:9092 10.244.33.243
 c.close()

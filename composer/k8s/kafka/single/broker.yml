@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kafka-sn
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: kafka-broker
+  name: kafka-broker
+  namespace: kafka-sn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-broker
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: kafka-broker
+    spec:
+      containers:
+        - env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: KAFKA_CFG_ZOOKEEPER_CONNECT
+              value: kafka-zookeeper:2181
+            - name: ALLOW_PLAINTEXT_LISTENER
+              value: "yes"
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: PLAINTEXT://$(MY_POD_IP):9092 # EXTERNAL://$(MY_POD_IP):19092,INTERNAL://$(MY_POD_IP):9092
+          image: docker.io/bitnami/kafka:3.3
+          name: kafka-broker
+          ports:
+            - containerPort: 9092
+            - containerPort: 29092
+            - containerPort: 9999
+          resources: {}
+#      hostname: kafka-broker.kafka-sn
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: kafka-broker
+  name: kafka-broker
+  namespace: kafka-sn
+spec:
+  type: NodePort
+  ports:
+    - name: "9092"
+      port: 9092
+      targetPort: 9092
+      nodePort: 30992
+      protocol: TCP
+
+  selector:
+    app: kafka-broker
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: kafka-broker
+  name: kafka-broker-internal
+  namespace: kafka-sn
+spec:
+  type: ClusterIP
+  ports:
+    - name: "9092"
+      port: 9092
+      targetPort: 9092
+      protocol: TCP
+
+  selector:
+    app: kafka-broker
+status:
+  loadBalancer: {}
